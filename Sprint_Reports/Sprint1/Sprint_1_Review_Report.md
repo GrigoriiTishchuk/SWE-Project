@@ -56,7 +56,7 @@ Communication   - Discord
 | Bayram Erdogan | [Add] | [Add] | [Submitted / Not submitted] |
 | Grigorii Tishchuk | [Add] | [Add] | [Submitted / Not submitted] |
 | Olena Petrova | [Add] | [Add] | [Submitted / Not submitted] |
-| Maria Kuznetsova | [Add] | [Add] | [Submitted / Not submitted] |
+| Maria Kuznetsova | List of API endpoints, presentation (powerpoint) for Sprint 1 Review, Sprint_1_Planning_report, Sprint_1_Review_Report | 17 | Submitted  |
 
 ---
 
