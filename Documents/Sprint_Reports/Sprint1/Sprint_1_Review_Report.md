@@ -51,12 +51,12 @@ Communication   - Discord
 
 ## Team Contributions
 
-| Team Member | Tasks | Hours Spent | In-class tasks |
-|---|---|---|---|
-| Bayram Erdogan | [Add] | [Add] | [Submitted / Not submitted] |
-| Grigorii Tishchuk | [Add] | [Add] | [Submitted / Not submitted] |
-| Olena Petrova | [Add] | [Add] | [Submitted / Not submitted] |
-| Maria Kuznetsova | List of API endpoints, presentation (powerpoint) for Sprint 1 Review, Sprint_1_Planning_report, Sprint_1_Review_Report | 17 | Submitted  |
+| Team Member | Tasks                                                                                                                  | Hours Spent | In-class tasks |
+|---|------------------------------------------------------------------------------------------------------------------------|-------------|---|
+| Bayram Erdogan | Product vision, UML Diagrams, Database Diagram                                                                         | 19          | Submitted  |
+| Grigorii Tishchuk | [Add]                                                                                                                  | [Add]       | [Submitted / Not submitted] |
+| Olena Petrova | [Add]                                                                                                                  | [Add]       | [Submitted / Not submitted] |
+| Maria Kuznetsova | List of API endpoints, presentation (powerpoint) for Sprint 1 Review, Sprint_1_Planning_report, Sprint_1_Review_Report | 17          | Submitted  |
 
 ---
 
