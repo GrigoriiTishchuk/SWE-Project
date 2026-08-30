@@ -54,11 +54,11 @@ Communication   - Discord
 
 ## Team Contributions
 
-| Team Member | Tasks | Hours Spent | In-class tasks |
-|---|---|-------------|---|
-| Bayram Erdogan | [Add] | [Add]       | [Submitted / Not submitted] |
-| Grigorii Tishchuk | [Add] | 14          | Submitted  |
-| Olena Petrova | [Add] | [Add]       | [Submitted / Not submitted] |
+| Team Member | Tasks                                                                                                                                                                          | Hours Spent | In-class tasks |
+|---|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|---|
+| Bayram Erdogan | [Add]                                                                                                                                                                          | [Add]       | [Submitted / Not submitted] |
+| Grigorii Tishchuk | Project Plan, Product Vision, Trello structure established, UML Diagram of Use-Cases                                                                                           | 14          | Submitted  |
+| Olena Petrova | [Add]                                                                                                                                                                          | [Add]       | [Submitted / Not submitted] |
 | Maria Kuznetsova | Tasks completed in the previous group ICT25K-SW + List of API endpoints, presentation (powerpoint) for Sprint 1 Review, Sprint_1_Planning_report, Sprint_1_Review_Report, README | 20          | Submitted  |
 
 ---
