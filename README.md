@@ -60,7 +60,7 @@ The project will be successful if the gradebook system is completed on time, mee
 - Kubernetes - orchestration (deploying the MariaDB container)
 
 #### Other Tools
-- Git / GitHub - version control
+- GitHub - version control
 - Trello - sprint planning and task management
 - Discord - team communication
 - jBCrypt - password hashing
