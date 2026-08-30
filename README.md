@@ -65,6 +65,21 @@ The project will be successful if the gradebook system is completed on time, mee
 - Discord - team communication
 - jBCrypt - password hashing
 
+### Why We Chose These Technologies
+
+- **JavaFX** - the whole team codes in one language, no switching between frontend and backend languages.
+- **MariaDB** - a reliable relational database, good fit for structured data like students, grades, and courses.
+- **JPA (Hibernate)** - lets us work with Java classes instead of writing raw SQL by hand, which means less repetitive code and fewer manual query mistakes.
+- **Docker** - packages MariaDB the same way for every team member, so nobody has database setup problems on their own machine.
+- **Kubernetes** - deploys that Docker container;
+- **Jenkins** - automates building and testing the project on every change, catching mistakes earlier.
+- **JUnit** - lets us test grade calculations and other logic automatically, instead of checking everything by hand.
+- **Git / GitHub** - standard, reliable version control; lets the whole team work on the code without overwriting each other's work.
+- **Trello** - simple visual board for tracking sprint tasks and progress.
+- **Discord** - our team's main channel for daily communication and quick questions.
+- **jBCrypt** - securely hashes passwords so raw passwords are never stored in the database.
+- **Maven** - manages our project's dependencies and build process automatically.
+
 ---
 
 ## Project Plan & Sprint Structure
