@@ -8,7 +8,7 @@ Scrum Master: Grigorii Tishchuk
 
 ## Overview
 
-Sprint 1 focused on establishing the foundation for the project - the *Teacher's Gradebook and Report Card System*. The team was formed, the project topic was selected, and the product vision was documented. The team discussed and chose the technology stack (JavaFX, MariaDB, JDBC), set up a GitHub repository and a Trello/Jira workspace, and created the initial use case diagram, database design, and product backlog. This sprint gave the team a clear direction and the technical foundation needed for development in the next sprint.
+Sprint 1 focused on establishing the foundation for the project - the *Teacher's Gradebook and Report Card System*. The team was formed, the project topic was selected, and the product vision was documented. The team discussed and chose the technology stack (JavaFX, MariaDB, JPA), set up a GitHub repository and a Trello workspace, and created the initial use case diagram, database design, and product backlog. This sprint gave the team a clear direction and the technical foundation needed for development in the next sprint.
 
 ---
 
@@ -40,10 +40,13 @@ Sprint 1 focused on establishing the foundation for the project - the *Teacher's
 ```
 Frontend        - JavaFX
 Database        - MariaDB
-Data access     - JDBC (MariaDB Connector/J)
+Data access     - JPA (Hibernate)
 Password hashing - jBCrypt
+CI/CD - Jenkins 
+Containerization - Docker
+Orchestration   - Kubernetes 
 Version control - GitHub
-Project board   - Trello / Jira
+Project board   - Trello
 Communication   - Discord
 ```
 
@@ -56,7 +59,7 @@ Communication   - Discord
 | Bayram Erdogan | [Add] | [Add] | [Submitted / Not submitted] |
 | Grigorii Tishchuk | [Add] | [Add] | [Submitted / Not submitted] |
 | Olena Petrova | [Add] | [Add] | [Submitted / Not submitted] |
-| Maria Kuznetsova | List of API endpoints, presentation (powerpoint) for Sprint 1 Review, Sprint_1_Planning_report, Sprint_1_Review_Report | 17 | Submitted  |
+| Maria Kuznetsova | Tasks completed in the previous group ICT25K-SW + List of API endpoints, presentation (powerpoint) for Sprint 1 Review, Sprint_1_Planning_report, Sprint_1_Review_Report, README | 20 | Submitted  |
 
 ---
 
