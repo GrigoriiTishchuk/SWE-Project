@@ -214,5 +214,5 @@ mvn test
 
 Course name and semester:
 
-- Software Engineering Project TX00EY30-3011
+- Software Engineering Project TX00EY27-3012
 - Semester 3 & 4, 2026
