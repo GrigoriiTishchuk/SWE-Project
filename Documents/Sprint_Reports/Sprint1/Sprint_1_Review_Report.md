@@ -54,12 +54,12 @@ Communication   - Discord
 
 ## Team Contributions
 
-| Team Member | Tasks                                                                                                                                                                            | Hours Spent | In-class tasks |
-|---|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|---|
-| Bayram Erdogan | [Add]                                                                                                                                                                            | [Add]       | [Submitted / Not submitted] |
-| Grigorii Tishchuk | Project Plan, Product Vision, Trello structure established, UML Diagram of Use-Cases                                                                                             | 14          | Submitted  |
-| Olena Petrova | Product Vision, UML Diagram for Use-cases, Figma Design (Authorisation page and Dashboards)                                                                                      | 22          | Submitted |
-| Maria Kuznetsova | Tasks completed in the previous group ICT25K-SW + List of API endpoints, presentation (powerpoint) for Sprint 1 Review, Sprint_1_Planning_report, Sprint_1_Review_Report, README | 20          | Submitted  |
+| Team Member | Tasks                                                                                                                  | Hours Spent | In-class tasks |
+|---|------------------------------------------------------------------------------------------------------------------------|-------------|---|
+| Bayram Erdogan | Product vision, UML Diagrams, Database Diagram                                                                         | 19          | Submitted  |
+| Grigorii Tishchuk | [Add]                                                                                                                  | [Add]       | [Submitted / Not submitted] |
+| Olena Petrova | [Add]                                                                                                                  | [Add]       | [Submitted / Not submitted] |
+| Maria Kuznetsova | List of API endpoints, presentation (powerpoint) for Sprint 1 Review, Sprint_1_Planning_report, Sprint_1_Review_Report | 17          | Submitted  |
 
 ---
 
