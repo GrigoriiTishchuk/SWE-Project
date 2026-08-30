@@ -48,7 +48,10 @@ The goal of this sprint is to establish a project team, select a project topic, 
 - **Technology stack**
   - Frontend: JavaFX
   - Database: MariaDB
-  - Data access: JDBC (MariaDB Connector/J)
+  - Data access: JPA (Hibernate)
+  - CI/CD: Jenkins 
+  - Containerization: Docker (MariaDB)
+  - Orchestration: Kubernetes
 
 - **Design**
   - Created the use case diagram (Administrator, Teacher, Student).
