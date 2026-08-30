@@ -10,10 +10,8 @@ JavaFX UI  →  DAO layer (Java classes)  →  JPA (Hibernate)  →  MariaDB
 ```
 
 - **UI layer** - JavaFX views/controllers (screens, buttons, forms)
-- **DAO layer** - plain Java classes that hold queries and business rules
-  (e.g. `GradeDAO`, `StudentDAO`), keeping database logic out of the UI code
-- **JPA** - Java's persistence API (`Entity`, `EntityManager`, JPQL)
-  used inside the DAO layer to talk to MariaDB via Hibernate
+- **DAO layer** - plain Java classes that hold queries and business rules (e.g. `GradeDAO`, `StudentDAO`), keeping database logic out of the UI code
+- **JPA** - Java's persistence API (`Entity`, `EntityManager`, JPQL) used inside the DAO layer to talk to MariaDB via Hibernate
 
 ## Data access methods
 
