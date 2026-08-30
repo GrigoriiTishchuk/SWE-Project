@@ -1,19 +1,19 @@
 # Data Access (API)
 
-JavaFX connects to the MariaDB database directly using **JDBC** (`java.sql` / MariaDB Connector/J).
+JavaFX connects to the MariaDB database using **JPA** (Java Persistence API) with **Hibernate**.
 The desktop application and the data access logic run in the same process.
 
 ## Architecture
 
 ```
-JavaFX UI  →  DAO layer (Java classes)  →  JDBC (MariaDB Connector/J)  →  MariaDB
+JavaFX UI  →  DAO layer (Java classes)  →  JPA (Hibernate)  →  MariaDB
 ```
 
-- **UI layer** — JavaFX views/controllers (screens, buttons, forms)
-- **DAO layer** — plain Java classes that hold SQL and business rules
-  (e.g. `GradeDAO`, `StudentDAO`), keeping SQL out of the UI code
-- **JDBC** — Java's built-in database API (`Connection`, `PreparedStatement`,
-  `ResultSet`) used inside the DAO layer to talk to MariaDB
+- **UI layer** - JavaFX views/controllers (screens, buttons, forms)
+- **DAO layer** - plain Java classes that hold queries and business rules
+  (e.g. `GradeDAO`, `StudentDAO`), keeping database logic out of the UI code
+- **JPA** - Java's persistence API (`Entity`, `EntityManager`, JPQL)
+  used inside the DAO layer to talk to MariaDB via Hibernate
 
 ## Data access methods
 
@@ -80,7 +80,5 @@ Java method calls on DAO classes.
 
 ## Notes
 
-- Passwords are hashed with jBCrypt before being stored via
-  `UserDAO.createUser` / `authenticate`; the raw password is never stored.
-- All SQL uses `PreparedStatement` (not string-concatenated queries) to
-  prevent SQL injection.
+- Passwords are hashed with jBCrypt before being stored via `UserDAO.createUser` / `authenticate`; the raw password is never stored.
+- Queries use JPQL (not raw SQL) with bound parameters prevents SQL injection 
