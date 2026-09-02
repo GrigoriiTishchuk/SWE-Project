@@ -9,10 +9,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-/**
- * Admin dashboard — static layout matching the Figma design.
- * Everything is hardcoded/placeholder, nothing is connected to real data yet.
- */
+// Everything is hardcoded
+
 public class AdminDashboardPage extends BorderPane {
 
     public AdminDashboardPage() {

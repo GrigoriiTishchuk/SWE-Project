@@ -3,9 +3,8 @@ package com.edujournal.ui.admin;
 import com.edujournal.ui.PagePlaceholder;
 import javafx.scene.layout.BorderPane;
 
-/**
- * Skeleton page: admin / Student — no real content yet, placeholder only.
- */
+// placeholder only
+
 public class AdminStudentPage extends BorderPane {
 
     public AdminStudentPage() {

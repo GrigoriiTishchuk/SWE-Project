@@ -6,10 +6,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.VBox;
 
-/**
- * Builds the left navigation sidebar shared by every role's pages.
- * No FXML — just a plain Java helper that returns a VBox.
- */
+// left navigation sidebar for every role's pages.
+
 public class Sidebar {
 
     public record NavItem(String label, boolean active, Runnable onClick) {}

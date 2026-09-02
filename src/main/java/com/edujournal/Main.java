@@ -6,11 +6,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-/**
- * Application entry point. No FXML — pages are plain Java classes.
- * Run via Launcher (not this class directly) to avoid IntelliJ's
- * "JavaFX runtime components are missing" error.
- */
+// Run via Launcher (not this class directly) to avoid missing error
+
 public class Main extends Application {
 
     private static Stage stage;

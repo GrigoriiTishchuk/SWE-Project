@@ -4,11 +4,8 @@ import com.edujournal.Main;
 import com.edujournal.ui.Sidebar;
 import javafx.scene.layout.VBox;
 
-/**
- * Builds the Administrator sidebar. The nav item list lives here ONCE —
- * every admin page just calls AdminSidebar.build("<its own label>")
- * instead of repeating the whole list.
- */
+// every admin page just calls AdminSidebar.build("<its own label>"), instead of each page writing out all 8 nav links itself, just call one method and pass their own name
+
 public class AdminSidebar {
 
     public static VBox build(String active) {
