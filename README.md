@@ -107,7 +107,7 @@ sprints.
 - Key UI design elements created
 - Database structure designed
 
-🔗 [Sprint 1 Planning](Documents/Sprint_Reports/Sprint1/Sprint_1_Planning_Report.md)
+🔗 [Sprint 1 Planning](Documents/Sprint_Reports/Sprint1/Sprint_1_Planning_report.md)
 🔗 [Sprint 1 Review](Documents/Sprint_Reports/Sprint1/Sprint_1_Review_Report.md)
 
 ---
