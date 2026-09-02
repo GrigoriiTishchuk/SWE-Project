@@ -2,9 +2,13 @@ package com.edujournal.ui.admin;
 
 import com.edujournal.Main;
 import com.edujournal.ui.Sidebar;
+import com.edujournal.ui.common.CoursePage;
+import com.edujournal.ui.common.CourseReportPage;
+import com.edujournal.ui.common.OwnProfilePage;
+import com.edujournal.ui.common.StudentReportPage;
 import javafx.scene.layout.VBox;
 
-// every admin page just calls AdminSidebar.build("<its own label>"), instead of each page writing out all 8 nav links itself, just call one method and pass their own name
+// every admin page just calls AdminSidebar.build("<its own label>")
 
 public class AdminSidebar {
 
@@ -20,13 +24,13 @@ public class AdminSidebar {
                 new Sidebar.NavItem("Group", active.equals("Group"),
                         () -> Main.showPage(new AdminGroupPage())),
                 new Sidebar.NavItem("Course", active.equals("Course"),
-                        () -> Main.showPage(new AdminCoursePage())),
+                        () -> Main.showPage(new CoursePage(AdminSidebar.build("Course"), "Administrator"))),
                 new Sidebar.NavItem("Own Profile", active.equals("Own Profile"),
-                        () -> Main.showPage(new AdminOwnProfilePage())),
+                        () -> Main.showPage(new OwnProfilePage(AdminSidebar.build("Own Profile"), "Administrator"))),
                 new Sidebar.NavItem("Student's report", active.equals("Student's report"),
-                        () -> Main.showPage(new AdminStudentReportPage())),
+                        () -> Main.showPage(new StudentReportPage(AdminSidebar.build("Student's report"), "Administrator"))),
                 new Sidebar.NavItem("Course's report", active.equals("Course's report"),
-                        () -> Main.showPage(new AdminCourseReportPage()))
+                        () -> Main.showPage(new CourseReportPage(AdminSidebar.build("Course's report"), "Administrator")))
         );
     }
 }
