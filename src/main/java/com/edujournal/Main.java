@@ -6,7 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-// Run via Launcher (not this class directly) to avoid missing error
+// Run via Launcher to avoid missing error
 
 public class Main extends Application {
 
