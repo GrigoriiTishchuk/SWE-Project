@@ -25,10 +25,10 @@ public class StudentDashboardPage extends BorderPane {
         title.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
 
         HBox statCards = new HBox(16,
-                new StatCard("Average Grade", "4.83"),
-                new StatCard("Credits", "183"),
-                new StatCard("Current Courses", "4"),
-                new StatCard("Completed courses", "23")
+                new StatCard("Average Grade", "4.83", ""),
+                new StatCard("Credits", "183", ""),
+                new StatCard("Current Courses", "4", ""),
+                new StatCard("Completed courses", "23", "")
         );
 
         VBox courseOverview = buildCourseOverview();
