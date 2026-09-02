@@ -4,9 +4,8 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
-/**
- * Builds the placeholder center content shared by every skeleton page.
- */
+// info about the page
+
 public class PagePlaceholder {
 
     public static VBox build(String pageLabel, String roleTitle) {

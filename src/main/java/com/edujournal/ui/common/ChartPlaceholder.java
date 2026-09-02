@@ -4,6 +4,8 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
+// common chart placeholder for the dashboard
+
 public class ChartPlaceholder {
 
     public static VBox build(String title) {

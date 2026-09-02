@@ -10,6 +10,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
+// name, role, year
+
 public class TopBar {
 
     public static HBox build(String title, String role) {
