@@ -11,10 +11,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-/**
- * Skeleton login page — matches the Figma login screen fields.
- * No real authentication yet.
- */
+// No real authentication yet
+
 public class LoginPage extends HBox {
 
     private final TextField emailField = new TextField();
@@ -72,7 +70,7 @@ public class LoginPage extends HBox {
     }
 
     private void onForgotPassword() {
-        // TODO: forgot-password flow
+        // TODO: forgot-password logic
         System.out.println("Forgot password clicked");
     }
 }

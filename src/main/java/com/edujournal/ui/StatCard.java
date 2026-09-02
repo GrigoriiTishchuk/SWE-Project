@@ -4,10 +4,8 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
-/**
- * A small card showing one number, e.g. "Students / 518".
- * Static only — the value is just hardcoded text, no real data.
- */
+//  white boxes in dashboard
+
 public class StatCard extends VBox {
 
     public StatCard(String label, String value) {

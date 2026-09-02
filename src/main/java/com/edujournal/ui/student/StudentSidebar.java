@@ -4,10 +4,8 @@ import com.edujournal.Main;
 import com.edujournal.ui.Sidebar;
 import javafx.scene.layout.VBox;
 
-/**
- * Builds the Student sidebar. The nav item list lives here ONCE —
- * every student page just calls StudentSidebar.build("<its own label>").
- */
+// every student page just calls StudentSidebar.build("<its own label>"). The nav list is defined in one place. Every student page just calls that one method build
+
 public class StudentSidebar {
 
     public static VBox build(String active) {

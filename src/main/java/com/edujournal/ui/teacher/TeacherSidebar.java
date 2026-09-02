@@ -4,10 +4,8 @@ import com.edujournal.Main;
 import com.edujournal.ui.Sidebar;
 import javafx.scene.layout.VBox;
 
-/**
- * Builds the Teacher sidebar. The nav item list lives here ONCE —
- * every teacher page just calls TeacherSidebar.build("<its own label>").
- */
+// every teacher page just calls TeacherSidebar.build("<its own label>").
+
 public class TeacherSidebar {
 
     public static VBox build(String active) {
