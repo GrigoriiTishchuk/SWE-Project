@@ -8,7 +8,10 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 // No real authentication yet
@@ -19,30 +22,29 @@ public class LoginPage extends HBox {
     private final PasswordField passwordField = new PasswordField();
 
     public LoginPage() {
-        VBox banner = new VBox(8);
-        banner.setPadding(new Insets(40));
+        getChildren().addAll(buildBanner(), buildForm());
+    }
+
+    private VBox buildBanner() {
+        ImageView logo = new ImageView(new Image(
+                getClass().getResourceAsStream("/images/edujournal_logo.png")));
+        logo.setFitHeight(48);
+        logo.setPreserveRatio(true);
+
+        Label tagline = new Label("Teacher's Gradebook\nand Report Card System");
+        tagline.setStyle("-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2F6FED;");
+
+        VBox spacer = new VBox();
+        VBox.setVgrow(spacer, Priority.ALWAYS);
+
+        VBox banner = new VBox(logo, spacer, tagline);
+        banner.setPadding(new Insets(32));
         banner.setPrefWidth(400);
-        banner.setStyle("-fx-background-color: #EAF1FD;");
+        banner.setStyle("-fx-background-image: url('/images/background.jpg'); -fx-background-size: cover; -fx-background-position: center;");
+        return banner;
+    }
 
-        Label brand = new Label("EduJournal");
-        brand.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
-
-        Label tagline = new Label("Teacher's Gradebook and Report Card System");
-        tagline.setWrapText(true);
-        tagline.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #1B2A4A;");
-
-        banner.getChildren().addAll(brand, tagline);
-
-        VBox form = new VBox(12);
-        form.setPadding(new Insets(40));
-        form.setPrefWidth(400);
-
-        Label welcome = new Label("Welcome back");
-        welcome.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
-
-        Label subtitle = new Label("Sign into your account");
-        subtitle.setStyle("-fx-text-fill: #6B7280;");
-
+    private VBox buildForm() {
         emailField.setPromptText("Enter your email");
         passwordField.setPromptText("Enter your password");
 
@@ -54,14 +56,19 @@ public class LoginPage extends HBox {
         signIn.setStyle("-fx-background-color: #2F6FED; -fx-text-fill: white; -fx-padding: 10;");
         signIn.setOnAction(e -> onSignIn());
 
-        form.getChildren().addAll(
-                welcome, subtitle,
+        Label welcome = new Label("Welcome back");
+        welcome.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
+
+        VBox form = new VBox(12,
+                welcome,
+                new Label("Sign into your account"),
                 new Label("Email"), emailField,
                 new Label("Password"), passwordField,
                 forgotPassword, signIn
         );
-
-        getChildren().addAll(banner, form);
+        form.setPadding(new Insets(40));
+        form.setPrefWidth(400);
+        return form;
     }
 
     private void onSignIn() {
@@ -71,6 +78,5 @@ public class LoginPage extends HBox {
 
     private void onForgotPassword() {
         // TODO: forgot-password logic
-        System.out.println("Forgot password clicked");
     }
 }
