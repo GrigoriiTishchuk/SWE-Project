@@ -14,9 +14,9 @@ public class AdminSidebar {
 
     public static VBox build(String active) {
         return Sidebar.build(
-                "Administrator",
                 new Sidebar.NavItem("Dashboard", active.equals("Dashboard"),
                         () -> Main.showPage(new AdminDashboardPage())),
+                new Sidebar.SectionHeader("MANAGEMENT"),
                 new Sidebar.NavItem("Student", active.equals("Student"),
                         () -> Main.showPage(new AdminStudentPage())),
                 new Sidebar.NavItem("Teacher", active.equals("Teacher"),
@@ -27,6 +27,7 @@ public class AdminSidebar {
                         () -> Main.showPage(new CoursePage(AdminSidebar.build("Course"), "Administrator"))),
                 new Sidebar.NavItem("Own Profile", active.equals("Own Profile"),
                         () -> Main.showPage(new OwnProfilePage(AdminSidebar.build("Own Profile"), "Administrator"))),
+                new Sidebar.SectionHeader("REPORTS"),
                 new Sidebar.NavItem("Student's report", active.equals("Student's report"),
                         () -> Main.showPage(new StudentReportPage(AdminSidebar.build("Student's report"), "Administrator"))),
                 new Sidebar.NavItem("Course's report", active.equals("Course's report"),

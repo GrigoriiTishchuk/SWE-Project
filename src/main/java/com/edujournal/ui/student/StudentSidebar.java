@@ -12,11 +12,12 @@ public class StudentSidebar {
 
     public static VBox build(String active) {
         return Sidebar.build(
-                "Student",
                 new Sidebar.NavItem("Dashboard", active.equals("Dashboard"),
                         () -> Main.showPage(new StudentDashboardPage())),
+                new Sidebar.SectionHeader("MANAGEMENT"),
                 new Sidebar.NavItem("Own profile", active.equals("Own profile"),
                         () -> Main.showPage(new OwnProfilePage(StudentSidebar.build("Own profile"), "Student"))),
+                new Sidebar.SectionHeader("REPORTS"),
                 new Sidebar.NavItem("Student's report", active.equals("Student's report"),
                         () -> Main.showPage(new StudentReportPage(StudentSidebar.build("Student's report"), "Student")))
         );

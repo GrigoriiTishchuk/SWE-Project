@@ -2,6 +2,7 @@ package com.edujournal.ui;
 
 import com.edujournal.Main;
 import com.edujournal.ui.admin.AdminDashboardPage;
+import com.edujournal.ui.teacher.TeacherDashboardPage;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
@@ -73,7 +74,7 @@ public class LoginPage extends HBox {
 
     private void onSignIn() {
         // TODO: authenticate and navigate to the right dashboard by role
-        Main.showPage(new AdminDashboardPage());
+        Main.showPage(new TeacherDashboardPage());
     }
 
     private void onForgotPassword() {

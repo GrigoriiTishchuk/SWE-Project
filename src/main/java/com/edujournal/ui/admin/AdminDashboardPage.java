@@ -1,18 +1,14 @@
 package com.edujournal.ui.admin;
 
 import com.edujournal.ui.StatCard;
+import com.edujournal.ui.common.TopBar;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 
 // Everything is hardcoded
 
@@ -26,36 +22,8 @@ public class AdminDashboardPage extends BorderPane {
     private VBox buildContent() {
         VBox content = new VBox(20);
         content.setPadding(new Insets(24));
-
-        content.getChildren().addAll(buildTopBar(), buildStatCards(), buildBottomRow());
+        content.getChildren().addAll(TopBar.build("Dashboard", "Administrator"), buildStatCards(), buildBottomRow());
         return content;
-    }
-
-    private HBox buildTopBar() {
-        Label title = new Label("Dashboard");
-        title.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
-
-        HBox spacer = new HBox();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-
-        ComboBox<String> studyingYear = new ComboBox<>();
-        studyingYear.getItems().addAll("2025/2026", "2024/2025", "2023/2024");
-        studyingYear.setValue("2025/2026");
-
-        Circle avatar = new Circle(20, Color.web("#9CA3AF"));
-
-        Label name = new Label("Name Surname");
-        name.setStyle("-fx-font-weight: bold;");
-        Label role = new Label("Administrator");
-        role.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 11px;");
-
-        VBox userInfo = new VBox(2, name, role);
-        HBox userBox = new HBox(10, avatar, userInfo);
-        userBox.setAlignment(Pos.CENTER_LEFT);
-
-        HBox topBar = new HBox(16, title, spacer, studyingYear, userBox);
-        topBar.setAlignment(Pos.CENTER_LEFT);
-        return topBar;
     }
 
     private HBox buildStatCards() {
