@@ -26,10 +26,10 @@ public class TeacherDashboardPage extends BorderPane {
         title.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
 
         HBox statCards = new HBox(16,
-                new StatCard("Courses", "18"),
-                new StatCard("Groups", "18"),
-                new StatCard("Students", "515"),
-                new StatCard("Assessments", "202")
+                new StatCard("Courses", "18", ""),
+                new StatCard("Groups", "18", ""),
+                new StatCard("Students", "515", ""),
+                new StatCard("Assessments", "202", "")
         );
 
         VBox quickActions = buildQuickActions();
