@@ -1,6 +1,7 @@
 package com.edujournal.ui.teacher;
 
 import com.edujournal.ui.StatCard;
+import com.edujournal.ui.common.ChartPlaceholder;
 import com.edujournal.ui.common.TopBar;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -36,7 +37,7 @@ public class TeacherDashboardPage extends BorderPane {
     }
 
     private HBox buildBottomRow() {
-        return new HBox(16, buildQuickActions(), buildChartPlaceholder());
+        return new HBox(16, buildQuickActions(), ChartPlaceholder.build("My Courses Average Grade"));
     }
 
     private VBox buildQuickActions() {
@@ -56,23 +57,6 @@ public class TeacherDashboardPage extends BorderPane {
         HBox row3 = new HBox(8, new Button("Generate Group Report"));
 
         box.getChildren().addAll(heading, search, row1, row2, row3);
-        return box;
-    }
-
-    private VBox buildChartPlaceholder() {
-        VBox box = new VBox(8);
-        box.setPadding(new Insets(16));
-        box.setPrefWidth(260);
-        box.setStyle("-fx-background-color: white; -fx-border-color: #E5E7EB; "
-                + "-fx-border-radius: 8; -fx-background-radius: 8;");
-
-        Label heading = new Label("My Courses Average Grade");
-        heading.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-
-        Label placeholder = new Label("[chart placeholder]");
-        placeholder.setStyle("-fx-text-fill: #6B7280;");
-
-        box.getChildren().addAll(heading, placeholder);
         return box;
     }
 }

@@ -1,6 +1,8 @@
 package com.edujournal.ui.student;
 
 import com.edujournal.ui.StatCard;
+import com.edujournal.ui.common.ChartPlaceholder;
+import com.edujournal.ui.common.TopBar;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -20,24 +22,21 @@ public class StudentDashboardPage extends BorderPane {
     private VBox buildContent() {
         VBox content = new VBox(20);
         content.setPadding(new Insets(24));
-
-        Label title = new Label("Dashboard");
-        title.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
-
-        HBox statCards = new HBox(16,
-                new StatCard("Average Grade", "4.83", ""),
-                new StatCard("Credits", "183", ""),
-                new StatCard("Current Courses", "4", ""),
-                new StatCard("Completed courses", "23", "")
-        );
-
-        VBox courseOverview = buildCourseOverview();
-        VBox chartPlaceholder = buildChartPlaceholder("Personal Grade Distribution");
-
-        HBox bottomRow = new HBox(16, courseOverview, chartPlaceholder);
-
-        content.getChildren().addAll(title, statCards, bottomRow);
+        content.getChildren().addAll(TopBar.build("Dashboard", "Student"), buildStatCards(), buildBottomRow());
         return content;
+    }
+
+    private HBox buildStatCards() {
+        return new HBox(16,
+                new StatCard("Average Grade",     "4.83", "/images/av_grade_icon.png"),
+                new StatCard("Credits",           "183",  "/images/credits_icon.png"),
+                new StatCard("Current Courses",   "4",    "/images/current_course_icon.png"),
+                new StatCard("Completed Courses", "23",   "/images/course_icon.png")
+        );
+    }
+
+    private HBox buildBottomRow() {
+        return new HBox(16, buildCourseOverview(), ChartPlaceholder.build("Personal Grade Distribution"));
     }
 
     private VBox buildCourseOverview() {
@@ -67,22 +66,5 @@ public class StudentDashboardPage extends BorderPane {
         row.setPadding(new Insets(8));
         row.setStyle("-fx-background-color: #F3F4F6; -fx-background-radius: 6;");
         return row;
-    }
-
-    private VBox buildChartPlaceholder(String label) {
-        VBox box = new VBox(8);
-        box.setPadding(new Insets(16));
-        box.setPrefWidth(260);
-        box.setStyle("-fx-background-color: white; -fx-border-color: #E5E7EB; "
-                + "-fx-border-radius: 8; -fx-background-radius: 8;");
-
-        Label heading = new Label(label);
-        heading.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-
-        Label placeholder = new Label("[chart placeholder]");
-        placeholder.setStyle("-fx-text-fill: #6B7280;");
-
-        box.getChildren().addAll(heading, placeholder);
-        return box;
     }
 }
