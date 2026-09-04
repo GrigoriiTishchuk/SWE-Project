@@ -17,6 +17,8 @@ class InputValidatorTest {
     void isValidEmail() {
         assertTrue(inputValidator.isValidEmail("olenape@gmail.com"));
         assertFalse(inputValidator.isValidEmail("newmail.com"));
+        assertFalse(inputValidator.isValidEmail("newmail.com@"));
+        assertFalse(inputValidator.isValidEmail("@newmail.com"));
     }
 
     @org.junit.jupiter.api.Test
