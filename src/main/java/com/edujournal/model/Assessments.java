@@ -6,12 +6,12 @@ public class Assessments {
     private int id;
     private int courseId;
     private String title;
-    private String type;
+    private AssessmentType type;
     private double maxScore;
     private double weight;
     private LocalDate dueDate;
 
-    public Assessments(int id, int courseId, String title, String type, double maxScore, double weight, LocalDate dueDate) {
+    public Assessments(int id, int courseId, String title, AssessmentType type, double maxScore, double weight, LocalDate dueDate) {
         this.id = id;
         this.courseId = courseId;
         this.title = title;
@@ -33,9 +33,10 @@ public class Assessments {
         return title;
     }
 
-    public String getType() {
+    public AssessmentType getType() {
         return type;
     }
+
     public double getMaxScore() {
         return maxScore;
     }
