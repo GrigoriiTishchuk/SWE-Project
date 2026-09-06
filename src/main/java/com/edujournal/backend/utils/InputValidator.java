@@ -1,4 +1,4 @@
-package com.edujournal.backend;
+package com.edujournal.backend.utils;
 
 public class InputValidator {
     public static boolean isValidName(String name) {
