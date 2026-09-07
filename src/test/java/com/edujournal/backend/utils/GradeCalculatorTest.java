@@ -1,4 +1,4 @@
-package com.edujournal.backend;
+package com.edujournal.backend.utils;
 
 import org.junit.jupiter.api.Test;
 

@@ -1,4 +1,4 @@
-package com.edujournal.backend;
+package com.edujournal.backend.utils;
 
 import static org.junit.jupiter.api.Assertions.*;
 
