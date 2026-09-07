@@ -28,16 +28,20 @@ public class AdminDashboardPage extends BorderPane {
     }
 
     private HBox buildStatCards() {
-        return new HBox(16,
+        HBox box = new HBox(16,
                 new StatCard("Students", "518", "/images/student_icon.png"),
                 new StatCard("Teachers", "12",  "/images/teacher_icon.png"),
                 new StatCard("Courses",  "32",  "/images/course_icon.png"),
                 new StatCard("Groups",   "166", "/images/group_icon.png")
         );
+        box.setAlignment(javafx.geometry.Pos.CENTER);
+        return box;
     }
 
     private HBox buildBottomRow() {
-        return new HBox(16, buildQuickActions(), ChartPlaceholder.build("Average Grade"));
+        HBox box = new HBox(16, buildQuickActions(), ChartPlaceholder.build("Average Grade"));
+        box.setAlignment(javafx.geometry.Pos.CENTER);
+        return box;
     }
 
     private VBox buildQuickActions() {
