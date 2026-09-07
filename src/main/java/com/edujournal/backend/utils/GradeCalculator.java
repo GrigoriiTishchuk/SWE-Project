@@ -1,4 +1,4 @@
-package com.edujournal.backend;
+package com.edujournal.backend.utils;
 
 public class GradeCalculator {
     public static double calculateAverage(double[] grades) {
