@@ -32,7 +32,7 @@ public class CourseGradeService {
                 typeAverages.add(average);
                 typeWeights.add(assessmentsForType.get(type).get(0).getWeight());
             } else {
-                double avg = calculateCategoryAverage(assessmentsForType.get(type), gradesForAssessment);
+                double avg = calculateTypeAverage(assessmentsForType.get(type), gradesForAssessment);
                 typeAverages.add(avg);
                 typeWeights.add(assessmentsForType.get(type).get(0).getWeight());
             }
@@ -43,7 +43,7 @@ public class CourseGradeService {
     }
 
     // Method to calculate the average score for a category of assessments
-    private double calculateCategoryAverage(List<Assessments> assessments, Map<Integer, List<Grades>> gradesForAssessment) {
+    private double calculateTypeAverage(List<Assessments> assessments, Map<Integer, List<Grades>> gradesForAssessment) {
         List<Double> normalizedScores = new ArrayList<>();
 
         for (Assessments a : assessments) {
