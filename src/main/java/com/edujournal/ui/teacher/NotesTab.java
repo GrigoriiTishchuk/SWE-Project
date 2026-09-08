@@ -1,0 +1,15 @@
+package com.edujournal.ui.teacher;
+
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.control.Label;
+
+public class NotesTab {
+
+    public static Node build(String course, String group) {
+        Label lbl = new Label("Notes content goes here.");
+        lbl.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 14px;");
+        lbl.setAlignment(Pos.TOP_LEFT);
+        return lbl;
+    }
+}
