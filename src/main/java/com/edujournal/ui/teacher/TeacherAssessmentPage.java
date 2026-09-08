@@ -40,6 +40,11 @@ public class TeacherAssessmentPage extends BorderPane {
     private ComboBox<String> groupCombo;
 
     public TeacherAssessmentPage() {
+        this(0);
+    }
+
+    public TeacherAssessmentPage(int initialTab) {
+        activeTab = initialTab;
         setLeft(TeacherSidebar.build("Gradebook"));
         setCenter(buildContent());
     }
@@ -171,7 +176,7 @@ public class TeacherAssessmentPage extends BorderPane {
         totalRow.setPadding(new Insets(6, 8, 6, 8));
         totalRow.setStyle("-fx-background-color: #F3F4F6; -fx-border-color: #E5E7EB; -fx-border-radius: 4;");
         Label totalName = new Label("Total (Weighted)");
-        Label totalType = new Label("Weighted total");
+        Label totalType = new Label("100%");
         totalType.setStyle("-fx-text-fill: #6B7280;");
         Region totalSpacer = new Region();
         HBox.setHgrow(totalSpacer, Priority.ALWAYS);
