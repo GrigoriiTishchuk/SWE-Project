@@ -186,14 +186,16 @@ public class TeacherAssessmentPage extends BorderPane {
         fixSave.setMaxWidth(Double.MAX_VALUE);
         fixSave.setStyle(BLUE_BTN);
 
-        VBox leftPanel;
-        if (isFirst) {
-            leftPanel = new VBox(12, table, totalRow, fixSave);
-        } else {
-            Label dbNote = new Label("* Data for \"" + courseCombo.getValue() + "\" will be loaded from DB");
-            dbNote.setStyle("-fx-text-fill: #9CA3AF; -fx-font-size: 11px;");
-            leftPanel = new VBox(12, dbNote, table, totalRow, fixSave);
+        if (!isFirst) {
+            Label placeholder = new Label("Data for \"" + courseCombo.getValue() + "\" will be loaded from DB");
+            placeholder.setWrapText(true);
+            placeholder.setMaxWidth(348);
+            placeholder.setAlignment(javafx.geometry.Pos.CENTER);
+            placeholder.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+            table.setPlaceholder(placeholder);
         }
+
+        VBox leftPanel = new VBox(12, table, totalRow, fixSave);
         leftPanel.setPadding(new Insets(16));
         leftPanel.setStyle(PANEL_STYLE);
         leftPanel.setPrefWidth(380);

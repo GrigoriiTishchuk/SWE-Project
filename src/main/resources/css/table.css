@@ -22,6 +22,6 @@
 }
 
 .table-view .table-row-cell:selected {
-    -fx-background-color: #DBEAFE;
-    -fx-text-fill: black;
+    -fx-background-color: #2563EB;
+    -fx-text-fill: white;
 }
