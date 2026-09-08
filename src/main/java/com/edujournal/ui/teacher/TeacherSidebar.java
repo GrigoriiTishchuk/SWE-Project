@@ -19,7 +19,7 @@ public class TeacherSidebar {
                 new Sidebar.NavItem("Courses", active.equals("Courses"),
                         () -> Main.showPage(new CoursePage(TeacherSidebar.build("Courses"), "Teacher"))),
                 new Sidebar.NavItem("Gradebook", active.equals("Gradebook"),
-                        () -> Main.showPage(new TeacherAssessmentPage())),
+                        () -> Main.showPage(new TeacherGradebookPage())),
                 new Sidebar.NavItem("Own Profile", active.equals("Own Profile"),
                         () -> Main.showPage(new OwnProfilePage(TeacherSidebar.build("Own Profile"), "Teacher"))),
                 new Sidebar.SectionHeader("REPORTS"),

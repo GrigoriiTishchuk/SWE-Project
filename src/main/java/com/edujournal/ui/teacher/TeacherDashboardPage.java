@@ -59,13 +59,13 @@ public class TeacherDashboardPage extends BorderPane {
         search.setPromptText("Type the name");
 
         Button addAssessment = new Button("Add assessment");
-        addAssessment.setOnAction(e -> Main.showPage(new TeacherAssessmentPage(1)));
+        addAssessment.setOnAction(e -> Main.showPage(new TeacherGradebookPage(1)));
 
         Button viewCourses = new Button("View all courses");
         viewCourses.setOnAction(e -> Main.showPage(new CoursePage(TeacherSidebar.build("Courses"), "Teacher")));
 
         Button addGrade = new Button("Add grade");
-        addGrade.setOnAction(e -> Main.showPage(new TeacherAssessmentPage(0)));
+        addGrade.setOnAction(e -> Main.showPage(new TeacherGradebookPage(0)));
 
         HBox row1 = new HBox(8, addAssessment, viewCourses);
         HBox row2 = new HBox(8, addGrade, new Button("View all groups"));
