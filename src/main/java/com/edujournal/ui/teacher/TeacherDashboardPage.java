@@ -1,7 +1,9 @@
 package com.edujournal.ui.teacher;
 
+import com.edujournal.Main;
 import com.edujournal.ui.StatCard;
 import com.edujournal.ui.common.ChartPlaceholder;
+import com.edujournal.ui.common.CoursePage;
 import com.edujournal.ui.common.TopBar;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -56,8 +58,17 @@ public class TeacherDashboardPage extends BorderPane {
         TextField search = new TextField();
         search.setPromptText("Type the name");
 
-        HBox row1 = new HBox(8, new Button("Add assessment"), new Button("View all courses"));
-        HBox row2 = new HBox(8, new Button("Add grade"),      new Button("View all groups"));
+        Button addAssessment = new Button("Add assessment");
+        addAssessment.setOnAction(e -> Main.showPage(new TeacherAssessmentPage(1)));
+
+        Button viewCourses = new Button("View all courses");
+        viewCourses.setOnAction(e -> Main.showPage(new CoursePage(TeacherSidebar.build("Courses"), "Teacher")));
+
+        Button addGrade = new Button("Add grade");
+        addGrade.setOnAction(e -> Main.showPage(new TeacherAssessmentPage(0)));
+
+        HBox row1 = new HBox(8, addAssessment, viewCourses);
+        HBox row2 = new HBox(8, addGrade, new Button("View all groups"));
         HBox row3 = new HBox(8, new Button("Generate Group Report"));
 
         box.getChildren().addAll(heading, search, row1, row2, row3);
