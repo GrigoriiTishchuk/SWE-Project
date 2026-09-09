@@ -1,8 +1,10 @@
-package com.edujournal.ui.teacher;
+package com.edujournal.view.teacher;
 
-import com.edujournal.ui.StatCard;
-import com.edujournal.ui.common.ChartPlaceholder;
-import com.edujournal.ui.common.TopBar;
+import com.edujournal.Main;
+import com.edujournal.view.StatCard;
+import com.edujournal.view.common.ChartPlaceholder;
+import com.edujournal.view.common.CoursePage;
+import com.edujournal.view.common.TopBar;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -28,16 +30,20 @@ public class TeacherDashboardPage extends BorderPane {
     }
 
     private HBox buildStatCards() {
-        return new HBox(16,
+        HBox box = new HBox(16,
                 new StatCard("Courses",     "18",  "/images/course_icon.png"),
                 new StatCard("Groups",      "18",  "/images/group_icon.png"),
                 new StatCard("Students",    "515", "/images/student_icon.png"),
                 new StatCard("Assessments", "202", "/images/assessement_icon.png")
         );
+        box.setAlignment(javafx.geometry.Pos.CENTER);
+        return box;
     }
 
     private HBox buildBottomRow() {
-        return new HBox(16, buildQuickActions(), ChartPlaceholder.build("My Courses Average Grade"));
+        HBox box = new HBox(16, buildQuickActions(), ChartPlaceholder.build("My Courses Average Grade"));
+        box.setAlignment(javafx.geometry.Pos.CENTER);
+        return box;
     }
 
     private VBox buildQuickActions() {
@@ -52,8 +58,17 @@ public class TeacherDashboardPage extends BorderPane {
         TextField search = new TextField();
         search.setPromptText("Type the name");
 
-        HBox row1 = new HBox(8, new Button("Add assessment"), new Button("View all courses"));
-        HBox row2 = new HBox(8, new Button("Add grade"),      new Button("View all groups"));
+        Button addAssessment = new Button("Add assessment");
+        addAssessment.setOnAction(e -> Main.showPage(new TeacherGradebookPage(1)));
+
+        Button viewCourses = new Button("View all courses");
+        viewCourses.setOnAction(e -> Main.showPage(new CoursePage(TeacherSidebar.build("Courses"), "Teacher")));
+
+        Button addGrade = new Button("Add grade");
+        addGrade.setOnAction(e -> Main.showPage(new TeacherGradebookPage(0)));
+
+        HBox row1 = new HBox(8, addAssessment, viewCourses);
+        HBox row2 = new HBox(8, addGrade, new Button("View all groups"));
         HBox row3 = new HBox(8, new Button("Generate Group Report"));
 
         box.getChildren().addAll(heading, search, row1, row2, row3);

@@ -1,4 +1,4 @@
-package com.edujournal.ui.common;
+package com.edujournal.view.common;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
