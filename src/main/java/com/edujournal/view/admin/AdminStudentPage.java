@@ -1,6 +1,6 @@
-package com.edujournal.ui.admin;
+package com.edujournal.view.admin;
 
-import com.edujournal.ui.PagePlaceholder;
+import com.edujournal.view.PagePlaceholder;
 import javafx.scene.layout.BorderPane;
 
 // placeholder only

@@ -1,6 +1,6 @@
-package com.edujournal.ui.common;
+package com.edujournal.view.common;
 
-import com.edujournal.ui.PagePlaceholder;
+import com.edujournal.view.PagePlaceholder;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 

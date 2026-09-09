@@ -1,9 +1,9 @@
-package com.edujournal.ui.student;
+package com.edujournal.view.student;
 
 import com.edujournal.Main;
-import com.edujournal.ui.Sidebar;
-import com.edujournal.ui.common.OwnProfilePage;
-import com.edujournal.ui.common.StudentReportPage;
+import com.edujournal.view.Sidebar;
+import com.edujournal.view.common.OwnProfilePage;
+import com.edujournal.view.common.StudentReportPage;
 import javafx.scene.layout.VBox;
 
 // every student page just calls StudentSidebar.build("<its own label>")

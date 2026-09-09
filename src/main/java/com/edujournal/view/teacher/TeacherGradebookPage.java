@@ -1,7 +1,7 @@
-package com.edujournal.ui.teacher;
+package com.edujournal.view.teacher;
 
-import com.edujournal.ui.common.CoursePage;
-import com.edujournal.ui.common.TopBar;
+import com.edujournal.view.common.CoursePage;
+import com.edujournal.view.common.TopBar;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;

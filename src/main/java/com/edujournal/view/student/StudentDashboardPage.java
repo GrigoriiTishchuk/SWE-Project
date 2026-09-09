@@ -1,8 +1,8 @@
-package com.edujournal.ui.student;
+package com.edujournal.view.student;
 
-import com.edujournal.ui.StatCard;
-import com.edujournal.ui.common.ChartPlaceholder;
-import com.edujournal.ui.common.TopBar;
+import com.edujournal.view.StatCard;
+import com.edujournal.view.common.ChartPlaceholder;
+import com.edujournal.view.common.TopBar;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
