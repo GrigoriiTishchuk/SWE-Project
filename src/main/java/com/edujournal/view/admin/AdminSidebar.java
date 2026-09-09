@@ -1,11 +1,11 @@
-package com.edujournal.ui.admin;
+package com.edujournal.view.admin;
 
 import com.edujournal.Main;
-import com.edujournal.ui.Sidebar;
-import com.edujournal.ui.common.CoursePage;
-import com.edujournal.ui.common.CourseReportPage;
-import com.edujournal.ui.common.OwnProfilePage;
-import com.edujournal.ui.common.StudentReportPage;
+import com.edujournal.view.Sidebar;
+import com.edujournal.view.common.CoursePage;
+import com.edujournal.view.common.CourseReportPage;
+import com.edujournal.view.common.OwnProfilePage;
+import com.edujournal.view.common.StudentReportPage;
 import javafx.scene.layout.VBox;
 
 // every admin page just calls AdminSidebar.build("<its own label>")
@@ -17,14 +17,14 @@ public class AdminSidebar {
                 new Sidebar.NavItem("Dashboard", active.equals("Dashboard"),
                         () -> Main.showPage(new AdminDashboardPage())),
                 new Sidebar.SectionHeader("MANAGEMENT"),
-                new Sidebar.NavItem("Student", active.equals("Student"),
+                new Sidebar.NavItem("Students", active.equals("Students"),
                         () -> Main.showPage(new AdminStudentPage())),
-                new Sidebar.NavItem("Teacher", active.equals("Teacher"),
+                new Sidebar.NavItem("Teachers", active.equals("Teachers"),
                         () -> Main.showPage(new AdminTeacherPage())),
-                new Sidebar.NavItem("Group", active.equals("Group"),
+                new Sidebar.NavItem("Groups", active.equals("Groups"),
                         () -> Main.showPage(new AdminGroupPage())),
-                new Sidebar.NavItem("Course", active.equals("Course"),
-                        () -> Main.showPage(new CoursePage(AdminSidebar.build("Course"), "Administrator"))),
+                new Sidebar.NavItem("Courses", active.equals("Courses"),
+                        () -> Main.showPage(new CoursePage(AdminSidebar.build("Courses"), "Administrator"))),
                 new Sidebar.NavItem("Own Profile", active.equals("Own Profile"),
                         () -> Main.showPage(new OwnProfilePage(AdminSidebar.build("Own Profile"), "Administrator"))),
                 new Sidebar.SectionHeader("REPORTS"),

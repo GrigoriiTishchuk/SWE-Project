@@ -1,10 +1,10 @@
-package com.edujournal.ui.teacher;
+package com.edujournal.view.teacher;
 
 import com.edujournal.Main;
-import com.edujournal.ui.Sidebar;
-import com.edujournal.ui.common.CoursePage;
-import com.edujournal.ui.common.CourseReportPage;
-import com.edujournal.ui.common.OwnProfilePage;
+import com.edujournal.view.Sidebar;
+import com.edujournal.view.common.CoursePage;
+import com.edujournal.view.common.CourseReportPage;
+import com.edujournal.view.common.OwnProfilePage;
 import javafx.scene.layout.VBox;
 
 // every teacher page just calls TeacherSidebar.build("<its own label>")
@@ -16,10 +16,10 @@ public class TeacherSidebar {
                 new Sidebar.NavItem("Dashboard", active.equals("Dashboard"),
                         () -> Main.showPage(new TeacherDashboardPage())),
                 new Sidebar.SectionHeader("MANAGEMENT"),
-                new Sidebar.NavItem("Course", active.equals("Course"),
-                        () -> Main.showPage(new CoursePage(TeacherSidebar.build("Course"), "Teacher"))),
-                new Sidebar.NavItem("Assessment", active.equals("Assessment"),
-                        () -> Main.showPage(new TeacherAssessmentPage())),
+                new Sidebar.NavItem("Courses", active.equals("Courses"),
+                        () -> Main.showPage(new CoursePage(TeacherSidebar.build("Courses"), "Teacher"))),
+                new Sidebar.NavItem("Gradebook", active.equals("Gradebook"),
+                        () -> Main.showPage(new TeacherGradebookPage())),
                 new Sidebar.NavItem("Own Profile", active.equals("Own Profile"),
                         () -> Main.showPage(new OwnProfilePage(TeacherSidebar.build("Own Profile"), "Teacher"))),
                 new Sidebar.SectionHeader("REPORTS"),

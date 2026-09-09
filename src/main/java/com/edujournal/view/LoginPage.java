@@ -1,9 +1,7 @@
-package com.edujournal.ui;
+package com.edujournal.view;
 
 import com.edujournal.Main;
-import com.edujournal.ui.admin.AdminDashboardPage;
-import com.edujournal.ui.student.StudentDashboardPage;
-import com.edujournal.ui.teacher.TeacherDashboardPage;
+import com.edujournal.view.teacher.TeacherDashboardPage;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
@@ -34,14 +32,14 @@ public class LoginPage extends HBox {
         logo.setPreserveRatio(true);
 
         Label tagline = new Label("Teacher's Gradebook\nand Report Card System");
-        tagline.setStyle("-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2F6FED;");
+        tagline.setStyle("-fx-font-size: 40px; -fx-font-weight: bold; -fx-text-fill: #2F6FED;");
 
         VBox spacer = new VBox();
         VBox.setVgrow(spacer, Priority.ALWAYS);
 
         VBox banner = new VBox(logo, spacer, tagline);
         banner.setPadding(new Insets(32));
-        banner.setPrefWidth(400);
+        banner.setPrefWidth(600);
         banner.setStyle("-fx-background-image: url('/images/background.jpg'); -fx-background-size: cover; -fx-background-position: center;");
         return banner;
     }
@@ -70,12 +68,13 @@ public class LoginPage extends HBox {
         );
         form.setPadding(new Insets(40));
         form.setPrefWidth(400);
+        form.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
         return form;
     }
 
     private void onSignIn() {
         // TODO: authenticate and navigate to the right dashboard by role
-        Main.showPage(new StudentDashboardPage());
+        Main.showPage(new TeacherDashboardPage());
     }
 
     private void onForgotPassword() {
