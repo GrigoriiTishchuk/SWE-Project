@@ -1,4 +1,4 @@
-package com.edujournal.database;
+package com.edujournal;
 
 import com.edujournal.dao.UserDAO;
 import com.edujournal.entity.User;
