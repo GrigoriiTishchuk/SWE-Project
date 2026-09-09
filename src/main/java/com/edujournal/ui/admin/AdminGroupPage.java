@@ -8,7 +8,7 @@ import javafx.scene.layout.BorderPane;
 public class AdminGroupPage extends BorderPane {
 
     public AdminGroupPage() {
-        setLeft(AdminSidebar.build("Group"));
-        setCenter(PagePlaceholder.build("Group", "Administrator"));
+        setLeft(AdminSidebar.build("Groups"));
+        setCenter(PagePlaceholder.build("Groups", "Administrator"));
     }
 }

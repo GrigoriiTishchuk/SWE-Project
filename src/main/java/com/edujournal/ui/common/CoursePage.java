@@ -14,7 +14,10 @@ public class CoursePage extends BorderPane {
         {"WEB-Project",                    "TXK3000-105"}
     };
 
+    private final String role;
+
     public CoursePage(VBox sidebar, String role) {
+        this.role = role;
         setLeft(sidebar);
         setCenter(buildContent());
     }
@@ -23,10 +26,7 @@ public class CoursePage extends BorderPane {
         VBox box = new VBox(12);
         box.setPadding(new Insets(24));
 
-        Label title = new Label("Courses");
-        title.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
-
-        box.getChildren().add(title);
+        box.getChildren().add(TopBar.build("Courses", role));
 
         for (String[] course : COURSES) {
             Label name = new Label(course[0]);

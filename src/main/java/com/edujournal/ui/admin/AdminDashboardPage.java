@@ -1,7 +1,9 @@
 package com.edujournal.ui.admin;
 
+import com.edujournal.Main;
 import com.edujournal.ui.StatCard;
 import com.edujournal.ui.common.ChartPlaceholder;
+import com.edujournal.ui.common.CoursePage;
 import com.edujournal.ui.common.TopBar;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -56,18 +58,25 @@ public class AdminDashboardPage extends BorderPane {
         TextField search = new TextField();
         search.setPromptText("Type the name");
 
-        HBox addButtons = new HBox(8,
-                new Button("Add student"),
-                new Button("Add teacher"),
-                new Button("Add course"),
-                new Button("Add group")
-        );
-        HBox viewButtons = new HBox(8,
-                new Button("View all students"),
-                new Button("View all teachers"),
-                new Button("View all courses"),
-                new Button("View all groups")
-        );
+        Button addStudent  = new Button("Add student");
+        Button addTeacher  = new Button("Add teacher");
+        Button addCourse   = new Button("Add course");
+        Button addGroup    = new Button("Add group");
+
+        Button viewStudents = new Button("View all students");
+        viewStudents.setOnAction(e -> Main.showPage(new AdminStudentPage()));
+
+        Button viewTeachers = new Button("View all teachers");
+        viewTeachers.setOnAction(e -> Main.showPage(new AdminTeacherPage()));
+
+        Button viewCourses = new Button("View all courses");
+        viewCourses.setOnAction(e -> Main.showPage(new CoursePage(AdminSidebar.build("Courses"), "Administrator")));
+
+        Button viewGroups = new Button("View all groups");
+        viewGroups.setOnAction(e -> Main.showPage(new AdminGroupPage()));
+
+        HBox addButtons  = new HBox(8, addStudent, addTeacher, addCourse, addGroup);
+        HBox viewButtons = new HBox(8, viewStudents, viewTeachers, viewCourses, viewGroups);
 
         box.getChildren().addAll(heading, search, addButtons, viewButtons);
         return box;
