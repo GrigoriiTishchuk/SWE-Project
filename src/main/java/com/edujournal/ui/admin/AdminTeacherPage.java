@@ -8,7 +8,7 @@ import javafx.scene.layout.BorderPane;
 public class AdminTeacherPage extends BorderPane {
 
     public AdminTeacherPage() {
-        setLeft(AdminSidebar.build("Teacher"));
-        setCenter(PagePlaceholder.build("Teacher", "Administrator"));
+        setLeft(AdminSidebar.build("Teachers"));
+        setCenter(PagePlaceholder.build("Teachers", "Administrator"));
     }
 }
