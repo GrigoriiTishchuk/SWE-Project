@@ -1,6 +1,6 @@
-package com.edujournal.ui;
+package com.edujournal.view;
 
-import com.edujournal.ui.common.TopBar;
+import com.edujournal.view.common.TopBar;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;

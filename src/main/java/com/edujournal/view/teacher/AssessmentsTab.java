@@ -1,8 +1,8 @@
-package com.edujournal.ui.teacher;
+package com.edujournal.view.teacher;
 
 import com.edujournal.model.Assessments;
 import com.edujournal.model.AssessmentType;
-import com.edujournal.ui.common.CoursePage;
+import com.edujournal.view.common.CoursePage;
 import java.util.List;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;

@@ -1,6 +1,6 @@
-package com.edujournal.ui.teacher;
+package com.edujournal.view.teacher;
 
-import com.edujournal.ui.common.CoursePage;
+import com.edujournal.view.common.CoursePage;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Node;

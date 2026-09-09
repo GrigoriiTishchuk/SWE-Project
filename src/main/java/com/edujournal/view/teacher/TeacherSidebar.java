@@ -1,10 +1,10 @@
-package com.edujournal.ui.teacher;
+package com.edujournal.view.teacher;
 
 import com.edujournal.Main;
-import com.edujournal.ui.Sidebar;
-import com.edujournal.ui.common.CoursePage;
-import com.edujournal.ui.common.CourseReportPage;
-import com.edujournal.ui.common.OwnProfilePage;
+import com.edujournal.view.Sidebar;
+import com.edujournal.view.common.CoursePage;
+import com.edujournal.view.common.CourseReportPage;
+import com.edujournal.view.common.OwnProfilePage;
 import javafx.scene.layout.VBox;
 
 // every teacher page just calls TeacherSidebar.build("<its own label>")

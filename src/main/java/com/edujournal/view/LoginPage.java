@@ -1,9 +1,7 @@
-package com.edujournal.ui;
+package com.edujournal.view;
 
 import com.edujournal.Main;
-import com.edujournal.ui.admin.AdminDashboardPage;
-import com.edujournal.ui.student.StudentDashboardPage;
-import com.edujournal.ui.teacher.TeacherDashboardPage;
+import com.edujournal.view.teacher.TeacherDashboardPage;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;

@@ -1,4 +1,4 @@
-package com.edujournal.ui.teacher;
+package com.edujournal.view.teacher;
 
 import javafx.geometry.Pos;
 import javafx.scene.Node;

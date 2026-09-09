@@ -1,10 +1,10 @@
-package com.edujournal.ui.admin;
+package com.edujournal.view.admin;
 
 import com.edujournal.Main;
-import com.edujournal.ui.StatCard;
-import com.edujournal.ui.common.ChartPlaceholder;
-import com.edujournal.ui.common.CoursePage;
-import com.edujournal.ui.common.TopBar;
+import com.edujournal.view.StatCard;
+import com.edujournal.view.common.ChartPlaceholder;
+import com.edujournal.view.common.CoursePage;
+import com.edujournal.view.common.TopBar;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;

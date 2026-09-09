@@ -1,4 +1,4 @@
-package com.edujournal.ui;
+package com.edujournal.view;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
