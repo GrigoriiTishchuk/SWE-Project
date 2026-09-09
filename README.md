@@ -20,7 +20,7 @@ Our goal is to make managing student grades and academic performance easier for 
 - Make it easier for teachers to enter and manage student grades
 - Allow teachers to create accurate report cards more easily
 - Provide a simple and user-friendly interface for managing student records
-- Keep student and grade information organized in a rliable database
+- Keep student and grade information organized in a reliable database
 
 ### Key Features
 
