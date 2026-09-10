@@ -3,9 +3,9 @@ package com.edujournal.backend.service;
 import com.edujournal.backend.utils.BestScore;
 import com.edujournal.backend.utils.GradeCalculator;
 import com.edujournal.backend.utils.GradeNormalizer;
-import com.edujournal.model.AssessmentType;
-import com.edujournal.model.Assessments;
-import com.edujournal.model.Grades;
+import com.edujournal.entity.AssessmentType;
+import com.edujournal.entity.Assessments;
+import com.edujournal.entity.Grades;
 
 import java.util.ArrayList;
 import java.util.List;

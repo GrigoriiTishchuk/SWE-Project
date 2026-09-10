@@ -1,18 +1,18 @@
 package com.edujournal.model;
 
+import com.edujournal.entity.AssessmentType;
+
 import java.time.LocalDate;
 
-public class Assessments {
-    private int id;
-    private int courseId;
+public class AssessmentsDTO {
+    private Integer courseId;
     private String title;
     private AssessmentType type;
-    private double maxScore;
-    private double weight;
+    private Double maxScore;
+    private Double weight;
     private LocalDate dueDate;
 
-    public Assessments(int id, int courseId, String title, AssessmentType type, double maxScore, double weight, LocalDate dueDate) {
-        this.id = id;
+    public AssessmentsDTO(Integer courseId, String title, AssessmentType type, Double maxScore, Double weight, LocalDate dueDate) {
         this.courseId = courseId;
         this.title = title;
         this.type = type;
@@ -21,11 +21,7 @@ public class Assessments {
         this.dueDate = dueDate;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public int getCourseId() {
+    public Integer getCourseId() {
         return courseId;
     }
 
@@ -37,15 +33,17 @@ public class Assessments {
         return type;
     }
 
-    public double getMaxScore() {
+    public Double getMaxScore() {
         return maxScore;
     }
 
-    public double getWeight() {
+    public Double getWeight() {
         return weight;
     }
 
     public LocalDate getDueDate() {
         return dueDate;
     }
+
 }
+
