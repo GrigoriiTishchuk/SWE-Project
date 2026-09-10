@@ -1,7 +1,8 @@
 package com.edujournal.view.teacher;
 
-import com.edujournal.model.Assessments;
-import com.edujournal.model.AssessmentType;
+import com.edujournal.entity.Assessments;
+import com.edujournal.entity.AssessmentType;
+import com.edujournal.model.AssessmentsDTO;
 import com.edujournal.view.common.CoursePage;
 import java.util.List;
 import javafx.beans.property.SimpleStringProperty;
@@ -25,29 +26,29 @@ public class AssessmentsTab {
     public static Node build(String course, String group) {
         boolean isFirst = course.equals(CoursePage.COURSES[0][0]) && group.equals("TVT25K-O");
 
-        ObservableList<Assessments> data = isFirst
+        ObservableList<AssessmentsDTO> data = isFirst
                 ? FXCollections.observableArrayList(
-                        new Assessments(1, 1, "As1",   AssessmentType.INCLASSTASK, 100, 0.1, null),
-                        new Assessments(2, 1, "As2",   AssessmentType.INCLASSTASK, 100, 0.1, null),
-                        new Assessments(3, 1, "As3",   AssessmentType.HOMETASK,    100, 0.1, null),
-                        new Assessments(4, 1, "Exam1", AssessmentType.EXAM1,       100, 0.2, null),
-                        new Assessments(5, 1, "As4",   AssessmentType.INCLASSTASK, 100, 0.1, null),
-                        new Assessments(6, 1, "As5",   AssessmentType.HOMETASK,    100, 0.1, null),
-                        new Assessments(7, 1, "As6",   AssessmentType.INCLASSTASK, 100, 0.1, null),
-                        new Assessments(8, 1, "Exam2", AssessmentType.EXAM2,       100, 0.2, null))
+                        new AssessmentsDTO(1, "As1",   AssessmentType.INCLASSTASK, 100.0, 0.1, null),
+                        new AssessmentsDTO(1, "As2",   AssessmentType.INCLASSTASK, 100.0, 0.1, null),
+                        new AssessmentsDTO(1, "As3",   AssessmentType.HOMETASK,    100.0, 0.1, null),
+                        new AssessmentsDTO(1, "Exam1", AssessmentType.EXAM1,       100.0, 0.2, null),
+                        new AssessmentsDTO(1, "As4",   AssessmentType.INCLASSTASK, 100.0, 0.1, null),
+                        new AssessmentsDTO(1, "As5",   AssessmentType.HOMETASK,    100.0, 0.1, null),
+                        new AssessmentsDTO(1, "As6",   AssessmentType.INCLASSTASK, 100.0, 0.1, null),
+                        new AssessmentsDTO(1, "Exam2", AssessmentType.EXAM2,       100.0, 0.2, null))
                 : FXCollections.observableArrayList();
 
         // --- Table ---
-        TableColumn<Assessments, String> nameCol = new TableColumn<>("Name");
+        TableColumn<AssessmentsDTO, String> nameCol = new TableColumn<>("Name");
         nameCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getTitle()));
 
-        TableColumn<Assessments, String> typeCol = new TableColumn<>("Type");
+        TableColumn<AssessmentsDTO, String> typeCol = new TableColumn<>("Type");
         typeCol.setCellValueFactory(d -> new SimpleStringProperty(typeLabel(d.getValue().getType())));
 
-        TableColumn<Assessments, String> weightCol = new TableColumn<>("Weight");
+        TableColumn<AssessmentsDTO, String> weightCol = new TableColumn<>("Weight");
         weightCol.setCellValueFactory(d -> new SimpleStringProperty(String.valueOf(d.getValue().getWeight())));
 
-        TableView<Assessments> table = new TableView<>(data);
+        TableView<AssessmentsDTO> table = new TableView<>(data);
         table.getColumns().addAll(List.of(nameCol, typeCol, weightCol));
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         table.setPrefHeight(320);
@@ -111,7 +112,7 @@ public class AssessmentsTab {
             AssessmentType type = typeCombo.getValue();
             Integer pos         = posCombo.getValue();
             if (!name.isEmpty() && type != null && pos != null) {
-                data.add(pos - 1, new Assessments(data.size() + 1, 1, name, type, 100, 1.0, null));
+                data.add(pos - 1, new AssessmentsDTO( 1, name, type, 100.0, 1.0, null));
                 nameField.clear();
                 typeCombo.setValue(null);
                 posCombo.setValue(null);
