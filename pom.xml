@@ -76,7 +76,6 @@
                         <configuration>
                             <outputDirectory>public_html</outputDirectory>
                             <formats>
-                                <format>XML</format>
                                 <format>HTML</format>
                             </formats>
                         </configuration>
