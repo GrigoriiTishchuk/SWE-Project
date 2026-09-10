@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AdminDashboardPage.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">edujournal-frontend</a> &gt; <a href="index.source.html" class="el_package">com.edujournal.view.admin</a> &gt; <span class="el_source">AdminDashboardPage.java</span></div><h1>AdminDashboardPage.java</h1><pre class="source lang-java linenums">package com.edujournal.view.admin;
+
+import com.edujournal.Main;
+import com.edujournal.view.StatCard;
+import com.edujournal.view.common.ChartPlaceholder;
+import com.edujournal.view.common.CoursePage;
+import com.edujournal.view.common.TopBar;
+import javafx.geometry.Insets;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+
+// Everything is hardcoded
+
+public class AdminDashboardPage extends BorderPane {
+
+<span class="nc" id="L20">    public AdminDashboardPage() {</span>
+<span class="nc" id="L21">        setLeft(AdminSidebar.build(&quot;Dashboard&quot;));</span>
+<span class="nc" id="L22">        setCenter(buildContent());</span>
+<span class="nc" id="L23">    }</span>
+
+    private VBox buildContent() {
+<span class="nc" id="L26">        VBox content = new VBox(20);</span>
+<span class="nc" id="L27">        content.setPadding(new Insets(24));</span>
+<span class="nc" id="L28">        content.getChildren().addAll(TopBar.build(&quot;Dashboard&quot;, &quot;Administrator&quot;), buildStatCards(), buildBottomRow());</span>
+<span class="nc" id="L29">        return content;</span>
+    }
+
+    private HBox buildStatCards() {
+<span class="nc" id="L33">        HBox box = new HBox(16,</span>
+                new StatCard(&quot;Students&quot;, &quot;518&quot;, &quot;/images/student_icon.png&quot;),
+                new StatCard(&quot;Teachers&quot;, &quot;12&quot;,  &quot;/images/teacher_icon.png&quot;),
+                new StatCard(&quot;Courses&quot;,  &quot;32&quot;,  &quot;/images/course_icon.png&quot;),
+                new StatCard(&quot;Groups&quot;,   &quot;166&quot;, &quot;/images/group_icon.png&quot;)
+        );
+<span class="nc" id="L39">        box.setAlignment(javafx.geometry.Pos.CENTER);</span>
+<span class="nc" id="L40">        return box;</span>
+    }
+
+    private HBox buildBottomRow() {
+<span class="nc" id="L44">        HBox box = new HBox(16, buildQuickActions(), ChartPlaceholder.build(&quot;Average Grade&quot;));</span>
+<span class="nc" id="L45">        box.setAlignment(javafx.geometry.Pos.CENTER);</span>
+<span class="nc" id="L46">        return box;</span>
+    }
+
+    private VBox buildQuickActions() {
+<span class="nc" id="L50">        VBox box = new VBox(12);</span>
+<span class="nc" id="L51">        box.setPadding(new Insets(16));</span>
+<span class="nc" id="L52">        box.setStyle(&quot;-fx-background-color: white; -fx-border-color: #E5E7EB; &quot;</span>
+                + &quot;-fx-border-radius: 8; -fx-background-radius: 8;&quot;);
+
+<span class="nc" id="L55">        Label heading = new Label(&quot;Quick Actions&quot;);</span>
+<span class="nc" id="L56">        heading.setStyle(&quot;-fx-font-size: 16px; -fx-font-weight: bold;&quot;);</span>
+
+<span class="nc" id="L58">        TextField search = new TextField();</span>
+<span class="nc" id="L59">        search.setPromptText(&quot;Type the name&quot;);</span>
+
+<span class="nc" id="L61">        Button addStudent  = new Button(&quot;Add student&quot;);</span>
+<span class="nc" id="L62">        Button addTeacher  = new Button(&quot;Add teacher&quot;);</span>
+<span class="nc" id="L63">        Button addCourse   = new Button(&quot;Add course&quot;);</span>
+<span class="nc" id="L64">        Button addGroup    = new Button(&quot;Add group&quot;);</span>
+
+<span class="nc" id="L66">        Button viewStudents = new Button(&quot;View all students&quot;);</span>
+<span class="nc" id="L67">        viewStudents.setOnAction(e -&gt; Main.showPage(new AdminStudentPage()));</span>
+
+<span class="nc" id="L69">        Button viewTeachers = new Button(&quot;View all teachers&quot;);</span>
+<span class="nc" id="L70">        viewTeachers.setOnAction(e -&gt; Main.showPage(new AdminTeacherPage()));</span>
+
+<span class="nc" id="L72">        Button viewCourses = new Button(&quot;View all courses&quot;);</span>
+<span class="nc" id="L73">        viewCourses.setOnAction(e -&gt; Main.showPage(new CoursePage(AdminSidebar.build(&quot;Courses&quot;), &quot;Administrator&quot;)));</span>
+
+<span class="nc" id="L75">        Button viewGroups = new Button(&quot;View all groups&quot;);</span>
+<span class="nc" id="L76">        viewGroups.setOnAction(e -&gt; Main.showPage(new AdminGroupPage()));</span>
+
+<span class="nc" id="L78">        HBox addButtons  = new HBox(8, addStudent, addTeacher, addCourse, addGroup);</span>
+<span class="nc" id="L79">        HBox viewButtons = new HBox(8, viewStudents, viewTeachers, viewCourses, viewGroups);</span>
+
+<span class="nc" id="L81">        box.getChildren().addAll(heading, search, addButtons, viewButtons);</span>
+<span class="nc" id="L82">        return box;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

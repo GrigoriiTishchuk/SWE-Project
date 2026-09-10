@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AssessmentsTab.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">edujournal-frontend</a> &gt; <a href="index.source.html" class="el_package">com.edujournal.view.teacher</a> &gt; <span class="el_source">AssessmentsTab.java</span></div><h1>AssessmentsTab.java</h1><pre class="source lang-java linenums">package com.edujournal.view.teacher;
+
+import com.edujournal.model.Assessments;
+import com.edujournal.model.AssessmentType;
+import com.edujournal.view.common.CoursePage;
+import java.util.List;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+
+<span class="nc" id="L16">public class AssessmentsTab {</span>
+
+    private static final String PANEL_STYLE =
+            &quot;-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 8; -fx-background-radius: 8;&quot;;
+    private static final String BLUE_BTN =
+            &quot;-fx-background-color: #1a3a6b; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 10;&quot;;
+    private static final String LIGHT_INPUT =
+            &quot;-fx-background-color: #DBEAFE; -fx-background-radius: 6; -fx-border-color: transparent;&quot;;
+
+    public static Node build(String course, String group) {
+<span class="nc bnc" id="L26" title="All 4 branches missed.">        boolean isFirst = course.equals(CoursePage.COURSES[0][0]) &amp;&amp; group.equals(&quot;TVT25K-O&quot;);</span>
+
+<span class="nc bnc" id="L28" title="All 2 branches missed.">        ObservableList&lt;Assessments&gt; data = isFirst</span>
+<span class="nc" id="L29">                ? FXCollections.observableArrayList(</span>
+                        new Assessments(1, 1, &quot;As1&quot;,   AssessmentType.INCLASSTASK, 100, 0.1, null),
+                        new Assessments(2, 1, &quot;As2&quot;,   AssessmentType.INCLASSTASK, 100, 0.1, null),
+                        new Assessments(3, 1, &quot;As3&quot;,   AssessmentType.HOMETASK,    100, 0.1, null),
+                        new Assessments(4, 1, &quot;Exam1&quot;, AssessmentType.EXAM1,       100, 0.2, null),
+                        new Assessments(5, 1, &quot;As4&quot;,   AssessmentType.INCLASSTASK, 100, 0.1, null),
+                        new Assessments(6, 1, &quot;As5&quot;,   AssessmentType.HOMETASK,    100, 0.1, null),
+                        new Assessments(7, 1, &quot;As6&quot;,   AssessmentType.INCLASSTASK, 100, 0.1, null),
+                        new Assessments(8, 1, &quot;Exam2&quot;, AssessmentType.EXAM2,       100, 0.2, null))
+<span class="nc" id="L38">                : FXCollections.observableArrayList();</span>
+
+        // --- Table ---
+<span class="nc" id="L41">        TableColumn&lt;Assessments, String&gt; nameCol = new TableColumn&lt;&gt;(&quot;Name&quot;);</span>
+<span class="nc" id="L42">        nameCol.setCellValueFactory(d -&gt; new SimpleStringProperty(d.getValue().getTitle()));</span>
+
+<span class="nc" id="L44">        TableColumn&lt;Assessments, String&gt; typeCol = new TableColumn&lt;&gt;(&quot;Type&quot;);</span>
+<span class="nc" id="L45">        typeCol.setCellValueFactory(d -&gt; new SimpleStringProperty(typeLabel(d.getValue().getType())));</span>
+
+<span class="nc" id="L47">        TableColumn&lt;Assessments, String&gt; weightCol = new TableColumn&lt;&gt;(&quot;Weight&quot;);</span>
+<span class="nc" id="L48">        weightCol.setCellValueFactory(d -&gt; new SimpleStringProperty(String.valueOf(d.getValue().getWeight())));</span>
+
+<span class="nc" id="L50">        TableView&lt;Assessments&gt; table = new TableView&lt;&gt;(data);</span>
+<span class="nc" id="L51">        table.getColumns().addAll(List.of(nameCol, typeCol, weightCol));</span>
+<span class="nc" id="L52">        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);</span>
+<span class="nc" id="L53">        table.setPrefHeight(320);</span>
+<span class="nc" id="L54">        table.getStylesheets().add(String.valueOf(AssessmentsTab.class.getResource(&quot;/css/table.css&quot;)));</span>
+
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        if (!isFirst) {</span>
+<span class="nc" id="L57">            Label placeholder = new Label(&quot;Data for \&quot;&quot; + course + &quot;\&quot; will be loaded from DB&quot;);</span>
+<span class="nc" id="L58">            placeholder.setWrapText(true);</span>
+<span class="nc" id="L59">            placeholder.setMaxWidth(348);</span>
+<span class="nc" id="L60">            placeholder.setAlignment(Pos.CENTER);</span>
+<span class="nc" id="L61">            placeholder.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);</span>
+<span class="nc" id="L62">            table.setPlaceholder(placeholder);</span>
+        }
+
+        // --- Total row ---
+<span class="nc" id="L66">        HBox totalRow = new HBox();</span>
+<span class="nc" id="L67">        totalRow.setPadding(new Insets(6, 8, 6, 8));</span>
+<span class="nc" id="L68">        totalRow.setStyle(&quot;-fx-background-color: #F3F4F6; -fx-border-color: #E5E7EB; -fx-border-radius: 4;&quot;);</span>
+<span class="nc" id="L69">        Label totalName = new Label(&quot;Total (Weighted)&quot;);</span>
+<span class="nc" id="L70">        Label totalType = new Label(&quot;100%&quot;);</span>
+<span class="nc" id="L71">        totalType.setStyle(&quot;-fx-text-fill: #6B7280;&quot;);</span>
+<span class="nc" id="L72">        Region totalSpacer = new Region();</span>
+<span class="nc" id="L73">        HBox.setHgrow(totalSpacer, Priority.ALWAYS);</span>
+<span class="nc" id="L74">        totalRow.getChildren().addAll(totalName, totalSpacer, totalType);</span>
+
+<span class="nc" id="L76">        Button fixSave = new Button(&quot;Fix / Save&quot;);</span>
+<span class="nc" id="L77">        fixSave.setMaxWidth(Double.MAX_VALUE);</span>
+<span class="nc" id="L78">        fixSave.setStyle(BLUE_BTN);</span>
+
+<span class="nc" id="L80">        VBox leftPanel = new VBox(12, table, totalRow, fixSave);</span>
+<span class="nc" id="L81">        leftPanel.setPadding(new Insets(16));</span>
+<span class="nc" id="L82">        leftPanel.setStyle(PANEL_STYLE);</span>
+<span class="nc" id="L83">        leftPanel.setPrefWidth(380);</span>
+
+        // --- Add form ---
+<span class="nc" id="L86">        Label title = new Label(&quot;Add assessment&quot;);</span>
+<span class="nc" id="L87">        title.setStyle(&quot;-fx-font-size: 16px; -fx-font-weight: bold;&quot;);</span>
+
+<span class="nc" id="L89">        TextField nameField = new TextField();</span>
+<span class="nc" id="L90">        nameField.setPromptText(&quot;Type the name&quot;);</span>
+<span class="nc" id="L91">        nameField.setStyle(LIGHT_INPUT);</span>
+<span class="nc" id="L92">        nameField.setMaxWidth(Double.MAX_VALUE);</span>
+
+<span class="nc" id="L94">        ComboBox&lt;AssessmentType&gt; typeCombo = new ComboBox&lt;&gt;();</span>
+<span class="nc" id="L95">        typeCombo.getItems().addAll(AssessmentType.values());</span>
+<span class="nc" id="L96">        typeCombo.setPromptText(&quot;Choose the type&quot;);</span>
+<span class="nc" id="L97">        typeCombo.setMaxWidth(Double.MAX_VALUE);</span>
+<span class="nc" id="L98">        typeCombo.setStyle(LIGHT_INPUT);</span>
+
+<span class="nc" id="L100">        ComboBox&lt;Integer&gt; posCombo = new ComboBox&lt;&gt;();</span>
+<span class="nc bnc" id="L101" title="All 2 branches missed.">        for (int i = 1; i &lt;= data.size() + 1; i++) posCombo.getItems().add(i);</span>
+<span class="nc" id="L102">        posCombo.setPromptText(&quot;Choose the position&quot;);</span>
+<span class="nc" id="L103">        posCombo.setMaxWidth(Double.MAX_VALUE);</span>
+<span class="nc" id="L104">        posCombo.setStyle(LIGHT_INPUT);</span>
+
+<span class="nc" id="L106">        Button saveBtn = new Button(&quot;Save&quot;);</span>
+<span class="nc" id="L107">        saveBtn.setMaxWidth(Double.MAX_VALUE);</span>
+<span class="nc" id="L108">        saveBtn.setStyle(BLUE_BTN);</span>
+<span class="nc" id="L109">        saveBtn.setOnAction(e -&gt; {</span>
+<span class="nc" id="L110">            String name         = nameField.getText().trim();</span>
+<span class="nc" id="L111">            AssessmentType type = typeCombo.getValue();</span>
+<span class="nc" id="L112">            Integer pos         = posCombo.getValue();</span>
+<span class="nc bnc" id="L113" title="All 6 branches missed.">            if (!name.isEmpty() &amp;&amp; type != null &amp;&amp; pos != null) {</span>
+<span class="nc" id="L114">                data.add(pos - 1, new Assessments(data.size() + 1, 1, name, type, 100, 1.0, null));</span>
+<span class="nc" id="L115">                nameField.clear();</span>
+<span class="nc" id="L116">                typeCombo.setValue(null);</span>
+<span class="nc" id="L117">                posCombo.setValue(null);</span>
+<span class="nc" id="L118">                posCombo.getItems().add(data.size() + 1);</span>
+            }
+<span class="nc" id="L120">        });</span>
+
+<span class="nc" id="L122">        VBox rightPanel = new VBox(20, title, nameField, typeCombo, posCombo, saveBtn);</span>
+<span class="nc" id="L123">        rightPanel.setPadding(new Insets(24));</span>
+<span class="nc" id="L124">        rightPanel.setStyle(PANEL_STYLE);</span>
+<span class="nc" id="L125">        rightPanel.setAlignment(Pos.TOP_LEFT);</span>
+<span class="nc" id="L126">        HBox.setHgrow(rightPanel, Priority.ALWAYS);</span>
+
+<span class="nc" id="L128">        HBox layout = new HBox(16, leftPanel, rightPanel);</span>
+<span class="nc" id="L129">        layout.setAlignment(Pos.TOP_LEFT);</span>
+<span class="nc" id="L130">        return layout;</span>
+    }
+
+    private static String typeLabel(AssessmentType type) {
+<span class="nc bnc" id="L134" title="All 3 branches missed.">        return switch (type) {</span>
+<span class="nc" id="L135">            case INCLASSTASK -&gt; &quot;Assignment (inclass)&quot;;</span>
+<span class="nc" id="L136">            case HOMETASK    -&gt; &quot;Assignment (hometask)&quot;;</span>
+<span class="nc" id="L137">            default          -&gt; type.name();</span>
+        };
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

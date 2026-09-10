@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LoginPage.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">edujournal-frontend</a> &gt; <a href="index.source.html" class="el_package">com.edujournal.view</a> &gt; <span class="el_source">LoginPage.java</span></div><h1>LoginPage.java</h1><pre class="source lang-java linenums">package com.edujournal.view;
+
+import com.edujournal.Main;
+import com.edujournal.view.teacher.TeacherDashboardPage;
+import javafx.geometry.Insets;
+import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
+
+// No real authentication yet
+
+public class LoginPage extends HBox {
+
+<span class="nc" id="L21">    private final TextField emailField = new TextField();</span>
+<span class="nc" id="L22">    private final PasswordField passwordField = new PasswordField();</span>
+
+<span class="nc" id="L24">    public LoginPage() {</span>
+<span class="nc" id="L25">        getChildren().addAll(buildBanner(), buildForm());</span>
+<span class="nc" id="L26">    }</span>
+
+    private VBox buildBanner() {
+<span class="nc" id="L29">        ImageView logo = new ImageView(new Image(</span>
+<span class="nc" id="L30">                getClass().getResourceAsStream(&quot;/images/edujournal_logo.png&quot;)));</span>
+<span class="nc" id="L31">        logo.setFitHeight(48);</span>
+<span class="nc" id="L32">        logo.setPreserveRatio(true);</span>
+
+<span class="nc" id="L34">        Label tagline = new Label(&quot;Teacher's Gradebook\nand Report Card System&quot;);</span>
+<span class="nc" id="L35">        tagline.setStyle(&quot;-fx-font-size: 40px; -fx-font-weight: bold; -fx-text-fill: #2F6FED;&quot;);</span>
+
+<span class="nc" id="L37">        VBox spacer = new VBox();</span>
+<span class="nc" id="L38">        VBox.setVgrow(spacer, Priority.ALWAYS);</span>
+
+<span class="nc" id="L40">        VBox banner = new VBox(logo, spacer, tagline);</span>
+<span class="nc" id="L41">        banner.setPadding(new Insets(32));</span>
+<span class="nc" id="L42">        banner.setPrefWidth(600);</span>
+<span class="nc" id="L43">        banner.setStyle(&quot;-fx-background-image: url('/images/background.jpg'); -fx-background-size: cover; -fx-background-position: center;&quot;);</span>
+<span class="nc" id="L44">        return banner;</span>
+    }
+
+    private VBox buildForm() {
+<span class="nc" id="L48">        emailField.setPromptText(&quot;Enter your email&quot;);</span>
+<span class="nc" id="L49">        passwordField.setPromptText(&quot;Enter your password&quot;);</span>
+
+<span class="nc" id="L51">        Hyperlink forgotPassword = new Hyperlink(&quot;Forgot password?&quot;);</span>
+<span class="nc" id="L52">        forgotPassword.setOnAction(e -&gt; onForgotPassword());</span>
+
+<span class="nc" id="L54">        Button signIn = new Button(&quot;Sign in&quot;);</span>
+<span class="nc" id="L55">        signIn.setMaxWidth(Double.MAX_VALUE);</span>
+<span class="nc" id="L56">        signIn.setStyle(&quot;-fx-background-color: #2F6FED; -fx-text-fill: white; -fx-padding: 10;&quot;);</span>
+<span class="nc" id="L57">        signIn.setOnAction(e -&gt; onSignIn());</span>
+
+<span class="nc" id="L59">        Label welcome = new Label(&quot;Welcome back&quot;);</span>
+<span class="nc" id="L60">        welcome.setStyle(&quot;-fx-font-size: 22px; -fx-font-weight: bold;&quot;);</span>
+
+<span class="nc" id="L62">        VBox form = new VBox(12,</span>
+                welcome,
+                new Label(&quot;Sign into your account&quot;),
+                new Label(&quot;Email&quot;), emailField,
+                new Label(&quot;Password&quot;), passwordField,
+                forgotPassword, signIn
+        );
+<span class="nc" id="L69">        form.setPadding(new Insets(40));</span>
+<span class="nc" id="L70">        form.setPrefWidth(400);</span>
+<span class="nc" id="L71">        form.setAlignment(javafx.geometry.Pos.CENTER_LEFT);</span>
+<span class="nc" id="L72">        return form;</span>
+    }
+
+    private void onSignIn() {
+        // TODO: authenticate and navigate to the right dashboard by role
+<span class="nc" id="L77">        Main.showPage(new TeacherDashboardPage());</span>
+<span class="nc" id="L78">    }</span>
+
+    private void onForgotPassword() {
+        // TODO: forgot-password logic
+<span class="nc" id="L82">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
