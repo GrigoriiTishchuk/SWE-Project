@@ -158,105 +158,17 @@ sprints.
 
 **2.** Set up the database
 
-EduJournal uses **MariaDB** for storing users, students, courses, assessments, and grades. Hibernate/JPA is used to access the database.
+Database Setup
 
-Make sure MariaDB is installed and running on your computer.
+The project uses MariaDB for local database configuration.
 
-#### Create the database
+Before running the application make sure MariaDB is installed and running.
 
-Create the database used by the application:
+For detailed database configuration, see DatabaseConfiguration.md.
 
-```sql
-CREATE DATABASE edujournal;
-```
+For database initialization and connection testing, see DatabaseTest.md.
 
-#### Configure the environment variables
-
-The project uses a `.env` file for local database configuration.
-
-Create the `.env` file in the **project root directory**, next to `pom.xml`:
-
-```bash
-touch .env
-```
-
-Add the following configuration:
-
-```env
-DB_URL=jdbc:mariadb://localhost:3306/edujournal
-DB_USERNAME=your_username
-DB_PASSWORD=your_password
-DB_NAME=edujournal
-DB_PORT=3306
-```
-
-Replace `your_username` and `your_password` with your local MariaDB credentials.
-
-> **Important:** Do not commit the `.env` file to GitHub because it contains local database credentials.
-
-#### Create the database tables
-
-The database schema is provided in:
-
-```text
-src/main/resources/database/schema.sql
-```
-
-After creating the `edujournal` database, run the `schema.sql` script against it. The script creates the tables required by the application:
-
-* `users`
-* `students`
-* `courses`
-* `academic_groups`
-* `enrollments`
-* `assessments`
-* `grades`
-
-For example, using the MariaDB command line:
-
-```bash
-mariadb -u your_username -p edujournal < src/main/resources/database/schema.sql
-```
-
-Enter your MariaDB password when prompted.
-
-> **Note:** The `schema.sql` file creates the database tables but does not insert an `admin` user. The `DatabaseTest` therefore requires an `admin` user to already exist in the database.
-
-#### Test the database connection
-
-The project includes a simple database test:
-
-```text
-src/main/java/com/edujournal/DatabaseTest.java
-```
-
-Run the `DatabaseTest` class from IntelliJ IDEA.
-
-The test connects to MariaDB through Hibernate/JPA and searches for the `admin` user.
-
-A successful test should produce output similar to:
-
-```text
-USER FOUND!
-Username: admin
-Name: Admin User
-Role: ADMIN
-```
-
-If the test prints `USER NOT FOUND!`, the database connection is working, but the `admin` user has not been added to the database yet.
-
-After completing the database setup, the application can be started with:
-
-```bash
-mvn javafx:run
-```
-
-```md
-> ⚠️ Make sure the database name matches the one in your configuration file.
-> Update your database credentials in the configuration file (e.g., application.properties).
-```
-
-Run the application using Maven
+Run the application using Maven:
 
 ```bash
   mvn javafx:run
@@ -265,9 +177,6 @@ Run the application using Maven
 
 Run the application using Docker
 
-```bash
-  
-```
 ---
 
 ## Testing Instructions

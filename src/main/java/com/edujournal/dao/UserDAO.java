@@ -70,4 +70,58 @@ public class UserDAO {
             entityManager.close();
         }
     }
+
+    public void update(User user) {
+        EntityManager entityManager = JPAUtil
+                .getEntityManagerFactory()
+                .createEntityManager();
+
+        try {
+            entityManager.getTransaction().begin();
+
+            entityManager.merge(user);
+
+            entityManager.getTransaction().commit();
+
+        } catch (Exception e) {
+
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
+            }
+
+            throw e;
+
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    public void delete(User user) {
+        EntityManager entityManager = JPAUtil
+                .getEntityManagerFactory()
+                .createEntityManager();
+
+        try {
+            entityManager.getTransaction().begin();
+
+            entityManager.remove(
+                    entityManager.contains(user)
+                            ? user
+                            : entityManager.merge(user)
+            );
+
+            entityManager.getTransaction().commit();
+
+        } catch (Exception e) {
+
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
+            }
+
+            throw e;
+
+        } finally {
+            entityManager.close();
+        }
+    }
 }
