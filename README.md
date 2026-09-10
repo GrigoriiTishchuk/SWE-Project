@@ -158,31 +158,15 @@ sprints.
 
 **2.** Set up the database
 
-The project uses a .env file for local database configuration.
+Database Setup
 
-Create a .env file in the project root directory, next to pom.xml.
+The project uses MariaDB for local database configuration.
 
-You can use .env.example as a template:
+Before running the application make sure MariaDB is installed and running.
 
-DB_URL=jdbc:mariadb://localhost:3306/edujournal
-DB_USERNAME=your_username
-DB_PASSWORD=your_password
-DB_NAME=edujournal
-DB_PORT=3306
+For detailed database configuration, see DatabaseConfiguration.md.
 
-Replace your_username and your_password with your local MariaDB credentials.
-
-Important: Do not commit the .env file to GitHub because it contains local database credentials.
-
-Make sure MariaDB is installed and running on your computer.
-
-When the project starts, DatabaseInitializer automatically:
-
-creates the edujournal database if it does not exist
-creates the required database tables
-creates the default admin user if it does not exist
-
-No manual database or table creation is required.
+For database initialization and connection testing, see DatabaseTest.md.
 
 Run the application using Maven:
 
@@ -193,11 +177,6 @@ Run the application using Maven:
 
 Run the application using Docker
 
-You can also run DatabaseTest from IntelliJ IDEA to verify the database connection and initialization.
-
-```bash
-  
-```
 ---
 
 ## Testing Instructions
