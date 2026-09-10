@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StatCard.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">edujournal-frontend</a> &gt; <a href="index.source.html" class="el_package">com.edujournal.view</a> &gt; <span class="el_source">StatCard.java</span></div><h1>StatCard.java</h1><pre class="source lang-java linenums">package com.edujournal.view;
+
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+
+// white boxes in dashboard
+
+public class StatCard extends VBox {
+
+<span class="nc" id="L15">    public StatCard(String label, String value, String iconResource) {</span>
+<span class="nc" id="L16">        setSpacing(8);</span>
+<span class="nc" id="L17">        setPadding(new Insets(16));</span>
+<span class="nc" id="L18">        setPrefWidth(160);</span>
+<span class="nc" id="L19">        setAlignment(Pos.CENTER);</span>
+<span class="nc" id="L20">        setStyle(&quot;-fx-background-color: white; -fx-border-color: #E5E7EB; &quot;</span>
+                + &quot;-fx-border-radius: 8; -fx-background-radius: 8;&quot;);
+
+<span class="nc" id="L23">        StackPane iconBox = new StackPane(new ImageView(new Image(</span>
+<span class="nc" id="L24">                getClass().getResourceAsStream(iconResource), 40, 40, true, true)));</span>
+<span class="nc" id="L25">        iconBox.setPrefSize(64, 64);</span>
+<span class="nc" id="L26">        iconBox.setStyle(&quot;-fx-background-color: #DBEAFE; -fx-background-radius: 5;&quot;);</span>
+
+<span class="nc" id="L28">        Label nameLabel = new Label(label);</span>
+<span class="nc" id="L29">        nameLabel.setStyle(&quot;-fx-text-fill: #6B7280;&quot;);</span>
+
+<span class="nc" id="L31">        Label valueLabel = new Label(value);</span>
+<span class="nc" id="L32">        valueLabel.setStyle(&quot;-fx-font-size: 24px; -fx-font-weight: bold;&quot;);</span>
+
+<span class="nc" id="L34">        getChildren().addAll(nameLabel, iconBox, valueLabel);</span>
+<span class="nc" id="L35">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

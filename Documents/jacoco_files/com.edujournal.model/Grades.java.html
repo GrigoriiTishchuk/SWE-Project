@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Grades.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">edujournal-frontend</a> &gt; <a href="index.source.html" class="el_package">com.edujournal.model</a> &gt; <span class="el_source">Grades.java</span></div><h1>Grades.java</h1><pre class="source lang-java linenums">package com.edujournal.model;
+
+public class Grades {
+    private int id;
+    private int studentId;
+    private int assessmentId;
+    private double score;
+    private String note;
+
+<span class="nc" id="L10">    public Grades(int id, int studentId, int assessmentId, double score, String note) {</span>
+<span class="nc" id="L11">        this.id = id;</span>
+<span class="nc" id="L12">        this.studentId = studentId;</span>
+<span class="nc" id="L13">        this.assessmentId = assessmentId;</span>
+<span class="nc" id="L14">        this.score = score;</span>
+<span class="nc" id="L15">        this.note = note;</span>
+<span class="nc" id="L16">    }</span>
+
+    public int getId() {
+<span class="nc" id="L19">        return id;</span>
+    }
+
+    public int getStudentId() {
+<span class="nc" id="L23">        return studentId;</span>
+    }
+
+    public int getAssessmentId() {
+<span class="nc" id="L27">        return assessmentId;</span>
+    }
+
+    public double getScore() {
+<span class="nc" id="L31">        return score;</span>
+    }
+
+    public String getNote() {
+<span class="nc" id="L35">        return note;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

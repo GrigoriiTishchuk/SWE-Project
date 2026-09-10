@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CoursePage.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">edujournal-frontend</a> &gt; <a href="index.source.html" class="el_package">com.edujournal.view.common</a> &gt; <span class="el_source">CoursePage.java</span></div><h1>CoursePage.java</h1><pre class="source lang-java linenums">package com.edujournal.view.common;
+
+import javafx.geometry.Insets;
+import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+
+public class CoursePage extends BorderPane {
+
+<span class="nc" id="L11">    public static final String[][] COURSES = {</span>
+        {&quot;Software Engineering Project 1&quot;, &quot;TXK3000-112&quot;},
+        {&quot;Software Engineering Project 2&quot;, &quot;TXK3000-113&quot;},
+        {&quot;WEB-Project&quot;,                    &quot;TXK3000-105&quot;}
+    };
+
+    private final String role;
+
+<span class="nc" id="L19">    public CoursePage(VBox sidebar, String role) {</span>
+<span class="nc" id="L20">        this.role = role;</span>
+<span class="nc" id="L21">        setLeft(sidebar);</span>
+<span class="nc" id="L22">        setCenter(buildContent());</span>
+<span class="nc" id="L23">    }</span>
+
+    private VBox buildContent() {
+<span class="nc" id="L26">        VBox box = new VBox(12);</span>
+<span class="nc" id="L27">        box.setPadding(new Insets(24));</span>
+
+<span class="nc" id="L29">        box.getChildren().add(TopBar.build(&quot;Courses&quot;, role));</span>
+
+<span class="nc bnc" id="L31" title="All 2 branches missed.">        for (String[] course : COURSES) {</span>
+<span class="nc" id="L32">            Label name = new Label(course[0]);</span>
+<span class="nc" id="L33">            name.setStyle(&quot;-fx-font-size: 14px;&quot;);</span>
+<span class="nc" id="L34">            Label code = new Label(course[1]);</span>
+<span class="nc" id="L35">            code.setStyle(&quot;-fx-text-fill: #6B7280; -fx-font-size: 12px;&quot;);</span>
+
+<span class="nc" id="L37">            VBox text = new VBox(2, name, code);</span>
+<span class="nc" id="L38">            HBox row = new HBox(text);</span>
+<span class="nc" id="L39">            row.setPadding(new Insets(10, 12, 10, 12));</span>
+<span class="nc" id="L40">            row.setStyle(&quot;-fx-background-color: white; -fx-border-color: #E5E7EB; &quot;</span>
+                    + &quot;-fx-border-radius: 6; -fx-background-radius: 6;&quot;);
+<span class="nc" id="L42">            box.getChildren().add(row);</span>
+        }
+
+<span class="nc" id="L45">        return box;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

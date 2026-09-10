@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TeacherGradebookPage.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">edujournal-frontend</a> &gt; <a href="index.source.html" class="el_package">com.edujournal.view.teacher</a> &gt; <span class="el_source">TeacherGradebookPage.java</span></div><h1>TeacherGradebookPage.java</h1><pre class="source lang-java linenums">package com.edujournal.view.teacher;
+
+import com.edujournal.view.common.CoursePage;
+import com.edujournal.view.common.TopBar;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+
+public class TeacherGradebookPage extends BorderPane {
+
+    private static final String ACTIVE_TAB_STYLE =
+            &quot;-fx-text-fill: #2563EB; -fx-font-size: 14px; -fx-cursor: hand;&quot;;
+    private static final String INACTIVE_TAB_STYLE =
+            &quot;-fx-text-fill: #6B7280; -fx-font-size: 14px; -fx-cursor: hand;&quot;;
+    private static final String ACTIVE_UNDERLINE =
+            &quot;-fx-background-color: #2563EB; -fx-min-height: 2; -fx-max-height: 2;&quot;;
+    private static final String INACTIVE_UNDERLINE =
+            &quot;-fx-background-color: transparent; -fx-min-height: 2; -fx-max-height: 2;&quot;;
+
+<span class="nc" id="L22">    private final String[] TAB_NAMES = {&quot;Grades&quot;, &quot;Assessments&quot;, &quot;Notes&quot;};</span>
+<span class="nc" id="L23">    private final Label[] tabLabels = new Label[TAB_NAMES.length];</span>
+<span class="nc" id="L24">    private final Region[] tabUnderlines = new Region[TAB_NAMES.length];</span>
+<span class="nc" id="L25">    private final StackPane contentArea = new StackPane();</span>
+    private int activeTab;
+
+    private ComboBox&lt;String&gt; courseCombo;
+    private ComboBox&lt;String&gt; groupCombo;
+
+    public TeacherGradebookPage() {
+<span class="nc" id="L32">        this(0);</span>
+<span class="nc" id="L33">    }</span>
+
+<span class="nc" id="L35">    public TeacherGradebookPage(int initialTab) {</span>
+<span class="nc" id="L36">        activeTab = initialTab;</span>
+<span class="nc" id="L37">        setLeft(TeacherSidebar.build(&quot;Gradebook&quot;));</span>
+<span class="nc" id="L38">        setCenter(buildContent());</span>
+<span class="nc" id="L39">    }</span>
+
+    private VBox buildContent() {
+<span class="nc" id="L42">        VBox content = new VBox(16);</span>
+<span class="nc" id="L43">        content.setPadding(new Insets(24));</span>
+<span class="nc" id="L44">        content.getChildren().addAll(</span>
+<span class="nc" id="L45">                TopBar.build(&quot;Gradebook&quot;, &quot;Teacher&quot;),</span>
+<span class="nc" id="L46">                buildFilterRow(),</span>
+<span class="nc" id="L47">                buildTabs(),</span>
+                contentArea
+        );
+<span class="nc" id="L50">        updateTabContent();</span>
+<span class="nc" id="L51">        return content;</span>
+    }
+
+    private HBox buildFilterRow() {
+<span class="nc" id="L55">        courseCombo = new ComboBox&lt;&gt;();</span>
+<span class="nc" id="L56">        courseCombo.setPromptText(&quot;Choose the course&quot;);</span>
+<span class="nc" id="L57">        courseCombo.setPrefWidth(220);</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        for (String[] c : CoursePage.COURSES)</span>
+<span class="nc" id="L59">            courseCombo.getItems().add(c[0]);</span>
+
+<span class="nc" id="L61">        groupCombo = new ComboBox&lt;&gt;();</span>
+<span class="nc" id="L62">        groupCombo.setPromptText(&quot;Group&quot;);</span>
+<span class="nc" id="L63">        groupCombo.setPrefWidth(120);</span>
+<span class="nc" id="L64">        groupCombo.getItems().addAll(&quot;TVT25K-O&quot;, &quot;Group 2&quot;, &quot;Group 3&quot;);</span>
+
+<span class="nc" id="L66">        courseCombo.setOnAction(e -&gt; updateTabContent());</span>
+<span class="nc" id="L67">        groupCombo.setOnAction(e -&gt; updateTabContent());</span>
+
+<span class="nc" id="L69">        HBox row = new HBox(12, courseCombo, groupCombo);</span>
+<span class="nc" id="L70">        row.setAlignment(Pos.CENTER_LEFT);</span>
+<span class="nc" id="L71">        return row;</span>
+    }
+
+    private VBox buildTabs() {
+<span class="nc" id="L75">        HBox tabRow = new HBox(0);</span>
+<span class="nc" id="L76">        tabRow.setAlignment(Pos.CENTER_LEFT);</span>
+
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        for (int i = 0; i &lt; TAB_NAMES.length; i++) {</span>
+<span class="nc" id="L79">            final int idx = i;</span>
+
+<span class="nc" id="L81">            Label label = new Label(TAB_NAMES[i]);</span>
+<span class="nc bnc" id="L82" title="All 2 branches missed.">            label.setStyle(i == activeTab ? ACTIVE_TAB_STYLE : INACTIVE_TAB_STYLE);</span>
+<span class="nc" id="L83">            label.setPadding(new Insets(0, 0, 8, 0));</span>
+<span class="nc" id="L84">            label.setOnMouseClicked(e -&gt; selectTab(idx));</span>
+
+<span class="nc" id="L86">            Region underline = new Region();</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">            underline.setStyle(i == activeTab ? ACTIVE_UNDERLINE : INACTIVE_UNDERLINE);</span>
+<span class="nc" id="L88">            underline.setPrefWidth(80);</span>
+
+<span class="nc" id="L90">            VBox tabCell = new VBox(0, label, underline);</span>
+<span class="nc" id="L91">            tabCell.setPadding(new Insets(0, 24, 0, 0));</span>
+
+<span class="nc" id="L93">            tabLabels[i] = label;</span>
+<span class="nc" id="L94">            tabUnderlines[i] = underline;</span>
+<span class="nc" id="L95">            tabRow.getChildren().add(tabCell);</span>
+        }
+
+<span class="nc" id="L98">        Separator sep = new Separator();</span>
+<span class="nc" id="L99">        sep.setMaxWidth(Double.MAX_VALUE);</span>
+
+<span class="nc" id="L101">        return new VBox(0, tabRow, sep);</span>
+    }
+
+    private void selectTab(int idx) {
+<span class="nc" id="L105">        activeTab = idx;</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">        for (int i = 0; i &lt; TAB_NAMES.length; i++) {</span>
+<span class="nc bnc" id="L107" title="All 2 branches missed.">            tabLabels[i].setStyle(i == idx ? ACTIVE_TAB_STYLE : INACTIVE_TAB_STYLE);</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">            tabUnderlines[i].setStyle(i == idx ? ACTIVE_UNDERLINE : INACTIVE_UNDERLINE);</span>
+        }
+<span class="nc" id="L110">        updateTabContent();</span>
+<span class="nc" id="L111">    }</span>
+
+    private void updateTabContent() {
+<span class="nc" id="L114">        contentArea.getChildren().clear();</span>
+
+<span class="nc bnc" id="L116" title="All 2 branches missed.">        boolean courseSelected = courseCombo.getValue() != null;</span>
+<span class="nc bnc" id="L117" title="All 2 branches missed.">        boolean groupSelected  = groupCombo.getValue() != null;</span>
+
+<span class="nc bnc" id="L119" title="All 4 branches missed.">        if (!courseSelected || !groupSelected) {</span>
+<span class="nc" id="L120">            String action = TAB_NAMES[activeTab].toLowerCase();</span>
+<span class="nc" id="L121">            Label hint = new Label(&quot;Choose the course name and the group to view / add / delete &quot; + action + &quot;.&quot;);</span>
+<span class="nc" id="L122">            hint.setStyle(&quot;-fx-text-fill: #6B7280; -fx-font-size: 14px;&quot;);</span>
+<span class="nc" id="L123">            StackPane.setAlignment(hint, Pos.TOP_LEFT);</span>
+<span class="nc" id="L124">            contentArea.getChildren().add(hint);</span>
+<span class="nc" id="L125">            return;</span>
+        }
+
+<span class="nc" id="L128">        String course = courseCombo.getValue();</span>
+<span class="nc" id="L129">        String group  = groupCombo.getValue();</span>
+
+<span class="nc bnc" id="L131" title="All 3 branches missed.">        Node tabContent = switch (activeTab) {</span>
+<span class="nc" id="L132">            case 0  -&gt; GradesTab.build(course, group);</span>
+<span class="nc" id="L133">            case 1  -&gt; AssessmentsTab.build(course, group);</span>
+<span class="nc" id="L134">            default -&gt; NotesTab.build(course, group);</span>
+        };
+<span class="nc" id="L136">        StackPane.setAlignment(tabContent, Pos.TOP_LEFT);</span>
+<span class="nc" id="L137">        contentArea.getChildren().add(tabContent);</span>
+<span class="nc" id="L138">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
