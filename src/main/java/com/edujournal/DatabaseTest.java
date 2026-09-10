@@ -2,10 +2,13 @@ package com.edujournal;
 
 import com.edujournal.dao.UserDAO;
 import com.edujournal.entity.User;
+import com.edujournal.database.DatabaseInitializer;
 
 public class DatabaseTest {
 
     public static void main(String[] args) {
+
+        DatabaseInitializer.initialize();
 
         try {
             UserDAO userDAO = new UserDAO();
