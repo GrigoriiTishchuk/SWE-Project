@@ -42,15 +42,19 @@ class GradeCalculatorTest {
         assertThrows(IllegalArgumentException.class, () -> GradeCalculator.calculateWeightedAverage(grades3, weights3));
         assertThrows(IllegalArgumentException.class, () -> GradeCalculator.calculateWeightedAverage(grades1, weights3));
         assertThrows(IllegalArgumentException.class, () -> GradeCalculator.calculateWeightedAverage(grades3, weights1));
+
         // Mismatched lengths
         assertThrows(IllegalArgumentException.class, () -> GradeCalculator.calculateWeightedAverage(grades1, weights4));
+
         // Grades or weights are out of range
         assertThrows(IllegalArgumentException.class, () -> GradeCalculator.calculateWeightedAverage(grades5, weights4));
         assertThrows(IllegalArgumentException.class, () -> GradeCalculator.calculateWeightedAverage(grades4, weights5));
         assertThrows(IllegalArgumentException.class, () -> GradeCalculator.calculateWeightedAverage(grades6, weights4));
         assertThrows(IllegalArgumentException.class, () -> GradeCalculator.calculateWeightedAverage(grades6, weights7));
+
         // Total weight is zero
         assertThrows(IllegalArgumentException.class, () -> GradeCalculator.calculateWeightedAverage(grades4, weights6));
+
         // Grades or weights are null
         assertThrows(IllegalArgumentException.class, () -> GradeCalculator.calculateWeightedAverage(null, weights1));
         assertThrows(IllegalArgumentException.class, () -> GradeCalculator.calculateWeightedAverage(grades1, null));
