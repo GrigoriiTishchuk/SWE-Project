@@ -1,3 +1,5 @@
+public_html/com.*
+
 # .idea
 .idea/
 *.iml

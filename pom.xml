@@ -74,7 +74,7 @@
                             <goal>report</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>Documents/jacoco_files</outputDirectory>
+                            <outputDirectory>public_html</outputDirectory>
                             <formats>
                                 <format>XML</format>
                                 <format>HTML</format>
