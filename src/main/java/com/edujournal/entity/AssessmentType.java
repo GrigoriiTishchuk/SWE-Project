@@ -1,4 +1,4 @@
-package com.edujournal.model;
+package com.edujournal.entity;
 
 public enum AssessmentType {
     INCLASSTASK,
