@@ -17,7 +17,7 @@ public class Grades {
 
     private Double score;
 
-    private String note;
+    private String comment;
 
     public Grades() {
     }
@@ -47,10 +47,10 @@ public class Grades {
         this.score = score;
     }
 
-    public String getNote() {
-        return note;
+    public String getComment() {
+        return comment;
     }
-    public void setNote(String note) {
-        this.note = note;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }
