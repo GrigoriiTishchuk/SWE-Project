@@ -93,12 +93,12 @@ public class GradesTab {
         table.getItems().addAll(List.of(data));
 
         boolean[] editing = {false};
-        Button fixSave = new Button("Fix / Save Changes");
+        Button fixSave = new Button("Fix / Edit");
         fixSave.setStyle(BLUE_BTN);
         fixSave.setOnAction(e -> {
             editing[0] = !editing[0];
             table.setEditable(editing[0]);
-            fixSave.setText(editing[0] ? "Save Changes" : "Fix / Save Changes");
+            fixSave.setText(editing[0] ? "Save Changes" : "Fix / Edit");
         });
 
         HBox btnRow = new HBox(fixSave);
