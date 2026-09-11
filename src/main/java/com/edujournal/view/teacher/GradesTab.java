@@ -5,7 +5,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.*;
 import javafx.scene.text.TextAlignment;
 
@@ -39,6 +38,12 @@ public class GradesTab {
         String[][] data = isFirst ? new String[ROWS.length][] : new String[0][];
         for (int i = 0; i < data.length; i++) data[i] = ROWS[i].clone();
 
+        // Pre-create all TextFields so the Save button can read them directly
+        TextField[][] tfs = new TextField[data.length][HEADERS.length];
+        for (int r = 0; r < data.length; r++)
+            for (int c = 0; c < HEADERS.length; c++)
+                tfs[r][c] = new TextField(data[r][c + 1]);
+
         TableView<String[]> table = new TableView<>();
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         table.setPrefHeight(400);
@@ -69,13 +74,25 @@ public class GradesTab {
 
         table.getColumns().addAll(numCol, studentCol);
 
+        boolean[] editing = {false};
+
         // Score columns
         for (int i = 0; i < HEADERS.length; i++) {
-            final int col = i + 1; // data[0] = name, data[1..8] = scores
+            final int col = i + 1;
             TableColumn<String[], String> scoreCol = new TableColumn<>(HEADERS[i]);
             scoreCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue()[col]));
-            scoreCol.setCellFactory(TextFieldTableCell.forTableColumn());
-            scoreCol.setOnEditCommit(e -> e.getRowValue()[col] = e.getNewValue());
+            scoreCol.setCellFactory(tc -> new TableCell<>() {
+                @Override protected void updateItem(String s, boolean empty) {
+                    super.updateItem(s, empty);
+                    int idx = getIndex();
+                    if (empty || idx < 0 || idx >= data.length) { setText(null); setGraphic(null); return; }
+                    if (editing[0]) {
+                        setGraphic(tfs[idx][col - 1]); setText(null);
+                    } else {
+                        setText(data[idx][col]); setGraphic(null);
+                    }
+                }
+            });
             table.getColumns().add(scoreCol);
         }
 
@@ -92,12 +109,17 @@ public class GradesTab {
         table.getColumns().addAll(totalCol, gradeCol);
         table.getItems().addAll(List.of(data));
 
-        boolean[] editing = {false};
         Button fixSave = new Button("Fix / Edit");
         fixSave.setStyle(BLUE_BTN);
         fixSave.setOnAction(e -> {
+            if (editing[0]) {
+                // Save directly from TextFields — no Enter needed
+                for (int r = 0; r < data.length; r++)
+                    for (int c = 0; c < HEADERS.length; c++)
+                        data[r][c + 1] = tfs[r][c].getText();
+            }
             editing[0] = !editing[0];
-            table.setEditable(editing[0]);
+            table.refresh();
             fixSave.setText(editing[0] ? "Save Changes" : "Fix / Edit");
         });
 
