@@ -158,21 +158,17 @@ sprints.
 
 **2.** Set up the database
 
-Make sure MariaDB is installed and running.
+Database Setup
 
-Create a database:
-```sql
-CREATE DATABASE your_database_name;
-USE your_database_name;
-```
+The project uses MariaDB for local database configuration.
 
-```md
-> Replace `your_database_name` with the database name used in your configuration.
-> ⚠️ Make sure the database name matches the one in your configuration file.
-> Update your database credentials in the configuration file (e.g., application.properties).
-```
+Before running the application make sure MariaDB is installed and running.
 
-Run the application using Maven
+For detailed database configuration, see DatabaseConfiguration.md.
+
+For database initialization and connection testing, see DatabaseTest.md.
+
+Run the application using Maven:
 
 ```bash
   mvn javafx:run
@@ -181,9 +177,6 @@ Run the application using Maven
 
 Run the application using Docker
 
-```bash
-  
-```
 ---
 
 ## Testing Instructions

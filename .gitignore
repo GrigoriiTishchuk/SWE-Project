@@ -1,3 +1,6 @@
+public_html/com.*
+public_html/jacoco-sessions.html
+
 # .idea
 .idea/
 *.iml
@@ -30,3 +33,4 @@ replay_pid*
 .DS_Store
 **/.DS_Store
 target/
+.env
