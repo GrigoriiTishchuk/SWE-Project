@@ -1,7 +1,10 @@
 package com.edujournal.view.common;
 
+import com.edujournal.Main;
+import com.edujournal.view.LoginPage;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -33,10 +36,20 @@ public class TopBar {
         roleLabel.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 11px;");
 
         VBox userInfo = new VBox(2, name, roleLabel);
+        userInfo.setAlignment(Pos.CENTER_LEFT);
         HBox userBox = new HBox(10, avatar, userInfo);
-        userBox.setAlignment(Pos.CENTER_LEFT);
+        userBox.setAlignment(Pos.CENTER);
 
-        HBox topBar = new HBox(16, titleLabel, spacer, studyingYear, userBox);
+        Button exitBtn = new Button("⏻");
+        exitBtn.setStyle("-fx-background-color: transparent; -fx-font-size: 30px; -fx-text-fill: #6B7280; -fx-cursor: hand;");
+        exitBtn.setOnMouseEntered(e -> exitBtn.setStyle("-fx-background-color: transparent; -fx-font-size: 30px; -fx-text-fill: #EF4444; -fx-cursor: hand;"));
+        exitBtn.setOnMouseExited(e -> exitBtn.setStyle("-fx-background-color: transparent; -fx-font-size: 30px; -fx-text-fill: #6B7280; -fx-cursor: hand;"));
+        exitBtn.setOnAction(e -> Main.showPage(new LoginPage()));
+
+        HBox rightBox = new HBox(16, studyingYear, userBox, exitBtn);
+        rightBox.setAlignment(Pos.CENTER);
+
+        HBox topBar = new HBox(16, titleLabel, spacer, rightBox);
         topBar.setAlignment(Pos.CENTER_LEFT);
         topBar.setPadding(new Insets(0, 0, 8, 0));
         return topBar;
