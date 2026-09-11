@@ -3,7 +3,7 @@
 ## Sprint 2 Review – Edujournal
 
 - **Project:** Edujournal – Teacher's Gradebook and Report Card System
-- **Sprint Duration:** 01.09.2026 - 15.09.2026
+- **Sprint Duration:** 31.08.2026 - 14.09.2026
 - **Team Members:** Bayram Erdogan, Grigorii Tishchuk, Olena Petrova, Maria Kuznetsova
 - **Scrum Master:** Bayram Erdogan
 

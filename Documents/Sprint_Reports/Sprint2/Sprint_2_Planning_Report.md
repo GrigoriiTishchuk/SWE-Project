@@ -1,7 +1,7 @@
 # Sprint 2 – Sprint Planning Document
 
 **Project:** Edujournal – Teacher's Gradebook and Report Card System  
-**Sprint Duration:** 01.09.2026 – 15.09.2026  
+**Sprint Duration:** 31.08.2026 – 14.09.2026  
 **Team:** Bayram Erdogan, Grigorii Tishchuk, Olena Petrova, Maria Kuznetsova  
 **Scrum Master:** Bayram Erdogan
 
@@ -80,7 +80,6 @@ At the end of Sprint 2, the team expects to deliver:
 - Initial JavaFX application screens.
 - Basic navigation between initial screens.
 - Initial teacher grade management functionality.
-- Initial student report card functionality.
 - Configured Maven project and `pom.xml`.
 - JUnit unit testing infrastructure.
 - Initial unit tests for core functionality.
