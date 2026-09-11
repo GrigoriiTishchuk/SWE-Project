@@ -164,9 +164,9 @@ The project uses MariaDB for local database configuration.
 
 Before running the application make sure MariaDB is installed and running.
 
-For detailed database configuration, see DatabaseConfiguration.md.
+For detailed database configuration, see [DatabaseConfiguration.md](Documents/Diagrams/DatabaseConfiguration.md).
 
-For database initialization and connection testing, see DatabaseTest.md.
+For database initialization and connection testing, see [DatabaseTest.md](Documents/Diagrams/DatabaseTest.md).
 
 Run the application using Maven:
 
