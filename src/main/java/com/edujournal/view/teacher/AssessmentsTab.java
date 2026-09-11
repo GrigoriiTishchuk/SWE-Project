@@ -98,6 +98,11 @@ public class AssessmentsTab {
         typeCombo.setMaxWidth(Double.MAX_VALUE);
         typeCombo.setStyle(LIGHT_INPUT);
 
+        TextField weightField = new TextField();
+        weightField.setPromptText("Type the weight (e.g. 0.1)");
+        weightField.setStyle(LIGHT_INPUT);
+        weightField.setMaxWidth(Double.MAX_VALUE);
+
         ComboBox<Integer> posCombo = new ComboBox<>();
         for (int i = 1; i <= data.size() + 1; i++) posCombo.getItems().add(i);
         posCombo.setPromptText("Choose the position");
@@ -111,16 +116,23 @@ public class AssessmentsTab {
             String name         = nameField.getText().trim();
             AssessmentType type = typeCombo.getValue();
             Integer pos         = posCombo.getValue();
+            double weight;
+            try {
+                weight = Double.parseDouble(weightField.getText().trim());
+            } catch (NumberFormatException ex) {
+                weight = 1.0;
+            }
             if (!name.isEmpty() && type != null && pos != null) {
-                data.add(pos - 1, new AssessmentsDTO( 1, name, type, 100.0, 1.0, null));
+                data.add(pos - 1, new AssessmentsDTO(1, name, type, 100.0, weight, null));
                 nameField.clear();
                 typeCombo.setValue(null);
+                weightField.clear();
                 posCombo.setValue(null);
                 posCombo.getItems().add(data.size() + 1);
             }
         });
 
-        VBox rightPanel = new VBox(20, title, nameField, typeCombo, posCombo, saveBtn);
+        VBox rightPanel = new VBox(20, title, nameField, typeCombo, weightField, posCombo, saveBtn);
         rightPanel.setPadding(new Insets(24));
         rightPanel.setStyle(PANEL_STYLE);
         rightPanel.setAlignment(Pos.TOP_LEFT);
