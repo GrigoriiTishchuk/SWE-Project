@@ -15,7 +15,7 @@ public class StatCard extends VBox {
     public StatCard(String label, String value, String iconResource) {
         setSpacing(8);
         setPadding(new Insets(16));
-        setPrefWidth(160);
+        setPrefWidth(200);
         setAlignment(Pos.CENTER);
         setStyle("-fx-background-color: white; -fx-border-color: #E5E7EB; "
                 + "-fx-border-radius: 8; -fx-background-radius: 8;");

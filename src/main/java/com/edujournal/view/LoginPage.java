@@ -1,6 +1,8 @@
 package com.edujournal.view;
 
 import com.edujournal.Main;
+import com.edujournal.view.admin.AdminDashboardPage;
+import com.edujournal.view.student.StudentDashboardPage;
 import com.edujournal.view.teacher.TeacherDashboardPage;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;

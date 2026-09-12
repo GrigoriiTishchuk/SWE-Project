@@ -36,6 +36,10 @@ public class Sidebar {
                 Button button = new Button(n.label());
                 button.setMaxWidth(Double.MAX_VALUE);
                 button.setStyle(navButtonStyle(n.active()));
+                if (!n.active()) {
+                    button.setOnMouseEntered(e -> button.setStyle(navButtonStyle(true)));
+                    button.setOnMouseExited(e -> button.setStyle(navButtonStyle(false)));
+                }
                 button.setOnAction(e -> n.onClick().run());
                 box.getChildren().add(button);
             }
