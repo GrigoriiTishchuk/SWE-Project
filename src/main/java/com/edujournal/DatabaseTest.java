@@ -17,6 +17,7 @@ public class DatabaseTest {
         testRead(userDAO);
         testUpdate(userDAO);
         testDelete(userDAO);
+        testRead(userDAO);
     }
 
     public static void testCreate(UserDAO userDAO) {
