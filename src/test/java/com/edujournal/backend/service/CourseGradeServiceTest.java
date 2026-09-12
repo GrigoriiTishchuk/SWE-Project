@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -41,12 +42,29 @@ class CourseGradeServiceTest {
         g2.setScore(6.0);
         g2.setAssessmentId(1);
 
-        double result = service.calculateFinalGrade(
-                List.of(a1),
-                List.of(g1, g2)
-        );
-
+        double result = service.calculateFinalGrade(List.of(a1), List.of(g1, g2));
         assertEquals(70.0, result);
+    }
+
+    @Test
+    void calculateFinalGrade_missingGradesForOneAssessment() {
+        Assessments a1 = new Assessments();
+        a1.setType(AssessmentType.HOMETASK);
+        a1.setMaxScore(10.0);
+        a1.setWeight(1.0);
+        setId(a1, 1);
+
+        Assessments a2 = new Assessments();
+        a2.setType(AssessmentType.HOMETASK);
+        a2.setMaxScore(10.0);
+        a2.setWeight(1.0);
+        setId(a2, 2);
+
+        Grades g1 = new Grades();
+        g1.setScore(8.0);
+        g1.setAssessmentId(1);
+
+        assertThrows(IllegalArgumentException.class, () -> service.calculateFinalGrade(List.of(a1, a2), List.of(g1)));
     }
 
     @Test
@@ -65,12 +83,59 @@ class CourseGradeServiceTest {
         g2.setScore(90.0);
         g2.setAssessmentId(10);
 
-        double result = service.calculateFinalGrade(
-                List.of(exam),
-                List.of(g1, g2)
-        );
-
+        double result = service.calculateFinalGrade(List.of(exam), List.of(g1, g2));
         assertEquals(90.0, result);
+    }
+
+    @Test
+    void calculateFinalGrade_examScoreExceedsMax() {
+        Assessments exam = new Assessments();
+        exam.setType(AssessmentType.FINALEXAM);
+        exam.setMaxScore(100.0);
+        exam.setWeight(1.0);
+        setId(exam, 10);
+
+        Grades g1 = new Grades();
+        g1.setScore(150.0);
+        g1.setAssessmentId(10);
+
+        assertThrows(IllegalArgumentException.class, () -> service.calculateFinalGrade(List.of(exam), List.of(g1)));
+    }
+
+    @Test
+    void calculateFinalGrade_examWithoutGrades() {
+        Assessments exam = new Assessments();
+        exam.setType(AssessmentType.FINALEXAM);
+        exam.setMaxScore(100.0);
+        exam.setWeight(1.0);
+        setId(exam, 10);
+        assertThrows(IllegalArgumentException.class, () -> service.calculateFinalGrade(List.of(exam), List.of()));
+    }
+
+    @Test
+    void calculateFinalGrade_mixedTypesOrder() {
+        Assessments exam = new Assessments();
+        exam.setType(AssessmentType.FINALEXAM);
+        exam.setMaxScore(100.0);
+        exam.setWeight(0.5);
+        setId(exam, 1);
+
+        Assessments ht = new Assessments();
+        ht.setType(AssessmentType.HOMETASK);
+        ht.setMaxScore(10.0);
+        ht.setWeight(0.5);
+        setId(ht, 2);
+
+        Grades g1 = new Grades();
+        g1.setScore(90.0);
+        g1.setAssessmentId(1);
+
+        Grades g2 = new Grades();
+        g2.setScore(10.0);
+        g2.setAssessmentId(2);
+
+        double result = service.calculateFinalGrade(List.of(exam, ht), List.of(g1, g2));
+        assertEquals(95.0, result);
     }
 
     @Test
@@ -95,11 +160,7 @@ class CourseGradeServiceTest {
         g2.setScore(80.0);
         g2.setAssessmentId(2);
 
-        double result = service.calculateFinalGrade(
-                List.of(ht, exam),
-                List.of(g1, g2)
-        );
-
+        double result = service.calculateFinalGrade(List.of(ht, exam), List.of(g1, g2));
         assertEquals(88.0, result);
     }
 
@@ -111,12 +172,7 @@ class CourseGradeServiceTest {
         a1.setWeight(1.0);
         setId(a1, 1);
 
-        assertThrows(IllegalArgumentException.class, () ->
-                service.calculateFinalGrade(
-                        List.of(a1),
-                        List.of()
-                )
-        );
+        assertThrows(IllegalArgumentException.class, () -> service.calculateFinalGrade(List.of(a1), List.of()));
     }
 
     @Test
@@ -131,12 +187,7 @@ class CourseGradeServiceTest {
         g1.setScore(15.0);
         g1.setAssessmentId(1);
 
-        assertThrows(IllegalArgumentException.class, () ->
-                service.calculateFinalGrade(
-                        List.of(a1),
-                        List.of(g1)
-                )
-        );
+        assertThrows(IllegalArgumentException.class, () -> service.calculateFinalGrade(List.of(a1), List.of(g1)));
     }
 
     @Test
@@ -171,19 +222,12 @@ class CourseGradeServiceTest {
         g3.setScore(90.0);
         g3.setAssessmentId(3);
 
-        double result = service.calculateFinalGrade(
-                List.of(ht1, ht2, exam),
-                List.of(g1, g2, g3)
-        );
-
+        double result = service.calculateFinalGrade(List.of(ht1, ht2, exam), List.of(g1, g2, g3));
         assertEquals(83.57, result);
     }
 
     @Test
     void calculateFinalGrade_fullCourseScenario() {
-        // -----------------------------
-        // HOMEWORK (3 assessments)
-        // -----------------------------
         Assessments ht1 = new Assessments();
         ht1.setType(AssessmentType.HOMETASK);
         ht1.setMaxScore(10.0);
@@ -213,7 +257,6 @@ class CourseGradeServiceTest {
         Grades g_ht3 = new Grades();
         g_ht3.setScore(12.0);
         g_ht3.setAssessmentId(3);
-
         // Homework average = (90 + 75 + 80) / 3 = 81.67%
 
         Assessments lab1 = new Assessments();
@@ -235,7 +278,6 @@ class CourseGradeServiceTest {
         Grades g_lab2 = new Grades();
         g_lab2.setScore(45.0);
         g_lab2.setAssessmentId(5);
-
         // Lab average = (80 + 90) / 2 = 85%
 
         Assessments exam = new Assessments();
@@ -256,7 +298,6 @@ class CourseGradeServiceTest {
         g_exam1.setAssessmentId(6);
         g_exam2.setAssessmentId(6);
         g_exam3.setAssessmentId(6);
-
         // Exam best = 90%
 
         double result = service.calculateFinalGrade(
@@ -271,5 +312,4 @@ class CourseGradeServiceTest {
 
         assertEquals(86.83, result, 0.01);
     }
-
 }
