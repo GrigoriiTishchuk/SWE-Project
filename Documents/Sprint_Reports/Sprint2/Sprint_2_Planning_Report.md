@@ -66,7 +66,7 @@ The following Product Backlog Items are planned for Sprint 2:
 | **Bayram Erdogan**<br>*(Scrum Master)* | Manage Sprint 2 planning, facilitate team coordination, maintain the Trello backlog, monitor GitHub activity, implement database/JPA-related tasks, and coordinate Sprint Review preparation. |
 | **Grigorii Tishchuk** | |
 | **Olena Petrova** | |
-| **Maria Kuznetsova** | |
+| **Maria Kuznetsova** | Frontend Development: developed the JavaFX frontend of the application, referencing the Figma design, implemented screens that align with the product vision and user stories - Login page, role-based Sidebar, Dashboard pages, Placeholders, Report pages, TopBar, StatCard, GradebookPage with tabs, approved PRs. |
 
 ---
 
