@@ -119,6 +119,8 @@ sprints.
 - Develop JavaFX user interface
 - Set up JPA entities and connect to MariaDB
 
+🔗 [JaCoCo Code Coverage Report](https://users.metropolia.fi/~grigorit/devops/jacoco/)
+
 ---
 
 ## Sprint 3 – Feature Implementation and Testing (Planned)
