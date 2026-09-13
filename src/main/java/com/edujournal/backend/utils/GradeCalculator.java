@@ -1,12 +1,17 @@
 package com.edujournal.backend.utils;
 
 public class GradeCalculator {
+    private GradeCalculator() { }
+
     public static double calculateAverage(double[] grades) {
         if (grades == null || grades.length == 0) {
             throw new IllegalArgumentException("Grades array cannot be null or empty");
         }
         double sum = 0;
         for (double grade : grades) {
+            if (grade < 0 || grade > 100) {
+                throw new IllegalArgumentException("Grades should be between 0 and 100");
+            }
             sum += grade;
         }
 
@@ -25,8 +30,8 @@ public class GradeCalculator {
                 throw new IllegalArgumentException("Grades should be between 0 and 100");
             }
 
-            if (weights[i] < 0.01 || weights[i] > 1.0) {
-                throw new IllegalArgumentException("Weights should be between 0.01 and 1.0");
+            if (weights[i] < 0 || weights[i] > 1.0) {
+                throw new IllegalArgumentException("Weights should be between 0 and 1.0");
             }
 
             weightedSum += grades[i] * weights[i];
