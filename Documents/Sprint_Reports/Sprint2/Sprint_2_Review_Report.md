@@ -158,12 +158,12 @@ Daily Scrum discussions were expected to cover:
 
 ## Team Contributions
 
-| Team Member | Tasks                                                                                                                                                                           | Hours Spent |
-|---|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|
-| **Bayram Erdogan** | Scrum Master; Sprint coordination; Trello and GitHub maintenance; database/JPA-related tasks; Sprint Review preparation. |  |
-| **Grigorii Tishchuk** |  |
-| **Olena Petrova** |  |
-| **Maria Kuznetsova** |  |  |
+| Team Member | Tasks                                                                                                                                                                           | Hours Spent |In-class tasks |
+|---|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|-------------|
+| **Bayram Erdogan** | Scrum Master; Sprint coordination; Trello and GitHub maintenance; database/JPA-related tasks; Sprint Review preparation. | 30 h 10 min | Submitted |
+| **Grigorii Tishchuk** |  |             |  |
+| **Olena Petrova** |  |             |  |
+| **Maria Kuznetsova** |  |             |  |  |
 
 ---
 
