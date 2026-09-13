@@ -61,12 +61,12 @@ The following Product Backlog Items are planned for Sprint 2:
 
 ## 4. Roles and Responsibilities
 
-| Team Member | Responsibilities |
-|---|-|
+| Team Member | Responsibilities                                                                                                                                                                              |
+|---|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **Bayram Erdogan**<br>*(Scrum Master)* | Manage Sprint 2 planning, facilitate team coordination, maintain the Trello backlog, monitor GitHub activity, implement database/JPA-related tasks, and coordinate Sprint Review preparation. |
-| **Grigorii Tishchuk** | |
-| **Olena Petrova** | |
-| **Maria Kuznetsova** | |
+| **Grigorii Tishchuk** | Maven Configuration, JaCoCo Code Coverage                                                                                                                                                                                              |
+| **Olena Petrova** |                                                                                                                                                                                               |
+| **Maria Kuznetsova** |                                                                                                                                                                                               |
 
 ---
 
