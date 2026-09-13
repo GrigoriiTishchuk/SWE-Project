@@ -67,6 +67,9 @@ The following Product Backlog Items are planned for Sprint 2:
 | **Grigorii Tishchuk** | Maven Configuration, JaCoCo Code Coverage                                                                                                                                                                                              |
 | **Olena Petrova** |                                                                                                                                                                                               |
 | **Maria Kuznetsova** |                                                                                                                                                                                               |
+| **Grigorii Tishchuk** | |
+| **Olena Petrova** | |
+| **Maria Kuznetsova** | Frontend Development: developed the JavaFX frontend of the application, referencing the Figma design, implemented screens that align with the product vision and user stories - Login page, role-based Sidebar, Dashboard pages, Placeholders, Report pages, TopBar, StatCard, GradebookPage with tabs, approved PRs. |
 
 ---
 
