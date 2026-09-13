@@ -47,8 +47,9 @@ public class CourseGradeService {
         List<Double> normalizedScores = new ArrayList<>();
 
         for (Assessments a : assessments) {
-            List<Grades> g = gradesForAssessment.get(a.getId());
-            if (g == null || g.isEmpty()) {
+            // Create list (empty if no values)
+            List<Grades> g = gradesForAssessment.getOrDefault(a.getId(), List.of());
+            if (g.isEmpty()) {
                 throw new IllegalArgumentException("No Grades for Assessments with id " + a.getId());
             }
             for (Grades grade : g) {
