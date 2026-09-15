@@ -5,6 +5,8 @@ import com.edujournal.entity.AssessmentType;
 import java.time.LocalDate;
 
 public class AssessmentsDTO {
+
+    private Integer id;
     private Integer courseId;
     private String title;
     private AssessmentType type;
@@ -12,13 +14,26 @@ public class AssessmentsDTO {
     private Double weight;
     private LocalDate dueDate;
 
-    public AssessmentsDTO(Integer courseId, String title, AssessmentType type, Double maxScore, Double weight, LocalDate dueDate) {
+    public AssessmentsDTO(
+            Integer id,
+            Integer courseId,
+            String title,
+            AssessmentType type,
+            Double maxScore,
+            Double weight,
+            LocalDate dueDate) {
+
+        this.id = id;
         this.courseId = courseId;
         this.title = title;
         this.type = type;
         this.maxScore = maxScore;
         this.weight = weight;
         this.dueDate = dueDate;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public Integer getCourseId() {
@@ -44,6 +59,4 @@ public class AssessmentsDTO {
     public LocalDate getDueDate() {
         return dueDate;
     }
-
 }
-

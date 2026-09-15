@@ -9,9 +9,10 @@ import javafx.scene.layout.VBox;
 public class CoursePage extends BorderPane {
 
     public static final String[][] COURSES = {
-        {"Software Engineering Project 1", "TXK3000-112"},
-        {"Software Engineering Project 2", "TXK3000-113"},
-        {"WEB-Project",                    "TXK3000-105"}
+            {"Software Engineering", "SE01"},
+            {"Database Systems",     "DB01"},
+            {"Programming",          "PR01"},
+            {"Mathematics",          "MA01"}
     };
 
     private final String role;
