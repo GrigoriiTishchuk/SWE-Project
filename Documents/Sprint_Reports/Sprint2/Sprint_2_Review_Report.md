@@ -75,9 +75,9 @@ Planned tasks included:
 - Configuring JaCoCo.
 - Generating an HTML code coverage report.
 
-**JaCoCo Coverage:** [Note: Add final coverage percentage here.]
+**JaCoCo Coverage:35%
 
-**Public JaCoCo Report:** [Note: Add the publicly accessible JaCoCo HTML report link here.]
+**Public JaCoCo Report: https://users.metropolia.fi/~grigorit/devops/jacoco/
 
 ---
 
@@ -158,10 +158,10 @@ Daily Scrum discussions were expected to cover:
 
 ## Team Contributions
 | Team Member | Tasks                                                                                                                                                                                                            | Hours Spent | In-class tasks |
-|---|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------| -------------  |
+|---|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|----------------|
 | **Bayram Erdogan** | Scrum Master; Sprint coordination; Trello and GitHub maintenance; database/JPA-related tasks; Sprint Review preparation.                                                                                         | 30 h 10 min | Submitted      |
-| **Grigorii Tishchuk** | Maven organization; JaCoCo established; Helped out with Review preparation; approved PR's                                                                                                                                      | 20 h        | Submitted      |
-| **Olena Petrova** |                                                                                                                                                                                                                  |             |                |
+| **Grigorii Tishchuk** | Maven organization; JaCoCo established; Helped out with Review preparation; approved PR's                                                                                                                                      | 20h         | Submitted      |
+| **Olena Petrova** | Figma Design of teachers activity, Backend Development (utils, calculation service, entities partly), Unit Tests, approved PRs in GitHub                                                                           | 28 h 05 min | Submitted      |
 | **Maria Kuznetsova** | Frontend Development: Built the JavaFX frontend referencing the Figma design - Login page, role-based Sidebar, Dashboard, Report pages, TopBar, StatCard, GradebookPage with tabs, and placeholders; PR reviews. | 28 h        | Submitted      |  |
 
 ---

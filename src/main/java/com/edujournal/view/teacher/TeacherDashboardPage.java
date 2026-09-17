@@ -1,6 +1,7 @@
 package com.edujournal.view.teacher;
 
 import com.edujournal.Main;
+import com.edujournal.entity.Role;
 import com.edujournal.view.StatCard;
 import com.edujournal.view.common.ChartPlaceholder;
 import com.edujournal.view.common.CoursePage;
@@ -25,7 +26,7 @@ public class TeacherDashboardPage extends BorderPane {
     private VBox buildContent() {
         VBox content = new VBox(20);
         content.setPadding(new Insets(24));
-        content.getChildren().addAll(TopBar.build("Dashboard", "Teacher"), buildStatCards(), buildBottomRow());
+        content.getChildren().addAll(TopBar.build("Dashboard", Role.TEACHER), buildStatCards(), buildBottomRow());
         return content;
     }
 
@@ -62,7 +63,7 @@ public class TeacherDashboardPage extends BorderPane {
         addAssessment.setOnAction(e -> Main.showPage(new TeacherGradebookPage(1)));
 
         Button viewCourses = new Button("View all courses");
-        viewCourses.setOnAction(e -> Main.showPage(new CoursePage(TeacherSidebar.build("Courses"), "Teacher")));
+        viewCourses.setOnAction(e -> Main.showPage(new CoursePage(TeacherSidebar.build("Courses"), Role.TEACHER)));
 
         Button addGrade = new Button("Add grade");
         addGrade.setOnAction(e -> Main.showPage(new TeacherGradebookPage(0)));

@@ -1,6 +1,7 @@
 package com.edujournal;
 
 import com.edujournal.dao.UserDAO;
+import com.edujournal.entity.Role;
 import com.edujournal.entity.User;
 import com.edujournal.database.DatabaseInitializer;
 
@@ -30,7 +31,7 @@ public class DatabaseTest {
         user.setPasswordHash("test_password");
         user.setFirstName("CRUD");
         user.setLastName("Test");
-        user.setRole("STUDENT");
+        user.setRole(Role.STUDENT);
 
         userDAO.save(user);
 
@@ -101,7 +102,7 @@ public class DatabaseTest {
 
         user.setFirstName("Updated");
         user.setLastName("User");
-        user.setRole("TEACHER");
+        user.setRole(Role.TEACHER);
 
         userDAO.update(user);
 

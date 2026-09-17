@@ -1,3 +1,4 @@
+```sql
 INSERT INTO users (
     username,
     password_hash,
@@ -11,7 +12,7 @@ SELECT
     'Admin',
     'User',
     'ADMIN'
-    WHERE NOT EXISTS (
+WHERE NOT EXISTS (
     SELECT 1
     FROM users
     WHERE username = 'admin'
@@ -30,7 +31,7 @@ SELECT
     'Anna',
     'Korhonen',
     'TEACHER'
-    WHERE NOT EXISTS (
+WHERE NOT EXISTS (
     SELECT 1
     FROM users
     WHERE username = 'teacher1'
@@ -49,7 +50,7 @@ SELECT
     'Mika',
     'Virtanen',
     'TEACHER'
-    WHERE NOT EXISTS (
+WHERE NOT EXISTS (
     SELECT 1
     FROM users
     WHERE username = 'teacher2'
@@ -68,7 +69,7 @@ SELECT
     'Sofia',
     'Niemi',
     'TEACHER'
-    WHERE NOT EXISTS (
+WHERE NOT EXISTS (
     SELECT 1
     FROM users
     WHERE username = 'teacher3'
@@ -89,7 +90,7 @@ SELECT
     'Heikki',
     'Heikkinen',
     '2005-04-15'
-    WHERE NOT EXISTS (
+WHERE NOT EXISTS (
     SELECT 1
     FROM students
     WHERE student_number = 'S001'
@@ -106,7 +107,7 @@ SELECT
     'Anna',
     'Laine',
     '2006-02-20'
-    WHERE NOT EXISTS (
+WHERE NOT EXISTS (
     SELECT 1
     FROM students
     WHERE student_number = 'S002'
@@ -123,7 +124,7 @@ SELECT
     'Matti',
     'Nieminen',
     '2005-09-12'
-    WHERE NOT EXISTS (
+WHERE NOT EXISTS (
     SELECT 1
     FROM students
     WHERE student_number = 'S003'
@@ -140,7 +141,7 @@ SELECT
     'Sofia',
     'Virtanen',
     '2006-06-05'
-    WHERE NOT EXISTS (
+WHERE NOT EXISTS (
     SELECT 1
     FROM students
     WHERE student_number = 'S004'
@@ -227,7 +228,7 @@ INSERT INTO academic_groups (
 )
 SELECT
     'Software Engineering'
-    WHERE NOT EXISTS (
+WHERE NOT EXISTS (
     SELECT 1
     FROM academic_groups
     WHERE name = 'Software Engineering'
@@ -238,7 +239,7 @@ INSERT INTO academic_groups (
 )
 SELECT
     'Database Systems'
-    WHERE NOT EXISTS (
+WHERE NOT EXISTS (
     SELECT 1
     FROM academic_groups
     WHERE name = 'Database Systems'
@@ -249,7 +250,7 @@ INSERT INTO academic_groups (
 )
 SELECT
     'Programming'
-    WHERE NOT EXISTS (
+WHERE NOT EXISTS (
     SELECT 1
     FROM academic_groups
     WHERE name = 'Programming'
@@ -260,7 +261,7 @@ INSERT INTO academic_groups (
 )
 SELECT
     'Mathematics'
-    WHERE NOT EXISTS (
+WHERE NOT EXISTS (
     SELECT 1
     FROM academic_groups
     WHERE name = 'Mathematics'
@@ -282,10 +283,10 @@ SELECT
     ag.id,
     'ENROLLED'
 FROM students s
-         JOIN courses c
-              ON c.code = 'SE01'
-         JOIN academic_groups ag
-              ON ag.name = 'Software Engineering'
+JOIN courses c
+    ON c.code = 'SE01'
+JOIN academic_groups ag
+    ON ag.name = 'Software Engineering'
 WHERE s.student_number = 'S001'
   AND NOT EXISTS (
     SELECT 1
@@ -306,10 +307,10 @@ SELECT
     ag.id,
     'ENROLLED'
 FROM students s
-         JOIN courses c
-              ON c.code = 'DB01'
-         JOIN academic_groups ag
-              ON ag.name = 'Database Systems'
+JOIN courses c
+    ON c.code = 'DB01'
+JOIN academic_groups ag
+    ON ag.name = 'Database Systems'
 WHERE s.student_number = 'S002'
   AND NOT EXISTS (
     SELECT 1
@@ -330,10 +331,10 @@ SELECT
     ag.id,
     'ENROLLED'
 FROM students s
-         JOIN courses c
-              ON c.code = 'PR01'
-         JOIN academic_groups ag
-              ON ag.name = 'Programming'
+JOIN courses c
+    ON c.code = 'PR01'
+JOIN academic_groups ag
+    ON ag.name = 'Programming'
 WHERE s.student_number = 'S003'
   AND NOT EXISTS (
     SELECT 1
@@ -354,10 +355,10 @@ SELECT
     ag.id,
     'ENROLLED'
 FROM students s
-         JOIN courses c
-              ON c.code = 'MA01'
-         JOIN academic_groups ag
-              ON ag.name = 'Mathematics'
+JOIN courses c
+    ON c.code = 'MA01'
+JOIN academic_groups ag
+    ON ag.name = 'Mathematics'
 WHERE s.student_number = 'S004'
   AND NOT EXISTS (
     SELECT 1
@@ -381,7 +382,7 @@ INSERT INTO assessments (
 SELECT
     c.id,
     'Midterm Exam',
-    'EXAM',
+    'EXAM1',
     100,
     30,
     '2026-10-15'
@@ -405,7 +406,7 @@ INSERT INTO assessments (
 SELECT
     c.id,
     'Database Assignment',
-    'ASSIGNMENT',
+    'HOMETASK',
     100,
     30,
     '2026-10-20'
@@ -453,7 +454,7 @@ INSERT INTO assessments (
 SELECT
     c.id,
     'Mathematics Exam',
-    'EXAM',
+    'EXAM2',
     100,
     30,
     '2026-10-25'
@@ -482,10 +483,10 @@ SELECT
     85,
     'Good performance'
 FROM students s
-         JOIN assessments a
-              ON a.title = 'Midterm Exam'
-         JOIN courses c
-              ON c.id = a.course_id
+JOIN assessments a
+    ON a.title = 'Midterm Exam'
+JOIN courses c
+    ON c.id = a.course_id
 WHERE s.student_number = 'S001'
   AND c.code = 'SE01'
   AND NOT EXISTS (
@@ -507,10 +508,10 @@ SELECT
     90,
     'Very good work'
 FROM students s
-         JOIN assessments a
-              ON a.title = 'Database Assignment'
-         JOIN courses c
-              ON c.id = a.course_id
+JOIN assessments a
+    ON a.title = 'Database Assignment'
+JOIN courses c
+    ON c.id = a.course_id
 WHERE s.student_number = 'S002'
   AND c.code = 'DB01'
   AND NOT EXISTS (
@@ -532,10 +533,10 @@ SELECT
     88,
     'Good programming skills'
 FROM students s
-         JOIN assessments a
-              ON a.title = 'Programming Project'
-         JOIN courses c
-              ON c.id = a.course_id
+JOIN assessments a
+    ON a.title = 'Programming Project'
+JOIN courses c
+    ON c.id = a.course_id
 WHERE s.student_number = 'S003'
   AND c.code = 'PR01'
   AND NOT EXISTS (
@@ -557,10 +558,10 @@ SELECT
     92,
     'Excellent result'
 FROM students s
-         JOIN assessments a
-              ON a.title = 'Mathematics Exam'
-         JOIN courses c
-              ON c.id = a.course_id
+JOIN assessments a
+    ON a.title = 'Mathematics Exam'
+JOIN courses c
+    ON c.id = a.course_id
 WHERE s.student_number = 'S004'
   AND c.code = 'MA01'
   AND NOT EXISTS (
@@ -569,4 +570,4 @@ WHERE s.student_number = 'S004'
     WHERE g.student_id = s.id
       AND g.assessment_id = a.id
 );
-
+```

@@ -1,5 +1,6 @@
 package com.edujournal.view.common;
 
+import com.edujournal.entity.Role;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -18,12 +19,12 @@ public class OwnProfilePage extends BorderPane {
     private static final String READONLY_INPUT =
             "-fx-background-color: #F3F4F6; -fx-background-radius: 6; -fx-border-color: transparent; -fx-text-fill: #374151;";
 
-    public OwnProfilePage(VBox sidebar, String role) {
+    public OwnProfilePage(VBox sidebar, Role role) {
         setLeft(sidebar);
         setCenter(buildContent(role));
     }
 
-    private VBox buildContent(String role) {
+    private VBox buildContent(Role role) {
         HBox body = new HBox(16, buildAvatarCard(role), buildFormCard(role));
         body.setAlignment(Pos.TOP_LEFT);
 
@@ -33,13 +34,13 @@ public class OwnProfilePage extends BorderPane {
         return content;
     }
 
-    private VBox buildAvatarCard(String role) {
+    private VBox buildAvatarCard(Role role) {
         Circle avatar = new Circle(40, Color.web("#9CA3AF"));
 
         Label name = new Label("Name Surname");
         name.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
-        Label badge = new Label(role);
+        Label badge = new Label(role.getDisplayName());
         badge.setStyle("-fx-background-color: #DBEAFE; -fx-text-fill: #1a3a6b; "
                 + "-fx-font-size: 11px; -fx-padding: 4 12; -fx-background-radius: 12;");
 
@@ -51,7 +52,7 @@ public class OwnProfilePage extends BorderPane {
         return card;
     }
 
-    private VBox buildFormCard(String role) {
+    private VBox buildFormCard(Role role) {
         Label title = new Label("Personal Information");
         title.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
@@ -62,16 +63,16 @@ public class OwnProfilePage extends BorderPane {
                 row("Phone", "+358 00 000 0000", false)
         );
 
-        if (role.equals("Student")) {
+        if (role == Role.STUDENT) {
             form.getChildren().addAll(
                     row("Student ID", "e.g. 2300001", false),
                     row("Group", "e.g. TVT25K", false)
             );
-        } else if (role.equals("Teacher")) {
+        } else if (role == Role.TEACHER) {
             form.getChildren().add(row("Department", "e.g. ICT", false));
         }
 
-        form.getChildren().add(row("Role", role, true));
+        form.getChildren().add(row("Role", role.getDisplayName(), true));
 
         Button saveBtn = new Button("Save Changes");
         saveBtn.setStyle(BLUE_BTN);

@@ -112,12 +112,17 @@ sprints.
 
 ---
 
-## Sprint 2 – Design and Core Development (Planned)
+## Sprint 2 – Design and Core Development
 
-- Finalize database schema
-- Create MariaDB tables
-- Develop JavaFX user interface
-- Set up JPA entities and connect to MariaDB
+- Designed and implemented database schema (MariaDB tables, CRUD operations)
+- Developed initial JavaFX UI views referencing Figma designs
+- Set up JPA entities and connected to MariaDB
+- Wrote JUnit unit tests for key backend functions
+- Configured JaCoCo code coverage reporting and published report
+
+🔗 [Sprint 2 Planning](Documents/Sprint_Reports/Sprint2/Sprint_2_Planning_Report.md)
+🔗 [Sprint 2 Review](Documents/Sprint_Reports/Sprint2/Sprint_2_Review_Report.md)
+🔗 [Public JaCoCo Report](https://users.metropolia.fi/~grigorit/devops/jacoco/)
 
 🔗 [JaCoCo Code Coverage Report](https://users.metropolia.fi/~grigorit/devops/jacoco/)
 

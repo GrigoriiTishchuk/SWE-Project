@@ -1,6 +1,7 @@
 package com.edujournal.view.student;
 
 import com.edujournal.Main;
+import com.edujournal.entity.Role;
 import com.edujournal.view.Sidebar;
 import com.edujournal.view.common.OwnProfilePage;
 import com.edujournal.view.common.StudentReportPage;
@@ -16,10 +17,10 @@ public class StudentSidebar {
                         () -> Main.showPage(new StudentDashboardPage())),
                 new Sidebar.SectionHeader("MANAGEMENT"),
                 new Sidebar.NavItem("Own profile", active.equals("Own profile"),
-                        () -> Main.showPage(new OwnProfilePage(StudentSidebar.build("Own profile"), "Student"))),
+                        () -> Main.showPage(new OwnProfilePage(StudentSidebar.build("Own profile"), Role.STUDENT))),
                 new Sidebar.SectionHeader("REPORTS"),
                 new Sidebar.NavItem("Student's report", active.equals("Student's report"),
-                        () -> Main.showPage(new StudentReportPage(StudentSidebar.build("Student's report"), "Student")))
+                        () -> Main.showPage(new StudentReportPage(StudentSidebar.build("Student's report"), Role.STUDENT)))
         );
     }
 }
