@@ -53,6 +53,7 @@ public class CourseController extends BorderPane {
         );
 
         filterComboBox.setValue("All");
+        Button refreshButton = new Button("Refresh");
         Button clearButton = new Button("Clear");
         HBox filterBar = new HBox(10);
         filterBar.setPadding(new Insets(10, 0, 10, 0));
@@ -60,7 +61,9 @@ public class CourseController extends BorderPane {
                 new Label("Search:"),
                 searchField,
                 new Label("Filter by:"),
-                filterComboBox, clearButton
+                filterComboBox,
+                clearButton,
+                refreshButton
         );
 
         searchField.textProperty().addListener( (observable, oldValue, newValue) -> applyFilter() );
@@ -70,6 +73,8 @@ public class CourseController extends BorderPane {
             filterComboBox.setValue("All");
         });
 
+        refreshButton.setOnAction(event -> loadCourses());
+
         return filterBar;
     }
 
@@ -78,16 +83,20 @@ public class CourseController extends BorderPane {
 
         TableColumn<CourseDTO, String> idCol = new TableColumn<>("ID");
         idCol.setCellValueFactory(c -> new SimpleStringProperty(String.valueOf(c.getValue().getId())));
+        idCol.setSortable(true);
 
         TableColumn<CourseDTO, String> codeCol = new TableColumn<>("Code");
         codeCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getCode()));
+        idCol.setSortable(true);
 
         TableColumn<CourseDTO, String> nameCol = new TableColumn<>("Name");
         nameCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getName()));
+        idCol.setSortable(true);
 
         /* TODO: uncomment, when Teacher appears
         TableColumn<CourseDTO, String> teacherCol = new TableColumn<>("Teacher ID");
         teacherCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getUserId() == null ? "" : String.valueOf(c.getValue().getUserId())));
+        idCol.setSortable(true);
         */
 
         table.getColumns().addAll(
@@ -156,6 +165,7 @@ public class CourseController extends BorderPane {
         courses = FXCollections.observableArrayList(result);
         filteredCourses = new FilteredList<>( courses, course -> true );
         table.setItems(filteredCourses);
+        applyFilter();
     }
 
     private void applyFilter() {
