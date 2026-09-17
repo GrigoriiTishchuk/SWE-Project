@@ -3,6 +3,7 @@ package com.edujournal.view.controller;
 import com.edujournal.backend.service.CourseService;
 import com.edujournal.backend.utils.CourseMapper;
 import com.edujournal.entity.Course;
+import com.edujournal.entity.Role;
 import com.edujournal.model.CourseDTO;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -17,11 +18,11 @@ public class CourseController extends BorderPane {
     private final CourseService courseService = new CourseService();
     private final CourseMapper courseMapper = new CourseMapper();
 
-    private final String role;
+    private final Role role;
 
     private TableView<CourseDTO> table;
 
-    public CourseController(String role) {
+    public CourseController(Role role) {
         this.role = role;
         buildUI();
         loadCourses();
@@ -78,9 +79,9 @@ public class CourseController extends BorderPane {
         actions.setPadding(new Insets(10));
 
         // Buttons available by roles
-        if (role.equals("Administrator")) {
+        if (role == Role.ADMINISTRATOR) {
             actions.getChildren().addAll(addBtn, editBtn, deleteBtn);
-        } else if (role.equals("Teacher")) {
+        } else if (role == Role.TEACHER) {
             actions.getChildren().add(addAssessmentBtn);
         }
 
@@ -96,8 +97,6 @@ public class CourseController extends BorderPane {
     }
 
     // Dialogs
-
-    // TODO: replace with pop-up windows
     private void showCourseInfoDialog(CourseDTO course) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Course Info");
@@ -192,7 +191,6 @@ public class CourseController extends BorderPane {
         }
     }
 
-    // TODO: replace with pop-up windows
     private void showAssessmentDialog(CourseDTO course) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Add Assessment");

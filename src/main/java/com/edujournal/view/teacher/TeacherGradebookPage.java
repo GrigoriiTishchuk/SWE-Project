@@ -1,5 +1,8 @@
 package com.edujournal.view.teacher;
 
+import com.edujournal.backend.service.CourseService;
+import com.edujournal.entity.Role;
+import com.edujournal.model.CourseDTO;
 import com.edujournal.view.common.CoursePage;
 import com.edujournal.view.common.TopBar;
 import javafx.geometry.Insets;
@@ -24,6 +27,7 @@ public class TeacherGradebookPage extends BorderPane {
     private final Region[] tabUnderlines = new Region[TAB_NAMES.length];
     private final StackPane contentArea = new StackPane();
     private int activeTab;
+    private CourseService courseService;
 
     private ComboBox<String> courseCombo;
     private ComboBox<String> groupCombo;
@@ -42,7 +46,7 @@ public class TeacherGradebookPage extends BorderPane {
         VBox content = new VBox(16);
         content.setPadding(new Insets(24));
         content.getChildren().addAll(
-                TopBar.build("Gradebook", "Teacher"),
+                TopBar.build("Gradebook", Role.TEACHER),
                 buildFilterRow(),
                 buildTabs(),
                 contentArea
@@ -55,8 +59,8 @@ public class TeacherGradebookPage extends BorderPane {
         courseCombo = new ComboBox<>();
         courseCombo.setPromptText("Choose the course");
         courseCombo.setPrefWidth(220);
-        for (String[] c : CoursePage.COURSES)
-            courseCombo.getItems().add(c[0]);
+        for (CourseDTO c : courseService.findAll())
+            courseCombo.getItems().add(c.getName());
 
         groupCombo = new ComboBox<>();
         groupCombo.setPromptText("Group");
