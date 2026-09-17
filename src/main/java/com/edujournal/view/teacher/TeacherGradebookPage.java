@@ -26,8 +26,8 @@ public class TeacherGradebookPage extends BorderPane {
     private final Label[] tabLabels = new Label[TAB_NAMES.length];
     private final Region[] tabUnderlines = new Region[TAB_NAMES.length];
     private final StackPane contentArea = new StackPane();
+    private final CourseService courseService = new CourseService();
     private int activeTab;
-    private CourseService courseService;
 
     private ComboBox<String> courseCombo;
     private ComboBox<String> groupCombo;
