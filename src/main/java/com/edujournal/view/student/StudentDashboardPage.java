@@ -1,5 +1,6 @@
 package com.edujournal.view.student;
 
+import com.edujournal.entity.Role;
 import com.edujournal.view.StatCard;
 import com.edujournal.view.common.ChartPlaceholder;
 import com.edujournal.view.common.TopBar;
@@ -22,7 +23,7 @@ public class StudentDashboardPage extends BorderPane {
     private VBox buildContent() {
         VBox content = new VBox(20);
         content.setPadding(new Insets(24));
-        content.getChildren().addAll(TopBar.build("Dashboard", "Student"), buildStatCards(), buildBottomRow());
+        content.getChildren().addAll(TopBar.build("Dashboard", Role.STUDENT), buildStatCards(), buildBottomRow());
         return content;
     }
 

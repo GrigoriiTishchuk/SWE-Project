@@ -22,7 +22,8 @@ public class User {
     @Column(name = "last_name")
     private String lastName;
 
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     public User() {
     }
@@ -63,11 +64,11 @@ public class User {
         this.lastName = lastName;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 }

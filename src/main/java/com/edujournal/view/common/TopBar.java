@@ -1,6 +1,7 @@
 package com.edujournal.view.common;
 
 import com.edujournal.Main;
+import com.edujournal.entity.Role;
 import com.edujournal.view.LoginPage;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -17,7 +18,7 @@ import javafx.scene.shape.Circle;
 
 public class TopBar {
 
-    public static HBox build(String title, String role) {
+    public static HBox build(String title, Role role) {
         Label titleLabel = new Label(title);
         titleLabel.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
 
@@ -32,7 +33,7 @@ public class TopBar {
 
         Label name = new Label("Name Surname");
         name.setStyle("-fx-font-weight: bold;");
-        Label roleLabel = new Label(role);
+        Label roleLabel = new Label(role.getDisplayName());
         roleLabel.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 11px;");
 
         VBox userInfo = new VBox(2, name, roleLabel);

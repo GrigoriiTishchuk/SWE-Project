@@ -1,5 +1,6 @@
 package com.edujournal.view.admin;
 
+import com.edujournal.entity.Role;
 import com.edujournal.view.PagePlaceholder;
 import javafx.scene.layout.BorderPane;
 
@@ -9,6 +10,6 @@ public class AdminStudentPage extends BorderPane {
 
     public AdminStudentPage() {
         setLeft(AdminSidebar.build("Students"));
-        setCenter(PagePlaceholder.build("Students", "Administrator"));
+        setCenter(PagePlaceholder.build("Students", Role.ADMINISTRATOR));
     }
 }

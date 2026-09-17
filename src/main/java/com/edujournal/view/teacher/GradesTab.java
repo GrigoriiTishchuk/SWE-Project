@@ -33,7 +33,7 @@ public class GradesTab {
     };
 
     public static Node build(String course, String group) {
-        boolean isFirst = course.equals(CoursePage.COURSES[0][0]) && group.equals("TVT25K-O");
+        boolean isFirst = course.equals(group.equals("TVT25K-O"));
 
         String[][] data = isFirst ? new String[ROWS.length][] : new String[0][];
         for (int i = 0; i < data.length; i++) data[i] = ROWS[i].clone();
