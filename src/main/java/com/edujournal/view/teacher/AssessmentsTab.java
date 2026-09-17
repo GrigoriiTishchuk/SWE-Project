@@ -78,7 +78,7 @@ public class AssessmentsTab {
 
         typeCol.setCellValueFactory(
                 d -> new SimpleStringProperty(
-                        typeLabel(d.getValue().getType())
+                        d.getValue().getType().name()
                 )
         );
 
@@ -93,8 +93,8 @@ public class AssessmentsTab {
                 )
         );
 
-        nameCol.setPrefWidth(200);
-        typeCol.setPrefWidth(105);
+        nameCol.setPrefWidth(160);
+        typeCol.setPrefWidth(160);
         weightCol.setPrefWidth(60);
 
         // --- Table ---
@@ -300,18 +300,19 @@ public class AssessmentsTab {
         TableColumn<AssessmentsDTO, Void> actionCol =
                 new TableColumn<>("Actions");
 
-        actionCol.setPrefWidth(135);
+        actionCol.setPrefWidth(100);
 
         actionCol.setCellFactory(col ->
                 new TableCell<>() {
 
                     private final Button editBtn =
-                            new Button("Edit");
+                            new Button("✏");
 
                     private final Button deleteBtn =
-                            new Button("Delete");
+                            new Button("🗑");
 
                     {
+                        deleteBtn.setStyle("-fx-background-color: #DC2626; -fx-text-fill: white; -fx-background-radius: 6;");
                         editBtn.setOnAction(e -> {
 
                             AssessmentsDTO selected =
@@ -394,30 +395,21 @@ public class AssessmentsTab {
                                             selected.getId()
                                     );
 
-                            if (assessmentsService.hasGrades(
-                                    selected.getId()
-                            )) {
+                            if (assessmentsService.hasGrades(selected.getId())) {
+                                Alert warning = new Alert(Alert.AlertType.CONFIRMATION);
+                                warning.setTitle("Delete Assessment");
+                                warning.setHeaderText("This assessment has grades.");
+                                warning.setContentText("All associated grades will also be deleted. Delete anyway?");
 
-                                Alert warning =
-                                        new Alert(
-                                                Alert.AlertType.WARNING
-                                        );
+                                ButtonType yes = new ButtonType("Delete anyway", ButtonBar.ButtonData.OK_DONE);
+                                ButtonType no = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+                                warning.getButtonTypes().setAll(yes, no);
 
-                                warning.setTitle(
-                                        "Cannot Delete Assessment"
-                                );
+                                if (warning.showAndWait().orElse(no) != yes) return;
 
-                                warning.setHeaderText(
-                                        "This assessment has grades."
-                                );
-
-                                warning.setContentText(
-                                        "Remove the grades first."
-                                );
-
-                                warning.showAndWait();
-
-                                return;
+                                com.edujournal.dao.GradesDAO gradesDAO = new com.edujournal.dao.GradesDAO();
+                                gradesDAO.findByAssessment(selected.getId())
+                                        .forEach(g -> gradesDAO.deleteById(g.getId()));
                             }
 
                             assessmentsService.delete(assessment);
@@ -680,19 +672,4 @@ public class AssessmentsTab {
         return layout;
     }
 
-    private static String typeLabel(
-            AssessmentType type) {
-
-        return switch (type) {
-
-            case INCLASSTASK ->
-                    "Assignment (inclass)";
-
-            case HOMETASK ->
-                    "Assignment (hometask)";
-
-            default ->
-                    type.name();
-        };
-    }
 }
