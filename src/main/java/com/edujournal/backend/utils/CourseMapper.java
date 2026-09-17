@@ -1,0 +1,20 @@
+package com.edujournal.backend.utils;
+
+import com.edujournal.entity.Course;
+import com.edujournal.model.CourseDTO;
+
+public class CourseMapper {
+    public CourseDTO toDTO(Course entity) {
+        CourseDTO dto = new CourseDTO(
+                entity.getCode(),
+                entity.getName(),
+                entity.getUserId()
+        );
+
+        // dto.setId(entity.getId());
+        // dto.setTeacherName(...);
+        // dto.setStudentsCount(...);
+
+        return dto;
+    }
+}
