@@ -1,5 +1,6 @@
 package com.edujournal.view.common;
 
+import com.edujournal.view.controller.CourseController;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
@@ -7,14 +8,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class CoursePage extends BorderPane {
-
-    public static final String[][] COURSES = {
-            {"Software Engineering", "SE01"},
-            {"Database Systems",     "DB01"},
-            {"Programming",          "PR01"},
-            {"Mathematics",          "MA01"}
-    };
-
     private final String role;
 
     public CoursePage(VBox sidebar, String role) {
@@ -29,19 +22,8 @@ public class CoursePage extends BorderPane {
 
         box.getChildren().add(TopBar.build("Courses", role));
 
-        for (String[] course : COURSES) {
-            Label name = new Label(course[0]);
-            name.setStyle("-fx-font-size: 14px;");
-            Label code = new Label(course[1]);
-            code.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 12px;");
-
-            VBox text = new VBox(2, name, code);
-            HBox row = new HBox(text);
-            row.setPadding(new Insets(10, 12, 10, 12));
-            row.setStyle("-fx-background-color: white; -fx-border-color: #E5E7EB; "
-                    + "-fx-border-radius: 6; -fx-background-radius: 6;");
-            box.getChildren().add(row);
-        }
+        CourseController controller = new CourseController(role);
+        box.getChildren().add(controller);
 
         return box;
     }
