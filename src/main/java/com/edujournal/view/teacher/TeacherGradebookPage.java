@@ -1,6 +1,8 @@
 package com.edujournal.view.teacher;
 
+import com.edujournal.backend.service.AcademicGroupService;
 import com.edujournal.backend.service.CourseService;
+import com.edujournal.entity.AcademicGroup;
 import com.edujournal.entity.Role;
 import com.edujournal.model.CourseDTO;
 import com.edujournal.view.common.TopBar;
@@ -30,13 +32,19 @@ public class TeacherGradebookPage extends BorderPane {
 
     private ComboBox<String> courseCombo;
     private ComboBox<String> groupCombo;
+    private String preSelectedCourse;
 
     public TeacherGradebookPage() {
-        this(0);
+        this(0, null);
     }
 
     public TeacherGradebookPage(int initialTab) {
+        this(initialTab, null);
+    }
+
+    public TeacherGradebookPage(int initialTab, String course) {
         activeTab = initialTab;
+        preSelectedCourse = course;
         setLeft(TeacherSidebar.build("Gradebook"));
         setCenter(buildContent());
     }
@@ -63,8 +71,11 @@ public class TeacherGradebookPage extends BorderPane {
 
         groupCombo = new ComboBox<>();
         groupCombo.setPromptText("Group");
-        groupCombo.setPrefWidth(120);
-        groupCombo.getItems().addAll("TVT25K-O", "Group 2", "Group 3");
+        groupCombo.setPrefWidth(160);
+        for (AcademicGroup g : new AcademicGroupService().findAll())
+            groupCombo.getItems().add(g.getName());
+
+        if (preSelectedCourse != null) courseCombo.setValue(preSelectedCourse);
 
         courseCombo.setOnAction(e -> updateTabContent());
         groupCombo.setOnAction(e -> updateTabContent());

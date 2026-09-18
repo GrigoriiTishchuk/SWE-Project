@@ -137,7 +137,12 @@ public class CourseController extends BorderPane {
 
         addAssessmentBtn.setOnAction(e -> {
             CourseDTO selected = table.getSelectionModel().getSelectedItem();
-            if (selected != null) {
+            if (selected == null) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("No Course Selected");
+                alert.setContentText("Please select a course first.");
+                alert.showAndWait();
+            } else {
                 showAssessmentDialog(selected);
             }
         });
@@ -313,10 +318,6 @@ public class CourseController extends BorderPane {
     }
 
     private void showAssessmentDialog(CourseDTO course) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Add Assessment");
-        alert.setHeaderText("Teacher functionality");
-        alert.setContentText("Here you will add assessments for: " + course.getName());
-        alert.showAndWait();
+        com.edujournal.Main.showPage(new com.edujournal.view.teacher.TeacherGradebookPage(1, course.getName()));
     }
 }
