@@ -5,15 +5,16 @@ public class CourseDTO {
     private String code;
     private String name;
     private Integer userId;
+    private String teacherName;
 
-    // private String teacherName; // later
     // private Integer studentsCount; // later
 
-    public CourseDTO(Integer id, String code, String name, Integer userId) {
+    public CourseDTO(Integer id, String code, String name, Integer userId, String teacherName) {
         this.id = id;
         this.code = code;
         this.name = name;
         this.userId = userId;
+        this.teacherName = teacherName;
     }
 
     public CourseDTO() {
@@ -36,4 +37,7 @@ public class CourseDTO {
         return userId;
     }
     public void setUserId(Integer userId) { this.userId = userId;}
+
+    public String getTeacherName() { return teacherName; }
+    public void setTeacherName(String teacherName) { this.teacherName = teacherName; }
 }
