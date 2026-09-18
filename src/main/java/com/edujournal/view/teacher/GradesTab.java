@@ -1,9 +1,14 @@
 package com.edujournal.view.teacher;
 
+import com.edujournal.backend.service.AcademicGroupService;
 import com.edujournal.backend.service.AssessmentsService;
 import com.edujournal.backend.service.StudentService;
+import com.edujournal.dao.EnrollmentDAO;
 import com.edujournal.dao.GradesDAO;
+import com.edujournal.entity.AcademicGroup;
 import com.edujournal.entity.Assessments;
+import com.edujournal.entity.Course;
+import com.edujournal.entity.Enrollment;
 import com.edujournal.entity.Grades;
 import com.edujournal.entity.Student;
 import javafx.beans.property.SimpleStringProperty;
@@ -41,7 +46,23 @@ public class GradesTab {
             }
         }
 
-        List<Student> allStudents = studentService.findAll();
+        List<Student> allStudents;
+        if (group != null && !group.isEmpty()) {
+            AcademicGroup academicGroup = new AcademicGroupService().findByName(group);
+            Course dbCourse = new AssessmentsService().getCourseByName(course);
+            if (academicGroup != null && dbCourse != null) {
+                List<Enrollment> enrollments = new EnrollmentDAO().findByCourseAndGroup(dbCourse.getId(), academicGroup.getId());
+                allStudents = new ArrayList<>();
+                for (Enrollment e : enrollments) {
+                    Student s = studentService.findById(e.getStudentId());
+                    if (s != null) allStudents.add(s);
+                }
+            } else {
+                allStudents = studentService.findAll();
+            }
+        } else {
+            allStudents = studentService.findAll();
+        }
         List<Integer> rowStudentIds = new ArrayList<>();
         for (Student s : allStudents) rowStudentIds.add(s.getId());
 
