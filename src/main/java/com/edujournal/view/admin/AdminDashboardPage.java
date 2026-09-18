@@ -1,6 +1,7 @@
 package com.edujournal.view.admin;
 
 import com.edujournal.Main;
+import com.edujournal.entity.Role;
 import com.edujournal.view.StatCard;
 import com.edujournal.view.common.ChartPlaceholder;
 import com.edujournal.view.common.CoursePage;
@@ -25,7 +26,7 @@ public class AdminDashboardPage extends BorderPane {
     private VBox buildContent() {
         VBox content = new VBox(20);
         content.setPadding(new Insets(24));
-        content.getChildren().addAll(TopBar.build("Dashboard", "Administrator"), buildStatCards(), buildBottomRow());
+        content.getChildren().addAll(TopBar.build("Dashboard", Role.ADMINISTRATOR), buildStatCards(), buildBottomRow());
         return content;
     }
 
@@ -70,7 +71,7 @@ public class AdminDashboardPage extends BorderPane {
         viewTeachers.setOnAction(e -> Main.showPage(new AdminTeacherPage()));
 
         Button viewCourses = new Button("View all courses");
-        viewCourses.setOnAction(e -> Main.showPage(new CoursePage(AdminSidebar.build("Courses"), "Administrator")));
+        viewCourses.setOnAction(e -> Main.showPage(new CoursePage(AdminSidebar.build("Courses"), Role.ADMINISTRATOR)));
 
         Button viewGroups = new Button("View all groups");
         viewGroups.setOnAction(e -> Main.showPage(new AdminGroupPage()));

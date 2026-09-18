@@ -1,6 +1,7 @@
 package com.edujournal.view.teacher;
 
 import com.edujournal.Main;
+import com.edujournal.entity.Role;
 import com.edujournal.view.Sidebar;
 import com.edujournal.view.common.CoursePage;
 import com.edujournal.view.common.CourseReportPage;
@@ -17,14 +18,14 @@ public class TeacherSidebar {
                         () -> Main.showPage(new TeacherDashboardPage())),
                 new Sidebar.SectionHeader("MANAGEMENT"),
                 new Sidebar.NavItem("Courses", active.equals("Courses"),
-                        () -> Main.showPage(new CoursePage(TeacherSidebar.build("Courses"), "Teacher"))),
+                        () -> Main.showPage(new CoursePage(TeacherSidebar.build("Courses"), Role.TEACHER))),
                 new Sidebar.NavItem("Gradebook", active.equals("Gradebook"),
                         () -> Main.showPage(new TeacherGradebookPage())),
                 new Sidebar.NavItem("Own Profile", active.equals("Own Profile"),
-                        () -> Main.showPage(new OwnProfilePage(TeacherSidebar.build("Own Profile"), "Teacher"))),
+                        () -> Main.showPage(new OwnProfilePage(TeacherSidebar.build("Own Profile"), Role.TEACHER))),
                 new Sidebar.SectionHeader("REPORTS"),
                 new Sidebar.NavItem("Course's report", active.equals("Course's report"),
-                        () -> Main.showPage(new CourseReportPage(TeacherSidebar.build("Course's report"), "Teacher")))
+                        () -> Main.showPage(new CourseReportPage(TeacherSidebar.build("Course's report"), Role.TEACHER)))
         );
     }
 }

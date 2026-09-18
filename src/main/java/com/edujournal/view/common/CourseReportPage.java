@@ -1,12 +1,13 @@
 package com.edujournal.view.common;
 
+import com.edujournal.entity.Role;
 import com.edujournal.view.PagePlaceholder;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
 public class CourseReportPage extends BorderPane {
 
-    public CourseReportPage(VBox sidebar, String role) {
+    public CourseReportPage(VBox sidebar, Role role) {
         setLeft(sidebar);
         setCenter(PagePlaceholder.build("Course's report", role));
     }

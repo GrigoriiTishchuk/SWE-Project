@@ -1,6 +1,7 @@
 package com.edujournal.view.admin;
 
 import com.edujournal.Main;
+import com.edujournal.entity.Role;
 import com.edujournal.view.Sidebar;
 import com.edujournal.view.common.CoursePage;
 import com.edujournal.view.common.CourseReportPage;
@@ -24,14 +25,14 @@ public class AdminSidebar {
                 new Sidebar.NavItem("Groups", active.equals("Groups"),
                         () -> Main.showPage(new AdminGroupPage())),
                 new Sidebar.NavItem("Courses", active.equals("Courses"),
-                        () -> Main.showPage(new CoursePage(AdminSidebar.build("Courses"), "Administrator"))),
+                        () -> Main.showPage(new CoursePage(AdminSidebar.build("Courses"), Role.ADMINISTRATOR))),
                 new Sidebar.NavItem("Own Profile", active.equals("Own Profile"),
-                        () -> Main.showPage(new OwnProfilePage(AdminSidebar.build("Own Profile"), "Administrator"))),
+                        () -> Main.showPage(new OwnProfilePage(AdminSidebar.build("Own Profile"), Role.ADMINISTRATOR))),
                 new Sidebar.SectionHeader("REPORTS"),
                 new Sidebar.NavItem("Student's report", active.equals("Student's report"),
-                        () -> Main.showPage(new StudentReportPage(AdminSidebar.build("Student's report"), "Administrator"))),
+                        () -> Main.showPage(new StudentReportPage(AdminSidebar.build("Student's report"), Role.ADMINISTRATOR))),
                 new Sidebar.NavItem("Course's report", active.equals("Course's report"),
-                        () -> Main.showPage(new CourseReportPage(AdminSidebar.build("Course's report"), "Administrator")))
+                        () -> Main.showPage(new CourseReportPage(AdminSidebar.build("Course's report"), Role.ADMINISTRATOR)))
         );
     }
 }
