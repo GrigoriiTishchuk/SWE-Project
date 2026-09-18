@@ -59,6 +59,9 @@ public class CourseService {
     }
 
     public void save(Course course) {
+        if (existsByCode(course.getCode())) {
+            throw new IllegalArgumentException("Course code already exists");
+        }
         courseDAO.save(course);
     }
 
@@ -69,4 +72,9 @@ public class CourseService {
     public void delete(Integer id) {
         courseDAO.delete(id);
     }
+
+    public boolean existsByCode(String code) {
+        return courseDAO.existsByCode(code);
+    }
+
 }
