@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\makuz\\\\Desktop\\\\metropolia\\\\3 semester\\\\SWE-Project\\\\src\\\\main\\\\java\\\\com\\\\edujournal\" -Recurse -Directory)",
+      "Bash(Select-Object FullName)"
+    ]
+  }
+}
