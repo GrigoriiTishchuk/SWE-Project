@@ -9,11 +9,8 @@ import com.edujournal.model.CourseDTO;
 import com.edujournal.model.UserDTO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -369,7 +366,6 @@ public class CourseController extends BaseController<CourseDTO> {
 
         if (updated != null) {
             Course entity = courseMapper.toEntity(updated);
-            courseService.update(entity);
             courseService.update(entity);
             loadAndShowItems();
         }

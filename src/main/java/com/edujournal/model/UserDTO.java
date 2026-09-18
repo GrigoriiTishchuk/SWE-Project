@@ -17,6 +17,9 @@ public class UserDTO {
         this.role = role;
     }
 
+    public UserDTO() {
+    }
+
     public Integer getId() {
         return id;
     }

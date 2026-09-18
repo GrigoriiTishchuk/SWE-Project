@@ -44,7 +44,6 @@ public class UserService {
                 .toList();
     }
 
-
     public void deleteUser(Integer userId) {
         User user = userDAO.findById(userId);
 
