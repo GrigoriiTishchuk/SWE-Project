@@ -2,9 +2,11 @@ package com.edujournal.view.teacher;
 
 import com.edujournal.Main;
 import com.edujournal.entity.Role;
-import com.edujournal.view.StatCard;
 import com.edujournal.view.common.ChartPlaceholder;
+import com.edujournal.view.common.CourseReportPage;
+import com.edujournal.view.common.DashboardStatCards;
 import com.edujournal.view.common.CoursePage;
+import com.edujournal.view.common.OwnProfilePage;
 import com.edujournal.view.common.TopBar;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -31,14 +33,7 @@ public class TeacherDashboardPage extends BorderPane {
     }
 
     private HBox buildStatCards() {
-        HBox box = new HBox(16,
-                new StatCard("Courses",     "18",  "/images/course_icon.png"),
-                new StatCard("Groups",      "18",  "/images/group_icon.png"),
-                new StatCard("Students",    "515", "/images/student_icon.png"),
-                new StatCard("Assessments", "202", "/images/assessement_icon.png")
-        );
-        box.setAlignment(javafx.geometry.Pos.CENTER);
-        return box;
+        return DashboardStatCards.build(Role.TEACHER);
     }
 
     private HBox buildBottomRow() {
@@ -69,8 +64,14 @@ public class TeacherDashboardPage extends BorderPane {
         addGrade.setOnAction(e -> Main.showPage(new TeacherGradebookPage(0)));
 
         HBox row1 = new HBox(8, addAssessment, viewCourses);
-        HBox row2 = new HBox(8, addGrade, new Button("View all groups"));
-        HBox row3 = new HBox(8, new Button("Generate Group Report"));
+        Button viewProfile = new Button("View own profile");
+        viewProfile.setOnAction(e -> Main.showPage(new OwnProfilePage(TeacherSidebar.build("Own Profile"), Role.TEACHER)));
+
+        Button generateReport = new Button("Generate Course's report");
+        generateReport.setOnAction(e -> Main.showPage(new CourseReportPage(TeacherSidebar.build("Course's report"), Role.TEACHER)));
+
+        HBox row2 = new HBox(8, addGrade, viewProfile);
+        HBox row3 = new HBox(8, generateReport);
 
         box.getChildren().addAll(heading, search, row1, row2, row3);
         return box;

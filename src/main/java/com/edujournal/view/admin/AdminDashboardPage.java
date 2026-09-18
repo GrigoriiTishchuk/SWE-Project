@@ -2,8 +2,8 @@ package com.edujournal.view.admin;
 
 import com.edujournal.Main;
 import com.edujournal.entity.Role;
-import com.edujournal.view.StatCard;
 import com.edujournal.view.common.ChartPlaceholder;
+import com.edujournal.view.common.DashboardStatCards;
 import com.edujournal.view.common.CoursePage;
 import com.edujournal.view.common.TopBar;
 import javafx.geometry.Insets;
@@ -31,14 +31,7 @@ public class AdminDashboardPage extends BorderPane {
     }
 
     private HBox buildStatCards() {
-        HBox box = new HBox(16,
-                new StatCard("Students", "518", "/images/student_icon.png"),
-                new StatCard("Teachers", "12",  "/images/teacher_icon.png"),
-                new StatCard("Courses",  "32",  "/images/course_icon.png"),
-                new StatCard("Groups",   "166", "/images/group_icon.png")
-        );
-        box.setAlignment(javafx.geometry.Pos.CENTER);
-        return box;
+        return DashboardStatCards.build(Role.ADMINISTRATOR);
     }
 
     private HBox buildBottomRow() {

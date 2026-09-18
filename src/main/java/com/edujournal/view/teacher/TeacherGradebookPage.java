@@ -1,9 +1,10 @@
 package com.edujournal.view.teacher;
 
+import com.edujournal.backend.service.AcademicGroupService;
 import com.edujournal.backend.service.CourseService;
+import com.edujournal.entity.AcademicGroup;
 import com.edujournal.entity.Role;
 import com.edujournal.model.CourseDTO;
-import com.edujournal.view.common.CoursePage;
 import com.edujournal.view.common.TopBar;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -31,13 +32,19 @@ public class TeacherGradebookPage extends BorderPane {
 
     private ComboBox<String> courseCombo;
     private ComboBox<String> groupCombo;
+    private String preSelectedCourse;
 
     public TeacherGradebookPage() {
-        this(0);
+        this(0, null);
     }
 
     public TeacherGradebookPage(int initialTab) {
+        this(initialTab, null);
+    }
+
+    public TeacherGradebookPage(int initialTab, String course) {
         activeTab = initialTab;
+        preSelectedCourse = course;
         setLeft(TeacherSidebar.build("Gradebook"));
         setCenter(buildContent());
     }
@@ -64,8 +71,11 @@ public class TeacherGradebookPage extends BorderPane {
 
         groupCombo = new ComboBox<>();
         groupCombo.setPromptText("Group");
-        groupCombo.setPrefWidth(120);
-        groupCombo.getItems().addAll("TVT25K-O", "Group 2", "Group 3");
+        groupCombo.setPrefWidth(160);
+        for (AcademicGroup g : new AcademicGroupService().findAll())
+            groupCombo.getItems().add(g.getName());
+
+        if (preSelectedCourse != null) courseCombo.setValue(preSelectedCourse);
 
         courseCombo.setOnAction(e -> updateTabContent());
         groupCombo.setOnAction(e -> updateTabContent());
@@ -117,12 +127,9 @@ public class TeacherGradebookPage extends BorderPane {
     private void updateTabContent() {
         contentArea.getChildren().clear();
 
-        boolean courseSelected = courseCombo.getValue() != null;
-        boolean groupSelected  = groupCombo.getValue() != null;
-
-        if (!courseSelected || !groupSelected) {
+        if (courseCombo.getValue() == null) {
             String action = TAB_NAMES[activeTab].toLowerCase();
-            Label hint = new Label("Choose the course name and the group to view / add / delete " + action + ".");
+            Label hint = new Label("Choose a course to view " + action + ".");
             hint.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 14px;");
             StackPane.setAlignment(hint, Pos.TOP_LEFT);
             contentArea.getChildren().add(hint);
@@ -130,7 +137,7 @@ public class TeacherGradebookPage extends BorderPane {
         }
 
         String course = courseCombo.getValue();
-        String group  = groupCombo.getValue();
+        String group  = groupCombo.getValue() != null ? groupCombo.getValue() : "";
 
         Node tabContent = switch (activeTab) {
             case 0  -> GradesTab.build(course, group);

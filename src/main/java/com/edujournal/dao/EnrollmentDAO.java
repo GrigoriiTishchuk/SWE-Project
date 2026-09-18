@@ -153,3 +153,17 @@ public class EnrollmentDAO {
         }
     }
 }
+    public List<Enrollment> findByCourseAndGroup(int courseId, int groupId) {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        try {
+            return em.createQuery(
+                    "SELECT e FROM Enrollment e WHERE e.courseId = :courseId AND e.academicGroupId = :groupId",
+                    Enrollment.class)
+                    .setParameter("courseId", courseId)
+                    .setParameter("groupId", groupId)
+                    .getResultList();
+        } finally {
+            em.close();
+        }
+    }
+}
