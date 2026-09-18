@@ -182,21 +182,11 @@ public class AssessmentsTab {
                 totalType
         );
 
-        Button fixSave =
-                new Button("Fix / Save");
-
-        fixSave.setMaxWidth(
-                Double.MAX_VALUE
-        );
-
-        fixSave.setStyle(BLUE_BTN);
-
         VBox leftPanel =
                 new VBox(
                         12,
                         table,
-                        totalRow,
-                        fixSave
+                        totalRow
                 );
 
         leftPanel.setPadding(
