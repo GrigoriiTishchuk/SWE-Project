@@ -1,8 +1,8 @@
 package com.edujournal.view.student;
 
 import com.edujournal.entity.Role;
-import com.edujournal.view.StatCard;
 import com.edujournal.view.common.ChartPlaceholder;
+import com.edujournal.view.common.DashboardStatCards;
 import com.edujournal.view.common.TopBar;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -28,14 +28,7 @@ public class StudentDashboardPage extends BorderPane {
     }
 
     private HBox buildStatCards() {
-        HBox box = new HBox(16,
-                new StatCard("Average Grade",     "4.83", "/images/av_grade_icon.png"),
-                new StatCard("Credits",           "183",  "/images/credits_icon.png"),
-                new StatCard("Current Courses",   "4",    "/images/current_course_icon.png"),
-                new StatCard("Completed Courses", "23",   "/images/course_icon.png")
-        );
-        box.setAlignment(javafx.geometry.Pos.CENTER);
-        return box;
+        return DashboardStatCards.build(Role.STUDENT);
     }
 
     private HBox buildBottomRow() {
