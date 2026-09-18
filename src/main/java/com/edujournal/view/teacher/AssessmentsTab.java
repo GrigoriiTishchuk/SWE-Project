@@ -158,12 +158,15 @@ public class AssessmentsTab {
         Label totalName =
                 new Label("Total (Weighted)");
 
-        Label totalType =
-                new Label("100%");
+        Label totalType = new Label();
+        totalType.setStyle("-fx-text-fill: #6B7280;");
 
-        totalType.setStyle(
-                "-fx-text-fill: #6B7280;"
-        );
+        Runnable updateTotal = () -> {
+            double sum = data.stream().mapToDouble(AssessmentsDTO::getWeight).sum();
+            totalType.setText(String.format("%.2f", sum));
+        };
+        updateTotal.run();
+        data.addListener((javafx.collections.ListChangeListener<AssessmentsDTO>) c -> updateTotal.run());
 
         Region totalSpacer =
                 new Region();
