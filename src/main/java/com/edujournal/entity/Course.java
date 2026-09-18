@@ -17,6 +17,10 @@ public class Course {
     @Column(name = "user_id")
     private Integer userId;
 
+    @ManyToOne
+    @JoinColumn(name = "academic_group_id", nullable = false)
+    private AcademicGroup academicGroup;
+
     public Course() {
     }
 
@@ -48,5 +52,13 @@ public class Course {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public AcademicGroup getAcademicGroup() {
+        return academicGroup;
+    }
+
+    public void setAcademicGroup(AcademicGroup academicGroup) {
+        this.academicGroup = academicGroup;
     }
 }
