@@ -157,4 +157,23 @@ public class CourseDAO {
         }
     }
 
+    public List<Course> findByAcademicGroupId(Integer groupId) {
+
+        EntityManager entityManager =
+                JPAUtil.getEntityManagerFactory()
+                        .createEntityManager();
+
+        try {
+            return entityManager.createQuery(
+                            "SELECT c FROM Course c WHERE c.academicGroup.id = :groupId",
+                            Course.class
+                    )
+                    .setParameter("groupId", groupId)
+                    .getResultList();
+
+        } finally {
+            entityManager.close();
+        }
+    }
+
 }

@@ -54,4 +54,43 @@ public class CourseDAOTest {
                 course.getCode()
         );
     }
+
+    @Test
+    void testFindByAcademicGroupId() {
+
+        CourseDAO courseDAO = new CourseDAO();
+
+        List<Course> courses =
+                courseDAO.findByAcademicGroupId(3);
+
+        assertNotNull(courses);
+        assertEquals(2, courses.size());
+
+        assertTrue(
+                courses.stream()
+                        .anyMatch(course ->
+                                "PR01".equals(course.getCode())
+                        )
+        );
+
+        assertTrue(
+                courses.stream()
+                        .anyMatch(course ->
+                                "MA01".equals(course.getCode())
+                        )
+        );
+
+        for (Course course : courses) {
+            System.out.println(
+                    course.getCode()
+                            + " - "
+                            + course.getName()
+                            + " - Group: "
+                            + course.getAcademicGroup().getName()
+            );
+
+            assertNotNull(course.getAcademicGroup());
+            assertEquals(3, course.getAcademicGroup().getId());
+        }
+    }
 }
