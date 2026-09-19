@@ -81,6 +81,20 @@ public class CourseDAO {
         }
     }
 
+    public boolean existsByCode(String code) {
+        EntityManager entityManager =
+                JPAUtil.getEntityManagerFactory()
+                        .createEntityManager();
+        try{
+            return entityManager.createQuery(
+                            "SELECT COUNT(c) FROM Course c WHERE c.code = :code", Long.class)
+                    .setParameter("code", code)
+                    .getSingleResult() > 0;
+        } finally {
+            entityManager.close();
+        }
+    }
+
     public List<Course> findByUserId(Integer userId) {
 
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();

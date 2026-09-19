@@ -26,8 +26,6 @@ public class CoursePage extends BorderPane {
         CourseController controller = new CourseController(role);
         box.getChildren().add(controller);
 
-
-
         return box;
     }
 }

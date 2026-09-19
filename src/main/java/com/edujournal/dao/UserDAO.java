@@ -1,12 +1,26 @@
 package com.edujournal.dao;
 
 import com.edujournal.config.JPAUtil;
+import com.edujournal.entity.Role;
 import com.edujournal.entity.User;
 import jakarta.persistence.EntityManager;
 
 import java.util.List;
 
 public class UserDAO {
+
+    public User findById(Integer userId) {
+        EntityManager entityManager = JPAUtil
+                .getEntityManagerFactory()
+                .createEntityManager();
+
+        try {
+            return entityManager.find(User.class, userId);
+
+        } finally {
+            entityManager.close();
+        }
+    }
 
     public User findByUsername(String username) {
 
@@ -29,6 +43,25 @@ public class UserDAO {
         }
     }
 
+    public List<User> findByRole(Role role) {
+
+        EntityManager entityManager = JPAUtil
+                .getEntityManagerFactory()
+                .createEntityManager();
+
+        try {
+            return entityManager.createQuery(
+                            "SELECT u FROM User u WHERE u.role = :role",
+                            User.class
+                    )
+                    .setParameter("role", role)
+                    .getResultList();
+
+        } finally {
+            entityManager.close();
+        }
+    }
+
     public List<User> findAll() {
 
         EntityManager entityManager = JPAUtil
@@ -38,6 +71,24 @@ public class UserDAO {
         try {
             return entityManager.createQuery(
                             "SELECT u FROM User u",
+                            User.class
+                    )
+                    .getResultList();
+
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    public List<User> findAllTeachers() {
+
+        EntityManager entityManager = JPAUtil
+                .getEntityManagerFactory()
+                .createEntityManager();
+
+        try {
+            return entityManager.createQuery(
+                            "SELECT u FROM User u WHERE u.role = com.edujournal.entity.Role.TEACHER",
                             User.class
                     )
                     .getResultList();
