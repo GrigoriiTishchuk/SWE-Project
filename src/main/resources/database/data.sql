@@ -13,7 +13,7 @@ SELECT
     'demo_password',
     'Admin',
     'User',
-    'ADMIN'
+    'ADMINISTRATOR'
     WHERE NOT EXISTS (
     SELECT 1
     FROM users

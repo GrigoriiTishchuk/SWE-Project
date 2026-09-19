@@ -152,7 +152,7 @@ public class EnrollmentDAO {
             entityManager.close();
         }
     }
-}
+
     public List<Enrollment> findByCourseAndGroup(int courseId, int groupId) {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
