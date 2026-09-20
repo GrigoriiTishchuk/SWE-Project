@@ -1,21 +1,18 @@
-package com.edujournal.entity;
+package com.edujournal.model;
 
+import com.edujournal.entity.Course;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "academic_groups")
-public class AcademicGroup {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class AcademicGroupDTO {
     private Integer id;
-
     private String name;
 
-    public AcademicGroup() {
+    public AcademicGroupDTO(Integer id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     public Integer getId() {
