@@ -18,7 +18,7 @@ public class Course {
     private Integer userId;
 
     @ManyToOne
-    @JoinColumn(name = "academic_group_id", nullable = false)
+    @JoinColumn(name = "academic_group_id", nullable = true)
     private AcademicGroup academicGroup;
 
     public Course() {

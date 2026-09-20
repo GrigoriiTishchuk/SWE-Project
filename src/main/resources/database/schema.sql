@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS courses (
     code VARCHAR(50) NOT NULL,
     name VARCHAR(100) NOT NULL,
     user_id INT,
-    academic_group_id INT NOT NULL,
+    academic_group_id INT,
 
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (academic_group_id) REFERENCES academic_groups(id)

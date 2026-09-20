@@ -76,7 +76,7 @@ public class LoginPage extends HBox {
 
     private void onSignIn() {
         // TODO: authenticate and navigate to the right dashboard by role
-        Main.showPage(new TeacherDashboardPage());
+        Main.showPage(new AdminDashboardPage());
     }
 
     private void onForgotPassword() {
