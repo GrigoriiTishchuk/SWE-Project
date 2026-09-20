@@ -9,6 +9,8 @@ import java.util.List;
 public class AcademicGroupDTO {
     private Integer id;
     private String name;
+    private Integer courseId;
+    private String courseName;
 
     public AcademicGroupDTO(Integer id, String name) {
         this.id = id;
