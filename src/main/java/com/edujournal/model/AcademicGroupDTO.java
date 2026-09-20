@@ -17,6 +17,8 @@ public class AcademicGroupDTO {
         this.name = name;
     }
 
+    public AcademicGroupDTO() {}
+
     public Integer getId() {
         return id;
     }

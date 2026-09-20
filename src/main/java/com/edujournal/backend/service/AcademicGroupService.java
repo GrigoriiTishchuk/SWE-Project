@@ -41,4 +41,9 @@ public class AcademicGroupService {
     public void delete(Integer id) {
         academicGroupDAO.delete(id);
     }
+
+    public boolean existsByName(String name) {
+        return academicGroupDAO.findByName(name) != null;
+    }
+
 }

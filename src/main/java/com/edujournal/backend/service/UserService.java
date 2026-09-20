@@ -100,4 +100,7 @@ public class UserService {
                 .replaceAll("\\s+", "");
     }
 
+    public void update(User user) {
+        userDAO.update(user);
+    }
 }

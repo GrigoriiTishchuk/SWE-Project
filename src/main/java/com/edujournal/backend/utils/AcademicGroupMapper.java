@@ -21,7 +21,7 @@ public class AcademicGroupMapper {
         }
 
         AcademicGroup group = new AcademicGroup();
-
+        group.setId(dto.getId());
         group.setName(dto.getName());
 
         return group;
