@@ -17,8 +17,6 @@ class StudentDAOTest {
         Student student = new Student();
 
         student.setStudentNumber("TEST001");
-        student.setFirstName("John");
-        student.setLastName("Doe");
         student.setDateOfBirth(LocalDate.of(2000, 1, 1));
 
         studentDAO.save(student);
@@ -46,8 +44,6 @@ class StudentDAOTest {
         Student student = new Student();
 
         student.setStudentNumber("TEST002");
-        student.setFirstName("Jane");
-        student.setLastName("Smith");
         student.setDateOfBirth(LocalDate.of(2001, 5, 10));
 
         studentDAO.save(student);
@@ -66,13 +62,8 @@ class StudentDAOTest {
         Student student = new Student();
 
         student.setStudentNumber("TEST003");
-        student.setFirstName("OldName");
-        student.setLastName("OldLastName");
 
         studentDAO.save(student);
-
-        student.setFirstName("NewName");
-        student.setLastName("NewLastName");
 
         studentDAO.update(student);
 
@@ -89,8 +80,6 @@ class StudentDAOTest {
         Student student = new Student();
 
         student.setStudentNumber("TEST004");
-        student.setFirstName("Delete");
-        student.setLastName("Test");
 
         studentDAO.save(student);
 

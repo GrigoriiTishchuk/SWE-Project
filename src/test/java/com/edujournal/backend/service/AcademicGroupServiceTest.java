@@ -1,8 +1,10 @@
 package com.edujournal.backend.service;
 
 import com.edujournal.entity.AcademicGroup;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,6 +14,18 @@ class AcademicGroupServiceTest {
     private final AcademicGroupService academicGroupService =
             new AcademicGroupService();
 
+    private final List<Integer> createdIds =
+            new ArrayList<>();
+
+    @AfterEach
+    void cleanup() {
+        for (Integer id : createdIds) {
+            academicGroupService.delete(id);
+        }
+
+        createdIds.clear();
+    }
+
     @Test
     void saveAndFindById() {
         AcademicGroup group = new AcademicGroup();
@@ -19,13 +33,18 @@ class AcademicGroupServiceTest {
 
         academicGroupService.save(group);
 
+        createdIds.add(group.getId());
+
         assertNotNull(group.getId());
 
         AcademicGroup found =
                 academicGroupService.findById(group.getId());
 
         assertNotNull(found);
-        assertEquals("Service Test Group 1", found.getName());
+        assertEquals(
+                "Service Test Group 1",
+                found.getName()
+        );
     }
 
     @Test
@@ -42,6 +61,8 @@ class AcademicGroupServiceTest {
         group.setName("Service Test Group 2");
 
         academicGroupService.save(group);
+
+        createdIds.add(group.getId());
 
         AcademicGroup found =
                 academicGroupService.findByName(
@@ -61,6 +82,8 @@ class AcademicGroupServiceTest {
         group.setName("Old Service Group");
 
         academicGroupService.save(group);
+
+        createdIds.add(group.getId());
 
         group.setName("New Service Group");
 

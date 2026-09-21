@@ -1,8 +1,10 @@
 package com.edujournal.dao;
 
 import com.edujournal.entity.AcademicGroup;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,12 +14,24 @@ class AcademicGroupDAOTest {
     private final AcademicGroupDAO academicGroupDAO =
             new AcademicGroupDAO();
 
+    private final List<Integer> createdIds = new ArrayList<>();
+
+    @AfterEach
+    void cleanup() {
+        for (Integer id : createdIds) {
+            academicGroupDAO.delete(id);
+        }
+
+        createdIds.clear();
+    }
+
     @Test
     void saveAndFindById() {
         AcademicGroup group = new AcademicGroup();
         group.setName("Test Group 1");
 
         academicGroupDAO.save(group);
+        createdIds.add(group.getId());
 
         assertNotNull(group.getId());
 
@@ -42,6 +56,7 @@ class AcademicGroupDAOTest {
         group.setName("Test Group 2");
 
         academicGroupDAO.save(group);
+        createdIds.add(group.getId());
 
         AcademicGroup found =
                 academicGroupDAO.findByName("Test Group 2");
@@ -56,6 +71,7 @@ class AcademicGroupDAOTest {
         group.setName("Old Group Name");
 
         academicGroupDAO.save(group);
+        createdIds.add(group.getId());
 
         group.setName("New Group Name");
 
@@ -82,5 +98,8 @@ class AcademicGroupDAOTest {
         academicGroupDAO.delete(id);
 
         assertNull(academicGroupDAO.findById(id));
+
+        // Zaten silindiği için cleanup'ın tekrar silmeye
+        // çalışmaması adına listede tutmuyoruz.
     }
 }

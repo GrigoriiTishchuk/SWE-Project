@@ -1,41 +1,67 @@
 package com.edujournal.backend.service;
 
 import com.edujournal.entity.Student;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class StudentServiceTest {
 
-    private final StudentService studentService = new StudentService();
+    private final StudentService studentService =
+            new StudentService();
+
+    private final List<Integer> createdIds =
+            new ArrayList<>();
+
+    @AfterEach
+    void cleanup() {
+        for (Integer id : createdIds) {
+            studentService.delete(id);
+        }
+
+        createdIds.clear();
+    }
 
     @Test
     void saveAndFindById() {
         Student student = new Student();
 
         student.setStudentNumber("SERVICE001");
-        student.setFirstName("John");
-        student.setLastName("Doe");
-        student.setDateOfBirth(LocalDate.of(2000, 1, 1));
+        student.setDateOfBirth(
+                LocalDate.of(2000, 1, 1)
+        );
 
         studentService.save(student);
 
+        createdIds.add(student.getId());
+
         assertNotNull(student.getId());
 
-        Student found = studentService.findById(student.getId());
+        Student found =
+                studentService.findById(student.getId());
 
         assertNotNull(found);
-        assertEquals("SERVICE001", found.getStudentNumber());
-        assertEquals("John", found.getFirstName());
-        assertEquals("Doe", found.getLastName());
+
+        assertEquals(
+                "SERVICE001",
+                found.getStudentNumber()
+        );
+
+        assertEquals(
+                LocalDate.of(2000, 1, 1),
+                found.getDateOfBirth()
+        );
     }
 
     @Test
     void findAll() {
-        List<Student> students = studentService.findAll();
+        List<Student> students =
+                studentService.findAll();
 
         assertNotNull(students);
     }
@@ -45,17 +71,22 @@ class StudentServiceTest {
         Student student = new Student();
 
         student.setStudentNumber("SERVICE002");
-        student.setFirstName("Jane");
-        student.setLastName("Smith");
 
         studentService.save(student);
 
+        createdIds.add(student.getId());
+
         Student found =
-                studentService.findByStudentNumber("SERVICE002");
+                studentService.findByStudentNumber(
+                        "SERVICE002"
+                );
 
         assertNotNull(found);
-        assertEquals("SERVICE002", found.getStudentNumber());
-        assertEquals("Jane", found.getFirstName());
+
+        assertEquals(
+                "SERVICE002",
+                found.getStudentNumber()
+        );
     }
 
     @Test
@@ -63,22 +94,37 @@ class StudentServiceTest {
         Student student = new Student();
 
         student.setStudentNumber("SERVICE003");
-        student.setFirstName("OldName");
-        student.setLastName("OldLastName");
+        student.setDateOfBirth(
+                LocalDate.of(2000, 1, 1)
+        );
 
         studentService.save(student);
 
-        student.setFirstName("NewName");
-        student.setLastName("NewLastName");
+        createdIds.add(student.getId());
+
+        student.setStudentNumber("SERVICE003_UPDATED");
+        student.setDateOfBirth(
+                LocalDate.of(2001, 2, 2)
+        );
 
         studentService.update(student);
 
         Student updated =
-                studentService.findById(student.getId());
+                studentService.findById(
+                        student.getId()
+                );
 
         assertNotNull(updated);
-        assertEquals("NewName", updated.getFirstName());
-        assertEquals("NewLastName", updated.getLastName());
+
+        assertEquals(
+                "SERVICE003_UPDATED",
+                updated.getStudentNumber()
+        );
+
+        assertEquals(
+                LocalDate.of(2001, 2, 2),
+                updated.getDateOfBirth()
+        );
     }
 
     @Test
@@ -86,17 +132,22 @@ class StudentServiceTest {
         Student student = new Student();
 
         student.setStudentNumber("SERVICE004");
-        student.setFirstName("Delete");
-        student.setLastName("Test");
+        student.setDateOfBirth(
+                LocalDate.of(2000, 1, 1)
+        );
 
         studentService.save(student);
 
         Integer id = student.getId();
 
-        assertNotNull(studentService.findById(id));
+        assertNotNull(
+                studentService.findById(id)
+        );
 
         studentService.delete(id);
 
-        assertNull(studentService.findById(id));
+        assertNull(
+                studentService.findById(id)
+        );
     }
 }

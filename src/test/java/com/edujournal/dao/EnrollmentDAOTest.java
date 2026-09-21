@@ -1,8 +1,10 @@
 package com.edujournal.dao;
 
 import com.edujournal.entity.Enrollment;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,6 +13,18 @@ class EnrollmentDAOTest {
 
     private final EnrollmentDAO enrollmentDAO =
             new EnrollmentDAO();
+
+    private final List<Integer> createdIds =
+            new ArrayList<>();
+
+    @AfterEach
+    void cleanup() {
+        for (Integer id : createdIds) {
+            enrollmentDAO.delete(id);
+        }
+
+        createdIds.clear();
+    }
 
     @Test
     void saveAndFindById() {
@@ -22,6 +36,8 @@ class EnrollmentDAOTest {
         enrollment.setStatus("ACTIVE");
 
         enrollmentDAO.save(enrollment);
+
+        createdIds.add(enrollment.getId());
 
         assertNotNull(enrollment.getId());
 
@@ -54,6 +70,8 @@ class EnrollmentDAOTest {
 
         enrollmentDAO.save(enrollment);
 
+        createdIds.add(enrollment.getId());
+
         List<Enrollment> results =
                 enrollmentDAO.findByStudentId(1);
 
@@ -77,6 +95,8 @@ class EnrollmentDAOTest {
         enrollment.setStatus("ACTIVE");
 
         enrollmentDAO.save(enrollment);
+
+        createdIds.add(enrollment.getId());
 
         List<Enrollment> results =
                 enrollmentDAO.findByCourseId(1);
@@ -102,6 +122,8 @@ class EnrollmentDAOTest {
 
         enrollmentDAO.save(enrollment);
 
+        createdIds.add(enrollment.getId());
+
         List<Enrollment> results =
                 enrollmentDAO.findByAcademicGroupId(1);
 
@@ -125,6 +147,8 @@ class EnrollmentDAOTest {
         enrollment.setStatus("ACTIVE");
 
         enrollmentDAO.save(enrollment);
+
+        createdIds.add(enrollment.getId());
 
         enrollment.setStatus("INACTIVE");
 
