@@ -23,7 +23,7 @@ public class StudentDashboardPage extends BorderPane {
     private VBox buildContent() {
         VBox content = new VBox(20);
         content.setPadding(new Insets(24));
-        content.getChildren().addAll(TopBar.build("Dashboard", Role.STUDENT), buildStatCards(), buildBottomRow());
+        content.getChildren().addAll(TopBar.build("Dashboard", Role.STUDENT, false), buildStatCards(), buildBottomRow());
         return content;
     }
 

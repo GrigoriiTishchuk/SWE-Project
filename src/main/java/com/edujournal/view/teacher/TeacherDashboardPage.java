@@ -28,7 +28,7 @@ public class TeacherDashboardPage extends BorderPane {
     private VBox buildContent() {
         VBox content = new VBox(20);
         content.setPadding(new Insets(24));
-        content.getChildren().addAll(TopBar.build("Dashboard", Role.TEACHER), buildStatCards(), buildBottomRow());
+        content.getChildren().addAll(TopBar.build("Dashboard", Role.TEACHER, false), buildStatCards(), buildBottomRow());
         return content;
     }
 

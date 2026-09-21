@@ -18,7 +18,7 @@ import javafx.scene.shape.Circle;
 
 public class TopBar {
 
-    public static HBox build(String title, Role role) {
+    public static HBox build(String title, Role role, boolean showYear) {
         Label titleLabel = new Label(title);
         titleLabel.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
 
@@ -26,8 +26,9 @@ public class TopBar {
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
         ComboBox<String> studyingYear = new ComboBox<>();
-        studyingYear.getItems().addAll("2025/2026", "2024/2025", "2023/2024");
-        studyingYear.setValue("2025/2026");
+        studyingYear.getItems().addAll("2026/2027", "2025/2026", "2024/2025");
+        studyingYear.setValue("2026/2027");
+        studyingYear.setVisible(showYear);
 
         Circle avatar = new Circle(20, Color.web("#9CA3AF"));
 
