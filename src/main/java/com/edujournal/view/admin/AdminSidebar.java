@@ -23,7 +23,7 @@ public class AdminSidebar {
                 new Sidebar.NavItem("Teachers", active.equals("Teachers"),
                         () -> Main.showPage(new AdminTeacherPage(AdminSidebar.build("Teachers"), Role.ADMINISTRATOR))),
                 new Sidebar.NavItem("Groups", active.equals("Groups"),
-                        () -> Main.showPage(new AdminGroupPage())),
+                        () -> Main.showPage(new AdminGroupPage(AdminSidebar.build("Academic Groups"), Role.ADMINISTRATOR))),
                 new Sidebar.NavItem("Courses", active.equals("Courses"),
                         () -> Main.showPage(new CoursePage(AdminSidebar.build("Courses"), Role.ADMINISTRATOR))),
                 new Sidebar.NavItem("Own Profile", active.equals("Own Profile"),

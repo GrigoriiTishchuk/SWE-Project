@@ -17,9 +17,8 @@ public class Course {
     @Column(name = "user_id")
     private Integer userId;
 
-    @ManyToOne
-    @JoinColumn(name = "academic_group_id", nullable = true)
-    private AcademicGroup academicGroup;
+    @Column(name = "academic_group_id")
+    private Integer academicGroupId;
 
     public Course() {
     }
@@ -54,11 +53,11 @@ public class Course {
         this.userId = userId;
     }
 
-    public AcademicGroup getAcademicGroup() {
-        return academicGroup;
+    public Integer getAcademicGroupId() {
+        return academicGroupId;
     }
 
-    public void setAcademicGroup(AcademicGroup academicGroup) {
-        this.academicGroup = academicGroup;
+    public void setAcademicGroupId(Integer academicGroupId) {
+        this.academicGroupId = academicGroupId;
     }
 }

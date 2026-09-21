@@ -24,66 +24,7 @@ public class AdminTeacherController extends BaseController<UserDTO> {
     public AdminTeacherController(Role role) {
         this.role = role;
         configureColumns();
-        buildUI();
         loadAndShowItems();
-    }
-
-    private HBox buildFilterBar() {
-        searchField.setPromptText("Search teachers...");
-        searchField.setPrefWidth(250);
-
-        Button clearButton = new Button("Clear");
-        HBox filterBar = new HBox(10);
-        filterBar.setPadding(new Insets(10, 0, 10, 0));
-        filterBar.getChildren().addAll(
-                new Label("Search:"),
-                searchField,
-                new Label("Filter by:"),
-                filterCombo,
-                clearButton
-        );
-
-        clearButton.setOnAction(event -> {
-            searchField.clear();
-            filterCombo.setValue("All");
-        });
-
-        return filterBar;
-    }
-
-    private void buildUI() {
-        // Double click opens information about the teacher
-        table.setRowFactory(tv -> {
-            TableRow<UserDTO> row = new TableRow<>();
-            row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && !row.isEmpty()) {
-                    UserDTO teacher = row.getItem();
-                    showUserInfoDialog(teacher);
-                }
-            });
-            return row;
-        });
-
-        Button addBtn = new Button("Add");
-        Button deleteBtn = new Button("Delete");
-
-        addBtn.setOnAction(e -> showAddTeacherDialog());
-
-        deleteBtn.setOnAction(e -> {
-            UserDTO selected = table.getSelectionModel().getSelectedItem();
-            if (selected != null) showDeleteTeacherDialog(selected);
-        });
-
-        HBox actions = new HBox(10);
-        actions.setPadding(new Insets(10));
-        actions.getChildren().addAll(addBtn, deleteBtn);
-
-        HBox filterBar = buildFilterBar();
-
-        VBox layout = new VBox(10, filterBar, table, actions);
-        layout.setPadding(new Insets(10));
-
-        setCenter(layout);
     }
 
     @Override
@@ -150,7 +91,118 @@ public class AdminTeacherController extends BaseController<UserDTO> {
     }
 
     // Dialogs
-    private void showUserInfoDialog(UserDTO teacher) {
+    @Override
+    protected void showAddDialog() {
+        Dialog<UserDTO> dialog = new Dialog<>();
+        dialog.setTitle("Add Teacher");
+
+        TextField firstNameField = new TextField();
+        firstNameField.setPromptText("First Name");
+
+        TextField lastNameField = new TextField();
+        lastNameField.setPromptText("Last Name");
+
+        VBox box = new VBox(10, firstNameField, lastNameField);
+        box.setPadding(new Insets(10));
+        dialog.getDialogPane().setContent(box);
+
+        ButtonType saveBtn = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveBtn, ButtonType.CANCEL);
+
+        dialog.setResultConverter(button -> {
+            if (button == saveBtn) {
+                if (firstNameField.getText().isBlank() || lastNameField.getText().isBlank()) {
+                    new Alert(Alert.AlertType.ERROR,
+                            "First name and last name cannot be empty.").showAndWait();
+                    return null;
+                }
+
+                UserDTO dto = new UserDTO();
+                dto.setFirstName(firstNameField.getText());
+                dto.setLastName(lastNameField.getText());
+                return dto;
+            }
+            return null;
+        });
+
+        UserDTO result = dialog.showAndWait().orElse(null);
+
+        if (result != null) {
+            userService.createTeacher(result.getFirstName(), result.getLastName());
+            loadAndShowItems();
+        }
+    }
+
+    @Override
+    protected void showEditDialog() {
+
+        UserDTO teacher = table.getSelectionModel().getSelectedItem();
+        if (teacher == null) return;
+
+        Dialog<UserDTO> dialog = new Dialog<>();
+        dialog.setTitle("Edit Teacher");
+
+        TextField firstNameField = new TextField(teacher.getFirstName());
+        TextField lastNameField = new TextField(teacher.getLastName());
+
+        VBox box = new VBox(10, firstNameField, lastNameField);
+        box.setPadding(new Insets(10));
+        dialog.getDialogPane().setContent(box);
+
+        ButtonType saveBtn = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveBtn, ButtonType.CANCEL);
+
+        dialog.setResultConverter(btn -> {
+            if (btn == saveBtn) {
+
+                if (firstNameField.getText().isBlank() || lastNameField.getText().isBlank()) {
+                    new Alert(Alert.AlertType.ERROR,
+                            "First name and last name cannot be empty.").showAndWait();
+                    return null;
+                }
+
+                teacher.setFirstName(firstNameField.getText().trim());
+                teacher.setLastName(lastNameField.getText().trim());
+                return teacher;
+            }
+            return null;
+        });
+
+        UserDTO updated = dialog.showAndWait().orElse(null);
+
+        if (updated != null) {
+            User entity = userMapper.toEntity(updated);
+            userService.update(entity);
+            loadAndShowItems();
+        }
+    }
+
+    @Override
+    protected void showDeleteDialog() {
+        UserDTO teacher = table.getSelectionModel().getSelectedItem();
+        if (teacher == null) return;
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Delete Teacher");
+        alert.setHeaderText("Are you sure you want to delete \"" + teacher.getUsername() + "\"?");
+        alert.setContentText("This action cannot be undone.");
+
+        ButtonType yes = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
+        ButtonType no = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        alert.getButtonTypes().setAll(yes, no);
+
+        if (alert.showAndWait().orElse(no) == yes) {
+            userService.deleteUser(teacher.getId());
+            loadAndShowItems();
+        }
+    }
+
+    @Override
+    protected void onView() {
+        UserDTO teacher = table.getSelectionModel().getSelectedItem();
+        if (teacher == null) return;
+
         CourseService courseService = new CourseService();
         List<CourseDTO> courses = courseService.findByUserId(teacher.getId());
 
@@ -181,55 +233,4 @@ public class AdminTeacherController extends BaseController<UserDTO> {
         alert.showAndWait();
     }
 
-    private void showAddTeacherDialog() {
-        Dialog<UserDTO> dialog = new Dialog<>();
-        dialog.setTitle("Add Teacher");
-
-        TextField firstNameField = new TextField();
-        firstNameField.setPromptText("First Name");
-
-        TextField lastNameField = new TextField();
-        lastNameField.setPromptText("Last Name");
-
-        VBox box = new VBox(10, firstNameField, lastNameField);
-        box.setPadding(new Insets(10));
-        dialog.getDialogPane().setContent(box);
-
-        ButtonType saveBtn = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(saveBtn, ButtonType.CANCEL);
-
-        dialog.setResultConverter(button -> {
-            if (button == saveBtn) {
-                UserDTO dto = new UserDTO();
-                dto.setFirstName(firstNameField.getText());
-                dto.setLastName(lastNameField.getText());
-                return dto;
-            }
-            return null;
-        });
-
-        UserDTO result = dialog.showAndWait().orElse(null);
-
-        if (result != null) {
-            userService.createTeacher(result.getFirstName(), result.getLastName());
-            loadAndShowItems();
-        }
-    }
-
-    private void showDeleteTeacherDialog(UserDTO teacher) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Delete Teacher");
-        alert.setHeaderText("Are you sure you want to delete \"" + teacher.getUsername() + "\"?");
-        alert.setContentText("This action cannot be undone.");
-
-        ButtonType yes = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
-        ButtonType no = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
-
-        alert.getButtonTypes().setAll(yes, no);
-
-        if (alert.showAndWait().orElse(no) == yes) {
-            userService.deleteUser(teacher.getId());
-            loadAndShowItems();
-        }
-    }
 }
