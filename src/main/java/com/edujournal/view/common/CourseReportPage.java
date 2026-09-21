@@ -53,7 +53,7 @@ public class CourseReportPage extends BorderPane {
         HBox toolbar = new HBox(exportBtn);
         toolbar.setAlignment(Pos.CENTER_RIGHT);
 
-        box.getChildren().addAll(TopBar.build("Course's report", role), toolbar, table);
+        box.getChildren().addAll(TopBar.build("Course's report", role, true), toolbar, table);
         return box;
     }
 

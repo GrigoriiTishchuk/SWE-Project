@@ -22,7 +22,7 @@ public class AdminGroupPage extends BorderPane {
         VBox box = new VBox(12);
         box.setPadding(new Insets(24));
 
-        box.getChildren().add(TopBar.build("Academic Groups", role));
+        box.getChildren().add(TopBar.build("Academic Groups", role, false));
 
         AdminGroupController controller = new AdminGroupController();
         box.getChildren().add(controller);
