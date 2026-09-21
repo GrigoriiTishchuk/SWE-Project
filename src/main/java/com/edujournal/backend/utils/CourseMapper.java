@@ -8,8 +8,18 @@ import com.edujournal.entity.User;
 import com.edujournal.model.CourseDTO;
 
 public class CourseMapper {
-    private final UserDAO userDAO = new UserDAO();
-    private final AcademicGroupDAO academicGroupDAO = new AcademicGroupDAO();
+    private final UserDAO userDAO;
+    private final AcademicGroupDAO academicGroupDAO ;
+
+    public CourseMapper() {
+        this.userDAO = new UserDAO();
+        this.academicGroupDAO = new AcademicGroupDAO();
+    }
+
+    public CourseMapper(UserDAO userDAO, AcademicGroupDAO academicGroupDAO) {
+        this.userDAO = userDAO;
+        this.academicGroupDAO = academicGroupDAO;
+    }
 
     public CourseDTO toDTO(Course entity) {
 
