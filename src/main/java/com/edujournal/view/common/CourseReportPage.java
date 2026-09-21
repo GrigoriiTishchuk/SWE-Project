@@ -1,8 +1,10 @@
 package com.edujournal.view.common;
 
+import com.edujournal.backend.service.AcademicGroupService;
 import com.edujournal.backend.service.AssessmentsService;
 import com.edujournal.backend.service.EnrollmentService;
 import com.edujournal.dao.CourseDAO;
+import com.edujournal.entity.AcademicGroup;
 import com.edujournal.entity.Course;
 import com.edujournal.entity.Role;
 import javafx.beans.property.SimpleStringProperty;
@@ -17,6 +19,7 @@ public class CourseReportPage extends BorderPane {
     private final CourseDAO courseDAO = new CourseDAO();
     private final EnrollmentService enrollmentService = new EnrollmentService();
     private final AssessmentsService assessmentsService = new AssessmentsService();
+    private final AcademicGroupService academicGroupService = new AcademicGroupService();
 
     public CourseReportPage(VBox sidebar, Role role) {
         setLeft(sidebar);
@@ -44,7 +47,8 @@ public class CourseReportPage extends BorderPane {
 
         TableColumn<Course, String> groupCol = new TableColumn<>("Group");
         groupCol.setCellValueFactory(c -> {
-            var group = c.getValue().getAcademicGroup();
+            Integer groupId = c.getValue().getAcademicGroupId();
+            AcademicGroup group = groupId != null ? academicGroupService.findById(groupId) : null;
             return new SimpleStringProperty(group != null ? group.getName() : "—");
         });
 
