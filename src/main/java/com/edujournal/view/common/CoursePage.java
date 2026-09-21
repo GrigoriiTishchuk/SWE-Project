@@ -3,9 +3,7 @@ package com.edujournal.view.common;
 import com.edujournal.entity.Role;
 import com.edujournal.view.controller.CourseController;
 import javafx.geometry.Insets;
-import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class CoursePage extends BorderPane {

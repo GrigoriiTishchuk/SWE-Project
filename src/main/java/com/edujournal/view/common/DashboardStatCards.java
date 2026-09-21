@@ -29,15 +29,12 @@ public class DashboardStatCards {
                         new StatCard("Assessments", String.valueOf(assessments), "/images/assessement_icon.png")
                 );
             }
-            case STUDENT -> {
-                // data hardcoded, need user session
-                box.getChildren().addAll(
+            case STUDENT -> box.getChildren().addAll(
                         new StatCard("Average Grade",     "4.2", "/images/av_grade_icon.png"),
                         new StatCard("Credits",           "15",  "/images/credits_icon.png"),
                         new StatCard("Current Courses",   "3",   "/images/current_course_icon.png"),
                         new StatCard("Completed Courses", "8",   "/images/course_icon.png")
                 );
-            }
             case ADMINISTRATOR -> {
                 int students = new StudentService().findAll().size();
                 int teachers = (int) new UserDAO().findAll().stream()
