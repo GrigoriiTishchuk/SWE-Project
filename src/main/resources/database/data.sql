@@ -82,69 +82,152 @@ SELECT
  Students
  */
 
-INSERT INTO students (
-    student_number,
+-- Student 1
+INSERT INTO users (
+    username,
+    password_hash,
     first_name,
     last_name,
-    date_of_birth
+    role
+)
+SELECT
+    'student1',
+    'demo_password',
+    'Heikki',
+    'Heikkinen',
+    'STUDENT'
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM users
+    WHERE username = 'student1'
+);
+
+INSERT INTO students (
+    student_number,
+    date_of_birth,
+    user_id
 )
 SELECT
     'S001',
-    'Heikki',
-    'Heikkinen',
-    '2005-04-15'
-    WHERE NOT EXISTS (
+    '2005-04-15',
+    u.id
+FROM users u
+WHERE u.username = 'student1'
+  AND NOT EXISTS (
     SELECT 1
     FROM students
     WHERE student_number = 'S001'
 );
 
-INSERT INTO students (
-    student_number,
+
+-- Student 2
+INSERT INTO users (
+    username,
+    password_hash,
     first_name,
     last_name,
-    date_of_birth
+    role
+)
+SELECT
+    'student2',
+    'demo_password',
+    'Anna',
+    'Laine',
+    'STUDENT'
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM users
+    WHERE username = 'student2'
+);
+
+INSERT INTO students (
+    student_number,
+    date_of_birth,
+    user_id
 )
 SELECT
     'S002',
-    'Anna',
-    'Laine',
-    '2006-02-20'
-    WHERE NOT EXISTS (
+    '2006-02-20',
+    u.id
+FROM users u
+WHERE u.username = 'student2'
+  AND NOT EXISTS (
     SELECT 1
     FROM students
     WHERE student_number = 'S002'
 );
 
-INSERT INTO students (
-    student_number,
+
+-- Student 3
+INSERT INTO users (
+    username,
+    password_hash,
     first_name,
     last_name,
-    date_of_birth
+    role
+)
+SELECT
+    'student3',
+    'demo_password',
+    'Matti',
+    'Nieminen',
+    'STUDENT'
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM users
+    WHERE username = 'student3'
+);
+
+INSERT INTO students (
+    student_number,
+    date_of_birth,
+    user_id
 )
 SELECT
     'S003',
-    'Matti',
-    'Nieminen',
-    '2005-09-12'
-    WHERE NOT EXISTS (
+    '2005-09-12',
+    u.id
+FROM users u
+WHERE u.username = 'student3'
+  AND NOT EXISTS (
     SELECT 1
     FROM students
     WHERE student_number = 'S003'
 );
 
-INSERT INTO students (
-    student_number,
+
+-- Student 4
+INSERT INTO users (
+    username,
+    password_hash,
     first_name,
     last_name,
-    date_of_birth
+    role
+)
+SELECT
+    'student4',
+    'demo_password',
+    'Sofia',
+    'Virtanen',
+    'STUDENT'
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM users
+    WHERE username = 'student4'
+);
+
+INSERT INTO students (
+    student_number,
+    date_of_birth,
+    user_id
 )
 SELECT
     'S004',
-    'Sofia',
-    'Virtanen',
-    '2006-06-05'
-    WHERE NOT EXISTS (
+    '2006-06-05',
+    u.id
+FROM users u
+WHERE u.username = 'student4'
+  AND NOT EXISTS (
     SELECT 1
     FROM students
     WHERE student_number = 'S004'
@@ -485,101 +568,116 @@ WHERE c.code = 'MA01'
  */
 
 INSERT INTO grades (
-    student_id,
+    enrollment_id,
     assessment_id,
     score,
     comment
 )
 SELECT
-    s.id,
+    e.id,
     a.id,
     85,
     'Good performance'
-FROM students s
-         JOIN assessments a
-              ON a.title = 'Midterm Exam'
+FROM enrollments e
+         JOIN students s
+              ON e.student_id = s.id
          JOIN courses c
-              ON c.id = a.course_id
+              ON e.course_id = c.id
+         JOIN assessments a
+              ON a.course_id = c.id
 WHERE s.student_number = 'S001'
   AND c.code = 'SE01'
+  AND a.title = 'Midterm Exam'
   AND NOT EXISTS (
     SELECT 1
     FROM grades g
-    WHERE g.student_id = s.id
+    WHERE g.enrollment_id = e.id
       AND g.assessment_id = a.id
 );
 
+
 INSERT INTO grades (
-    student_id,
+    enrollment_id,
     assessment_id,
     score,
     comment
 )
 SELECT
-    s.id,
+    e.id,
     a.id,
     90,
     'Very good work'
-FROM students s
-         JOIN assessments a
-              ON a.title = 'Database Assignment'
+FROM enrollments e
+         JOIN students s
+              ON e.student_id = s.id
          JOIN courses c
-              ON c.id = a.course_id
+              ON e.course_id = c.id
+         JOIN assessments a
+              ON a.course_id = c.id
 WHERE s.student_number = 'S002'
   AND c.code = 'DB01'
+  AND a.title = 'Database Assignment'
   AND NOT EXISTS (
     SELECT 1
     FROM grades g
-    WHERE g.student_id = s.id
+    WHERE g.enrollment_id = e.id
       AND g.assessment_id = a.id
 );
 
+
 INSERT INTO grades (
-    student_id,
+    enrollment_id,
     assessment_id,
     score,
     comment
 )
 SELECT
-    s.id,
+    e.id,
     a.id,
     88,
     'Good programming skills'
-FROM students s
-         JOIN assessments a
-              ON a.title = 'Programming Project'
+FROM enrollments e
+         JOIN students s
+              ON e.student_id = s.id
          JOIN courses c
-              ON c.id = a.course_id
+              ON e.course_id = c.id
+         JOIN assessments a
+              ON a.course_id = c.id
 WHERE s.student_number = 'S003'
   AND c.code = 'PR01'
+  AND a.title = 'Programming Project'
   AND NOT EXISTS (
     SELECT 1
     FROM grades g
-    WHERE g.student_id = s.id
+    WHERE g.enrollment_id = e.id
       AND g.assessment_id = a.id
 );
 
+
 INSERT INTO grades (
-    student_id,
+    enrollment_id,
     assessment_id,
     score,
     comment
 )
 SELECT
-    s.id,
+    e.id,
     a.id,
     92,
     'Excellent result'
-FROM students s
-         JOIN assessments a
-              ON a.title = 'Mathematics Exam'
+FROM enrollments e
+         JOIN students s
+              ON e.student_id = s.id
          JOIN courses c
-              ON c.id = a.course_id
+              ON e.course_id = c.id
+         JOIN assessments a
+              ON a.course_id = c.id
 WHERE s.student_number = 'S004'
   AND c.code = 'MA01'
+  AND a.title = 'Mathematics Exam'
   AND NOT EXISTS (
     SELECT 1
     FROM grades g
-    WHERE g.student_id = s.id
+    WHERE g.enrollment_id = e.id
       AND g.assessment_id = a.id
 );
