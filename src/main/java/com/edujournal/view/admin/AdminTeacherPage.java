@@ -7,8 +7,6 @@ import javafx.geometry.Insets;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
-// placeholder only
-
 public class AdminTeacherPage extends BorderPane {
     private final Role role;
 

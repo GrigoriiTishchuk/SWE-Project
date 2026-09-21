@@ -67,7 +67,7 @@ public class AdminDashboardPage extends BorderPane {
         viewCourses.setOnAction(e -> Main.showPage(new CoursePage(AdminSidebar.build("Courses"), Role.ADMINISTRATOR)));
 
         Button viewGroups = new Button("View all groups");
-        viewGroups.setOnAction(e -> Main.showPage(new AdminGroupPage()));
+        viewGroups.setOnAction(e -> Main.showPage(new AdminGroupPage(AdminSidebar.build("Academic Groups"), Role.ADMINISTRATOR)));
 
         HBox addButtons  = new HBox(8, addStudent, addTeacher, addCourse, addGroup);
         HBox viewButtons = new HBox(8, viewStudents, viewTeachers, viewCourses, viewGroups);

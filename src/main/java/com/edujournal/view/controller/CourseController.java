@@ -1,10 +1,12 @@
 package com.edujournal.view.controller;
 
+import com.edujournal.backend.service.AcademicGroupService;
 import com.edujournal.backend.service.CourseService;
 import com.edujournal.backend.service.UserService;
 import com.edujournal.backend.utils.CourseMapper;
 import com.edujournal.entity.Course;
 import com.edujournal.entity.Role;
+import com.edujournal.model.AcademicGroupDTO;
 import com.edujournal.model.CourseDTO;
 import com.edujournal.model.UserDTO;
 import javafx.beans.property.SimpleStringProperty;
@@ -16,103 +18,36 @@ import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public class CourseController extends BaseController<CourseDTO> {
 
     private final CourseService courseService = new CourseService();
     private final CourseMapper courseMapper = new CourseMapper();
     private final UserService userService = new UserService();
+    private final AcademicGroupService academicGroupService = new AcademicGroupService();
 
     private final Role role;
 
     public CourseController(Role role) {
         this.role = role;
         configureColumns();
-        buildUI();
+        setupRoleButtons();
         loadAndShowItems();
     }
 
-    private HBox buildFilterBar() {
-        searchField.setPromptText("Search courses...");
-        searchField.setPrefWidth(250);
-
-        Button clearButton = new Button("Clear");
-        HBox filterBar = new HBox(10);
-        filterBar.setPadding(new Insets(10, 0, 10, 0));
-        filterBar.getChildren().addAll(
-                new Label("Search:"),
-                searchField,
-                new Label("Filter by:"),
-                filterCombo,
-                clearButton
-        );
-
-        clearButton.setOnAction(event -> {
-            searchField.clear();
-            filterCombo.setValue("All");
-        });
-
-        return filterBar;
-    }
-
-    private void buildUI() {
-        // Double click opens information about the course
-        table.setRowFactory(tv -> {
-            TableRow<CourseDTO> row = new TableRow<>();
-            row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && !row.isEmpty()) {
-                    CourseDTO course = row.getItem();
-                    showCourseInfoDialog(course);
-                }
-            });
-            return row;
-        });
-
-        Button addBtn = new Button("Add");
-        Button editBtn = new Button("Edit");
-        Button deleteBtn = new Button("Delete");
-        Button addAssessmentBtn = new Button("Add Assessment");
-
-        addBtn.setOnAction(e -> showAddCourseDialog());
-
-        editBtn.setOnAction(e -> {
-            CourseDTO selected = table.getSelectionModel().getSelectedItem();
-            if (selected != null) showEditCourseDialog(selected);
-        });
-
-        deleteBtn.setOnAction(e -> {
-            CourseDTO selected = table.getSelectionModel().getSelectedItem();
-            if (selected != null) showDeleteDialog(selected);
-        });
-
-        addAssessmentBtn.setOnAction(e -> {
-            CourseDTO selected = table.getSelectionModel().getSelectedItem();
-            if (selected == null) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("No Course Selected");
-                alert.setContentText("Please select a course first.");
-                alert.showAndWait();
-            } else {
-                showAssessmentDialog(selected);
-            }
-        });
-
-        HBox actions = new HBox(10);
-        actions.setPadding(new Insets(10));
-
-        // Buttons available by roles
+    private void setupRoleButtons() {
         if (role == Role.ADMINISTRATOR) {
-            actions.getChildren().addAll(addBtn, editBtn, deleteBtn);
+            addBtn.setVisible(true);
+            editBtn.setVisible(true);
+            deleteBtn.setVisible(true);
+            viewBtn.setVisible(true);
         } else if (role == Role.TEACHER) {
-            actions.getChildren().add(addAssessmentBtn);
+            addBtn.setVisible(false);
+            editBtn.setVisible(false);
+            deleteBtn.setVisible(false);
+            viewBtn.setText("Add Assessment");
         }
-
-        HBox filterBar = buildFilterBar();
-
-        VBox layout = new VBox(10, filterBar, table, actions);
-        layout.setPadding(new Insets(10));
-
-        setCenter(layout);
     }
 
     @Override
@@ -140,6 +75,10 @@ public class CourseController extends BaseController<CourseDTO> {
                 return course.getTeacherName() != null &&
                         course.getTeacherName().toLowerCase().contains(searchText);
 
+            case "Academic Group":
+                return course.getGroupName() != null &&
+                        course.getGroupName().toLowerCase().contains(searchText);
+
             case "All":
             default:
                 return matchesAllFields(
@@ -147,7 +86,8 @@ public class CourseController extends BaseController<CourseDTO> {
                                 String.valueOf(course.getId()),
                                 safe(course.getName()),
                                 safe(course.getCode()),
-                                safe(course.getTeacherName())
+                                safe(course.getTeacherName()),
+                                safe(course.getGroupName())
                         ),
                         searchText
                 );
@@ -160,6 +100,7 @@ public class CourseController extends BaseController<CourseDTO> {
 
     @Override
     protected void configureColumns() {
+        // TODO: Setup columns width
         TableColumn<CourseDTO, String> idCol = new TableColumn<>("ID");
         idCol.setCellValueFactory(c -> new SimpleStringProperty(String.valueOf(c.getValue().getId())));
 
@@ -178,22 +119,23 @@ public class CourseController extends BaseController<CourseDTO> {
                 )
         );
 
-        table.getColumns().addAll(idCol, codeCol, nameCol, teacherCol);
+        TableColumn<CourseDTO, String> groupCol = new TableColumn<>("Academic Group");
+        groupCol.setCellValueFactory(c ->
+                new SimpleStringProperty(
+                        c.getValue().getGroupName() == null
+                                ? ""
+                                : c.getValue().getGroupName()
+                )
+        );
 
-        filterCombo.getItems().addAll("All", "ID", "Name", "Code", "Teacher");
+        table.getColumns().addAll(idCol, codeCol, nameCol, teacherCol, groupCol);
+
+        filterCombo.getItems().addAll("All", "ID", "Name", "Code", "Teacher", "Academic Group");
         filterCombo.setValue("All");
     }
 
-    // Dialogs
-    private void showCourseInfoDialog(CourseDTO course) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Course Info");
-        alert.setHeaderText(course.getName());
-        alert.setContentText("Code: " + course.getCode() + "\nTeacher: " + course.getTeacherName());
-        alert.showAndWait();
-    }
-
-    private void showAddCourseDialog() {
+    @Override
+    protected void showAddDialog() {
         Dialog<CourseDTO> dialog = new Dialog<>();
         dialog.setTitle("Add Course");
 
@@ -203,49 +145,27 @@ public class CourseController extends BaseController<CourseDTO> {
         TextField codeField = new TextField();
         codeField.setPromptText("Course code");
 
+        // Teacher ComboBox
         List<UserDTO> teachers = userService.findAllTeachers();
+        ComboBox<UserDTO> teacherCombo = createComboBox(
+                teachers,
+                null,
+                "Select teacher",
+                "— No teacher —",
+                u -> u.getFirstName() + " " + u.getLastName()
+        );
 
-        List<Object> teacherOptions = new ArrayList<>();
-        teacherOptions.add(null);
-        teacherOptions.addAll(teachers);
+        // Group ComboBox
+        List<AcademicGroupDTO> groups = academicGroupService.findAllDTO();
+        ComboBox<AcademicGroupDTO> groupCombo = createComboBox(
+                groups,
+                null,
+                "Select group",
+                "— No group —",
+                AcademicGroupDTO::getName
+        );
 
-        ComboBox<Object> teacherCombo = new ComboBox<>();
-        teacherCombo.setItems(FXCollections.observableArrayList(teacherOptions));
-        teacherCombo.setPromptText("Select teacher");
-
-        teacherCombo.setCellFactory(list -> new ListCell<>() {
-            @Override
-            protected void updateItem(Object item, boolean empty) {
-                super.updateItem(item, empty);
-
-                if (empty) {
-                    setText(null);
-                } else if (item == null) {
-                    setText("— No teacher —");
-                } else {
-                    UserDTO u = (UserDTO) item;
-                    setText(u.getFirstName() + " " + u.getLastName());
-                }
-            }
-        });
-
-        teacherCombo.setButtonCell(new ListCell<>() {
-            @Override
-            protected void updateItem(Object item, boolean empty) {
-                super.updateItem(item, empty);
-
-                if (empty) {
-                    setText(null);
-                } else if (item == null) {
-                    setText("— No teacher —");
-                } else {
-                    UserDTO u = (UserDTO) item;
-                    setText(u.getFirstName() + " " + u.getLastName());
-                }
-            }
-        });
-
-        VBox box = new VBox(10, nameField, codeField, teacherCombo);
+        VBox box = new VBox(10, nameField, codeField, teacherCombo, groupCombo);
         box.setPadding(new Insets(10));
         dialog.getDialogPane().setContent(box);
 
@@ -254,26 +174,23 @@ public class CourseController extends BaseController<CourseDTO> {
 
         dialog.setResultConverter(button -> {
             if (button == saveBtn) {
-                String code = codeField.getText();
 
-                if (courseService.existsByCode(code)) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR,
-                            "Course code already exists. Please try again.");
-                    alert.showAndWait();
+                if (courseService.existsByCode(codeField.getText())) {
+                    new Alert(Alert.AlertType.ERROR,
+                            "Course code already exists.").showAndWait();
                     return null;
                 }
 
                 CourseDTO dto = new CourseDTO();
-                dto.setCode(code);
                 dto.setName(nameField.getText());
+                dto.setCode(codeField.getText());
 
-                Object selected = teacherCombo.getValue();
-                if (selected == null) {
-                    dto.setUserId(null);
-                } else {
-                    UserDTO u = (UserDTO) selected;
-                    dto.setUserId(u.getId());
-                }
+                UserDTO selectedTeacher = teacherCombo.getValue();
+                dto.setUserId(selectedTeacher == null ? null : selectedTeacher.getId());
+
+                AcademicGroupDTO selectedGroup = groupCombo.getValue();
+                dto.setGroupId(selectedGroup == null ? null : selectedGroup.getId());
+
                 return dto;
             }
             return null;
@@ -288,61 +205,50 @@ public class CourseController extends BaseController<CourseDTO> {
         }
     }
 
-    private void showEditCourseDialog(CourseDTO course) {
+    @Override
+    protected void showEditDialog() {
+        CourseDTO course = table.getSelectionModel().getSelectedItem();
+        if (course == null) {
+            return;
+        }
+
         Dialog<CourseDTO> dialog = new Dialog<>();
         dialog.setTitle("Edit Course");
 
         TextField nameField = new TextField(course.getName());
         TextField codeField = new TextField(course.getCode());
 
+        // Teacher ComboBox
         List<UserDTO> teachers = userService.findAllTeachers();
+        UserDTO selectedTeacher = teachers.stream()
+                .filter(t -> t.getId().equals(course.getUserId()))
+                .findFirst()
+                .orElse(null);
 
-        List<UserDTO> teacherOptions = new ArrayList<>();
-        teacherOptions.add(null);
-        teacherOptions.addAll(teachers);
+        ComboBox<UserDTO> teacherCombo = createComboBox(
+                teachers,
+                selectedTeacher,
+                "Select teacher",
+                "- No teacher -",
+                u -> u.getFirstName() + " " + u.getLastName()
+        );
 
-        ComboBox<UserDTO> teacherCombo = new ComboBox<>();
-        teacherCombo.setItems(FXCollections.observableArrayList(teacherOptions));
-        teacherCombo.setPromptText("Select teacher");
+        // Group ComboBox
+        List<AcademicGroupDTO> groups = academicGroupService.findAllDTO();
+        AcademicGroupDTO selectedGroup = groups.stream()
+                .filter(g -> g.getId().equals(course.getGroupId()))
+                .findFirst()
+                .orElse(null);
 
-        teacherCombo.setCellFactory(list -> new ListCell<>() {
-            @Override
-            protected void updateItem(UserDTO item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setText(null);
-                } else if (item == null) {
-                    setText("— Remove teacher —");
-                } else {
-                    UserDTO u = (UserDTO) item;
-                    setText(u.getFirstName() + " " + u.getLastName());
-                }
-            }
-        });
+        ComboBox<AcademicGroupDTO> groupCombo = createComboBox(
+                groups,
+                selectedGroup,
+                "Select group",
+                "- No group -",
+                AcademicGroupDTO::getName
+        );
 
-        teacherCombo.setButtonCell(new ListCell<>() {
-            @Override
-            protected void updateItem(UserDTO item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setText(null);
-                } else if (item == null) {
-                    setText("— Remove teacher —");
-                } else {
-                    UserDTO u = (UserDTO) item;
-                    setText(u.getFirstName() + " " + u.getLastName());
-                }
-            }
-        });
-
-        if (course.getUserId() != null) {
-            teachers.stream()
-                    .filter(t -> t.getId().equals(course.getUserId()))
-                    .findFirst()
-                    .ifPresent(teacherCombo::setValue);
-        }
-
-        VBox box = new VBox(10, nameField, codeField, teacherCombo);
+        VBox box = new VBox(10, nameField, codeField, teacherCombo, groupCombo);
         box.setPadding(new Insets(10));
         dialog.getDialogPane().setContent(box);
 
@@ -351,17 +257,37 @@ public class CourseController extends BaseController<CourseDTO> {
 
         dialog.setResultConverter(btn -> {
             if (btn == saveBtn) {
+                String newName = nameField.getText().trim();
+                String newCode = codeField.getText().trim();
+
+                if (newName.isBlank()) {
+                    new Alert(Alert.AlertType.ERROR,
+                            "Course name cannot be empty.").showAndWait();
+                    return null;
+                }
+
+                if (newCode.isBlank()) {
+                    new Alert(Alert.AlertType.ERROR,
+                            "Course code cannot be empty.").showAndWait();
+                    return null;
+                }
+
+                if (!newCode.equalsIgnoreCase(course.getCode()) &&
+                        courseService.existsByCode(newCode)) {
+                    new Alert(Alert.AlertType.ERROR,
+                            "Course code already exists.").showAndWait();
+                    return null;
+                }
+
                 course.setName(nameField.getText());
                 course.setCode(codeField.getText());
 
-                Object selected = teacherCombo.getValue();
+                UserDTO t = teacherCombo.getValue();
+                course.setUserId(t == null ? null : t.getId());
 
-                if (selected == null) {
-                    course.setUserId(null);
-                } else {
-                    UserDTO u = (UserDTO) selected;
-                    course.setUserId(u.getId());
-                }
+                AcademicGroupDTO g = groupCombo.getValue();
+                course.setGroupId(g == null ? null : g.getId());
+
                 return course;
             }
             return null;
@@ -376,7 +302,13 @@ public class CourseController extends BaseController<CourseDTO> {
         }
     }
 
-    private void showDeleteDialog(CourseDTO course) {
+    @Override
+    protected void showDeleteDialog() {
+        CourseDTO course = table.getSelectionModel().getSelectedItem();
+        if (course == null) {
+            return;
+        }
+
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Delete Course");
         alert.setHeaderText("Are you sure you want to delete \"" + course.getName() + "\"?");
@@ -393,7 +325,33 @@ public class CourseController extends BaseController<CourseDTO> {
         }
     }
 
+    @Override
+    protected void onView() {
+        CourseDTO selected = table.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            return;
+        }
+
+        if (role == Role.ADMINISTRATOR) {
+            showCourseInfoDialog(selected);
+        } else if (role == Role.TEACHER) {
+            showAssessmentDialog(selected);
+        }
+    }
+
+    // Dialogs
+    private void showCourseInfoDialog(CourseDTO course) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Course Info");
+        alert.setHeaderText(course.getName());
+        alert.setContentText("Code: " + course.getCode() + "\nTeacher: " + course.getTeacherName() + "\nAcademic Group: " + course.getGroupName());
+        alert.showAndWait();
+    }
+
     private void showAssessmentDialog(CourseDTO course) {
         com.edujournal.Main.showPage(new com.edujournal.view.teacher.TeacherGradebookPage(1, course.getName()));
     }
+
+
+
 }

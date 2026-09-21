@@ -100,4 +100,14 @@ public class UserService {
                 .replaceAll("\\s+", "");
     }
 
+    public void update(User user) {
+        User existing = userDAO.findById(user.getId());
+        if (existing == null) return;
+
+        existing.setFirstName(user.getFirstName());
+        existing.setLastName(user.getLastName());
+        existing.setUsername(user.getUsername());
+
+        userDAO.update(existing);
+    }
 }

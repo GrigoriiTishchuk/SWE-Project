@@ -17,7 +17,7 @@ public class CourseService {
 
     public CourseDTO getById(Integer id) {
         Course course = courseDAO.findById(id);
-        return courseMapper.toDTO(course);
+        return course != null ? courseMapper.toDTO(course) : null;
     }
 
     public List<CourseDTO> findAll() {
@@ -26,7 +26,7 @@ public class CourseService {
 
     public CourseDTO findByCode(String code) {
         Course course = courseDAO.findByCode(code);
-        return courseMapper.toDTO(course);
+        return course != null ? courseMapper.toDTO(course) : null;
     }
 
     public CourseDTO findByName(String name) {
@@ -36,6 +36,11 @@ public class CourseService {
 
     public List<CourseDTO> findByUserId(Integer userId) {
         List<Course> courses = courseDAO.findByUserId(userId);
+        return courses.stream().map(courseMapper::toDTO).toList();
+    }
+
+    public List<CourseDTO> findByGroupId(Integer groupId) {
+        List<Course> courses = courseDAO.findByGroupId(groupId);
         return courses.stream().map(courseMapper::toDTO).toList();
     }
 
