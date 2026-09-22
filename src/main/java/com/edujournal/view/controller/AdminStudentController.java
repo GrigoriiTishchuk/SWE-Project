@@ -2,10 +2,11 @@ package com.edujournal.view.controller;
 
 import com.edujournal.backend.service.StudentService;
 import com.edujournal.backend.service.UserService;
+import com.edujournal.backend.utils.GeneratorUtil;
 import com.edujournal.entity.Role;
 import com.edujournal.entity.Student;
+import com.edujournal.model.StudentDTO;
 import com.edujournal.entity.User;
-import com.edujournal.model.UserDTO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -14,62 +15,55 @@ import javafx.scene.layout.VBox;
 
 import java.util.List;
 
-public class AdminStudentController extends BaseController<Student> {
+public class AdminStudentController extends BaseController<StudentDTO> {
 
     private final StudentService studentService = new StudentService();
     private final UserService userService = new UserService();
-    private final Role role;
 
     public AdminStudentController(Role role) {
-        this.role = role;
         configureColumns();
         loadAndShowItems();
     }
 
     @Override
-    protected List<Student> loadAllItems() {
-        return studentService.findAll();
+    protected List<StudentDTO> loadAllItems() {
+        return studentService.findAllDTO();
     }
 
     @Override
-    protected boolean matchesFilter(
-            Student student,
-            String filter,
-            String searchText
-    ) {
-        if (searchText == null || searchText.isBlank()) {
-            return true;
-        }
-
-        String text = searchText.toLowerCase();
+    protected boolean matchesFilter(StudentDTO dto, String filter, String text) {
+        if (text == null || text.isBlank()) return true;
+        text = text.toLowerCase();
 
         if (filter == null || filter.equals("All")) {
             return matchesAllFields(
                     List.of(
-                            student.getId() != null
-                                    ? student.getId().toString()
-                                    : null,
-                            student.getStudentNumber()
+                            dto.getStudentId() != null ? dto.getStudentId().toString() : null,
+                            dto.getStudentNumber(),
+                            dto.getUsername(),
+                            dto.getFirstName(),
+                            dto.getLastName()
                     ),
                     text
             );
         }
 
         return switch (filter) {
-            case "ID" -> student.getId() != null
-                    && student.getId().toString().contains(text);
-            case "Student Number" -> student.getStudentNumber() != null
-                    && student.getStudentNumber().toLowerCase().contains(text);
-            case "First Name" -> {
-                User user = student.getUserId() != null ? userService.findById(student.getUserId()) : null;
-                yield user != null && user.getFirstName() != null
-                        && user.getFirstName().toLowerCase().contains(text);
-            }
-            case "Last Name" -> {
-                User user = student.getUserId() != null ? userService.findById(student.getUserId()) : null;
-                yield user != null && user.getLastName() != null
-                        && user.getLastName().toLowerCase().contains(text);
-            }
+            case "ID" -> dto.getStudentId() != null &&
+                    dto.getStudentId().toString().contains(text);
+
+            case "Student Number" -> dto.getStudentNumber() != null &&
+                    dto.getStudentNumber().toLowerCase().contains(text);
+
+            case "Username" -> dto.getLastName() != null &&
+                    dto.getUsername().toLowerCase().contains(text);
+
+            case "First Name" -> dto.getFirstName() != null &&
+                    dto.getFirstName().toLowerCase().contains(text);
+
+            case "Last Name" -> dto.getLastName() != null &&
+                    dto.getLastName().toLowerCase().contains(text);
+
             default -> true;
         };
     }
@@ -77,45 +71,43 @@ public class AdminStudentController extends BaseController<Student> {
     @Override
     protected void configureColumns() {
 
-        TableColumn<Student, String> idCol =
-                new TableColumn<>("ID");
-
+        TableColumn<StudentDTO, String> idCol = new TableColumn<>("ID");
         idCol.setCellValueFactory(
-                cellData -> cellData.getValue()
-                        .getId() == null
-                        ? null
-                        : new javafx.beans.property.SimpleStringProperty(
-                        cellData.getValue().getId().toString()
+                cell -> new SimpleStringProperty(
+                        cell.getValue().getStudentId() != null
+                                ? cell.getValue().getStudentId().toString()
+                                : ""
                 )
         );
 
-        TableColumn<Student, String> studentNumberCol =
+        TableColumn<StudentDTO, String> studentNumberCol =
                 new TableColumn<>("Student Number");
-
         studentNumberCol.setCellValueFactory(
                 new PropertyValueFactory<>("studentNumber")
         );
 
-        TableColumn<Student, String> firstNameCol =
+        TableColumn<StudentDTO, String> usernameCol =
+                new TableColumn<>("Username");
+        usernameCol.setCellValueFactory(
+                cell -> new SimpleStringProperty(cell.getValue().getUsername())
+        );
+
+        TableColumn<StudentDTO, String> firstNameCol =
                 new TableColumn<>("First Name");
-        firstNameCol.setCellValueFactory(cellData -> {
-            User user = cellData.getValue().getUserId() != null
-                    ? userService.findById(cellData.getValue().getUserId()) : null;
-            return new SimpleStringProperty(user != null ? user.getFirstName() : "");
-        });
+        firstNameCol.setCellValueFactory(
+                cell -> new SimpleStringProperty(cell.getValue().getFirstName())
+        );
 
-        TableColumn<Student, String> lastNameCol =
+        TableColumn<StudentDTO, String> lastNameCol =
                 new TableColumn<>("Last Name");
-        lastNameCol.setCellValueFactory(cellData -> {
-            User user = cellData.getValue().getUserId() != null
-                    ? userService.findById(cellData.getValue().getUserId()) : null;
-            return new SimpleStringProperty(user != null ? user.getLastName() : "");
-        });
-
+        lastNameCol.setCellValueFactory(
+                cell -> new SimpleStringProperty(cell.getValue().getLastName())
+        );
 
         table.getColumns().addAll(
                 idCol,
                 studentNumberCol,
+                usernameCol,
                 firstNameCol,
                 lastNameCol
         );
@@ -124,6 +116,7 @@ public class AdminStudentController extends BaseController<Student> {
                 "All",
                 "ID",
                 "Student Number",
+                "Username",
                 "First Name",
                 "Last Name"
         );
@@ -133,19 +126,18 @@ public class AdminStudentController extends BaseController<Student> {
 
     @Override
     protected void showAddDialog() {
-        Dialog<Student> dialog = new Dialog<>();
+        Dialog<StudentDTO> dialog = new Dialog<>();
         dialog.setTitle("Add Student");
 
         TextField firstNameField = new TextField();
-        firstNameField.setPromptText("First Name");
-
         TextField lastNameField = new TextField();
+        TextField phoneField = new TextField();
+
+        firstNameField.setPromptText("First Name");
         lastNameField.setPromptText("Last Name");
+        phoneField.setPromptText("Phone Number");
 
-        TextField studentNumberField = new TextField();
-        studentNumberField.setPromptText("Student Number");
-
-        VBox box = new VBox(10, firstNameField, lastNameField, studentNumberField);
+        VBox box = new VBox(10, firstNameField, lastNameField, phoneField);
         box.setPadding(new Insets(10));
         dialog.getDialogPane().setContent(box);
 
@@ -154,51 +146,52 @@ public class AdminStudentController extends BaseController<Student> {
 
         dialog.setResultConverter(button -> {
             if (button == saveBtn) {
-                if (firstNameField.getText().isBlank() || lastNameField.getText().isBlank()) {
-                    new Alert(Alert.AlertType.ERROR, "First name and last name cannot be empty.").showAndWait();
+                if (firstNameField.getText().isBlank() ||
+                        lastNameField.getText().isBlank()) {
+                    new Alert(Alert.AlertType.ERROR,
+                            "First name and last name cannot be empty.").showAndWait();
                     return null;
                 }
-                if (studentNumberField.getText().isBlank()) {
-                    new Alert(Alert.AlertType.ERROR, "Student number cannot be empty.").showAndWait();
+
+                if (phoneField.getText().isBlank()) {
+                    new Alert(Alert.AlertType.ERROR,
+                            "Phone cannot be empty.").showAndWait();
                     return null;
                 }
-                if (studentService.findByStudentNumber(studentNumberField.getText().trim()) != null) {
-                    new Alert(Alert.AlertType.ERROR, "Student number already exists.").showAndWait();
-                    return null;
-                }
-                Student s = new Student();
-                s.setStudentNumber(studentNumberField.getText().trim());
-                return s;
+
+                StudentDTO dto = new StudentDTO();
+                dto.setFirstName(firstNameField.getText().trim());
+                dto.setLastName(lastNameField.getText().trim());
+                dto.setPhone(phoneField.getText().trim());
+                return dto;
             }
             return null;
         });
 
-        dialog.showAndWait().ifPresent(student -> {
-            UserDTO user = userService.createStudent(
-                    firstNameField.getText().trim(),
-                    lastNameField.getText().trim()
+        dialog.showAndWait().ifPresent(dto -> {
+            StudentDTO created = studentService.createStudent(
+                    dto.getFirstName(),
+                    dto.getLastName(),
+                    dto.getPhone()
             );
-            student.setUserId(user.getId());
-            studentService.save(student);
+
             loadAndShowItems();
         });
     }
 
     @Override
     protected void showEditDialog() {
-        Student student = table.getSelectionModel().getSelectedItem();
-        if (student == null) return;
-
-        User user = student.getUserId() != null ? userService.findById(student.getUserId()) : null;
+        StudentDTO dto = table.getSelectionModel().getSelectedItem();
+        if (dto == null) return;
 
         Dialog<Boolean> dialog = new Dialog<>();
         dialog.setTitle("Edit Student");
 
-        TextField firstNameField = new TextField(user != null ? user.getFirstName() : "");
-        TextField lastNameField = new TextField(user != null ? user.getLastName() : "");
-        TextField studentNumberField = new TextField(student.getStudentNumber());
+        TextField firstNameField = new TextField(dto.getFirstName());
+        TextField lastNameField = new TextField(dto.getLastName());
+        TextField phoneField = new TextField(dto.getPhone());
 
-        VBox box = new VBox(10, firstNameField, lastNameField, studentNumberField);
+        VBox box = new VBox(10, firstNameField, lastNameField, phoneField);
         box.setPadding(new Insets(10));
         dialog.getDialogPane().setContent(box);
 
@@ -207,12 +200,15 @@ public class AdminStudentController extends BaseController<Student> {
 
         dialog.setResultConverter(btn -> {
             if (btn == saveBtn) {
-                if (firstNameField.getText().isBlank() || lastNameField.getText().isBlank()) {
-                    new Alert(Alert.AlertType.ERROR, "First name and last name cannot be empty.").showAndWait();
+                if (firstNameField.getText().isBlank() ||
+                        lastNameField.getText().isBlank()) {
+                    new Alert(Alert.AlertType.ERROR,
+                            "First name and last name cannot be empty.").showAndWait();
                     return null;
                 }
-                if (studentNumberField.getText().isBlank()) {
-                    new Alert(Alert.AlertType.ERROR, "Student number cannot be empty.").showAndWait();
+                if (phoneField.getText().isBlank()) {
+                    new Alert(Alert.AlertType.ERROR,
+                            "Phone cannot be empty.").showAndWait();
                     return null;
                 }
                 return true;
@@ -221,28 +217,24 @@ public class AdminStudentController extends BaseController<Student> {
         });
 
         dialog.showAndWait().ifPresent(ok -> {
-            if (user != null) {
-                user.setFirstName(firstNameField.getText().trim());
-                user.setLastName(lastNameField.getText().trim());
-                userService.update(user);
-            }
-            student.setStudentNumber(studentNumberField.getText().trim());
-            studentService.update(student);
+            dto.setFirstName(firstNameField.getText().trim());
+            dto.setLastName(lastNameField.getText().trim());
+            dto.setPhone(phoneField.getText().trim());
+
+            studentService.updateFromDTO(dto);
             loadAndShowItems();
         });
     }
 
     @Override
     protected void showDeleteDialog() {
-        Student student = table.getSelectionModel().getSelectedItem();
-        if (student == null) return;
-
-        User user = student.getUserId() != null ? userService.findById(student.getUserId()) : null;
-        String name = user != null ? user.getFirstName() + " " + user.getLastName() : student.getStudentNumber();
+        StudentDTO dto = table.getSelectionModel().getSelectedItem();
+        if (dto == null) return;
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Delete Student");
-        alert.setHeaderText("Are you sure you want to delete \"" + name + "\"?");
+        alert.setHeaderText("Are you sure you want to delete \"" +
+                dto.getFirstName() + " " + dto.getLastName() + "\"?");
         alert.setContentText("This action cannot be undone.");
 
         ButtonType yes = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
@@ -250,28 +242,30 @@ public class AdminStudentController extends BaseController<Student> {
         alert.getButtonTypes().setAll(yes, no);
 
         if (alert.showAndWait().orElse(no) == yes) {
-            studentService.delete(student.getId());
-            if (student.getUserId() != null) userService.deleteUser(student.getUserId());
-            loadAndShowItems();
+            try {
+                studentService.delete(dto.getStudentId());
+                userService.deleteUser(dto.getUserId());
+                loadAndShowItems();
+            } catch (Exception e) {
+                new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
+            }
         }
     }
 
     @Override
     protected void onView() {
-        Student student = table.getSelectionModel().getSelectedItem();
-        if (student == null) return;
-
-        User user = student.getUserId() != null ? userService.findById(student.getUserId()) : null;
-        String name = user != null ? user.getFirstName() + " " + user.getLastName() : "—";
+        StudentDTO dto = table.getSelectionModel().getSelectedItem();
+        if (dto == null) return;
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Student Info");
-        alert.setHeaderText(name);
+        alert.setHeaderText(dto.getFirstName() + " " + dto.getLastName());
         alert.setContentText(
-                "Student Number: " + student.getStudentNumber() + "\n" +
-                (user != null ? "Username: " + user.getUsername() : "")
+                "Student Number: " + dto.getStudentNumber() + "\n" +
+                        "Username: " + dto.getUsername() + "\n" +
+                        "Email: " + dto.getEmail() + "\n" +
+                        "Phone: " + dto.getPhone()
         );
         alert.showAndWait();
     }
 }
-

@@ -21,6 +21,35 @@ public class UserService {
         return userDAO.findAll();
     }
 
+    public void save(User user) {
+        userDAO.save(user);
+    }
+
+    public void update(User user) {
+        User existing = userDAO.findById(user.getId());
+        if (existing == null) return;
+
+        existing.setFirstName(user.getFirstName());
+        existing.setLastName(user.getLastName());
+        existing.setUsername(user.getUsername());
+
+        userDAO.update(existing);
+    }
+
+    public void deleteUser(Integer userId) {
+        User user = userDAO.findById(userId);
+
+        if (user == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+
+        if (user.getRole() == Role.ADMINISTRATOR) {
+            throw new IllegalArgumentException("Administrator's deleting is not available");
+        }
+
+        userDAO.delete(user);
+    }
+
     public UserDTO createTeacher(String firstName, String lastName) {
         String username = generateUsername(firstName, lastName);
 
@@ -68,20 +97,6 @@ public class UserService {
                 .toList();
     }
 
-    public void deleteUser(Integer userId) {
-        User user = userDAO.findById(userId);
-
-        if (user == null) {
-            throw new IllegalArgumentException("User not found");
-        }
-
-        if (user.getRole() == Role.ADMINISTRATOR) {
-            throw new IllegalArgumentException("Administrator's deleting is not available");
-        }
-
-        userDAO.delete(user);
-    }
-
     private String generateUsername(String firstName, String lastName) {
 
         String fn = normalize(firstName);
@@ -122,16 +137,5 @@ public class UserService {
                 .replace("ö", "o")
                 .replace("å", "a")
                 .replaceAll("\\s+", "");
-    }
-
-    public void update(User user) {
-        User existing = userDAO.findById(user.getId());
-        if (existing == null) return;
-
-        existing.setFirstName(user.getFirstName());
-        existing.setLastName(user.getLastName());
-        existing.setUsername(user.getUsername());
-
-        userDAO.update(existing);
     }
 }
