@@ -30,19 +30,6 @@ public class CourseDAOTest {
         List<Course> courses = courseDAO.findAll();
 
         assertNotNull(courses);
-
-        System.out.println("Course count: " + courses.size());
-
-        for (Course course : courses) {
-            System.out.println(
-                    course.getId()
-                            + " - "
-                            + course.getCode()
-                            + " - "
-                            + course.getName()
-            );
-        }
-
         assertFalse(courses.isEmpty());
     }
 
@@ -53,13 +40,6 @@ public class CourseDAOTest {
                 courseDAO.findByName("Software Engineering");
 
         assertNotNull(course);
-
-        System.out.println(
-                "Found course: "
-                        + course.getId()
-                        + " - "
-                        + course.getName()
-        );
 
         assertEquals(
                 "SE01",

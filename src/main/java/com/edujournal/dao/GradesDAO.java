@@ -61,6 +61,14 @@ public class GradesDAO {
         }
     }
 
+    public List<Grades> findByStudent(int studentId) {
+        return findByEnrollment(studentId);
+    }
+
+    public Grades findByStudentAssessment(int studentId, int assessmentId) {
+        return findByEnrollmentAssessment(studentId, assessmentId);
+    }
+
     public void save(Grades grade) {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 

@@ -53,4 +53,12 @@ public class Grades {
     public void setComment(String comment) {
         this.comment = comment;
     }
+
+    public Integer getStudentId() {
+        return enrollmentId;
+    }
+
+    public void setStudentId(Integer studentId) {
+        this.enrollmentId = studentId;
+    }
 }

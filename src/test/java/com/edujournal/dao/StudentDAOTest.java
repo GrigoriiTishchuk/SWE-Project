@@ -57,7 +57,7 @@ class StudentDAOTest {
         student.setDateOfBirth(
                 LocalDate.of(2000, 1, 1)
         );
-        student.setUser(user);
+        student.setUserId(user.getId());
 
         studentDAO.save(student);
         createdStudentIds.add(student.getId());
@@ -73,16 +73,25 @@ class StudentDAOTest {
                 found.getStudentNumber()
         );
         assertEquals(
-                "John",
-                found.getFirstName()
-        );
-        assertEquals(
-                "Doe",
-                found.getLastName()
+                user.getId(),
+                found.getUserId()
         );
         assertEquals(
                 LocalDate.of(2000, 1, 1),
                 found.getDateOfBirth()
+        );
+
+        User foundUser =
+                userDAO.findById(found.getUserId());
+
+        assertNotNull(foundUser);
+        assertEquals(
+                "John",
+                foundUser.getFirstName()
+        );
+        assertEquals(
+                "Doe",
+                foundUser.getLastName()
         );
     }
 
@@ -113,7 +122,7 @@ class StudentDAOTest {
         student.setDateOfBirth(
                 LocalDate.of(2001, 5, 10)
         );
-        student.setUser(user);
+        student.setUserId(user.getId());
 
         studentDAO.save(student);
         createdStudentIds.add(student.getId());
@@ -124,18 +133,26 @@ class StudentDAOTest {
                 );
 
         assertNotNull(found);
-        assertNotNull(found.getUser());
         assertEquals(
                 "TEST002",
                 found.getStudentNumber()
         );
         assertEquals(
+                user.getId(),
+                found.getUserId()
+        );
+
+        User foundUser =
+                userDAO.findById(found.getUserId());
+
+        assertNotNull(foundUser);
+        assertEquals(
                 "Jane",
-                found.getFirstName()
+                foundUser.getFirstName()
         );
         assertEquals(
                 "Smith",
-                found.getLastName()
+                foundUser.getLastName()
         );
     }
 
@@ -155,7 +172,7 @@ class StudentDAOTest {
         Student student = new Student();
 
         student.setStudentNumber("TEST003");
-        student.setUser(user);
+        student.setUserId(user.getId());
 
         studentDAO.save(student);
         createdStudentIds.add(student.getId());
@@ -170,12 +187,21 @@ class StudentDAOTest {
 
         assertNotNull(updated);
         assertEquals(
+                user.getId(),
+                updated.getUserId()
+        );
+
+        User updatedUser =
+                userDAO.findById(updated.getUserId());
+
+        assertNotNull(updatedUser);
+        assertEquals(
                 "NewName",
-                updated.getFirstName()
+                updatedUser.getFirstName()
         );
         assertEquals(
                 "NewLastName",
-                updated.getLastName()
+                updatedUser.getLastName()
         );
     }
 
@@ -195,7 +221,7 @@ class StudentDAOTest {
         Student student = new Student();
 
         student.setStudentNumber("TEST004");
-        student.setUser(user);
+        student.setUserId(user.getId());
 
         studentDAO.save(student);
 

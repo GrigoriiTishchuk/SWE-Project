@@ -35,19 +35,6 @@ public class AssessmentsServiceTest {
                         "Software Engineering"
                 );
 
-        System.out.println(
-                "Assessment count: "
-                        + assessments.size()
-        );
-
-        for (Assessments assessment : assessments) {
-            System.out.println(
-                    assessment.getId()
-                            + " - "
-                            + assessment.getTitle()
-            );
-        }
-
         assertNotNull(assessments);
         assertFalse(assessments.isEmpty());
     }
@@ -69,10 +56,6 @@ public class AssessmentsServiceTest {
 
         assertNotNull(assessment.getId());
 
-        System.out.println(
-                "Saved assessment ID: "
-                        + assessment.getId()
-        );
     }
 
     @Test
@@ -112,10 +95,6 @@ public class AssessmentsServiceTest {
                 updated.getTitle()
         );
 
-        System.out.println(
-                "Updated assessment ID: "
-                        + updated.getId()
-        );
     }
 
     @Test
@@ -146,9 +125,5 @@ public class AssessmentsServiceTest {
                         .orElse(null);
 
         assertNull(deleted);
-
-        System.out.println(
-                "Deleted assessment ID: " + id
-        );
     }
 }
