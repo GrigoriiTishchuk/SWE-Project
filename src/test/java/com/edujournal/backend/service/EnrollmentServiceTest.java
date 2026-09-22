@@ -1,8 +1,10 @@
 package com.edujournal.backend.service;
 
 import com.edujournal.entity.Enrollment;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,6 +13,18 @@ class EnrollmentServiceTest {
 
     private final EnrollmentService enrollmentService =
             new EnrollmentService();
+
+    private final List<Integer> createdIds =
+            new ArrayList<>();
+
+    @AfterEach
+    void cleanup() {
+        for (Integer id : createdIds) {
+            enrollmentService.delete(id);
+        }
+
+        createdIds.clear();
+    }
 
     @Test
     void saveAndFindById() {
@@ -22,6 +36,8 @@ class EnrollmentServiceTest {
         enrollment.setStatus("ACTIVE");
 
         enrollmentService.save(enrollment);
+
+        createdIds.add(enrollment.getId());
 
         assertNotNull(enrollment.getId());
 
@@ -54,6 +70,8 @@ class EnrollmentServiceTest {
 
         enrollmentService.save(enrollment);
 
+        createdIds.add(enrollment.getId());
+
         List<Enrollment> results =
                 enrollmentService.findByStudentId(1);
 
@@ -77,6 +95,8 @@ class EnrollmentServiceTest {
         enrollment.setStatus("ACTIVE");
 
         enrollmentService.save(enrollment);
+
+        createdIds.add(enrollment.getId());
 
         List<Enrollment> results =
                 enrollmentService.findByCourseId(1);
@@ -102,6 +122,8 @@ class EnrollmentServiceTest {
 
         enrollmentService.save(enrollment);
 
+        createdIds.add(enrollment.getId());
+
         List<Enrollment> results =
                 enrollmentService.findByAcademicGroupId(1);
 
@@ -125,6 +147,8 @@ class EnrollmentServiceTest {
         enrollment.setStatus("ACTIVE");
 
         enrollmentService.save(enrollment);
+
+        createdIds.add(enrollment.getId());
 
         enrollment.setStatus("INACTIVE");
 
@@ -150,10 +174,14 @@ class EnrollmentServiceTest {
 
         Integer id = enrollment.getId();
 
-        assertNotNull(enrollmentService.findById(id));
+        assertNotNull(
+                enrollmentService.findById(id)
+        );
 
         enrollmentService.delete(id);
 
-        assertNull(enrollmentService.findById(id));
+        assertNull(
+                enrollmentService.findById(id)
+        );
     }
 }

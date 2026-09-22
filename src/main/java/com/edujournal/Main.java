@@ -1,5 +1,6 @@
 package com.edujournal;
 
+import com.edujournal.database.DatabaseInitializer;
 import com.edujournal.view.LoginPage;
 import javafx.application.Application;
 import javafx.scene.Parent;
@@ -14,6 +15,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        DatabaseInitializer.initialize();
         stage = primaryStage;
         stage.setTitle("EduJournal");
         showPage(new LoginPage());

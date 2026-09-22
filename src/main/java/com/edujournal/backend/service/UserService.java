@@ -13,6 +13,14 @@ public class UserService {
     UserDAO userDAO = new UserDAO();
     UserMapper userMapper = new UserMapper();
 
+    public User findById(int id) {
+        return userDAO.findById(id);
+    }
+
+    public List<User> findAll() {
+        return userDAO.findAll();
+    }
+
     public UserDTO createTeacher(String firstName, String lastName) {
         String username = generateUsername(firstName, lastName);
 
@@ -32,6 +40,22 @@ public class UserService {
 
         userDAO.save(user);
 
+        return userMapper.toDTO(user);
+    }
+
+    public UserDTO createStudent(String firstName, String lastName) {
+        String username = generateUsername(firstName, lastName);
+        String tempPassword = UUID.randomUUID().toString().substring(0, 8);
+        String hashedPassword = Integer.toHexString(tempPassword.hashCode());
+
+        User user = new User();
+        user.setUsername(username);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setRole(Role.STUDENT);
+        user.setPasswordHash(hashedPassword);
+
+        userDAO.save(user);
         return userMapper.toDTO(user);
     }
 

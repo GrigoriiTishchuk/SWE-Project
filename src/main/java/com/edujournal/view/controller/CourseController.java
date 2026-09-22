@@ -47,6 +47,7 @@ public class CourseController extends BaseController<CourseDTO> {
             editBtn.setVisible(false);
             deleteBtn.setVisible(false);
             viewBtn.setText("Add Assessment");
+            viewBtn.setOnAction(e -> openAddAssessmentPage());
         }
     }
 
@@ -324,6 +325,16 @@ public class CourseController extends BaseController<CourseDTO> {
             loadAndShowItems();
         }
     }
+
+    private void openAddAssessmentPage() {
+        CourseDTO course = table.getSelectionModel().getSelectedItem();
+        if (course == null) {
+            new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.WARNING, "Please select a course first.").showAndWait();
+            return;
+        }
+        com.edujournal.Main.showPage(new com.edujournal.view.teacher.TeacherGradebookPage(1, course.getName()));
+    }
+
 
     @Override
     protected void onView() {

@@ -459,20 +459,27 @@ public class AssessmentsTab {
                 weight = 1.0;
             }
 
-            if (!name.isEmpty()
-                    && type != null
-                    && pos != null) {
+            if (name.isEmpty()) {
+                new Alert(Alert.AlertType.WARNING, "Please enter the assessment name.").showAndWait();
+                return;
+            }
+            if (type == null) {
+                new Alert(Alert.AlertType.WARNING, "Please choose the assessment type.").showAndWait();
+                return;
+            }
+            if (pos == null) {
+                new Alert(Alert.AlertType.WARNING, "Please choose the position.").showAndWait();
+                return;
+            }
 
-                Assessments assessment =
-                        new Assessments();
+            Assessments assessment = new Assessments();
 
-                Course courseEntity =
-                        assessmentsService
-                                .getCourseByName(course);
+            Course courseEntity = assessmentsService.getCourseByName(course);
 
-                if (courseEntity == null) {
-                    return;
-                }
+            if (courseEntity == null) {
+                new Alert(Alert.AlertType.ERROR, "Course not found.").showAndWait();
+                return;
+            }
 
                 assessment.setCourseId(
                         courseEntity.getId()
@@ -524,7 +531,6 @@ public class AssessmentsTab {
 
                     posCombo.getItems().add(i);
                 }
-            }
         });
 
         // --- Update ---

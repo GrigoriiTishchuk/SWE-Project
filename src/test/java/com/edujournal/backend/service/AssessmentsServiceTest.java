@@ -2,19 +2,33 @@ package com.edujournal.backend.service;
 
 import com.edujournal.entity.AssessmentType;
 import com.edujournal.entity.Assessments;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AssessmentsServiceTest {
 
+    private final AssessmentsService service =
+            new AssessmentsService();
+
+    private final List<Assessments> createdAssessments =
+            new ArrayList<>();
+
+    @AfterEach
+    void cleanup() {
+        for (Assessments assessment : createdAssessments) {
+            service.delete(assessment);
+        }
+
+        createdAssessments.clear();
+    }
+
     @Test
     void testGetByCourseName() {
-
-        AssessmentsService service =
-                new AssessmentsService();
 
         List<Assessments> assessments =
                 service.getByCourseName(
@@ -49,10 +63,9 @@ public class AssessmentsServiceTest {
         assessment.setMaxScore(100.0);
         assessment.setWeight(20.0);
 
-        AssessmentsService service =
-                new AssessmentsService();
-
         service.save(assessment);
+
+        createdAssessments.add(assessment);
 
         assertNotNull(assessment.getId());
 
@@ -65,9 +78,6 @@ public class AssessmentsServiceTest {
     @Test
     void testUpdate() {
 
-        AssessmentsService service =
-                new AssessmentsService();
-
         Assessments assessment =
                 new Assessments();
 
@@ -79,6 +89,8 @@ public class AssessmentsServiceTest {
 
         service.save(assessment);
 
+        createdAssessments.add(assessment);
+
         Integer id = assessment.getId();
 
         assessment.setTitle("Updated Assessment");
@@ -88,7 +100,9 @@ public class AssessmentsServiceTest {
         Assessments updated =
                 service.getByCourseId(1)
                         .stream()
-                        .filter(a -> a.getId().equals(id))
+                        .filter(a ->
+                                a.getId().equals(id)
+                        )
                         .findFirst()
                         .orElse(null);
 
@@ -106,9 +120,6 @@ public class AssessmentsServiceTest {
 
     @Test
     void testDelete() {
-
-        AssessmentsService service =
-                new AssessmentsService();
 
         Assessments assessment =
                 new Assessments();
@@ -128,7 +139,9 @@ public class AssessmentsServiceTest {
         Assessments deleted =
                 service.getByCourseId(1)
                         .stream()
-                        .filter(a -> a.getId().equals(id))
+                        .filter(a ->
+                                a.getId().equals(id)
+                        )
                         .findFirst()
                         .orElse(null);
 

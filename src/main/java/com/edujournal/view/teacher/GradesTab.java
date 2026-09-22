@@ -3,14 +3,10 @@ package com.edujournal.view.teacher;
 import com.edujournal.backend.service.AcademicGroupService;
 import com.edujournal.backend.service.AssessmentsService;
 import com.edujournal.backend.service.StudentService;
+import com.edujournal.backend.service.UserService;
 import com.edujournal.dao.EnrollmentDAO;
 import com.edujournal.dao.GradesDAO;
-import com.edujournal.entity.AcademicGroup;
-import com.edujournal.entity.Assessments;
-import com.edujournal.entity.Course;
-import com.edujournal.entity.Enrollment;
-import com.edujournal.entity.Grades;
-import com.edujournal.entity.Student;
+import com.edujournal.entity.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -30,6 +26,7 @@ public class GradesTab {
         AssessmentsService assessmentsService = new AssessmentsService();
         GradesDAO gradesDAO = new GradesDAO();
         StudentService studentService = new StudentService();
+        UserService userService = new UserService();
 
         List<Assessments> assessments = assessmentsService.getByCourseName(course);
 
@@ -43,32 +40,30 @@ public class GradesTab {
         Map<Integer, Map<Integer, Grades>> gradeMap = new LinkedHashMap<>();
         for (Assessments a : assessments) {
             for (Grades g : gradesDAO.findByAssessment(a.getId())) {
-                gradeMap.computeIfAbsent(g.getStudentId(), k -> new LinkedHashMap<>())
+                gradeMap.computeIfAbsent(g.getEnrollmentId(), k -> new LinkedHashMap<>())
                         .put(g.getAssessmentId(), g);
             }
         }
 
-        List<Student> allStudents;
+        // Load enrollments for this course/group
+        List<Enrollment> enrollments;
         if (group != null && !group.isEmpty()) {
             AcademicGroup academicGroup = new AcademicGroupService().findByName(group);
             Course dbCourse = new AssessmentsService().getCourseByName(course);
             if (academicGroup != null && dbCourse != null) {
-                List<Enrollment> enrollments = new EnrollmentDAO().findByCourseAndGroup(dbCourse.getId(), academicGroup.getId());
-                allStudents = new ArrayList<>();
-                for (Enrollment e : enrollments) {
-                    Student s = studentService.findById(e.getStudentId());
-                    if (s != null) allStudents.add(s);
-                }
+                enrollments = new EnrollmentDAO().findByCourseAndGroup(dbCourse.getId(), academicGroup.getId());
             } else {
-                allStudents = studentService.findAll();
+                enrollments = new ArrayList<>();
             }
         } else {
-            allStudents = studentService.findAll();
+        Course dbCourse = new AssessmentsService().getCourseByName(course);
+        enrollments = new EnrollmentDAO().findByCourseId(dbCourse.getId());
         }
-        List<Integer> rowStudentIds = new ArrayList<>();
-        for (Student s : allStudents) rowStudentIds.add(s.getId());
 
-        int rowCount = rowStudentIds.size();
+        List<Integer> rowEnrollmentIds = new ArrayList<>();
+        for (Enrollment e : enrollments) rowEnrollmentIds.add(e.getId());
+
+        int rowCount = rowEnrollmentIds.size();
         int colCount = assessments.size();
 
         // Display data and TextFields side by side
@@ -76,10 +71,15 @@ public class GradesTab {
         TextField[][] tfs = new TextField[rowCount][colCount];
 
         for (int r = 0; r < rowCount; r++) {
-            Student student = allStudents.get(r);
-            int studentId = student.getId();
-            data[r][0] = student.getFirstName() + " " + student.getLastName();
-            Map<Integer, Grades> studentGrades = gradeMap.get(studentId);
+            Enrollment enrollment = enrollments.get(r);
+            int enrollmentId = enrollment.getId();
+
+            Student student = studentService.findById(enrollment.getStudentId());
+            User user = userService.findById(student.getUserId());
+
+            data[r][0] = user.getFirstName() + " " + user.getLastName();
+            Map<Integer, Grades> studentGrades = gradeMap.get(enrollmentId);
+
             for (int c = 0; c < colCount; c++) {
                 Grades g = studentGrades != null ? studentGrades.get(assessments.get(c).getId()) : null;
                 String val = (g != null && g.getScore() != null) ? String.valueOf(g.getScore()) : "—";
@@ -170,11 +170,12 @@ public class GradesTab {
 
         Button fixSave = new Button("Fix / Edit");
         fixSave.setStyle(BLUE_BTN);
+
         fixSave.setOnAction(e -> {
             if (editing[0]) {
                 for (int r = 0; r < rowCount; r++) {
-                    int studentId = rowStudentIds.get(r);
-                    Map<Integer, Grades> studentGrades = gradeMap.get(studentId);
+                    int enrollmentId = rowEnrollmentIds.get(r);
+                    Map<Integer, Grades> studentGrades = gradeMap.get(enrollmentId);
                     for (int c = 0; c < colCount; c++) {
                         String text = tfs[r][c].getText().trim();
                         if (text.isEmpty()) continue;
@@ -187,11 +188,11 @@ public class GradesTab {
                                 gradesDAO.update(grade);
                             } else {
                                 Grades newGrade = new Grades();
-                                newGrade.setStudentId(studentId);
+                                newGrade.setEnrollmentId(enrollmentId);
                                 newGrade.setAssessmentId(assessments.get(c).getId());
                                 newGrade.setScore(score);
                                 gradesDAO.save(newGrade);
-                                gradeMap.computeIfAbsent(studentId, k -> new LinkedHashMap<>())
+                                gradeMap.computeIfAbsent(enrollmentId, k -> new LinkedHashMap<>())
                                         .put(assessments.get(c).getId(), newGrade);
                             }
                             data[r][c + 1] = text;
