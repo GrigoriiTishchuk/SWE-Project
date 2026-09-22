@@ -43,6 +43,22 @@ public class UserService {
         return userMapper.toDTO(user);
     }
 
+    public UserDTO createStudent(String firstName, String lastName) {
+        String username = generateUsername(firstName, lastName);
+        String tempPassword = UUID.randomUUID().toString().substring(0, 8);
+        String hashedPassword = Integer.toHexString(tempPassword.hashCode());
+
+        User user = new User();
+        user.setUsername(username);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setRole(Role.STUDENT);
+        user.setPasswordHash(hashedPassword);
+
+        userDAO.save(user);
+        return userMapper.toDTO(user);
+    }
+
     public List<UserDTO> findAllTeachers() {
 
         List<User> teachers = userDAO.findByRole(Role.TEACHER);

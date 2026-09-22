@@ -5,9 +5,12 @@ import com.edujournal.backend.service.UserService;
 import com.edujournal.entity.Role;
 import com.edujournal.entity.Student;
 import com.edujournal.entity.User;
+import com.edujournal.model.UserDTO;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.scene.control.TableColumn;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.VBox;
 
 import java.util.List;
 
@@ -19,9 +22,7 @@ public class AdminStudentController extends BaseController<Student> {
 
     public AdminStudentController(Role role) {
         this.role = role;
-
         configureColumns();
-
         loadAndShowItems();
     }
 
@@ -132,32 +133,145 @@ public class AdminStudentController extends BaseController<Student> {
 
     @Override
     protected void showAddDialog() {
-        // Will be implemented later
+        Dialog<Student> dialog = new Dialog<>();
+        dialog.setTitle("Add Student");
+
+        TextField firstNameField = new TextField();
+        firstNameField.setPromptText("First Name");
+
+        TextField lastNameField = new TextField();
+        lastNameField.setPromptText("Last Name");
+
+        TextField studentNumberField = new TextField();
+        studentNumberField.setPromptText("Student Number");
+
+        VBox box = new VBox(10, firstNameField, lastNameField, studentNumberField);
+        box.setPadding(new Insets(10));
+        dialog.getDialogPane().setContent(box);
+
+        ButtonType saveBtn = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveBtn, ButtonType.CANCEL);
+
+        dialog.setResultConverter(button -> {
+            if (button == saveBtn) {
+                if (firstNameField.getText().isBlank() || lastNameField.getText().isBlank()) {
+                    new Alert(Alert.AlertType.ERROR, "First name and last name cannot be empty.").showAndWait();
+                    return null;
+                }
+                if (studentNumberField.getText().isBlank()) {
+                    new Alert(Alert.AlertType.ERROR, "Student number cannot be empty.").showAndWait();
+                    return null;
+                }
+                if (studentService.findByStudentNumber(studentNumberField.getText().trim()) != null) {
+                    new Alert(Alert.AlertType.ERROR, "Student number already exists.").showAndWait();
+                    return null;
+                }
+                Student s = new Student();
+                s.setStudentNumber(studentNumberField.getText().trim());
+                return s;
+            }
+            return null;
+        });
+
+        dialog.showAndWait().ifPresent(student -> {
+            UserDTO user = userService.createStudent(
+                    firstNameField.getText().trim(),
+                    lastNameField.getText().trim()
+            );
+            student.setUserId(user.getId());
+            studentService.save(student);
+            loadAndShowItems();
+        });
     }
 
     @Override
     protected void showEditDialog() {
-        // Will be implemented later
+        Student student = table.getSelectionModel().getSelectedItem();
+        if (student == null) return;
+
+        User user = student.getUserId() != null ? userService.findById(student.getUserId()) : null;
+
+        Dialog<Boolean> dialog = new Dialog<>();
+        dialog.setTitle("Edit Student");
+
+        TextField firstNameField = new TextField(user != null ? user.getFirstName() : "");
+        TextField lastNameField = new TextField(user != null ? user.getLastName() : "");
+        TextField studentNumberField = new TextField(student.getStudentNumber());
+
+        VBox box = new VBox(10, firstNameField, lastNameField, studentNumberField);
+        box.setPadding(new Insets(10));
+        dialog.getDialogPane().setContent(box);
+
+        ButtonType saveBtn = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveBtn, ButtonType.CANCEL);
+
+        dialog.setResultConverter(btn -> {
+            if (btn == saveBtn) {
+                if (firstNameField.getText().isBlank() || lastNameField.getText().isBlank()) {
+                    new Alert(Alert.AlertType.ERROR, "First name and last name cannot be empty.").showAndWait();
+                    return null;
+                }
+                if (studentNumberField.getText().isBlank()) {
+                    new Alert(Alert.AlertType.ERROR, "Student number cannot be empty.").showAndWait();
+                    return null;
+                }
+                return true;
+            }
+            return null;
+        });
+
+        dialog.showAndWait().ifPresent(ok -> {
+            if (user != null) {
+                user.setFirstName(firstNameField.getText().trim());
+                user.setLastName(lastNameField.getText().trim());
+                userService.update(user);
+            }
+            student.setStudentNumber(studentNumberField.getText().trim());
+            studentService.update(student);
+            loadAndShowItems();
+        });
     }
 
     @Override
     protected void showDeleteDialog() {
-        // Will be implemented later
+        Student student = table.getSelectionModel().getSelectedItem();
+        if (student == null) return;
+
+        User user = student.getUserId() != null ? userService.findById(student.getUserId()) : null;
+        String name = user != null ? user.getFirstName() + " " + user.getLastName() : student.getStudentNumber();
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Delete Student");
+        alert.setHeaderText("Are you sure you want to delete \"" + name + "\"?");
+        alert.setContentText("This action cannot be undone.");
+
+        ButtonType yes = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
+        ButtonType no = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getButtonTypes().setAll(yes, no);
+
+        if (alert.showAndWait().orElse(no) == yes) {
+            studentService.delete(student.getId());
+            if (student.getUserId() != null) userService.deleteUser(student.getUserId());
+            loadAndShowItems();
+        }
     }
 
     @Override
     protected void onView() {
-        Student selectedStudent =
-                table.getSelectionModel().getSelectedItem();
+        Student student = table.getSelectionModel().getSelectedItem();
+        if (student == null) return;
 
-        if (selectedStudent == null) {
-            return;
-        }
+        User user = student.getUserId() != null ? userService.findById(student.getUserId()) : null;
+        String name = user != null ? user.getFirstName() + " " + user.getLastName() : "—";
 
-        System.out.println(
-                "Selected student: "
-                        + selectedStudent.getStudentNumber()
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Student Info");
+        alert.setHeaderText(name);
+        alert.setContentText(
+                "Student Number: " + student.getStudentNumber() + "\n" +
+                (user != null ? "Username: " + user.getUsername() : "")
         );
+        alert.showAndWait();
     }
 }
 

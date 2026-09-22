@@ -1,7 +1,6 @@
 package com.edujournal.view.student;
 
 import com.edujournal.entity.Role;
-import com.edujournal.view.StatCard;
 import com.edujournal.view.common.ChartPlaceholder;
 import com.edujournal.view.common.DashboardStatCards;
 import com.edujournal.view.common.TopBar;
