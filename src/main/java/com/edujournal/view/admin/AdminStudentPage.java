@@ -15,22 +15,6 @@ public class AdminStudentPage extends BorderPane {
         this.role = Role.ADMINISTRATOR;
 
         setLeft(AdminSidebar.build("Students"));
-        setCenter(buildContent());
     }
 
-    private VBox buildContent() {
-        VBox box = new VBox(12);
-        box.setPadding(new Insets(24));
-
-        box.getChildren().add(
-                TopBar.build("Students", role)
-        );
-
-        AdminStudentController controller =
-                new AdminStudentController(role);
-
-        box.getChildren().add(controller);
-
-        return box;
-    }
 }

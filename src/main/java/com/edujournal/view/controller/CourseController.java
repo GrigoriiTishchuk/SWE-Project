@@ -1,9 +1,11 @@
 package com.edujournal.view.controller;
 
 import com.edujournal.backend.service.AcademicGroupService;
+import com.edujournal.backend.service.AssessmentsService;
 import com.edujournal.backend.service.CourseService;
 import com.edujournal.backend.service.UserService;
 import com.edujournal.backend.utils.CourseMapper;
+import com.edujournal.entity.Assessments;
 import com.edujournal.entity.Course;
 import com.edujournal.entity.Role;
 import com.edujournal.model.AcademicGroupDTO;
@@ -47,6 +49,7 @@ public class CourseController extends BaseController<CourseDTO> {
             editBtn.setVisible(false);
             deleteBtn.setVisible(false);
             viewBtn.setText("Add Assessment");
+            viewBtn.setOnAction(e -> openAddAssessmentPage());
         }
     }
 
@@ -324,6 +327,13 @@ public class CourseController extends BaseController<CourseDTO> {
             loadAndShowItems();
         }
     }
+
+    private void openAddAssessmentPage() {
+        CourseDTO course = table.getSelectionModel().getSelectedItem();
+
+
+    }
+
 
     @Override
     protected void onView() {
