@@ -30,7 +30,7 @@ public class OwnProfilePage extends BorderPane {
 
         VBox content = new VBox(20);
         content.setPadding(new Insets(24));
-        content.getChildren().addAll(TopBar.build("Own Profile", role), body);
+        content.getChildren().addAll(TopBar.build("Own Profile", role, false), body);
         return content;
     }
 

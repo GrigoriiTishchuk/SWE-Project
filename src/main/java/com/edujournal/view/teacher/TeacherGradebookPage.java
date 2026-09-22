@@ -53,7 +53,7 @@ public class TeacherGradebookPage extends BorderPane {
         VBox content = new VBox(16);
         content.setPadding(new Insets(24));
         content.getChildren().addAll(
-                TopBar.build("Gradebook", Role.TEACHER),
+                TopBar.build("Gradebook", Role.TEACHER, false),
                 buildFilterRow(),
                 buildTabs(),
                 contentArea

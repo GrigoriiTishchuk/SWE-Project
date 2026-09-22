@@ -26,7 +26,7 @@ public class AdminDashboardPage extends BorderPane {
     private VBox buildContent() {
         VBox content = new VBox(20);
         content.setPadding(new Insets(24));
-        content.getChildren().addAll(TopBar.build("Dashboard", Role.ADMINISTRATOR), buildStatCards(), buildBottomRow());
+        content.getChildren().addAll(TopBar.build("Dashboard", Role.ADMINISTRATOR, false), buildStatCards(), buildBottomRow());
         return content;
     }
 
