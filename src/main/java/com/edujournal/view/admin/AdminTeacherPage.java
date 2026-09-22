@@ -20,7 +20,7 @@ public class AdminTeacherPage extends BorderPane {
         VBox box = new VBox(12);
         box.setPadding(new Insets(24));
 
-        box.getChildren().add(TopBar.build("Teachers", role));
+        box.getChildren().add(TopBar.build("Teachers", role, false));
 
         AdminTeacherController controller = new AdminTeacherController(role);
         box.getChildren().add(controller);

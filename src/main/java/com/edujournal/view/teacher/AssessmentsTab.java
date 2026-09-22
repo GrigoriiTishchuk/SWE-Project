@@ -42,8 +42,6 @@ public class AssessmentsTab {
                 FXCollections.observableArrayList();
 
         // --- Load assessments from DB ---
-
-
             List<Assessments> assessments =
                     assessmentsService.getByCourseName(course);
 
@@ -285,7 +283,6 @@ public class AssessmentsTab {
 
         updateBtn.setVisible(false);
 
-        // Hangi assessment'ın edit edildiğini tutacak
         final AssessmentsDTO[] selectedAssessment =
                 new AssessmentsDTO[1];
 
@@ -316,7 +313,6 @@ public class AssessmentsTab {
                             selectedAssessment[0] =
                                     selected;
 
-                            // Formu seçilen assessment ile doldur
                             nameField.setText(
                                     selected.getTitle()
                             );
@@ -331,7 +327,6 @@ public class AssessmentsTab {
                                     )
                             );
 
-                            // Edit moduna geç
                             title.setText(
                                     "Edit assessment"
                             );
@@ -582,7 +577,6 @@ public class AssessmentsTab {
                     assessment
             );
 
-            // TableView'daki DTO'yu güncelle
             int index =
                     data.indexOf(selected);
 
@@ -602,7 +596,6 @@ public class AssessmentsTab {
                     updated
             );
 
-            // Formu temizle
             nameField.clear();
             typeCombo.setValue(null);
             weightField.clear();
@@ -661,8 +654,6 @@ public class AssessmentsTab {
         layout.setAlignment(
                 Pos.TOP_LEFT
         );
-
         return layout;
     }
-
 }

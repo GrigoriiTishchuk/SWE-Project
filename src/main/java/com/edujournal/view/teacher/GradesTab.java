@@ -13,6 +13,8 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
+import com.edujournal.view.common.ExportUtil;
+
 import java.util.*;
 
 public class GradesTab {
@@ -132,6 +134,40 @@ public class GradesTab {
         }
         table.getItems().addAll(List.of(data));
 
+        String[] exportHeaders = new String[2 + colCount];
+        exportHeaders[0] = "#";
+        exportHeaders[1] = "Student";
+        for (int i = 0; i < colCount; i++) exportHeaders[2 + i] = assessments.get(i).getTitle();
+
+        Button csvBtn = new Button("Export CSV");
+        csvBtn.setStyle(BLUE_BTN);
+        csvBtn.setOnAction(e -> {
+            List<String[]> rows = new ArrayList<>();
+            for (int r = 0; r < rowCount; r++) {
+                String[] row = new String[2 + colCount];
+                row[0] = String.valueOf(r + 1);
+                row[1] = data[r][0];
+                for (int c = 0; c < colCount; c++) row[2 + c] = data[r][c + 1];
+                rows.add(row);
+            }
+            ExportUtil.exportCsv(csvBtn.getScene().getWindow(), "gradebook", exportHeaders, rows);
+        });
+
+        Button pdfBtn = new Button("Export PDF");
+        pdfBtn.setStyle(BLUE_BTN);
+        pdfBtn.setOnAction(e -> {
+            List<String[]> rows = new ArrayList<>();
+            for (int r = 0; r < rowCount; r++) {
+                String[] row = new String[2 + colCount];
+                row[0] = String.valueOf(r + 1);
+                row[1] = data[r][0];
+                for (int c = 0; c < colCount; c++) row[2 + c] = data[r][c + 1];
+                rows.add(row);
+            }
+            String subtitle = "Course: " + course + (group != null && !group.isEmpty() ? "   Group: " + group : "");
+            ExportUtil.exportPdf(pdfBtn.getScene().getWindow(), "gradebook", "Gradebook", subtitle, exportHeaders, rows);
+        });
+
         Button fixSave = new Button("Fix / Edit");
         fixSave.setStyle(BLUE_BTN);
 
@@ -169,7 +205,7 @@ public class GradesTab {
             fixSave.setText(editing[0] ? "Save Changes" : "Fix / Edit");
         });
 
-        HBox btnRow = new HBox(fixSave);
+        HBox btnRow = new HBox(8, csvBtn, pdfBtn, fixSave);
         btnRow.setAlignment(Pos.CENTER_RIGHT);
 
         VBox vbox = new VBox(8, btnRow, table);
