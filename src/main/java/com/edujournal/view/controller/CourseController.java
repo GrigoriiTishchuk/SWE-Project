@@ -136,7 +136,7 @@ public class CourseController extends BaseController<CourseDTO> {
     }
 
     @Override
-    protected void showAddDialog() {
+    public void showAddDialog() {
         Dialog<CourseDTO> dialog = new Dialog<>();
         dialog.setTitle("Add Course");
 

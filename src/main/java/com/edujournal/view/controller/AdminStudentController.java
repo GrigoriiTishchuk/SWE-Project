@@ -125,7 +125,7 @@ public class AdminStudentController extends BaseController<StudentDTO> {
     }
 
     @Override
-    protected void showAddDialog() {
+    public void showAddDialog() {
         Dialog<StudentDTO> dialog = new Dialog<>();
         dialog.setTitle("Add Student");
 

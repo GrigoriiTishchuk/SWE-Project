@@ -92,7 +92,7 @@ public class AdminTeacherController extends BaseController<UserDTO> {
 
     // Dialogs
     @Override
-    protected void showAddDialog() {
+    public void showAddDialog() {
         Dialog<UserDTO> dialog = new Dialog<>();
         dialog.setTitle("Add Teacher");
 
