@@ -31,7 +31,7 @@ class GradesDAOTest {
     @Test
     void findById_returnEntityIfExists() {
         Grades grade = new Grades();
-        grade.setStudentId(1);
+        grade.setEnrollmentId(1);
         grade.setAssessmentId(10);
         grade.setScore(8.5);
 
@@ -42,7 +42,7 @@ class GradesDAOTest {
         Grades result = gdao.findById(grade.getId());
 
         assertNotNull(result);
-        assertEquals(1, result.getStudentId());
+        assertEquals(1, result.getEnrollmentId());
         assertEquals(10, result.getAssessmentId());
         assertEquals(8.5, result.getScore());
     }
@@ -56,7 +56,7 @@ class GradesDAOTest {
     @Test
     void findById_returnSavedEntityAfterSave() {
         Grades grade = new Grades();
-        grade.setStudentId(2);
+        grade.setEnrollmentId(2);
         grade.setAssessmentId(20);
         grade.setScore(7.0);
 
@@ -65,7 +65,7 @@ class GradesDAOTest {
         Grades result = gdao.findById(grade.getId());
 
         assertNotNull(result);
-        assertEquals(2, result.getStudentId());
+        assertEquals(2, result.getEnrollmentId());
         assertEquals(20, result.getAssessmentId());
         assertEquals(7.0, result.getScore());
     }
@@ -73,7 +73,7 @@ class GradesDAOTest {
     @Test
     void findById_returnNullAfterDelete() {
         Grades grade = new Grades();
-        grade.setStudentId(3);
+        grade.setEnrollmentId(3);
         grade.setAssessmentId(30);
         grade.setScore(9.0);
 
@@ -89,12 +89,12 @@ class GradesDAOTest {
     @Test
     void findByStudent_returnListIfExists() {
         Grades g1 = new Grades();
-        g1.setStudentId(1);
+        g1.setEnrollmentId(1);
         g1.setAssessmentId(10);
         g1.setScore(8.0);
 
         Grades g2 = new Grades();
-        g2.setStudentId(1);
+        g2.setEnrollmentId(1);
         g2.setAssessmentId(11);
         g2.setScore(9.0);
 
@@ -117,17 +117,17 @@ class GradesDAOTest {
     @Test
     void findByStudent_returnMultipleGrades() {
         Grades g1 = new Grades();
-        g1.setStudentId(2);
+        g1.setEnrollmentId(2);
         g1.setAssessmentId(20);
         g1.setScore(7.0);
 
         Grades g2 = new Grades();
-        g2.setStudentId(2);
+        g2.setEnrollmentId(2);
         g2.setAssessmentId(21);
         g2.setScore(6.5);
 
         Grades g3 = new Grades();
-        g3.setStudentId(2);
+        g3.setEnrollmentId(2);
         g3.setAssessmentId(22);
         g3.setScore(9.0);
 
@@ -145,12 +145,12 @@ class GradesDAOTest {
     @Test
     void findByStudent_shouldNotReturnOtherStudentsGrades() {
         Grades g1 = new Grades();
-        g1.setStudentId(3);
+        g1.setEnrollmentId(3);
         g1.setAssessmentId(30);
         g1.setScore(8.0);
 
         Grades g2 = new Grades();
-        g2.setStudentId(4);
+        g2.setEnrollmentId(4);
         g2.setAssessmentId(40);
         g2.setScore(9.0);
 
@@ -162,18 +162,18 @@ class GradesDAOTest {
         List<Grades> result = gdao.findByStudent(3);
 
         assertEquals(1, result.size());
-        assertEquals(3, result.get(0).getStudentId());
+        assertEquals(3, result.get(0).getEnrollmentId());
     }
 
     @Test
     void findByAssessment_returnListIfExists() {
         Grades g1 = new Grades();
-        g1.setStudentId(1);
+        g1.setEnrollmentId(1);
         g1.setAssessmentId(10);
         g1.setScore(8.0);
 
         Grades g2 = new Grades();
-        g2.setStudentId(2);
+        g2.setEnrollmentId(2);
         g2.setAssessmentId(10);
         g2.setScore(9.0);
 
@@ -196,17 +196,17 @@ class GradesDAOTest {
     @Test
     void findByAssessment_returnMultipleGrades() {
         Grades g1 = new Grades();
-        g1.setStudentId(1);
+        g1.setEnrollmentId(1);
         g1.setAssessmentId(20);
         g1.setScore(7.0);
 
         Grades g2 = new Grades();
-        g2.setStudentId(2);
+        g2.setEnrollmentId(2);
         g2.setAssessmentId(20);
         g2.setScore(6.5);
 
         Grades g3 = new Grades();
-        g3.setStudentId(3);
+        g3.setEnrollmentId(3);
         g3.setAssessmentId(20);
         g3.setScore(9.0);
 
@@ -224,12 +224,12 @@ class GradesDAOTest {
     @Test
     void findByAssessment_shouldNotReturnOtherAssessmentsGrades() {
         Grades g1 = new Grades();
-        g1.setStudentId(3);
+        g1.setEnrollmentId(3);
         g1.setAssessmentId(30);
         g1.setScore(8.0);
 
         Grades g2 = new Grades();
-        g2.setStudentId(4);
+        g2.setEnrollmentId(4);
         g2.setAssessmentId(40);
         g2.setScore(9.0);
 
@@ -247,7 +247,7 @@ class GradesDAOTest {
     @Test
     void findByStudentAssessment_returnEntityIfExists() {
         Grades g = new Grades();
-        g.setStudentId(1);
+        g.setEnrollmentId(1);
         g.setAssessmentId(10);
         g.setScore(8.0);
 
@@ -258,7 +258,7 @@ class GradesDAOTest {
         Grades result = gdao.findByStudentAssessment(1, 10);
 
         assertNotNull(result);
-        assertEquals(1, result.getStudentId());
+        assertEquals(1, result.getEnrollmentId());
         assertEquals(10, result.getAssessmentId());
         assertEquals(8.0, result.getScore());
     }
@@ -272,12 +272,12 @@ class GradesDAOTest {
     @Test
     void findByStudentAssessment_shouldNotReturnWrongPair() {
         Grades g1 = new Grades();
-        g1.setStudentId(1);
+        g1.setEnrollmentId(1);
         g1.setAssessmentId(10);
         g1.setScore(8.0);
 
         Grades g2 = new Grades();
-        g2.setStudentId(2);
+        g2.setEnrollmentId(2);
         g2.setAssessmentId(10);
         g2.setScore(9.0);
 
@@ -289,19 +289,19 @@ class GradesDAOTest {
         Grades result = gdao.findByStudentAssessment(1, 10);
 
         assertNotNull(result);
-        assertEquals(1, result.getStudentId());
+        assertEquals(1, result.getEnrollmentId());
         assertEquals(10, result.getAssessmentId());
     }
 
     @Test
     void findByStudentAssessment_returnFirstIfMultipleExist() {
         Grades g1 = new Grades();
-        g1.setStudentId(3);
+        g1.setEnrollmentId(3);
         g1.setAssessmentId(30);
         g1.setScore(7.0);
 
         Grades g2 = new Grades();
-        g2.setStudentId(3);
+        g2.setEnrollmentId(3);
         g2.setAssessmentId(30);
         g2.setScore(9.0);
 
@@ -313,14 +313,14 @@ class GradesDAOTest {
         Grades result = gdao.findByStudentAssessment(3, 30);
 
         assertNotNull(result);
-        assertEquals(3, result.getStudentId());
+        assertEquals(3, result.getEnrollmentId());
         assertEquals(30, result.getAssessmentId());
     }
 
     @Test
     void save_shouldPersistEntity() {
         Grades grade = new Grades();
-        grade.setStudentId(1);
+        grade.setEnrollmentId(1);
         grade.setAssessmentId(10);
         grade.setScore(8.0);
 
@@ -329,7 +329,7 @@ class GradesDAOTest {
         Grades result = gdao.findById(grade.getId());
 
         assertNotNull(result);
-        assertEquals(1, result.getStudentId());
+        assertEquals(1, result.getEnrollmentId());
         assertEquals(10, result.getAssessmentId());
         assertEquals(8.0, result.getScore());
     }
@@ -337,7 +337,7 @@ class GradesDAOTest {
     @Test
     void save_shouldGenerateId() {
         Grades grade = new Grades();
-        grade.setStudentId(2);
+        grade.setEnrollmentId(2);
         grade.setAssessmentId(20);
         grade.setScore(9.0);
 
@@ -349,7 +349,7 @@ class GradesDAOTest {
     @Test
     void save_shouldRollbackOnError() {
         Grades grade = new Grades();
-        grade.setStudentId(3);
+        grade.setEnrollmentId(3);
         grade.setAssessmentId(30);
         grade.setScore(10.0);
 
@@ -367,7 +367,7 @@ class GradesDAOTest {
     @Test
     void update_shouldModifyEntity() {
         Grades grade = new Grades();
-        grade.setStudentId(1);
+        grade.setEnrollmentId(1);
         grade.setAssessmentId(10);
         grade.setScore(8.0);
 
@@ -384,13 +384,13 @@ class GradesDAOTest {
     @Test
     void update_shouldModifyMultipleFields() {
         Grades grade = new Grades();
-        grade.setStudentId(2);
+        grade.setEnrollmentId(2);
         grade.setAssessmentId(20);
         grade.setScore(7.0);
 
         gdao.save(grade);
 
-        grade.setStudentId(3);
+        grade.setEnrollmentId(3);
         grade.setAssessmentId(25);
         grade.setScore(10.0);
 
@@ -398,7 +398,7 @@ class GradesDAOTest {
 
         Grades result = gdao.findById(grade.getId());
 
-        assertEquals(3, result.getStudentId());
+        assertEquals(3, result.getEnrollmentId());
         assertEquals(25, result.getAssessmentId());
         assertEquals(10.0, result.getScore());
     }
@@ -406,7 +406,7 @@ class GradesDAOTest {
     @Test
     void update_shouldRollbackOnError() {
         Grades grade = new Grades();
-        grade.setStudentId(5);
+        grade.setEnrollmentId(5);
         grade.setAssessmentId(50);
         grade.setScore(7.0);
 
@@ -426,7 +426,7 @@ class GradesDAOTest {
     @Test
     void deleteById_shouldDeleteEntity() {
         Grades grade = new Grades();
-        grade.setStudentId(1);
+        grade.setEnrollmentId(1);
         grade.setAssessmentId(10);
         grade.setScore(8.0);
 
@@ -447,7 +447,7 @@ class GradesDAOTest {
     @Test
     void deleteById_twice_shouldNotFail() {
         Grades grade = new Grades();
-        grade.setStudentId(2);
+        grade.setEnrollmentId(2);
         grade.setAssessmentId(20);
         grade.setScore(9.0);
 
@@ -463,7 +463,7 @@ class GradesDAOTest {
     @Test
     void deleteById_shouldRollbackOnError() {
         Grades grade = new Grades();
-        grade.setStudentId(3);
+        grade.setEnrollmentId(3);
         grade.setAssessmentId(30);
         grade.setScore(7.0);
 
