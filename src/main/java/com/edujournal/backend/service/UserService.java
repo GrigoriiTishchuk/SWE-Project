@@ -13,6 +13,14 @@ public class UserService {
     UserDAO userDAO = new UserDAO();
     UserMapper userMapper = new UserMapper();
 
+    public User findById(int id) {
+        return userDAO.findById(id);
+    }
+
+    public List<User> findAll() {
+        return userDAO.findAll();
+    }
+
     public UserDTO createTeacher(String firstName, String lastName) {
         String username = generateUsername(firstName, lastName);
 

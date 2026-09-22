@@ -44,9 +44,7 @@ public class AdminStudentController extends BaseController<Student> {
                             student.getId() != null
                                     ? student.getId().toString()
                                     : null,
-                            student.getStudentNumber(),
-                            student.getFirstName(),
-                            student.getLastName()
+                            student.getStudentNumber()
                     ),
                     text
             );
@@ -58,12 +56,6 @@ public class AdminStudentController extends BaseController<Student> {
 
             case "Student Number" -> student.getStudentNumber() != null
                     && student.getStudentNumber().toLowerCase().contains(text);
-
-            case "First Name" -> student.getFirstName() != null
-                    && student.getFirstName().toLowerCase().contains(text);
-
-            case "Last Name" -> student.getLastName() != null
-                    && student.getLastName().toLowerCase().contains(text);
 
             default -> true;
         };
@@ -94,24 +86,10 @@ public class AdminStudentController extends BaseController<Student> {
         TableColumn<Student, String> firstNameCol =
                 new TableColumn<>("First Name");
 
-        firstNameCol.setCellValueFactory(
-                cellData -> new javafx.beans.property.SimpleStringProperty(
-                        cellData.getValue().getFirstName() != null
-                                ? cellData.getValue().getFirstName()
-                                : ""
-                )
-        );
 
         TableColumn<Student, String> lastNameCol =
                 new TableColumn<>("Last Name");
 
-        lastNameCol.setCellValueFactory(
-                cellData -> new javafx.beans.property.SimpleStringProperty(
-                        cellData.getValue().getLastName() != null
-                                ? cellData.getValue().getLastName()
-                                : ""
-                )
-        );
 
         table.getColumns().addAll(
                 idCol,
@@ -158,10 +136,6 @@ public class AdminStudentController extends BaseController<Student> {
         System.out.println(
                 "Selected student: "
                         + selectedStudent.getStudentNumber()
-                        + " - "
-                        + selectedStudent.getFirstName()
-                        + " "
-                        + selectedStudent.getLastName()
         );
     }
 }

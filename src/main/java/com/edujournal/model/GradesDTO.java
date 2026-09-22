@@ -1,20 +1,20 @@
 package com.edujournal.model;
 
 public class GradesDTO {
-    private Integer studentId;
+    private Integer enrollmentId;
     private Integer assessmentId;
     private Double score;
     private String comment;
 
-    public GradesDTO(Integer studentId, Integer assessmentId, Double score, String comment) {
-        this.studentId = studentId;
+    public GradesDTO(Integer enrollmentId, Integer assessmentId, Double score, String comment) {
+        this.enrollmentId = enrollmentId;
         this.assessmentId = assessmentId;
         this.score = score;
         this.comment = comment;
     }
 
-    public Integer getStudentId() {
-        return studentId;
+    public Integer getEnrollmentId() {
+        return enrollmentId;
     }
 
     public Integer getAssessmentId() {
