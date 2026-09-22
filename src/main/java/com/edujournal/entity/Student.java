@@ -17,9 +17,8 @@ public class Student {
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(name = "user_id")
+    private Integer userId;
 
     public Student() {
     }
@@ -44,19 +43,11 @@ public class Student {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public User getUser() {
-        return user;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public String getFirstName() {
-        return user != null ? user.getFirstName() : null;
-    }
-
-    public String getLastName() {
-        return user != null ? user.getLastName() : null;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }

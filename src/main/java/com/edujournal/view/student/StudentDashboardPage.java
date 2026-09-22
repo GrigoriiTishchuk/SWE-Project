@@ -1,13 +1,9 @@
 package com.edujournal.view.student;
 
-import com.edujournal.backend.service.StudentService;
 import com.edujournal.entity.Role;
-import com.edujournal.entity.Student;
+import com.edujournal.view.StatCard;
 import com.edujournal.view.common.ChartPlaceholder;
-import com.edujournal.view.common.DashboardStatCards;
 import com.edujournal.view.common.TopBar;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -15,12 +11,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+// Everything is hardcoded
+
 public class StudentDashboardPage extends BorderPane {
-
-    private final StudentService studentService = new StudentService();
-
-    private final VBox studentList = new VBox(8);
-    private final ObservableList<Student> students = FXCollections.observableArrayList();
 
     public StudentDashboardPage() {
         setLeft(StudentSidebar.build("Dashboard"));
@@ -30,159 +23,53 @@ public class StudentDashboardPage extends BorderPane {
     private VBox buildContent() {
         VBox content = new VBox(20);
         content.setPadding(new Insets(24));
-
-        content.getChildren().addAll(
-                TopBar.build("Dashboard", Role.STUDENT),
-                buildStatCards(),
-                buildBottomRow()
-        );
-
+        content.getChildren().addAll(TopBar.build("Dashboard", Role.STUDENT), buildStatCards(), buildBottomRow());
         return content;
     }
 
     private HBox buildStatCards() {
-        return DashboardStatCards.build(Role.STUDENT);
+        HBox box = new HBox(16,
+                new StatCard("Average Grade",     "4.83", "/images/av_grade_icon.png"),
+                new StatCard("Credits",           "183",  "/images/credits_icon.png"),
+                new StatCard("Current Courses",   "4",    "/images/current_course_icon.png"),
+                new StatCard("Completed Courses", "23",   "/images/course_icon.png")
+        );
+        box.setAlignment(javafx.geometry.Pos.CENTER);
+        return box;
     }
 
     private HBox buildBottomRow() {
-        HBox box = new HBox(
-                16,
-                buildStudentOverview(),
-                ChartPlaceholder.build("Personal Grade Distribution")
-        );
-
+        HBox box = new HBox(16, buildCourseOverview(), ChartPlaceholder.build("Personal Grade Distribution"));
         box.setAlignment(javafx.geometry.Pos.CENTER);
-
         return box;
     }
 
-    private VBox buildStudentOverview() {
-
+    private VBox buildCourseOverview() {
         VBox box = new VBox(12);
-
         box.setPadding(new Insets(16));
+        box.setStyle("-fx-background-color: white; -fx-border-color: #E5E7EB; "
+                + "-fx-border-radius: 8; -fx-background-radius: 8;");
 
-        box.setStyle(
-                "-fx-background-color: white;" +
-                        "-fx-border-color: #E5E7EB;" +
-                        "-fx-border-radius: 8;" +
-                        "-fx-background-radius: 8;"
-        );
-
-        Label heading = new Label("Students");
-
-        heading.setStyle(
-                "-fx-font-size: 16px;" +
-                        "-fx-font-weight: bold;"
-        );
+        Label heading = new Label("Course Overview");
+        heading.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
         TextField search = new TextField();
-        search.setPromptText("Type student name or number");
-
-        search.textProperty().addListener((observable, oldValue, newValue) -> {
-            showStudents(newValue);
-        });
-
-        loadStudents();
+        search.setPromptText("Type the name of course");
 
         box.getChildren().addAll(
-                heading,
-                search,
-                studentList
+                heading, search,
+                courseRow("Software Engineering Project 1", "TXK3000-112"),
+                courseRow("Software Engineering Project 2", "TXK3000-113"),
+                courseRow("WEB-Project", "TXK3000-105")
         );
-
         return box;
     }
 
-    private void loadStudents() {
-        students.setAll(studentService.findAll());
-
-        showStudents("");
-    }
-
-    private void showStudents(String searchText) {
-
-        studentList.getChildren().clear();
-
-        String search = searchText == null
-                ? ""
-                : searchText.trim().toLowerCase();
-
-        for (Student student : students) {
-
-            String firstName = student.getFirstName() == null
-                    ? ""
-                    : student.getFirstName();
-
-            String lastName = student.getLastName() == null
-                    ? ""
-                    : student.getLastName();
-
-            String studentNumber = student.getStudentNumber() == null
-                    ? ""
-                    : student.getStudentNumber();
-
-            String fullName = firstName + " " + lastName;
-
-            boolean matches =
-                    fullName.toLowerCase().contains(search)
-                            || studentNumber.toLowerCase().contains(search);
-
-            if (matches) {
-                studentList.getChildren().add(
-                        studentRow(student)
-                );
-            }
-        }
-    }
-
-    private HBox studentRow(Student student) {
-
-        String firstName = student.getFirstName() == null
-                ? ""
-                : student.getFirstName();
-
-        String lastName = student.getLastName() == null
-                ? ""
-                : student.getLastName();
-
-        String studentNumber = student.getStudentNumber() == null
-                ? ""
-                : student.getStudentNumber();
-
-        Label nameLabel = new Label(
-                firstName + " " + lastName
-        );
-
-        nameLabel.setStyle(
-                "-fx-font-size: 14px;" +
-                        "-fx-font-weight: bold;"
-        );
-
-        Label numberLabel = new Label(
-                studentNumber
-        );
-
-        numberLabel.setStyle(
-                "-fx-text-fill: #6B7280;" +
-                        "-fx-font-size: 12px;"
-        );
-
-        VBox text = new VBox(
-                2,
-                nameLabel,
-                numberLabel
-        );
-
+    private HBox courseRow(String name, String code) {
+        VBox text = new VBox(2, new Label(name), new Label(code));
         HBox row = new HBox(text);
-
         row.setPadding(new Insets(8));
-
-        row.setStyle(
-                "-fx-background-color: #F3F4F6;" +
-                        "-fx-background-radius: 6;"
-        );
-
+        row.setStyle("-fx-background-color: #F3F4F6; -fx-background-radius: 6;");
         return row;
     }
 }
