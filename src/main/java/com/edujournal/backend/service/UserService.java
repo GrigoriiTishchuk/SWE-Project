@@ -10,6 +10,8 @@ import com.edujournal.model.UserDTO;
 import java.util.List;
 import java.util.UUID;
 
+import static com.edujournal.backend.utils.GeneratorUtil.generateEmail;
+
 public class UserService {
     UserDAO userDAO = new UserDAO();
     UserMapper userMapper = new UserMapper();
@@ -51,8 +53,11 @@ public class UserService {
         userDAO.delete(user);
     }
 
-    public UserDTO createTeacher(String firstName, String lastName) {
+    public UserDTO createTeacher(String firstName, String lastName, String phone) {
         String username = generateUniqueUsername(firstName, lastName);
+
+        // Generate eamil
+        String email = generateEmail(username);
 
         // Generate temporary password
         String tempPassword = UUID.randomUUID().toString().substring(0, 8);
@@ -65,6 +70,8 @@ public class UserService {
         user.setUsername(username);
         user.setFirstName(firstName);
         user.setLastName(lastName);
+        user.setEmail(email);
+        user.setPhone(phone);
         user.setRole(Role.TEACHER);
         user.setPasswordHash(hashedPassword);
 
@@ -75,7 +82,7 @@ public class UserService {
 
     public User createStudentUser(String firstName, String lastName, String phone) {
         String username = generateUniqueUsername(firstName, lastName);
-        String email = GeneratorUtil.generateEmail(username);
+        String email = generateEmail(username);
         String tempPassword = UUID.randomUUID().toString().substring(0, 8);
         String hashedPassword = Integer.toHexString(tempPassword.hashCode());
 
