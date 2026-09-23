@@ -66,6 +66,6 @@ CREATE TABLE IF NOT EXISTS grades (
     assessment_id INT NOT NULL,
     score DECIMAL(10,2) NOT NULL,
     comment TEXT,
-    FOREIGN KEY (enrollment_id) REFERENCES students(id),
+    FOREIGN KEY (enrollment_id) REFERENCES enrollments(id),
     FOREIGN KEY (assessment_id) REFERENCES assessments(id)
 );
