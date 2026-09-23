@@ -3,6 +3,7 @@ package com.edujournal.backend.service;
 import com.edujournal.dao.UserDAO;
 import com.edujournal.entity.User;
 import com.edujournal.backend.utils.UserSession;
+import com.edujournal.backend.utils.InputValidator;
 
 public class AuthService {
 
@@ -17,8 +18,7 @@ public class AuthService {
     }
 
     public boolean login(String username, String password) {
-        if (username == null || password == null
-                || username.isBlank() || password.isBlank()) {
+        if (!InputValidator.isValidName(username) || password == null || password.isBlank()) {
             return false;
         }
 
@@ -42,7 +42,7 @@ public class AuthService {
     }
 
     public boolean resetPassword(String username, String newPassword) {
-        if (username == null || newPassword == null || username.isBlank() || newPassword.isBlank()) {
+        if (!InputValidator.isValidName(username) || !InputValidator.isValidPassword(newPassword)) {
             return false;
         }
 

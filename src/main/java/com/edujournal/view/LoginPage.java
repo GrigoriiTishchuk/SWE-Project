@@ -3,6 +3,7 @@ package com.edujournal.view;
 import com.edujournal.Main;
 import com.edujournal.backend.service.AuthService;
 import com.edujournal.backend.utils.UserSession;
+import com.edujournal.backend.utils.InputValidator;
 import com.edujournal.entity.Role;
 import com.edujournal.view.admin.AdminDashboardPage;
 import com.edujournal.view.student.StudentDashboardPage;
@@ -131,7 +132,7 @@ public class LoginPage extends HBox {
         usernameInput.setPromptText("Username");
 
         PasswordField newPasswordInput = new PasswordField();
-        newPasswordInput.setPromptText("New password");
+        newPasswordInput.setPromptText("New password (min 9 chars)");
 
         grid.add(new Label("Username:"), 0, 0);
         grid.add(usernameInput, 1, 0);
@@ -145,20 +146,29 @@ public class LoginPage extends HBox {
                 String username = usernameInput.getText();
                 String newPassword = newPasswordInput.getText();
 
-                boolean success = authService.resetPassword(username, newPassword);
+                if (!InputValidator.isValidName(username)) {
+                    showResultAlert(false, "Username cannot be empty.");
+                    return;
+                }
 
-                Alert alert = new Alert(
-                        success ? Alert.AlertType.INFORMATION : Alert.AlertType.ERROR
-                );
-                alert.setTitle("Password Reset Result");
-                alert.setHeaderText(null);
-                alert.setContentText(
-                        success
-                                ? "Password successfully updated! You can now sign in."
-                                : "User not found. Check your Username."
-                );
-                alert.showAndWait();
+                if (!InputValidator.isValidPassword(newPassword)) {
+                    showResultAlert(false, "Password must be at least 9 characters long.");
+                    return;
+                }
+
+                boolean success = authService.resetPassword(username, newPassword);
+                showResultAlert(success, success
+                        ? "Password successfully updated! You can now sign in."
+                        : "User not found. Check your Username.");
             }
         });
+    }
+
+    private void showResultAlert(boolean isSuccess, String message) {
+        Alert alert = new Alert(isSuccess ? Alert.AlertType.INFORMATION : Alert.AlertType.ERROR);
+        alert.setTitle("Password Reset Result");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }
