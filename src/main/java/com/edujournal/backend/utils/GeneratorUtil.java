@@ -1,10 +1,15 @@
 package com.edujournal.backend.utils;
 
+import com.edujournal.dao.UserDAO;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class GeneratorUtil {
     // Username generation
-    public static String generateUsername(String firstName, String lastName) {
+    public static List<String> generateUsernameCandidates(String firstName, String lastName) {
+
         String fn = normalize(firstName);
         String ln = normalize(lastName);
 
@@ -14,18 +19,23 @@ public class GeneratorUtil {
         int minLn = 3;
         int maxLn = ln.length();
 
+        List<String> candidates = new ArrayList<>();
+
         for (int fnLen = maxFn, lnLen = minLn;
              fnLen >= minFn && lnLen <= maxLn;
              fnLen--, lnLen++) {
 
             String base = fn.substring(0, fnLen) + ln.substring(0, lnLen);
-            return base;
+
+            if (base.length() == 8) {
+                candidates.add(base);
+            }
         }
 
-        return fn + ln;
+        return candidates;
     }
 
-    private static String normalize(String s) {
+    public static String normalize(String s) {
         return s.toLowerCase()
                 .replace("ä", "a")
                 .replace("ö", "o")

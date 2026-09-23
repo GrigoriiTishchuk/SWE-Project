@@ -22,6 +22,7 @@ public class StudentService {
     private final StudentMapper studentMapper;
     private final EnrollmentDAO enrollmentDAO;
     private final GradesDAO gradesDAO;
+    private final UserService userService;
 
     public StudentService() {
         this.studentDAO = new StudentDAO();
@@ -29,6 +30,7 @@ public class StudentService {
         this.studentMapper = new StudentMapper();
         this.enrollmentDAO = new EnrollmentDAO();
         this.gradesDAO = new GradesDAO();
+        this.userService = new UserService();
     }
 
     public Student findById(Integer id) {
@@ -94,31 +96,14 @@ public class StudentService {
 
     public StudentDTO createStudent(String firstName, String lastName, String phone) {
 
-        User user = new User();
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setPhone(phone);
-        user.setRole(Role.STUDENT);
-
-        String username = GeneratorUtil.generateUsername(user.getFirstName(), user.getLastName());
-        String email = GeneratorUtil.generateEmail(username);
-        String tempPassword = GeneratorUtil.generateTempPassword();
-        String passwordHash = GeneratorUtil.hashPassword(tempPassword);
-
-        user.setUsername(username);
-        user.setEmail(email);
-        user.setPasswordHash(passwordHash);
-
-        userDAO.save(user);
-
-        Student student = new Student();
-        student.setUserId(user.getId());
+        User user = userService.createStudentUser(firstName, lastName, phone);
 
         String studentNumber;
         do {
             studentNumber = GeneratorUtil.generateStudentNumber();
         } while (studentDAO.findByStudentNumber(studentNumber) != null);
 
+        Student student = new Student();
         student.setUserId(user.getId());
         student.setStudentNumber(studentNumber);
 
