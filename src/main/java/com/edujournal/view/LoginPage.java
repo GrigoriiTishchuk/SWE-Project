@@ -1,27 +1,36 @@
 package com.edujournal.view;
 
 import com.edujournal.Main;
+import com.edujournal.backend.service.AuthService;
+import com.edujournal.backend.utils.UserSession;
+import com.edujournal.backend.utils.InputValidator;
+import com.edujournal.entity.Role;
 import com.edujournal.view.admin.AdminDashboardPage;
 import com.edujournal.view.student.StudentDashboardPage;
 import com.edujournal.view.teacher.TeacherDashboardPage;
 import javafx.geometry.Insets;
+/*
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+*/
+
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-
-// No real authentication yet
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 
 public class LoginPage extends HBox {
 
-    private final TextField emailField = new TextField();
+    private final TextField usernameField = new TextField();
     private final PasswordField passwordField = new PasswordField();
+    private final Label errorLabel = new Label();
+    private final AuthService authService = new AuthService();
 
     public LoginPage() {
         getChildren().addAll(buildBanner(), buildForm());
@@ -47,8 +56,10 @@ public class LoginPage extends HBox {
     }
 
     private VBox buildForm() {
-        emailField.setPromptText("Enter your email");
+        usernameField.setPromptText("Enter your username");
         passwordField.setPromptText("Enter your password");
+
+        errorLabel.setStyle("-fx-text-fill: #d9534f; -fx-font-size: 13px;");
 
         Hyperlink forgotPassword = new Hyperlink("Forgot password?");
         forgotPassword.setOnAction(e -> onForgotPassword());
@@ -64,8 +75,9 @@ public class LoginPage extends HBox {
         VBox form = new VBox(12,
                 welcome,
                 new Label("Sign into your account"),
-                new Label("Email"), emailField,
+                new Label("Username"), usernameField,
                 new Label("Password"), passwordField,
+                errorLabel,
                 forgotPassword, signIn
         );
         form.setPadding(new Insets(40));
@@ -75,11 +87,91 @@ public class LoginPage extends HBox {
     }
 
     private void onSignIn() {
-        // TODO: authenticate and navigate to the right dashboard by role
-        Main.showPage(new AdminDashboardPage());
+        String username = usernameField.getText();
+        String password = passwordField.getText();
+
+        if (authService.login(username, password)) {
+            errorLabel.setText("");
+            Role role = UserSession.getInstance().getCurrentUser().getRole();
+            navigateToDashboard(role);
+        } else {
+            errorLabel.setText("Invalid username or password.");
+        }
+    }
+
+    private void navigateToDashboard(Role role) {
+        if (role == null) return;
+
+        switch (role) {
+            case ADMINISTRATOR:
+                Main.showPage(new AdminDashboardPage());
+                break;
+            case TEACHER:
+                Main.showPage(new TeacherDashboardPage());
+                break;
+            case STUDENT:
+                Main.showPage(new StudentDashboardPage());
+                break;
+            default:
+                errorLabel.setText("Unknown user role.");
+                break;
+        }
     }
 
     private void onForgotPassword() {
-        // TODO: forgot-password logic
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Reset Password");
+        dialog.setHeaderText("Enter your username and new password");
+
+        ButtonType resetButtonType = new ButtonType("Reset Password", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(resetButtonType, ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 20, 10, 10));
+
+        TextField usernameInput = new TextField();
+        usernameInput.setPromptText("Username");
+
+        PasswordField newPasswordInput = new PasswordField();
+        newPasswordInput.setPromptText("New password (min 9 chars)");
+
+        grid.add(new Label("Username:"), 0, 0);
+        grid.add(usernameInput, 1, 0);
+        grid.add(new Label("New Password:"), 0, 1);
+        grid.add(newPasswordInput, 1, 1);
+
+        dialog.getDialogPane().setContent(grid);
+
+        dialog.showAndWait().ifPresent(buttonType -> {
+            if (buttonType == resetButtonType) {
+                String username = usernameInput.getText();
+                String newPassword = newPasswordInput.getText();
+
+                if (!InputValidator.isValidName(username)) {
+                    showResultAlert(false, "Username cannot be empty.");
+                    return;
+                }
+
+                if (!InputValidator.isValidPassword(newPassword)) {
+                    showResultAlert(false, "Password must be at least 9 characters long.");
+                    return;
+                }
+
+                boolean success = authService.resetPassword(username, newPassword);
+                showResultAlert(success, success
+                        ? "Password successfully updated! You can now sign in."
+                        : "User not found. Check your Username.");
+            }
+        });
+    }
+
+    private void showResultAlert(boolean isSuccess, String message) {
+        Alert alert = new Alert(isSuccess ? Alert.AlertType.INFORMATION : Alert.AlertType.ERROR);
+        alert.setTitle("Password Reset Result");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

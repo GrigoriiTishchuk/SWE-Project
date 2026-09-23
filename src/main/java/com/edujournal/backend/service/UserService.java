@@ -1,5 +1,6 @@
 package com.edujournal.backend.service;
 
+import com.edujournal.backend.utils.GeneratorUtil;
 import com.edujournal.backend.utils.UserMapper;
 import com.edujournal.dao.UserDAO;
 import com.edujournal.entity.Role;
@@ -8,6 +9,8 @@ import com.edujournal.model.UserDTO;
 
 import java.util.List;
 import java.util.UUID;
+
+import static com.edujournal.backend.utils.GeneratorUtil.generateEmail;
 
 public class UserService {
     UserDAO userDAO = new UserDAO();
@@ -21,51 +24,19 @@ public class UserService {
         return userDAO.findAll();
     }
 
-    public UserDTO createTeacher(String firstName, String lastName) {
-        String username = generateUsername(firstName, lastName);
-
-        // Generate temporary password
-        String tempPassword = UUID.randomUUID().toString().substring(0, 8);
-
-        // Password hashing
-        String hashedPassword = Integer.toHexString(tempPassword.hashCode());
-
-        // Create entity
-        User user = new User();
-        user.setUsername(username);
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setRole(Role.TEACHER);
-        user.setPasswordHash(hashedPassword);
-
+    public void save(User user) {
         userDAO.save(user);
-
-        return userMapper.toDTO(user);
     }
 
-    public UserDTO createStudent(String firstName, String lastName) {
-        String username = generateUsername(firstName, lastName);
-        String tempPassword = UUID.randomUUID().toString().substring(0, 8);
-        String hashedPassword = Integer.toHexString(tempPassword.hashCode());
+    public void update(User user) {
+        User existing = userDAO.findById(user.getId());
+        if (existing == null) return;
 
-        User user = new User();
-        user.setUsername(username);
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setRole(Role.STUDENT);
-        user.setPasswordHash(hashedPassword);
+        existing.setFirstName(user.getFirstName());
+        existing.setLastName(user.getLastName());
+        existing.setUsername(user.getUsername());
 
-        userDAO.save(user);
-        return userMapper.toDTO(user);
-    }
-
-    public List<UserDTO> findAllTeachers() {
-
-        List<User> teachers = userDAO.findByRole(Role.TEACHER);
-
-        return teachers.stream()
-                .map(userMapper::toDTO)
-                .toList();
+        userDAO.update(existing);
     }
 
     public void deleteUser(Integer userId) {
@@ -82,56 +53,83 @@ public class UserService {
         userDAO.delete(user);
     }
 
-    private String generateUsername(String firstName, String lastName) {
+    public UserDTO createTeacher(String firstName, String lastName, String phone) {
+        String username = generateUniqueUsername(firstName, lastName);
 
-        String fn = normalize(firstName);
-        String ln = normalize(lastName);
+        // Generate eamil
+        String email = generateEmail(username);
 
-        int maxFn = Math.min(fn.length(), 5);
-        int minFn = 1;
+        // Generate temporary password
+        String tempPassword = UUID.randomUUID().toString().substring(0, 8);
 
-        int minLn = 3;
-        int maxLn = ln.length();
+        // Password hashing
+        String hashedPassword = Integer.toHexString(tempPassword.hashCode());
 
-        // Search for the unique username
-        for (int fnLen = maxFn, lnLen = minLn;
-             fnLen >= minFn && lnLen <= maxLn;
-             fnLen--, lnLen++) {
+        // Create entity
+        User user = new User();
+        user.setUsername(username);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setEmail(email);
+        user.setPhone(phone);
+        user.setRole(Role.TEACHER);
+        user.setPasswordHash(hashedPassword);
 
-            String base = fn.substring(0, fnLen) + ln.substring(0, lnLen);
+        userDAO.save(user);
 
-            String username = base;
-            int counter = 1;
+        return userMapper.toDTO(user);
+    }
 
-            while (userDAO.findByUsername(username) != null) {
-                username = base + counter;
-                counter++;
+    public User createStudentUser(String firstName, String lastName, String phone) {
+        String username = generateUniqueUsername(firstName, lastName);
+        String email = generateEmail(username);
+        String tempPassword = UUID.randomUUID().toString().substring(0, 8);
+        String hashedPassword = Integer.toHexString(tempPassword.hashCode());
+
+        User user = new User();
+        user.setUsername(username);
+        user.setEmail(email);
+        user.setPhone(phone);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setRole(Role.STUDENT);
+        user.setPasswordHash(hashedPassword);
+
+        userDAO.save(user);
+        return user;
+    }
+
+    public List<UserDTO> findAllTeachers() {
+
+        List<User> teachers = userDAO.findByRole(Role.TEACHER);
+
+        return teachers.stream()
+                .map(userMapper::toDTO)
+                .toList();
+    }
+
+    public String generateUniqueUsername(String firstName, String lastName) {
+
+        List<String> candidates = GeneratorUtil.generateUsernameCandidates(firstName, lastName);
+
+        for (String candidate : candidates) {
+            if (userDAO.findByUsername(candidate) == null) {
+                return candidate;
             }
-
-            return username;
         }
 
-        // fallback
-        return fn + ln;
-    }
+        String base = candidates.isEmpty()
+                ? (GeneratorUtil.normalize(firstName) + GeneratorUtil.normalize(lastName))
+                : candidates.get(0).substring(0, 7);
 
-    private String normalize(String s) {
-        return s
-                .toLowerCase()
-                .replace("ä", "a")
-                .replace("ö", "o")
-                .replace("å", "a")
-                .replaceAll("\\s+", "");
-    }
+        int counter = 1;
+        String username;
 
-    public void update(User user) {
-        User existing = userDAO.findById(user.getId());
-        if (existing == null) return;
+        do {
+            username = base + counter;
+            counter++;
+        } while (userDAO.findByUsername(username) != null);
 
-        existing.setFirstName(user.getFirstName());
-        existing.setLastName(user.getLastName());
-        existing.setUsername(user.getUsername());
-
-        userDAO.update(existing);
+        return username;
     }
 }

@@ -52,6 +52,10 @@ public class AdminTeacherController extends BaseController<UserDTO> {
                 return teacher.getLastName() != null &&
                         teacher.getLastName().toLowerCase().contains(searchText);
 
+            case "Phone":
+                return teacher.getPhone() != null &&
+                        teacher.getPhone().toLowerCase().contains(searchText);
+
             case "All":
             default:
                 return matchesAllFields(
@@ -59,7 +63,8 @@ public class AdminTeacherController extends BaseController<UserDTO> {
                                 String.valueOf(teacher.getId()),
                                 safe(teacher.getUsername()),
                                 safe(teacher.getFirstName()),
-                                safe(teacher.getLastName())
+                                safe(teacher.getLastName()),
+                                safe(teacher.getPhone())
                         ),
                         searchText
                 );
@@ -84,15 +89,21 @@ public class AdminTeacherController extends BaseController<UserDTO> {
         TableColumn<UserDTO, String> lastNameCol = new TableColumn<>("Last Name");
         lastNameCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getLastName()));
 
-        table.getColumns().addAll(idCol, usernameCol, firstNameCol, lastNameCol);
+        TableColumn<UserDTO, String> emailCol = new TableColumn<>("Email");
+        emailCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getEmail()));
 
-        filterCombo.getItems().addAll("All", "ID", "Username", "First Name", "Last Name");
+        TableColumn<UserDTO, String> phoneCol = new TableColumn<>("Phone Number");
+        phoneCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPhone()));
+
+        table.getColumns().addAll(idCol, usernameCol, firstNameCol, lastNameCol, emailCol, phoneCol);
+
+        filterCombo.getItems().addAll("All", "ID", "Username", "First Name", "Last Name", "Phone Number");
         filterCombo.setValue("All");
     }
 
     // Dialogs
     @Override
-    protected void showAddDialog() {
+    public void showAddDialog() {
         Dialog<UserDTO> dialog = new Dialog<>();
         dialog.setTitle("Add Teacher");
 
@@ -102,7 +113,10 @@ public class AdminTeacherController extends BaseController<UserDTO> {
         TextField lastNameField = new TextField();
         lastNameField.setPromptText("Last Name");
 
-        VBox box = new VBox(10, firstNameField, lastNameField);
+        TextField phoneField = new TextField();
+        phoneField.setPromptText("Phone Number");
+
+        VBox box = new VBox(10, firstNameField, lastNameField, phoneField);
         box.setPadding(new Insets(10));
         dialog.getDialogPane().setContent(box);
 
@@ -120,6 +134,7 @@ public class AdminTeacherController extends BaseController<UserDTO> {
                 UserDTO dto = new UserDTO();
                 dto.setFirstName(firstNameField.getText());
                 dto.setLastName(lastNameField.getText());
+                dto.setPhone(phoneField.getText());
                 return dto;
             }
             return null;
@@ -128,7 +143,7 @@ public class AdminTeacherController extends BaseController<UserDTO> {
         UserDTO result = dialog.showAndWait().orElse(null);
 
         if (result != null) {
-            userService.createTeacher(result.getFirstName(), result.getLastName());
+            userService.createTeacher(result.getFirstName(), result.getLastName(), result.getPhone());
             loadAndShowItems();
         }
     }

@@ -36,6 +36,8 @@ class UserMapperTest {
                 "john",
                 "John",
                 "Doe",
+                "john@edujournal.fi",
+                "0501112233",
                 Role.TEACHER
         );
 
@@ -46,6 +48,8 @@ class UserMapperTest {
         assertEquals("john", user.getUsername());
         assertEquals("John", user.getFirstName());
         assertEquals("Doe", user.getLastName());
+        assertEquals("john@edujournal.fi", user.getEmail());
+        assertEquals("0501112233", user.getPhone());
         assertEquals(Role.TEACHER, user.getRole());
     }
 

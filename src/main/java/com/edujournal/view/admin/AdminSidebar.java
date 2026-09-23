@@ -19,7 +19,7 @@ public class AdminSidebar {
                         () -> Main.showPage(new AdminDashboardPage())),
                 new Sidebar.SectionHeader("MANAGEMENT"),
                 new Sidebar.NavItem("Students", active.equals("Students"),
-                        () -> Main.showPage(new AdminStudentPage())),
+                        () -> Main.showPage(new AdminStudentPage(AdminSidebar.build("Students"), Role.ADMINISTRATOR))),
                 new Sidebar.NavItem("Teachers", active.equals("Teachers"),
                         () -> Main.showPage(new AdminTeacherPage(AdminSidebar.build("Teachers"), Role.ADMINISTRATOR))),
                 new Sidebar.NavItem("Groups", active.equals("Groups"),
