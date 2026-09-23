@@ -5,6 +5,7 @@ import com.edujournal.backend.service.CourseService;
 import com.edujournal.backend.utils.AcademicGroupMapper;
 import com.edujournal.entity.AcademicGroup;
 import com.edujournal.entity.Course;
+import com.edujournal.entity.Role;
 import com.edujournal.model.AcademicGroupDTO;
 import com.edujournal.model.CourseDTO;
 import com.edujournal.model.UserDTO;
@@ -29,7 +30,7 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
 
     private AcademicGroupDTO selectedGroup;
 
-    public AdminGroupController() {
+    public AdminGroupController(Role role) {
         enableCardsView(this::buildGroupCard);
         viewBtn.setVisible(false);
         configureColumns();
@@ -118,7 +119,7 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
     }
 
     @Override
-    protected void showAddDialog() {
+    public void showAddDialog() {
         Dialog<AcademicGroupDTO> dialog = new Dialog<>();
         dialog.setTitle("Add Academic Group");
 

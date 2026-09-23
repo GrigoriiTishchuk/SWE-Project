@@ -20,12 +20,17 @@ public class Student {
     @Column(name = "user_id")
     private Integer userId;
 
+    @Column(name = "academic_group_id")
+    private Integer academicGroupId;
+
     public Student() {
     }
 
     public Integer getId() {
         return id;
     }
+
+    public void setId(Integer id) { this.id = id; }
 
     public String getStudentNumber() {
         return studentNumber;
@@ -49,5 +54,13 @@ public class Student {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public Integer getAcademicGroupId() {
+        return academicGroupId;
+    }
+
+    public void setAcademicGroupId(Integer academicGroupId) {
+        this.academicGroupId = academicGroupId;
     }
 }
