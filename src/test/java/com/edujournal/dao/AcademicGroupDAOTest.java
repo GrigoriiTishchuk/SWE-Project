@@ -169,6 +169,12 @@ class AcademicGroupDAOTest {
     }
 
     @Test
+    void updateWithNullEntity() {
+        assertThrows(Exception.class, () ->
+                academicGroupDAO.update(null)
+        );
+    }
+    @Test
     void updateWithNullName() {
         AcademicGroup group = new AcademicGroup();
         group.setName("Group Before Update");
@@ -219,6 +225,13 @@ class AcademicGroupDAOTest {
 
         // Zaten silindiği için cleanup'ın tekrar silmeye
         // çalışmaması adına listede tutmuyoruz.
+    }
+
+    @Test
+    void deleteWithNullId() {
+        assertThrows(Exception.class, () ->
+                academicGroupDAO.delete(null)
+        );
     }
 
     @Test
