@@ -9,11 +9,14 @@ import com.edujournal.view.admin.AdminDashboardPage;
 import com.edujournal.view.student.StudentDashboardPage;
 import com.edujournal.view.teacher.TeacherDashboardPage;
 import javafx.geometry.Insets;
+/*
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+*/
+
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -24,7 +27,7 @@ import javafx.scene.layout.GridPane;
 
 public class LoginPage extends HBox {
 
-    private final TextField emailField = new TextField();
+    private final TextField usernameField = new TextField();
     private final PasswordField passwordField = new PasswordField();
     private final Label errorLabel = new Label();
     private final AuthService authService = new AuthService();
@@ -53,7 +56,7 @@ public class LoginPage extends HBox {
     }
 
     private VBox buildForm() {
-        emailField.setPromptText("Enter your username");
+        usernameField.setPromptText("Enter your username");
         passwordField.setPromptText("Enter your password");
 
         errorLabel.setStyle("-fx-text-fill: #d9534f; -fx-font-size: 13px;");
@@ -72,7 +75,7 @@ public class LoginPage extends HBox {
         VBox form = new VBox(12,
                 welcome,
                 new Label("Sign into your account"),
-                new Label("Username"), emailField,
+                new Label("Username"), usernameField,
                 new Label("Password"), passwordField,
                 errorLabel,
                 forgotPassword, signIn
@@ -84,7 +87,7 @@ public class LoginPage extends HBox {
     }
 
     private void onSignIn() {
-        String username = emailField.getText();
+        String username = usernameField.getText();
         String password = passwordField.getText();
 
         if (authService.login(username, password)) {

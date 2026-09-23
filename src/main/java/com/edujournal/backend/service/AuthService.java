@@ -1,20 +1,25 @@
 package com.edujournal.backend.service;
 
 import com.edujournal.dao.UserDAO;
+import com.edujournal.model.UserDTO;
 import com.edujournal.entity.User;
+import com.edujournal.backend.utils.UserMapper;
 import com.edujournal.backend.utils.UserSession;
 import com.edujournal.backend.utils.InputValidator;
 
 public class AuthService {
 
     private final UserDAO userDao;
+    private final UserMapper userMapper;
 
     public AuthService() {
         this.userDao = new UserDAO();
+        this.userMapper = new UserMapper();
     }
 
-    public AuthService(UserDAO userDao) {
+    public AuthService(UserDAO userDao, UserMapper userMapper) {
         this.userDao = userDao;
+        this.userMapper = userMapper;
     }
 
     public boolean login(String username, String password) {
@@ -22,13 +27,14 @@ public class AuthService {
             return false;
         }
 
-        // findByUsername returns User (or null - could be null if user not found)
+        // findByUsername returns Entity
         User user = userDao.findByUsername(username);
 
         if (user != null) {
-            // В сущности User геттер называется getPasswordHash()
             if (checkPassword(password, user.getPasswordHash())) {
-                UserSession.getInstance().setCurrentUser(user);
+                // Convert Entity in DTO and send it to UserSession
+                UserDTO userDto = userMapper.toDTO(user);
+                UserSession.getInstance().setCurrentUser(userDto);
                 return true;
             }
         }
@@ -51,7 +57,6 @@ public class AuthService {
         if (user != null) {
             user.setPasswordHash(newPassword);
             userDao.update(user); // Update existing user in the database with the new password, user becomes Detached.
-            // Use update() method instead of save() to avoid creating a new user and having EntityExistsException or DuplicateKey.
             return true;
         }
 

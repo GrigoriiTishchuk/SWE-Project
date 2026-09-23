@@ -1,13 +1,13 @@
 package com.edujournal.backend.utils;
 
 import com.edujournal.entity.Role;
-import com.edujournal.entity.User;
+import com.edujournal.model.UserDTO;
 
 // Singleton class to manage the current user session
 public class UserSession {
 
     private static UserSession instance;
-    private User currentUser;
+    private UserDTO currentUser;
 
     private UserSession() {
     }
@@ -20,12 +20,12 @@ public class UserSession {
         return instance;
     }
 
-    public void setCurrentUser(User user) {
+    public void setCurrentUser(UserDTO user) {
         this.currentUser = user;
     }
 
 
-    public User getCurrentUser() {
+    public UserDTO getCurrentUser() {
         return currentUser;
     }
 
