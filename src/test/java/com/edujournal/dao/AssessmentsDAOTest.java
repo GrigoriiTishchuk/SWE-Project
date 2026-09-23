@@ -34,17 +34,6 @@ class AssessmentsDAOTest {
                 assessmentsDAO.findAll();
 
         assertNotNull(assessments);
-
-        System.out.println(
-                "Assessment count: " + assessments.size()
-        );
-
-        for (Assessments assessment : assessments) {
-            System.out.println(
-                    assessment.getId() + " - " +
-                            assessment.getTitle()
-            );
-        }
     }
 
     @Test
