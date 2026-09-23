@@ -41,6 +41,23 @@ public class AuthService {
         return rawPassword != null && rawPassword.equals(storedPassword);
     }
 
+    public boolean resetPassword(String username, String newPassword) {
+        if (username == null || newPassword == null || username.isBlank() || newPassword.isBlank()) {
+            return false;
+        }
+
+        User user = userDao.findByUsername(username);
+
+        if (user != null) {
+            user.setPasswordHash(newPassword);
+            userDao.update(user); // Update existing user in the database with the new password, user becomes Detached.
+            // Use update() method instead of save() to avoid creating a new user and having EntityExistsException or DuplicateKey.
+            return true;
+        }
+
+        return false;
+    }
+
     public void logout() {
         UserSession.getInstance().cleanUserSession();
     }

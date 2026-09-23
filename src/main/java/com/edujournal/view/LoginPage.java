@@ -18,6 +18,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 
 public class LoginPage extends HBox {
 
@@ -113,6 +115,50 @@ public class LoginPage extends HBox {
     }
 
     private void onForgotPassword() {
-        // TODO: forgot-password logic
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Reset Password");
+        dialog.setHeaderText("Enter your username and new password");
+
+        ButtonType resetButtonType = new ButtonType("Reset Password", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(resetButtonType, ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 20, 10, 10));
+
+        TextField usernameInput = new TextField();
+        usernameInput.setPromptText("Username");
+
+        PasswordField newPasswordInput = new PasswordField();
+        newPasswordInput.setPromptText("New password");
+
+        grid.add(new Label("Username:"), 0, 0);
+        grid.add(usernameInput, 1, 0);
+        grid.add(new Label("New Password:"), 0, 1);
+        grid.add(newPasswordInput, 1, 1);
+
+        dialog.getDialogPane().setContent(grid);
+
+        dialog.showAndWait().ifPresent(buttonType -> {
+            if (buttonType == resetButtonType) {
+                String username = usernameInput.getText();
+                String newPassword = newPasswordInput.getText();
+
+                boolean success = authService.resetPassword(username, newPassword);
+
+                Alert alert = new Alert(
+                        success ? Alert.AlertType.INFORMATION : Alert.AlertType.ERROR
+                );
+                alert.setTitle("Password Reset Result");
+                alert.setHeaderText(null);
+                alert.setContentText(
+                        success
+                                ? "Password successfully updated! You can now sign in."
+                                : "User not found. Check your Username."
+                );
+                alert.showAndWait();
+            }
+        });
     }
 }
