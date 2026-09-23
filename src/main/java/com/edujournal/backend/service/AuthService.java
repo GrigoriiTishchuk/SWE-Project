@@ -6,6 +6,7 @@ import com.edujournal.entity.User;
 import com.edujournal.backend.utils.UserMapper;
 import com.edujournal.backend.utils.UserSession;
 import com.edujournal.backend.utils.InputValidator;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class AuthService {
 
@@ -42,9 +43,8 @@ public class AuthService {
         return false;
     }
 
-    // check input password against stored password hash (in this case, just a simple comparison)
-    private boolean checkPassword(String rawPassword, String storedPassword) {
-        return rawPassword != null && rawPassword.equals(storedPassword);
+    private boolean checkPassword(String rawPassword, String storedHash) {
+        return rawPassword != null && BCrypt.checkpw(rawPassword, storedHash);
     }
 
     public boolean resetPassword(String username, String newPassword) {
@@ -55,8 +55,8 @@ public class AuthService {
         User user = userDao.findByUsername(username);
 
         if (user != null) {
-            user.setPasswordHash(newPassword);
-            userDao.update(user); // Update existing user in the database with the new password, user becomes Detached.
+            user.setPasswordHash(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
+            userDao.update(user);
             return true;
         }
 

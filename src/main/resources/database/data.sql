@@ -10,7 +10,7 @@ INSERT INTO users (
 )
 SELECT
     'admin',
-    'demo_password',
+    '$2a$10$dT96PvmFO9u5rV.Qo9FMle5Fr5HnVDKpsUm3S4KMadh8ygRYL5/aO',
     'Admin',
     'User',
     'ADMINISTRATOR'
@@ -29,7 +29,7 @@ INSERT INTO users (
 )
 SELECT
     'teacher1',
-    'demo_password',
+    '$2a$10$dT96PvmFO9u5rV.Qo9FMle5Fr5HnVDKpsUm3S4KMadh8ygRYL5/aO',
     'Anna',
     'Korhonen',
     'TEACHER'
@@ -48,7 +48,7 @@ INSERT INTO users (
 )
 SELECT
     'teacher2',
-    'demo_password',
+    '$2a$10$dT96PvmFO9u5rV.Qo9FMle5Fr5HnVDKpsUm3S4KMadh8ygRYL5/aO',
     'Mika',
     'Virtanen',
     'TEACHER'
@@ -67,7 +67,7 @@ INSERT INTO users (
 )
 SELECT
     'teacher3',
-    'demo_password',
+    '$2a$10$dT96PvmFO9u5rV.Qo9FMle5Fr5HnVDKpsUm3S4KMadh8ygRYL5/aO',
     'Sofia',
     'Niemi',
     'TEACHER'
@@ -92,7 +92,7 @@ INSERT INTO users (
 )
 SELECT
     'student1',
-    'demo_password',
+    '$2a$10$dT96PvmFO9u5rV.Qo9FMle5Fr5HnVDKpsUm3S4KMadh8ygRYL5/aO',
     'Heikki',
     'Heikkinen',
     'STUDENT'
@@ -130,7 +130,7 @@ INSERT INTO users (
 )
 SELECT
     'student2',
-    'demo_password',
+    '$2a$10$dT96PvmFO9u5rV.Qo9FMle5Fr5HnVDKpsUm3S4KMadh8ygRYL5/aO',
     'Anna',
     'Laine',
     'STUDENT'
@@ -168,7 +168,7 @@ INSERT INTO users (
 )
 SELECT
     'student3',
-    'demo_password',
+    '$2a$10$dT96PvmFO9u5rV.Qo9FMle5Fr5HnVDKpsUm3S4KMadh8ygRYL5/aO',
     'Matti',
     'Nieminen',
     'STUDENT'
@@ -206,7 +206,7 @@ INSERT INTO users (
 )
 SELECT
     'student4',
-    'demo_password',
+    '$2a$10$dT96PvmFO9u5rV.Qo9FMle5Fr5HnVDKpsUm3S4KMadh8ygRYL5/aO',
     'Sofia',
     'Virtanen',
     'STUDENT'

@@ -122,8 +122,6 @@ sprints.
 
 🔗 [Sprint 2 Planning](Documents/Sprint_Reports/Sprint2/Sprint_2_Planning_Report.md)
 🔗 [Sprint 2 Review](Documents/Sprint_Reports/Sprint2/Sprint_2_Review_Report.md)
-🔗 [Public JaCoCo Report](https://users.metropolia.fi/~grigorit/devops/jacoco/)
-
 🔗 [JaCoCo Code Coverage Report](https://users.metropolia.fi/~grigorit/devops/jacoco/)
 
 ---
