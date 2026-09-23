@@ -1,6 +1,7 @@
 package com.edujournal.backend.service;
 
 import com.edujournal.entity.AcademicGroup;
+import com.edujournal.model.AcademicGroupDTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -167,6 +168,36 @@ class AcademicGroupServiceTest {
                 "Duplicate Service Group",
                 found.getName()
         );
+    }
+
+    @Test
+    void findAllDTO() {
+        List<AcademicGroupDTO> result = academicGroupService.findAllDTO();
+
+        assertNotNull(result);
+    }
+
+    @Test
+    void existsByNameReturnsTrue() {
+        AcademicGroup group = new AcademicGroup();
+        group.setName("Existing Group");
+
+        academicGroupService.save(group);
+
+        boolean result =
+                academicGroupService.existsByName("Existing Group");
+
+        assertTrue(result);
+
+        academicGroupService.delete(group.getId());
+    }
+
+    @Test
+    void existsByNameReturnsFalse() {
+        boolean result =
+                academicGroupService.existsByName("Non Existing Group");
+
+        assertFalse(result);
     }
 
     @Test
