@@ -1,6 +1,9 @@
 package com.edujournal.view;
 
 import com.edujournal.Main;
+import com.edujournal.backend.service.AuthService;
+import com.edujournal.backend.utils.UserSession;
+import com.edujournal.entity.Role;
 import com.edujournal.view.admin.AdminDashboardPage;
 import com.edujournal.view.student.StudentDashboardPage;
 import com.edujournal.view.teacher.TeacherDashboardPage;
@@ -16,12 +19,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
-// No real authentication yet
-
 public class LoginPage extends HBox {
 
     private final TextField emailField = new TextField();
     private final PasswordField passwordField = new PasswordField();
+    private final Label errorLabel = new Label();
+    private final AuthService authService = new AuthService();
 
     public LoginPage() {
         getChildren().addAll(buildBanner(), buildForm());
@@ -47,8 +50,10 @@ public class LoginPage extends HBox {
     }
 
     private VBox buildForm() {
-        emailField.setPromptText("Enter your email");
+        emailField.setPromptText("Enter your username");
         passwordField.setPromptText("Enter your password");
+
+        errorLabel.setStyle("-fx-text-fill: #d9534f; -fx-font-size: 13px;");
 
         Hyperlink forgotPassword = new Hyperlink("Forgot password?");
         forgotPassword.setOnAction(e -> onForgotPassword());
@@ -64,8 +69,9 @@ public class LoginPage extends HBox {
         VBox form = new VBox(12,
                 welcome,
                 new Label("Sign into your account"),
-                new Label("Email"), emailField,
+                new Label("Username"), emailField,
                 new Label("Password"), passwordField,
+                errorLabel,
                 forgotPassword, signIn
         );
         form.setPadding(new Insets(40));
@@ -75,8 +81,35 @@ public class LoginPage extends HBox {
     }
 
     private void onSignIn() {
-        // TODO: authenticate and navigate to the right dashboard by role
-        Main.showPage(new StudentDashboardPage());
+        String username = emailField.getText();
+        String password = passwordField.getText();
+
+        if (authService.login(username, password)) {
+            errorLabel.setText("");
+            Role role = UserSession.getInstance().getCurrentUser().getRole();
+            navigateToDashboard(role);
+        } else {
+            errorLabel.setText("Invalid username or password.");
+        }
+    }
+
+    private void navigateToDashboard(Role role) {
+        if (role == null) return;
+
+        switch (role) {
+            case ADMINISTRATOR:
+                Main.showPage(new AdminDashboardPage());
+                break;
+            case TEACHER:
+                Main.showPage(new TeacherDashboardPage());
+                break;
+            case STUDENT:
+                Main.showPage(new StudentDashboardPage());
+                break;
+            default:
+                errorLabel.setText("Unknown user role.");
+                break;
+        }
     }
 
     private void onForgotPassword() {
