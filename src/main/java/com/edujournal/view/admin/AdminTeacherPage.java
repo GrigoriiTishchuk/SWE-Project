@@ -1,15 +1,30 @@
 package com.edujournal.view.admin;
 
 import com.edujournal.entity.Role;
-import com.edujournal.view.PagePlaceholder;
+import com.edujournal.view.common.TopBar;
+import com.edujournal.view.controller.AdminTeacherController;
+import javafx.geometry.Insets;
 import javafx.scene.layout.BorderPane;
-
-// placeholder only
+import javafx.scene.layout.VBox;
 
 public class AdminTeacherPage extends BorderPane {
+    private final Role role;
 
-    public AdminTeacherPage() {
-        setLeft(AdminSidebar.build("Teachers"));
-        setCenter(PagePlaceholder.build("Teachers", Role.ADMINISTRATOR));
+    public AdminTeacherPage(VBox sidebar, Role role) {
+        this.role = role;
+        setLeft(sidebar);
+        setCenter(buildContent());
+    }
+
+    private VBox buildContent()  {
+        VBox box = new VBox(12);
+        box.setPadding(new Insets(24));
+
+        box.getChildren().add(TopBar.build("Teachers", role, false));
+
+        AdminTeacherController controller = new AdminTeacherController(role);
+        box.getChildren().add(controller);
+
+        return box;
     }
 }

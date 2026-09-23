@@ -42,8 +42,6 @@ public class AssessmentsTab {
                 FXCollections.observableArrayList();
 
         // --- Load assessments from DB ---
-
-
             List<Assessments> assessments =
                     assessmentsService.getByCourseName(course);
 
@@ -78,7 +76,7 @@ public class AssessmentsTab {
 
         typeCol.setCellValueFactory(
                 d -> new SimpleStringProperty(
-                        typeLabel(d.getValue().getType())
+                        d.getValue().getType().name()
                 )
         );
 
@@ -93,8 +91,8 @@ public class AssessmentsTab {
                 )
         );
 
-        nameCol.setPrefWidth(200);
-        typeCol.setPrefWidth(105);
+        nameCol.setPrefWidth(160);
+        typeCol.setPrefWidth(160);
         weightCol.setPrefWidth(60);
 
         // --- Table ---
@@ -158,12 +156,15 @@ public class AssessmentsTab {
         Label totalName =
                 new Label("Total (Weighted)");
 
-        Label totalType =
-                new Label("100%");
+        Label totalType = new Label();
+        totalType.setStyle("-fx-text-fill: #6B7280;");
 
-        totalType.setStyle(
-                "-fx-text-fill: #6B7280;"
-        );
+        Runnable updateTotal = () -> {
+            double sum = data.stream().mapToDouble(AssessmentsDTO::getWeight).sum();
+            totalType.setText(String.format("%.2f", sum));
+        };
+        updateTotal.run();
+        data.addListener((javafx.collections.ListChangeListener<AssessmentsDTO>) c -> updateTotal.run());
 
         Region totalSpacer =
                 new Region();
@@ -179,21 +180,11 @@ public class AssessmentsTab {
                 totalType
         );
 
-        Button fixSave =
-                new Button("Fix / Save");
-
-        fixSave.setMaxWidth(
-                Double.MAX_VALUE
-        );
-
-        fixSave.setStyle(BLUE_BTN);
-
         VBox leftPanel =
                 new VBox(
                         12,
                         table,
-                        totalRow,
-                        fixSave
+                        totalRow
                 );
 
         leftPanel.setPadding(
@@ -292,7 +283,6 @@ public class AssessmentsTab {
 
         updateBtn.setVisible(false);
 
-        // Hangi assessment'ın edit edildiğini tutacak
         final AssessmentsDTO[] selectedAssessment =
                 new AssessmentsDTO[1];
 
@@ -300,18 +290,19 @@ public class AssessmentsTab {
         TableColumn<AssessmentsDTO, Void> actionCol =
                 new TableColumn<>("Actions");
 
-        actionCol.setPrefWidth(135);
+        actionCol.setPrefWidth(100);
 
         actionCol.setCellFactory(col ->
                 new TableCell<>() {
 
                     private final Button editBtn =
-                            new Button("Edit");
+                            new Button("✏");
 
                     private final Button deleteBtn =
-                            new Button("Delete");
+                            new Button("🗑");
 
                     {
+                        deleteBtn.setStyle("-fx-background-color: #DC2626; -fx-text-fill: white; -fx-background-radius: 6;");
                         editBtn.setOnAction(e -> {
 
                             AssessmentsDTO selected =
@@ -322,7 +313,6 @@ public class AssessmentsTab {
                             selectedAssessment[0] =
                                     selected;
 
-                            // Formu seçilen assessment ile doldur
                             nameField.setText(
                                     selected.getTitle()
                             );
@@ -337,7 +327,6 @@ public class AssessmentsTab {
                                     )
                             );
 
-                            // Edit moduna geç
                             title.setText(
                                     "Edit assessment"
                             );
@@ -394,30 +383,21 @@ public class AssessmentsTab {
                                             selected.getId()
                                     );
 
-                            if (assessmentsService.hasGrades(
-                                    selected.getId()
-                            )) {
+                            if (assessmentsService.hasGrades(selected.getId())) {
+                                Alert warning = new Alert(Alert.AlertType.CONFIRMATION);
+                                warning.setTitle("Delete Assessment");
+                                warning.setHeaderText("This assessment has grades.");
+                                warning.setContentText("All associated grades will also be deleted. Delete anyway?");
 
-                                Alert warning =
-                                        new Alert(
-                                                Alert.AlertType.WARNING
-                                        );
+                                ButtonType yes = new ButtonType("Delete anyway", ButtonBar.ButtonData.OK_DONE);
+                                ButtonType no = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+                                warning.getButtonTypes().setAll(yes, no);
 
-                                warning.setTitle(
-                                        "Cannot Delete Assessment"
-                                );
+                                if (warning.showAndWait().orElse(no) != yes) return;
 
-                                warning.setHeaderText(
-                                        "This assessment has grades."
-                                );
-
-                                warning.setContentText(
-                                        "Remove the grades first."
-                                );
-
-                                warning.showAndWait();
-
-                                return;
+                                com.edujournal.dao.GradesDAO gradesDAO = new com.edujournal.dao.GradesDAO();
+                                gradesDAO.findByAssessment(selected.getId())
+                                        .forEach(g -> gradesDAO.deleteById(g.getId()));
                             }
 
                             assessmentsService.delete(assessment);
@@ -479,20 +459,27 @@ public class AssessmentsTab {
                 weight = 1.0;
             }
 
-            if (!name.isEmpty()
-                    && type != null
-                    && pos != null) {
+            if (name.isEmpty()) {
+                new Alert(Alert.AlertType.WARNING, "Please enter the assessment name.").showAndWait();
+                return;
+            }
+            if (type == null) {
+                new Alert(Alert.AlertType.WARNING, "Please choose the assessment type.").showAndWait();
+                return;
+            }
+            if (pos == null) {
+                new Alert(Alert.AlertType.WARNING, "Please choose the position.").showAndWait();
+                return;
+            }
 
-                Assessments assessment =
-                        new Assessments();
+            Assessments assessment = new Assessments();
 
-                Course courseEntity =
-                        assessmentsService
-                                .getCourseByName(course);
+            Course courseEntity = assessmentsService.getCourseByName(course);
 
-                if (courseEntity == null) {
-                    return;
-                }
+            if (courseEntity == null) {
+                new Alert(Alert.AlertType.ERROR, "Course not found.").showAndWait();
+                return;
+            }
 
                 assessment.setCourseId(
                         courseEntity.getId()
@@ -544,7 +531,6 @@ public class AssessmentsTab {
 
                     posCombo.getItems().add(i);
                 }
-            }
         });
 
         // --- Update ---
@@ -597,7 +583,6 @@ public class AssessmentsTab {
                     assessment
             );
 
-            // TableView'daki DTO'yu güncelle
             int index =
                     data.indexOf(selected);
 
@@ -617,7 +602,6 @@ public class AssessmentsTab {
                     updated
             );
 
-            // Formu temizle
             nameField.clear();
             typeCombo.setValue(null);
             weightField.clear();
@@ -676,23 +660,6 @@ public class AssessmentsTab {
         layout.setAlignment(
                 Pos.TOP_LEFT
         );
-
         return layout;
-    }
-
-    private static String typeLabel(
-            AssessmentType type) {
-
-        return switch (type) {
-
-            case INCLASSTASK ->
-                    "Assignment (inclass)";
-
-            case HOMETASK ->
-                    "Assignment (hometask)";
-
-            default ->
-                    type.name();
-        };
     }
 }

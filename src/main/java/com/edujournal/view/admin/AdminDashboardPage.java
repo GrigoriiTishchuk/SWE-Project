@@ -2,8 +2,8 @@ package com.edujournal.view.admin;
 
 import com.edujournal.Main;
 import com.edujournal.entity.Role;
-import com.edujournal.view.StatCard;
 import com.edujournal.view.common.ChartPlaceholder;
+import com.edujournal.view.common.DashboardStatCards;
 import com.edujournal.view.common.CoursePage;
 import com.edujournal.view.common.TopBar;
 import javafx.geometry.Insets;
@@ -26,19 +26,12 @@ public class AdminDashboardPage extends BorderPane {
     private VBox buildContent() {
         VBox content = new VBox(20);
         content.setPadding(new Insets(24));
-        content.getChildren().addAll(TopBar.build("Dashboard", Role.ADMINISTRATOR), buildStatCards(), buildBottomRow());
+        content.getChildren().addAll(TopBar.build("Dashboard", Role.ADMINISTRATOR, false), buildStatCards(), buildBottomRow());
         return content;
     }
 
     private HBox buildStatCards() {
-        HBox box = new HBox(16,
-                new StatCard("Students", "518", "/images/student_icon.png"),
-                new StatCard("Teachers", "12",  "/images/teacher_icon.png"),
-                new StatCard("Courses",  "32",  "/images/course_icon.png"),
-                new StatCard("Groups",   "166", "/images/group_icon.png")
-        );
-        box.setAlignment(javafx.geometry.Pos.CENTER);
-        return box;
+        return DashboardStatCards.build(Role.ADMINISTRATOR);
     }
 
     private HBox buildBottomRow() {
@@ -68,13 +61,13 @@ public class AdminDashboardPage extends BorderPane {
         viewStudents.setOnAction(e -> Main.showPage(new AdminStudentPage()));
 
         Button viewTeachers = new Button("View all teachers");
-        viewTeachers.setOnAction(e -> Main.showPage(new AdminTeacherPage()));
+        viewTeachers.setOnAction(e -> Main.showPage(new AdminTeacherPage(AdminSidebar.build("Teachers"), Role.ADMINISTRATOR)));
 
         Button viewCourses = new Button("View all courses");
         viewCourses.setOnAction(e -> Main.showPage(new CoursePage(AdminSidebar.build("Courses"), Role.ADMINISTRATOR)));
 
         Button viewGroups = new Button("View all groups");
-        viewGroups.setOnAction(e -> Main.showPage(new AdminGroupPage()));
+        viewGroups.setOnAction(e -> Main.showPage(new AdminGroupPage(AdminSidebar.build("Academic Groups"), Role.ADMINISTRATOR)));
 
         HBox addButtons  = new HBox(8, addStudent, addTeacher, addCourse, addGroup);
         HBox viewButtons = new HBox(8, viewStudents, viewTeachers, viewCourses, viewGroups);

@@ -4,15 +4,25 @@ CREATE TABLE IF NOT EXISTS users (
     password_hash VARCHAR(255) NOT NULL,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
-    role VARCHAR(20) NOT NULL
+    role VARCHAR(20) NOT NULL,
+    phone VARCHAR(30),
+    email VARCHAR(255),
+    photo VARCHAR(255)
+);
+
+CREATE TABLE IF NOT EXISTS academic_groups (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS students (
     id INT PRIMARY KEY AUTO_INCREMENT,
     student_number VARCHAR(50) NOT NULL,
-    first_name VARCHAR(100) NOT NULL,
-    last_name VARCHAR(100) NOT NULL,
-    date_of_birth DATE
+    date_of_birth DATE,
+    user_id INT,
+    academic_group_id INT,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (academic_group_id) REFERENCES academic_groups(id)
 );
 
 CREATE TABLE IF NOT EXISTS courses (
@@ -20,12 +30,12 @@ CREATE TABLE IF NOT EXISTS courses (
     code VARCHAR(50) NOT NULL,
     name VARCHAR(100) NOT NULL,
     user_id INT,
-    FOREIGN KEY (user_id) REFERENCES users(id)
-);
+    academic_group_id INT,
+    start_date DATE,
+     end_date DATE,
 
-CREATE TABLE IF NOT EXISTS academic_groups (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(100) NOT NULL
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (academic_group_id) REFERENCES academic_groups(id)
 );
 
 CREATE TABLE IF NOT EXISTS enrollments (
@@ -52,10 +62,10 @@ CREATE TABLE IF NOT EXISTS assessments (
 
 CREATE TABLE IF NOT EXISTS grades (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    student_id INT NOT NULL,
+    enrollment_id INT NOT NULL,
     assessment_id INT NOT NULL,
     score DECIMAL(10,2) NOT NULL,
     comment TEXT,
-    FOREIGN KEY (student_id) REFERENCES students(id),
+    FOREIGN KEY (enrollment_id) REFERENCES students(id),
     FOREIGN KEY (assessment_id) REFERENCES assessments(id)
 );

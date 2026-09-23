@@ -1,139 +1,99 @@
 package com.edujournal.dao;
 
 import com.edujournal.config.JPAUtil;
-import com.edujournal.entity.Course;
+import com.edujournal.entity.Enrollment;
 import jakarta.persistence.EntityManager;
 
 import java.util.List;
 
-public class CourseDAO {
+public class EnrollmentDAO {
 
-    public Course findById(Integer id) {
-
+    public Enrollment findById(Integer id) {
         EntityManager entityManager =
                 JPAUtil.getEntityManagerFactory()
                         .createEntityManager();
 
         try {
-            return entityManager.find(Course.class, id);
-
+            return entityManager.find(Enrollment.class, id);
         } finally {
             entityManager.close();
         }
     }
 
-    public List<Course> findAll() {
-
+    public List<Enrollment> findAll() {
         EntityManager entityManager =
                 JPAUtil.getEntityManagerFactory()
                         .createEntityManager();
 
         try {
             return entityManager.createQuery(
-                    "SELECT c FROM Course c",
-                    Course.class
+                    "SELECT e FROM Enrollment e",
+                    Enrollment.class
             ).getResultList();
-
         } finally {
             entityManager.close();
         }
     }
 
-    public Course findByName(String name) {
-
+    public List<Enrollment> findByStudentId(Integer studentId) {
         EntityManager entityManager =
                 JPAUtil.getEntityManagerFactory()
                         .createEntityManager();
 
         try {
             return entityManager.createQuery(
-                            "SELECT c FROM Course c WHERE c.name = :name",
-                            Course.class
+                            "SELECT e FROM Enrollment e WHERE e.studentId = :studentId",
+                            Enrollment.class
                     )
-                    .setParameter("name", name)
-                    .getResultStream()
-                    .findFirst()
-                    .orElse(null);
-
-        } finally {
-            entityManager.close();
-        }
-    }
-
-    public Course findByCode(String code) {
-
-        EntityManager entityManager =
-                JPAUtil.getEntityManagerFactory()
-                        .createEntityManager();
-
-        try {
-            return entityManager.createQuery(
-                            "SELECT c FROM Course c WHERE c.code = :code",
-                            Course.class
-                    )
-                    .setParameter("code", code)
-                    .getResultStream()
-                    .findFirst()
-                    .orElse(null);
-
-        } finally {
-            entityManager.close();
-        }
-    }
-
-    public boolean existsByCode(String code) {
-        EntityManager entityManager =
-                JPAUtil.getEntityManagerFactory()
-                        .createEntityManager();
-        try{
-            return entityManager.createQuery(
-                            "SELECT COUNT(c) FROM Course c WHERE c.code = :code", Long.class)
-                    .setParameter("code", code)
-                    .getSingleResult() > 0;
-        } finally {
-            entityManager.close();
-        }
-    }
-
-    public List<Course> findByUserId(Integer userId) {
-
-        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
-
-        try {
-            return entityManager.createQuery(
-                            "SELECT c FROM Course c WHERE c.userId = :userId",
-                            Course.class
-                    )
-                    .setParameter("userId", userId)
+                    .setParameter("studentId", studentId)
                     .getResultList();
-
         } finally {
             entityManager.close();
         }
     }
 
-    public List<Course> findByGroupId(Integer groupId) {
-
-        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
+    public List<Enrollment> findByCourseId(Integer courseId) {
+        EntityManager entityManager =
+                JPAUtil.getEntityManagerFactory()
+                        .createEntityManager();
 
         try {
             return entityManager.createQuery(
-                            "SELECT c FROM Course c WHERE c.academicGroupId = :groupId",
-                            Course.class
+                            "SELECT e FROM Enrollment e WHERE e.courseId = :courseId",
+                            Enrollment.class
                     )
-                    .setParameter("groupId", groupId)
+                    .setParameter("courseId", courseId)
                     .getResultList();
-
         } finally {
             entityManager.close();
         }
     }
 
-    public void save(Course course) {
-        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
+    public List<Enrollment> findByAcademicGroupId(Integer academicGroupId) {
+        EntityManager entityManager =
+                JPAUtil.getEntityManagerFactory()
+                        .createEntityManager();
+
+        try {
+            return entityManager.createQuery(
+                            "SELECT e FROM Enrollment e WHERE e.academicGroupId = :academicGroupId",
+                            Enrollment.class
+                    )
+                    .setParameter("academicGroupId", academicGroupId)
+                    .getResultList();
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    public void save(Enrollment enrollment) {
+        EntityManager entityManager =
+                JPAUtil.getEntityManagerFactory()
+                        .createEntityManager();
+
         try {
             entityManager.getTransaction().begin();
-            entityManager.persist(course);
+            entityManager.persist(enrollment);
             entityManager.getTransaction().commit();
 
         } catch (Exception e) {
@@ -141,18 +101,19 @@ public class CourseDAO {
                 entityManager.getTransaction().rollback();
             }
             throw e;
-
         } finally {
             entityManager.close();
         }
     }
 
-    public void update(Course course) {
+    public void update(Enrollment enrollment) {
+        EntityManager entityManager =
+                JPAUtil.getEntityManagerFactory()
+                        .createEntityManager();
 
-        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
             entityManager.getTransaction().begin();
-            entityManager.merge(course);
+            entityManager.merge(enrollment);
             entityManager.getTransaction().commit();
 
         } catch (Exception e) {
@@ -160,21 +121,26 @@ public class CourseDAO {
                 entityManager.getTransaction().rollback();
             }
             throw e;
-
         } finally {
             entityManager.close();
         }
     }
 
     public void delete(Integer id) {
-        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
+        EntityManager entityManager =
+                JPAUtil.getEntityManagerFactory()
+                        .createEntityManager();
+
         try {
             entityManager.getTransaction().begin();
 
-            Course course = entityManager.find(Course.class, id);
-            if (course != null) {
-                entityManager.remove(course);
+            Enrollment enrollment =
+                    entityManager.find(Enrollment.class, id);
+
+            if (enrollment != null) {
+                entityManager.remove(enrollment);
             }
+
             entityManager.getTransaction().commit();
 
         } catch (Exception e) {
@@ -182,9 +148,22 @@ public class CourseDAO {
                 entityManager.getTransaction().rollback();
             }
             throw e;
-
         } finally {
             entityManager.close();
+        }
+    }
+
+    public List<Enrollment> findByCourseAndGroup(int courseId, int groupId) {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        try {
+            return em.createQuery(
+                    "SELECT e FROM Enrollment e WHERE e.courseId = :courseId AND e.academicGroupId = :groupId",
+                    Enrollment.class)
+                    .setParameter("courseId", courseId)
+                    .setParameter("groupId", groupId)
+                    .getResultList();
+        } finally {
+            em.close();
         }
     }
 }

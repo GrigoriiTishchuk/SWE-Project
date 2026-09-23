@@ -1,31 +1,23 @@
-package com.edujournal.entity;
+package com.edujournal.model;
 
-import jakarta.persistence.*;
+import com.edujournal.entity.Role;
 
-@Entity
-@Table(name = "users")
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class UserDTO {
     private Integer id;
-
-
     private String username;
-
-    @Column(name = "password_hash")
-    private String passwordHash;
-
-    @Column(name = "first_name")
     private String firstName;
-
-    @Column(name = "last_name")
     private String lastName;
-
-    @Enumerated(EnumType.STRING)
     private Role role;
 
-    public User() {
+    public UserDTO(Integer id, String username, String firstName, String lastName, Role role) {
+        this.id = id;
+        this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.role = role;
+    }
+
+    public UserDTO() {
     }
 
     public Integer getId() {
@@ -40,14 +32,6 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPasswordHash() {
-        return passwordHash;
-    }
-
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
     }
 
     public String getFirstName() {

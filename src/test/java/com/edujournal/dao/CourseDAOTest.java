@@ -1,20 +1,35 @@
 package com.edujournal.dao;
 
 import com.edujournal.entity.Course;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CourseDAOTest {
 
+    private final CourseDAO courseDAO = new CourseDAO();
+
+    private final List<Integer> createdIds = new ArrayList<>();
+
+    @AfterEach
+    void cleanup() {
+        for (Integer id : createdIds) {
+            courseDAO.delete(id);
+        }
+
+        createdIds.clear();
+    }
+
     @Test
     void testFindAll() {
 
-        CourseDAO courseDAO = new CourseDAO();
-
         List<Course> courses = courseDAO.findAll();
+
+        assertNotNull(courses);
 
         System.out.println("Course count: " + courses.size());
 
@@ -28,14 +43,11 @@ public class CourseDAOTest {
             );
         }
 
-        assertNotNull(courses);
         assertFalse(courses.isEmpty());
     }
 
     @Test
     void testFindByName() {
-
-        CourseDAO courseDAO = new CourseDAO();
 
         Course course =
                 courseDAO.findByName("Software Engineering");

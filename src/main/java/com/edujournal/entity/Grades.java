@@ -9,8 +9,8 @@ public class Grades {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "student_id")
-    private Integer studentId;
+    @Column(name = "enrollment_id")
+    private Integer enrollmentId;
 
     @Column(name = "assessment_id")
     private Integer assessmentId;
@@ -26,11 +26,11 @@ public class Grades {
         return id;
     }
 
-    public Integer getStudentId() {
-        return studentId;
+    public Integer getEnrollmentId() {
+        return enrollmentId;
     }
-    public void setStudentId(Integer studentId) {
-        this.studentId = studentId;
+    public void setEnrollmentId(Integer enrollmentId) {
+        this.enrollmentId = enrollmentId;
     }
 
     public Integer getAssessmentId() {

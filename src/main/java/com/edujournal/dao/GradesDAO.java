@@ -16,14 +16,14 @@ public class GradesDAO {
         }
     }
 
-    public List<Grades> findByStudent(int studentId) {
+    public List<Grades> findByEnrollment(int enrollmentId) {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
             return entityManager.createQuery(
-                            "SELECT g FROM Grades g WHERE g.studentId = :studentId",
+                            "SELECT g FROM Grades g WHERE g.enrollmentId = :enrollmentId",
                             Grades.class
                     )
-                    .setParameter("studentId", studentId)
+                    .setParameter("enrollmentId", enrollmentId)
                     .getResultList();
         } finally {
             entityManager.close();
@@ -44,14 +44,14 @@ public class GradesDAO {
         }
     }
 
-    public Grades findByStudentAssessment(int studentId, int assessmentId) {
+    public Grades findByEnrollmentAssessment(int enrollmentId, int assessmentId) {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
             return entityManager.createQuery(
-                    "SELECT g FROM Grades g WHERE g.studentId = :studentId AND g.assessmentId = :assessmentId",
+                    "SELECT g FROM Grades g WHERE g.enrollmentId = :enrollmentId AND g.assessmentId = :assessmentId",
                     Grades.class
             )
-                    .setParameter("studentId", studentId)
+                    .setParameter("enrollmentId", enrollmentId)
                     .setParameter("assessmentId", assessmentId)
                     .getResultStream()
                     .findFirst()

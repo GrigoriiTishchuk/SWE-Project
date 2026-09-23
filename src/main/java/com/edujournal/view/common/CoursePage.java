@@ -3,9 +3,7 @@ package com.edujournal.view.common;
 import com.edujournal.entity.Role;
 import com.edujournal.view.controller.CourseController;
 import javafx.geometry.Insets;
-import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class CoursePage extends BorderPane {
@@ -21,12 +19,10 @@ public class CoursePage extends BorderPane {
         VBox box = new VBox(12);
         box.setPadding(new Insets(24));
 
-        box.getChildren().add(TopBar.build("Courses", role));
+        box.getChildren().add(TopBar.build("Courses", role, true));
 
         CourseController controller = new CourseController(role);
         box.getChildren().add(controller);
-
-
 
         return box;
     }

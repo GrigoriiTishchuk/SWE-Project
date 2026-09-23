@@ -15,7 +15,7 @@ public class PagePlaceholder {
         Label placeholder = new Label("Here is the page of " + pageLabel + " (" + role.getDisplayName() + ").");
         placeholder.setStyle("-fx-text-fill: #6B7280;");
 
-        box.getChildren().addAll(TopBar.build(pageLabel, role), placeholder);
+        box.getChildren().addAll(TopBar.build(pageLabel, role, false), placeholder);
         return box;
     }
 }

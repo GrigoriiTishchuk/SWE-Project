@@ -17,6 +17,9 @@ public class Course {
     @Column(name = "user_id")
     private Integer userId;
 
+    @Column(name = "academic_group_id")
+    private Integer academicGroupId;
+
     public Course() {
     }
 
@@ -48,5 +51,13 @@ public class Course {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public Integer getAcademicGroupId() {
+        return academicGroupId;
+    }
+
+    public void setAcademicGroupId(Integer academicGroupId) {
+        this.academicGroupId = academicGroupId;
     }
 }
