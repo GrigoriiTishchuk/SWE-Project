@@ -222,9 +222,6 @@ class AcademicGroupDAOTest {
         academicGroupDAO.delete(id);
 
         assertNull(academicGroupDAO.findById(id));
-
-        // Zaten silindiği için cleanup'ın tekrar silmeye
-        // çalışmaması adına listede tutmuyoruz.
     }
 
     @Test

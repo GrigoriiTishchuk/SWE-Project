@@ -9,42 +9,34 @@ import java.util.List;
 public class AssessmentsDAO {
 
     public Assessments findById(Integer id) {
-
         EntityManager entityManager = JPAUtil
                 .getEntityManagerFactory()
                 .createEntityManager();
-
         try {
             return entityManager.find(Assessments.class, id);
-
         } finally {
             entityManager.close();
         }
     }
 
     public List<Assessments> findAll() {
-
         EntityManager entityManager = JPAUtil
                 .getEntityManagerFactory()
                 .createEntityManager();
-
         try {
             return entityManager.createQuery(
                     "SELECT a FROM Assessments a",
                     Assessments.class
             ).getResultList();
-
         } finally {
             entityManager.close();
         }
     }
 
     public List<Assessments> findByCourseId(Integer courseId) {
-
         EntityManager entityManager = JPAUtil
                 .getEntityManagerFactory()
                 .createEntityManager();
-
         try {
             return entityManager.createQuery(
                             "SELECT a FROM Assessments a WHERE a.courseId = :courseId",
@@ -52,91 +44,72 @@ public class AssessmentsDAO {
                     )
                     .setParameter("courseId", courseId)
                     .getResultList();
-
         } finally {
             entityManager.close();
         }
     }
 
     public void save(Assessments assessment) {
-
         EntityManager entityManager = JPAUtil
                 .getEntityManagerFactory()
                 .createEntityManager();
-
         try {
             entityManager.getTransaction().begin();
-
             entityManager.persist(assessment);
-
             entityManager.getTransaction().commit();
-
         } catch (Exception e) {
-
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
-            }
-
+            rollback(entityManager);
             throw e;
-
         } finally {
             entityManager.close();
         }
     }
 
     public void update(Assessments assessment) {
-
         EntityManager entityManager = JPAUtil
                 .getEntityManagerFactory()
                 .createEntityManager();
-
         try {
             entityManager.getTransaction().begin();
-
             entityManager.merge(assessment);
-
             entityManager.getTransaction().commit();
-
         } catch (Exception e) {
-
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
-            }
-
+            rollback(entityManager);
             throw e;
-
         } finally {
             entityManager.close();
         }
     }
 
     public void delete(Assessments assessment) {
-
         EntityManager entityManager = JPAUtil
                 .getEntityManagerFactory()
                 .createEntityManager();
-
         try {
             entityManager.getTransaction().begin();
 
-            entityManager.remove(
-                    entityManager.contains(assessment)
-                            ? assessment
-                            : entityManager.merge(assessment)
-            );
+            Assessments managedAssessment =
+                    entityManager.find(
+                            Assessments.class,
+                            assessment.getId()
+                    );
 
-            entityManager.getTransaction().commit();
-
-        } catch (Exception e) {
-
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
+            if (managedAssessment != null) {
+                entityManager.remove(managedAssessment);
             }
 
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            rollback(entityManager);
             throw e;
-
         } finally {
             entityManager.close();
+        }
+    }
+
+    private void rollback(EntityManager entityManager) {
+        if (entityManager.getTransaction().isActive()) {
+            entityManager.getTransaction().rollback();
         }
     }
 }
