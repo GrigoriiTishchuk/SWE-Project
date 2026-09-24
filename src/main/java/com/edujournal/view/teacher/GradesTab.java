@@ -134,8 +134,15 @@ public class GradesTab {
 
         TableColumn<String[], String> finalGradeCol = new TableColumn<>("Final Grade");
         finalGradeCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue()[colCount + 1]));
-        finalGradeCol.setPrefWidth(90);
-        finalGradeCol.setMinWidth(90);
+        finalGradeCol.setCellFactory(tc -> new TableCell<>() {
+            @Override protected void updateItem(String s, boolean empty) {
+                super.updateItem(s, empty);
+                setText(empty || s == null ? null : s);
+                setStyle(empty ? "" : "-fx-background-color: #DBEAFE; -fx-font-weight: bold; -fx-text-fill: #1a3a6b;");
+            }
+        });
+        finalGradeCol.setPrefWidth(110);
+        finalGradeCol.setMinWidth(110);
         table.getColumns().add(finalGradeCol);
 
         if (table.getItems().isEmpty()) {
@@ -193,6 +200,13 @@ public class GradesTab {
                         if (text.isEmpty()) continue;
                         try {
                             double score = Double.parseDouble(text);
+                            double maxScore = assessments.get(c).getMaxScore();
+                            if (score > maxScore) {
+                                new Alert(Alert.AlertType.WARNING,
+                                        "\"" + assessments.get(c).getTitle() + "\": score " + score +
+                                        " exceeds max score " + maxScore + ".").showAndWait();
+                                continue;
+                            }
                             Grades grade = studentGrades != null
                                     ? studentGrades.get(assessments.get(c).getId()) : null;
                             if (grade != null) {
