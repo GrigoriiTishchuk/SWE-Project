@@ -3,6 +3,7 @@ package com.edujournal.view.controller;
 import com.edujournal.backend.service.AcademicGroupService;
 import com.edujournal.backend.service.CourseService;
 import com.edujournal.backend.service.UserService;
+import com.edujournal.backend.utils.UserSession;
 import com.edujournal.backend.utils.CourseMapper;
 import com.edujournal.entity.Course;
 import com.edujournal.entity.Role;
@@ -53,6 +54,10 @@ public class CourseController extends BaseController<CourseDTO> {
 
     @Override
     protected List<CourseDTO> loadAllItems() {
+        if (role == Role.TEACHER) {
+            Integer teacherId = UserSession.getInstance().getCurrentUser().getId();
+            return courseService.findByUserId(teacherId);
+        }
         return courseService.findAll();
     }
 
