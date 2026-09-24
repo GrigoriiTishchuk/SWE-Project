@@ -1,0 +1,2 @@
+Benchmark                                Mode  Cnt  Score   Error  Units
+CourseAdditionPerformanceTest.addCourse  avgt    3  0,789 ± 0,123  ms/op

@@ -1,0 +1,2 @@
+Benchmark                               Mode  Cnt  Score   Error  Units
+TeacherListPerformanceTest.teacherList  avgt    3  0,079 ± 0,009  ms/op

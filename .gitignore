@@ -34,3 +34,6 @@ replay_pid*
 **/.DS_Store
 target/
 .env
+
+cp.txt
+dependency-reduced-pom.xml

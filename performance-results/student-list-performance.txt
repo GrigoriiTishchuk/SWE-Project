@@ -1,0 +1,2 @@
+Benchmark                               Mode  Cnt  Score   Error  Units
+StudentListPerformanceTest.studentList  avgt    3  1,011 ± 0,182  ms/op

@@ -1,0 +1,4 @@
+Benchmark                          Mode  Cnt   Score   Error  Units
+LoginPerformanceTest.adminLogin    avgt    3  55,221 ± 4,725  ms/op
+LoginPerformanceTest.studentLogin  avgt    3  56,031 ± 7,029  ms/op
+LoginPerformanceTest.teacherLogin  avgt    3  55,648 ± 8,631  ms/op
