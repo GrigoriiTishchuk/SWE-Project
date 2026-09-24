@@ -17,10 +17,13 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 */
 
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -36,7 +39,14 @@ public class LoginPage extends HBox {
         getChildren().addAll(buildBanner(), buildForm());
     }
 
-    private VBox buildBanner() {
+    private StackPane buildBanner() {
+        ImageView bg = new ImageView(new Image(
+                getClass().getResourceAsStream("/images/background.jpg")));
+        bg.setPreserveRatio(false);
+        GaussianBlur blur = new GaussianBlur(8);
+        blur.setInput(new ColorAdjust(0, 0, 0.55, 0));
+        bg.setEffect(blur);
+
         ImageView logo = new ImageView(new Image(
                 getClass().getResourceAsStream("/images/edujournal_logo.png")));
         logo.setFitHeight(48);
@@ -48,10 +58,14 @@ public class LoginPage extends HBox {
         VBox spacer = new VBox();
         VBox.setVgrow(spacer, Priority.ALWAYS);
 
-        VBox banner = new VBox(logo, spacer, tagline);
-        banner.setPadding(new Insets(32));
+        VBox content = new VBox(logo, spacer, tagline);
+        content.setPadding(new Insets(32));
+
+        StackPane banner = new StackPane(bg, content);
         banner.setPrefWidth(600);
-        banner.setStyle("-fx-background-image: url('/images/background.jpg'); -fx-background-size: cover; -fx-background-position: center;");
+        bg.fitWidthProperty().bind(banner.widthProperty());
+        bg.fitHeightProperty().bind(banner.heightProperty());
+        StackPane.setAlignment(content, javafx.geometry.Pos.TOP_LEFT);
         return banner;
     }
 
