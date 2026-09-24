@@ -250,6 +250,7 @@ public class GradesTab {
                     assessments, new ArrayList<>(studentGrades.values()));
             return String.format("%d (%.1f%%)", toGrade(percent), percent);
         } catch (Exception e) {
+            System.err.println("[FinalGrade] " + e.getMessage());
             return "—";
         }
     }

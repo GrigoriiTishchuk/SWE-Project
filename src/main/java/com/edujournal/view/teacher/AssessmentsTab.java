@@ -6,8 +6,10 @@ import com.edujournal.entity.Assessments;
 import com.edujournal.entity.Course;
 import com.edujournal.model.AssessmentsDTO;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -85,7 +87,7 @@ public class AssessmentsTab {
 
         weightCol.setCellValueFactory(
                 d -> new SimpleStringProperty(
-                        String.format("%.0f%%", d.getValue().getWeight())
+                        String.valueOf(d.getValue().getWeight())
                 )
         );
 
@@ -169,8 +171,12 @@ public class AssessmentsTab {
         totalType.setStyle("-fx-text-fill: #6B7280; -fx-font-weight: bold;");
 
         Runnable updateTotal = () -> {
-            double sum = data.stream().mapToDouble(AssessmentsDTO::getWeight).sum();
-            totalType.setText(String.format("%.0f%%", sum));
+            Set<AssessmentType> seen = new HashSet<>();
+            double sum = 0;
+            for (AssessmentsDTO dto : data) {
+                if (seen.add(dto.getType())) sum += dto.getWeight();
+            }
+            totalType.setText(String.valueOf(sum));
         };
         updateTotal.run();
         data.addListener((javafx.collections.ListChangeListener<AssessmentsDTO>) c -> updateTotal.run());
@@ -250,14 +256,20 @@ public class AssessmentsTab {
         TextField weightField =
                 new TextField();
 
-        weightField.setPromptText(
-                "Weight % (e.g. 30)"
-        );
+        weightField.setPromptText("Weight (e.g. 0.3)");
 
         weightField.setStyle(LIGHT_INPUT);
         weightField.setMaxWidth(
                 Double.MAX_VALUE
         );
+
+        typeCombo.setOnAction(e -> {
+            AssessmentType sel = typeCombo.getValue();
+            if (sel != null) {
+                data.stream().filter(dto -> dto.getType() == sel).findFirst()
+                    .ifPresent(dto -> weightField.setText(String.valueOf(dto.getWeight())));
+            }
+        });
 
         TextField maxScoreField = new TextField();
         maxScoreField.setPromptText("Max points (e.g. 100)");
@@ -339,11 +351,7 @@ public class AssessmentsTab {
                                     selected.getType()
                             );
 
-                            weightField.setText(
-                                    String.valueOf(
-                                            selected.getWeight()
-                                    )
-                            );
+                            weightField.setText(String.valueOf(selected.getWeight()));
 
                             maxScoreField.setText(
                                     String.valueOf(
@@ -496,11 +504,14 @@ public class AssessmentsTab {
                 return;
             }
 
-            double currentTotal = data.stream().mapToDouble(AssessmentsDTO::getWeight).sum();
-            if (currentTotal + weight > 100) {
+            Set<AssessmentType> seenTypes = new HashSet<>();
+            double currentTotal = 0;
+            for (AssessmentsDTO dto : data) {
+                if (dto.getType() != type && seenTypes.add(dto.getType())) currentTotal += dto.getWeight();
+            }
+            if (currentTotal + weight > 1.0) {
                 new Alert(Alert.AlertType.WARNING,
-                        "Total weight cannot exceed 100%. Already used: " +
-                        String.format("%.0f", currentTotal) + "%.").showAndWait();
+                        "Total type weights cannot exceed 1.0. Other types use: " + currentTotal + ".").showAndWait();
                 return;
             }
 
@@ -539,9 +550,7 @@ public class AssessmentsTab {
                 }
                 assessment.setMaxScore(maxScore);
 
-                assessment.setWeight(
-                        weight
-                );
+                assessment.setWeight(weight);
 
                 assessment.setDueDate(
                         null
@@ -613,13 +622,15 @@ public class AssessmentsTab {
                 return;
             }
 
-            double currentTotal = data.stream()
-                    .filter(dto -> dto != selectedAssessment[0])
-                    .mapToDouble(AssessmentsDTO::getWeight).sum();
-            if (currentTotal + weight > 100) {
+            Set<AssessmentType> seenTypes = new HashSet<>();
+            double currentTotal = 0;
+            for (AssessmentsDTO dto : data) {
+                if (dto == selectedAssessment[0]) continue;
+                if (dto.getType() != type && seenTypes.add(dto.getType())) currentTotal += dto.getWeight();
+            }
+            if (currentTotal + weight > 1.0) {
                 new Alert(Alert.AlertType.WARNING,
-                        "Total weight cannot exceed 100%. Other assignments use: " +
-                        String.format("%.0f", currentTotal) + "%.").showAndWait();
+                        "Total type weights cannot exceed 1.0. Other types use: " + currentTotal + ".").showAndWait();
                 return;
             }
 
