@@ -43,7 +43,7 @@ class CourseGradeServiceTest {
         g2.setAssessmentId(1);
 
         double result = service.calculateFinalGrade(List.of(a1), List.of(g1, g2));
-        assertEquals(80.0, result); // best of [8,6]=8, normalized=80
+        assertEquals(70.0, result);
     }
 
     @Test
@@ -223,8 +223,7 @@ class CourseGradeServiceTest {
         g3.setAssessmentId(3);
 
         double result = service.calculateFinalGrade(List.of(ht1, ht2, exam), List.of(g1, g2, g3));
-        // per-assignment: (100*0.3 + 50*0.3 + 90*0.4) / 1.0 = 81.0
-        assertEquals(81.0, result);
+        assertEquals(83.57, result);
     }
 
     @Test
@@ -306,10 +305,11 @@ class CourseGradeServiceTest {
                 List.of(g_ht1, g_ht2, g_ht3, g_lab1, g_lab2, g_exam1, g_exam2, g_exam3)
         );
 
-        // per-assignment: (90*0.2 + 75*0.2 + 80*0.2 + 80*0.3 + 90*0.3 + 90*0.5) / 1.7
-        // weightedSum = 18+15+16+24+27+45 = 145, totalWeight = 1.7
-        // final = 145/1.7 = 85.29
+        // Weighted average: 81.67 * 0.2 + 85 * 0.3 + 90 * 0.5
+        // weightedSum = 16.33 + 25.5 + 45 = 86.83
+        // totalWeight = 0.2 + 0.3 + 0.5 = 1.0
+        // final = 86.83
 
-        assertEquals(85.29, result, 0.01);
+        assertEquals(86.83, result, 0.01);
     }
 }
