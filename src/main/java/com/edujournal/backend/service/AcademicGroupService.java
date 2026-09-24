@@ -46,4 +46,9 @@ public class AcademicGroupService {
         return academicGroupDAO.findByName(name) != null;
     }
 
+    public void addStudentToGroup(Integer studentId, Integer groupId) {
+        academicGroupDAO.addStudentToGroup(studentId, groupId);
+    }
+
+
 }

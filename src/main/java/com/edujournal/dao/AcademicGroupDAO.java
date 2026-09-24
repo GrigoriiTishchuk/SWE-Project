@@ -2,6 +2,8 @@ package com.edujournal.dao;
 
 import com.edujournal.config.JPAUtil;
 import com.edujournal.entity.AcademicGroup;
+import com.edujournal.entity.Student;
+import com.edujournal.entity.User;
 import jakarta.persistence.EntityManager;
 
 import java.util.List;
@@ -49,6 +51,28 @@ public class AcademicGroupDAO {
                     .getResultStream()
                     .findFirst()
                     .orElse(null);
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    public void addStudentToGroup(Integer studentId, Integer groupId) {
+        EntityManager entityManager =
+                JPAUtil.getEntityManagerFactory()
+                        .createEntityManager();
+
+        try {
+            entityManager.getTransaction().begin();
+
+            Student student = entityManager.find(Student.class, studentId);
+
+            if (student != null) {
+                student.setAcademicGroupId(groupId);
+                entityManager.merge(student);
+            }
+
+            entityManager.getTransaction().commit();
+
         } finally {
             entityManager.close();
         }

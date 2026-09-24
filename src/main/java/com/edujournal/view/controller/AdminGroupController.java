@@ -2,6 +2,7 @@ package com.edujournal.view.controller;
 
 import com.edujournal.backend.service.AcademicGroupService;
 import com.edujournal.backend.service.CourseService;
+import com.edujournal.backend.service.UserService;
 import com.edujournal.backend.utils.AcademicGroupMapper;
 import com.edujournal.entity.AcademicGroup;
 import com.edujournal.entity.Course;
@@ -11,6 +12,7 @@ import com.edujournal.model.CourseDTO;
 import com.edujournal.model.UserDTO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.transformation.FilteredList;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -73,7 +75,11 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
         List<CourseDTO> courses = courseService.findByGroupId(group.getId());
 
         for (CourseDTO c : courses) {
-            Label courseLabel = new Label("• " + c.getName() + " (" + c.getCode() + ")");
+            String teacherName = (c.getTeacherName() != null && !c.getTeacherName().isBlank())
+                    ? c.getTeacherName()
+                    : "No teacher";
+
+            Label courseLabel = new Label("• " + c.getName() + " (" + c.getCode() + ") - " + teacherName);
             coursesBox.getChildren().add(courseLabel);
         }
 
@@ -96,6 +102,13 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
         });
 
         card.getChildren().addAll(header, coursesBox);
+
+        Button addStudentBtn = new Button("Add student");
+        addStudentBtn.setStyle("-fx-background-color: #4A90E2; -fx-text-fill: white;");
+        addStudentBtn.setOnAction(e -> showAddStudentDialog(group));
+
+        card.getChildren().add(addStudentBtn);
+
         return card;
     }
 
@@ -239,6 +252,103 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
 
             loadAndShowItems();
             clearSelection();
+        }
+    }
+
+    private void showAddStudentDialog(AcademicGroupDTO group) {
+
+        Dialog<Integer> dialog = new Dialog<>();
+        dialog.setTitle("Add student to group: " + group.getName());
+
+        List<UserDTO> allStudents = new UserService().findAllStudents();
+
+        FilteredList<UserDTO> filteredList =
+                new FilteredList<>(FXCollections.observableArrayList(allStudents), s -> true);
+
+        ComboBox<UserDTO> studentCombo = new ComboBox<>(filteredList);
+        studentCombo.setEditable(true);
+
+        // красивый вывод
+        studentCombo.setCellFactory(cb -> new ListCell<>() {
+            @Override
+            protected void updateItem(UserDTO item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : item.getFirstName() + " " + item.getLastName());
+            }
+        });
+        studentCombo.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(UserDTO item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : item.getFirstName() + " " + item.getLastName());
+            }
+        });
+
+        // предотвращаем рекурсию
+        studentCombo.valueProperty().addListener((obs, oldVal, newVal) -> {
+            // если выбранный элемент не входит в фильтр — не трогаем editor
+            if (newVal != null && !filteredList.contains(newVal)) {
+                return;
+            }
+            // иначе обновляем текст
+            if (newVal != null) {
+                studentCombo.getEditor().setText(newVal.getFirstName() + " " + newVal.getLastName());
+            }
+        });
+
+        // фильтрация по вводу
+        studentCombo.getEditor().textProperty().addListener((obs, oldVal, newVal) -> {
+
+            // если текст меняется из-за выбора — не фильтруем
+            if (studentCombo.getValue() != null &&
+                    (studentCombo.getValue().getFirstName() + " " + studentCombo.getValue().getLastName())
+                            .equals(newVal)) {
+                return;
+            }
+
+            String lower = newVal.toLowerCase();
+
+            filteredList.setPredicate(s ->
+                    (s.getFirstName() + " " + s.getLastName())
+                            .toLowerCase()
+                            .contains(lower)
+            );
+
+            if (!studentCombo.isShowing()) {
+                studentCombo.show();
+            }
+        });
+
+        VBox box = new VBox(10, studentCombo);
+        box.setPadding(new Insets(10));
+        dialog.getDialogPane().setContent(box);
+
+        ButtonType addBtn = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(addBtn, ButtonType.CANCEL);
+
+        dialog.setResultConverter(btn -> {
+            if (btn == addBtn) {
+
+                studentCombo.hide(); // закрываем popup
+
+                UserDTO selected = studentCombo.getSelectionModel().getSelectedItem();
+
+                if (selected == null) {
+                    new Alert(Alert.AlertType.ERROR, "Select a student").showAndWait();
+                    return null;
+                }
+
+                return selected.getId();
+            }
+            return null;
+        });
+
+
+        Integer studentId = dialog.showAndWait().orElse(null);
+
+        if (studentId != null) {
+            groupService.addStudentToGroup(studentId, group.getId());
+            loadAndShowItems();
         }
     }
 

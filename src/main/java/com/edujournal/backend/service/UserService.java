@@ -108,6 +108,15 @@ public class UserService {
                 .toList();
     }
 
+    public List<UserDTO> findAllStudents() {
+
+        List<User> students = userDAO.findByRole(Role.STUDENT);
+
+        return students.stream()
+                .map(userMapper::toDTO)
+                .toList();
+    }
+
     public String generateUniqueUsername(String firstName, String lastName) {
 
         List<String> candidates = GeneratorUtil.generateUsernameCandidates(firstName, lastName);
