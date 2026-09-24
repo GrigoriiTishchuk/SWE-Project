@@ -50,5 +50,7 @@ public class AcademicGroupService {
         academicGroupDAO.addStudentToGroup(studentId, groupId);
     }
 
-
+    public void removeStudentFromGroup(Integer studentId, Integer groupId) {
+        academicGroupDAO.removeStudentFromGroup(studentId, groupId);
+    }
 }

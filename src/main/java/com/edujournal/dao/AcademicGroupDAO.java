@@ -78,6 +78,28 @@ public class AcademicGroupDAO {
         }
     }
 
+    public void removeStudentFromGroup(Integer studentId, Integer groupId) {
+        EntityManager entityManager =
+                JPAUtil.getEntityManagerFactory()
+                        .createEntityManager();
+
+        try {
+            entityManager.getTransaction().begin();
+
+            Student student = entityManager.find(Student.class, studentId);
+
+            if (student != null && groupId.equals(student.getAcademicGroupId())) {
+                student.setAcademicGroupId(null);
+                entityManager.merge(student);
+            }
+
+            entityManager.getTransaction().commit();
+
+        } finally {
+            entityManager.close();
+        }
+    }
+
     public void save(AcademicGroup academicGroup) {
         EntityManager entityManager =
                 JPAUtil.getEntityManagerFactory()

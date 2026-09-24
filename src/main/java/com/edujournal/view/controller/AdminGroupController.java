@@ -73,7 +73,12 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
         addStudentBtn.setStyle("-fx-background-color: #4A90E2; -fx-text-fill: white;");
         addStudentBtn.setOnAction(e -> showAddStudentDialog(group));
 
-        Button showStudentsBtn = new Button("Show");
+        Button removeStudentBtn = new Button("Remove");
+        removeStudentBtn.setStyle("-fx-background-color: #4A90E2; -fx-text-fill: white;");
+        removeStudentBtn.setOnAction(e -> showRemoveStudentDialog(group));
+
+        Button showStudentsBtn = new Button("Show students");
+        showStudentsBtn.setStyle("-fx-background-color: #4A90E2; -fx-text-fill: white;");
         showStudentsBtn.setOnAction(e -> showGroupStudentsWindow(group));
 
         HBox header = new HBox(nameLabel, arrow);
@@ -84,7 +89,7 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
         HBox leftHeader = new HBox(nameLabel, arrow);
         leftHeader.setSpacing(10);
 
-        HBox rightHeader = new HBox(addStudentBtn, showStudentsBtn);
+        HBox rightHeader = new HBox(addStudentBtn, removeStudentBtn, showStudentsBtn);
         rightHeader.setSpacing(10);
 
         header.getChildren().addAll(leftHeader, rightHeader);
@@ -291,12 +296,20 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
         Dialog<Integer> dialog = new Dialog<>();
         dialog.setTitle("Add student to group: " + group.getName());
 
-        List<StudentDTO> allStudents = new StudentService().findAllDTO();
+        List<StudentDTO> availableStudents = new StudentService().findAllDTO()
+                .stream()
+                .filter(s -> s.getAcademicGroupId() == null)
+                .toList();
+
+        if (availableStudents.isEmpty()) {
+            new Alert(Alert.AlertType.INFORMATION,
+                    "No available students to add.").showAndWait();
+            return;
+        }
 
         ComboBox<StudentDTO> studentCombo = new ComboBox<>();
-        studentCombo.setItems(FXCollections.observableArrayList(allStudents));
+        studentCombo.setItems(FXCollections.observableArrayList(availableStudents));
         studentCombo.setEditable(false);
-
         studentCombo.setCellFactory(cb -> new ListCell<>() {
             @Override
             protected void updateItem(StudentDTO item, boolean empty) {
@@ -381,11 +394,97 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
 
         table.getColumns().addAll(firstNameCol, lastNameCol, numberCol, emailCol, phoneCol);
 
+        ScrollPane scrollPane = new ScrollPane(table);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+
         VBox root = new VBox(table);
         root.setPadding(new Insets(10));
 
         stage.setScene(new Scene(root, 600, 400));
         stage.show();
+    }
+
+    private void showRemoveStudentDialog(AcademicGroupDTO group) {
+
+        Dialog<Integer> dialog = new Dialog<>();
+        dialog.setTitle("Remove student from group: " + group.getName());
+
+        List<StudentDTO> groupStudents = new StudentService().findAllDTO()
+                .stream()
+                .filter(s -> group.getId().equals(s.getAcademicGroupId()))
+                .toList();
+
+        if (groupStudents.isEmpty()) {
+            new Alert(Alert.AlertType.INFORMATION,
+                    "This group has no students.").showAndWait();
+            return;
+        }
+
+        ComboBox<StudentDTO> studentCombo = new ComboBox<>();
+        studentCombo.setItems(FXCollections.observableArrayList(groupStudents));
+        studentCombo.setEditable(false);
+
+        studentCombo.setCellFactory(cb -> new ListCell<>() {
+            @Override
+            protected void updateItem(StudentDTO item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item.getFirstName() + " " + item.getLastName()
+                            + " (" + item.getStudentNumber() + ")");
+                }
+            }
+        });
+
+        studentCombo.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(StudentDTO item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item.getFirstName() + " " + item.getLastName()
+                            + " (" + item.getStudentNumber() + ")");
+                }
+            }
+        });
+
+        VBox box = new VBox(10, new Label("Select student to remove:"), studentCombo);
+        box.setPadding(new Insets(10));
+        dialog.getDialogPane().setContent(box);
+
+        ButtonType removeBtn = new ButtonType("Remove", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(removeBtn, ButtonType.CANCEL);
+
+        dialog.setResultConverter(btn -> {
+            if (btn == removeBtn) {
+                StudentDTO selected = studentCombo.getSelectionModel().getSelectedItem();
+                if (selected == null) {
+                    new Alert(Alert.AlertType.ERROR, "Select a student").showAndWait();
+                    return null;
+                }
+                return selected.getStudentId();
+            }
+            return null;
+        });
+
+        Integer studentId = dialog.showAndWait().orElse(null);
+
+        if (studentId != null) {
+
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+            confirm.setTitle("Confirm removal");
+            confirm.setHeaderText("Remove student from group?");
+            confirm.setContentText("This action cannot be undone.");
+
+            if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+                groupService.removeStudentFromGroup(studentId, group.getId());
+                loadAndShowItems();
+            }
+        }
     }
 
     @Override
