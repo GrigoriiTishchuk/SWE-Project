@@ -91,9 +91,19 @@ public class AssessmentsTab {
                 )
         );
 
+        TableColumn<AssessmentsDTO, String> maxScoreCol =
+                new TableColumn<>("Max Pts");
+
+        maxScoreCol.setCellValueFactory(
+                d -> new SimpleStringProperty(
+                        String.valueOf(d.getValue().getMaxScore())
+                )
+        );
+
         nameCol.setPrefWidth(160);
         typeCol.setPrefWidth(160);
         weightCol.setPrefWidth(60);
+        maxScoreCol.setPrefWidth(70);
 
         // --- Table ---
         TableView<AssessmentsDTO> table =
@@ -103,7 +113,8 @@ public class AssessmentsTab {
                 List.of(
                         nameCol,
                         typeCol,
-                        weightCol
+                        weightCol,
+                        maxScoreCol
                 )
         );
 
@@ -246,6 +257,11 @@ public class AssessmentsTab {
                 Double.MAX_VALUE
         );
 
+        TextField maxScoreField = new TextField();
+        maxScoreField.setPromptText("Max points (e.g. 100)");
+        maxScoreField.setStyle(LIGHT_INPUT);
+        maxScoreField.setMaxWidth(Double.MAX_VALUE);
+
         ComboBox<Integer> posCombo =
                 new ComboBox<>();
 
@@ -324,6 +340,12 @@ public class AssessmentsTab {
                             weightField.setText(
                                     String.valueOf(
                                             selected.getWeight()
+                                    )
+                            );
+
+                            maxScoreField.setText(
+                                    String.valueOf(
+                                            selected.getMaxScore()
                                     )
                             );
 
@@ -489,9 +511,23 @@ public class AssessmentsTab {
 
                 assessment.setType(type);
 
-                assessment.setMaxScore(
-                        100.0
-                );
+                String maxScoreText = maxScoreField.getText().trim();
+                if (maxScoreText.isEmpty()) {
+                    new Alert(Alert.AlertType.WARNING, "Please enter the max points.").showAndWait();
+                    return;
+                }
+                double maxScore;
+                try {
+                    maxScore = Double.parseDouble(maxScoreText);
+                    if (maxScore <= 0) {
+                        new Alert(Alert.AlertType.WARNING, "Max points must be greater than 0.").showAndWait();
+                        return;
+                    }
+                } catch (NumberFormatException ex) {
+                    new Alert(Alert.AlertType.WARNING, "Max points must be a valid number.").showAndWait();
+                    return;
+                }
+                assessment.setMaxScore(maxScore);
 
                 assessment.setWeight(
                         weight
@@ -521,6 +557,7 @@ public class AssessmentsTab {
                 nameField.clear();
                 typeCombo.setValue(null);
                 weightField.clear();
+                maxScoreField.clear();
                 posCombo.setValue(null);
 
                 posCombo.getItems().clear();
@@ -575,9 +612,27 @@ public class AssessmentsTab {
                 return;
             }
 
+            String maxScoreText = maxScoreField.getText().trim();
+            if (maxScoreText.isEmpty()) {
+                new Alert(Alert.AlertType.WARNING, "Please enter the max points.").showAndWait();
+                return;
+            }
+            double maxScore;
+            try {
+                maxScore = Double.parseDouble(maxScoreText);
+                if (maxScore <= 0) {
+                    new Alert(Alert.AlertType.WARNING, "Max points must be greater than 0.").showAndWait();
+                    return;
+                }
+            } catch (NumberFormatException ex) {
+                new Alert(Alert.AlertType.WARNING, "Max points must be a valid number.").showAndWait();
+                return;
+            }
+
             assessment.setTitle(name);
             assessment.setType(type);
             assessment.setWeight(weight);
+            assessment.setMaxScore(maxScore);
 
             assessmentsService.update(
                     assessment
@@ -605,6 +660,7 @@ public class AssessmentsTab {
             nameField.clear();
             typeCombo.setValue(null);
             weightField.clear();
+            maxScoreField.clear();
 
             selectedAssessment[0] = null;
 
@@ -628,6 +684,7 @@ public class AssessmentsTab {
                         nameField,
                         typeCombo,
                         weightField,
+                        maxScoreField,
                         posCombo,
                         saveBtn,
                         updateBtn
