@@ -2,6 +2,7 @@ package com.edujournal.view.teacher;
 
 import com.edujournal.backend.service.AcademicGroupService;
 import com.edujournal.backend.service.CourseService;
+import com.edujournal.backend.utils.UserSession;
 import com.edujournal.entity.AcademicGroup;
 import com.edujournal.entity.Role;
 import com.edujournal.model.CourseDTO;
@@ -66,7 +67,8 @@ public class TeacherGradebookPage extends BorderPane {
         courseCombo = new ComboBox<>();
         courseCombo.setPromptText("Choose the course");
         courseCombo.setPrefWidth(220);
-        for (CourseDTO c : courseService.findAll())
+        Integer userId = UserSession.getInstance().getCurrentUser().getId();
+        for (CourseDTO c : courseService.findByUserId(userId))
             courseCombo.getItems().add(c.getName());
 
         groupCombo = new ComboBox<>();

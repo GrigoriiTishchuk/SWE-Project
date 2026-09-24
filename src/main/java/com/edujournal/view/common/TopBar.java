@@ -1,7 +1,9 @@
 package com.edujournal.view.common;
 
 import com.edujournal.Main;
+import com.edujournal.backend.utils.UserSession;
 import com.edujournal.entity.Role;
+import com.edujournal.model.UserDTO;
 import com.edujournal.view.LoginPage;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -32,7 +34,11 @@ public class TopBar {
 
         Circle avatar = new Circle(20, Color.web("#9CA3AF"));
 
-        Label name = new Label("Name Surname");
+        UserDTO currentUser = UserSession.getInstance().getCurrentUser();
+        String fullName = currentUser != null
+                ? currentUser.getFirstName() + " " + currentUser.getLastName()
+                : "Unknown";
+        Label name = new Label(fullName);
         name.setStyle("-fx-font-weight: bold;");
         Label roleLabel = new Label(role.getDisplayName());
         roleLabel.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 11px;");
