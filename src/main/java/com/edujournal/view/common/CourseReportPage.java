@@ -3,6 +3,7 @@ package com.edujournal.view.common;
 import com.edujournal.backend.service.AcademicGroupService;
 import com.edujournal.backend.service.AssessmentsService;
 import com.edujournal.backend.service.EnrollmentService;
+import com.edujournal.backend.utils.UserSession;
 import com.edujournal.dao.CourseDAO;
 import com.edujournal.entity.AcademicGroup;
 import com.edujournal.entity.Course;
@@ -26,8 +27,10 @@ public class CourseReportPage extends BorderPane {
     private final AcademicGroupService academicGroupService = new AcademicGroupService();
 
     private TableView<Course> table;
+    private final Role role;
 
     public CourseReportPage(VBox sidebar, Role role) {
+        this.role = role;
         setLeft(sidebar);
         setCenter(buildContent(role));
     }
@@ -81,7 +84,10 @@ public class CourseReportPage extends BorderPane {
         });
 
         t.getColumns().addAll(List.of(codeCol, nameCol, groupCol, studentsCol, assessmentsCol));
-        t.getItems().addAll(courseDAO.findAll());
+        List<Course> courses = (role == Role.TEACHER)
+                ? courseDAO.findByUserId(UserSession.getInstance().getCurrentUser().getId())
+                : courseDAO.findAll();
+        t.getItems().addAll(courses);
         return t;
     }
 
