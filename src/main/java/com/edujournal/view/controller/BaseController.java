@@ -132,7 +132,6 @@ public abstract class BaseController<T> extends BorderPane {
         }
     }
 
-
     protected void applyFilter() {
         String filter = filterCombo.getValue();
         String text = searchField.getText().toLowerCase();

@@ -21,6 +21,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -57,7 +58,10 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
     private VBox buildGroupCard(AcademicGroupDTO group) {
         VBox card = new VBox();
         card.setStyle("-fx-border-color: #ccc; -fx-padding: 10; -fx-background-color: #f9f9f9;");
-        card.setSpacing(5);
+        card.setSpacing(8);
+        card.setMinHeight(80);
+        card.setPrefHeight(80);
+        card.setMaxHeight(80);
 
         Label nameLabel = new Label(group.getName());
         nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
@@ -65,9 +69,29 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
         Label arrow = new Label("▶");
         arrow.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
+        Button addStudentBtn = new Button("Add");
+        addStudentBtn.setStyle("-fx-background-color: #4A90E2; -fx-text-fill: white;");
+        addStudentBtn.setOnAction(e -> showAddStudentDialog(group));
+
+        Button showStudentsBtn = new Button("Show");
+        showStudentsBtn.setOnAction(e -> showGroupStudentsWindow(group));
+
         HBox header = new HBox(nameLabel, arrow);
         header.setSpacing(10);
         header.setStyle("-fx-alignment: center-left;");
+        header.setPadding(new Insets(0, 0, 5, 0));
+
+        HBox leftHeader = new HBox(nameLabel, arrow);
+        leftHeader.setSpacing(10);
+
+        HBox rightHeader = new HBox(addStudentBtn, showStudentsBtn);
+        rightHeader.setSpacing(10);
+
+        header.getChildren().addAll(leftHeader, rightHeader);
+        header.setSpacing(10);
+        header.setFillHeight(true);
+        header.setPrefWidth(Double.MAX_VALUE);
+        HBox.setHgrow(leftHeader, javafx.scene.layout.Priority.ALWAYS);
 
         VBox coursesBox = new VBox();
         coursesBox.setSpacing(5);
@@ -85,6 +109,23 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
             coursesBox.getChildren().add(courseLabel);
         }
 
+        header.setOnMouseClicked(e -> {
+            boolean expanded = coursesBox.isVisible();
+            coursesBox.setVisible(!expanded);
+            coursesBox.setManaged(!expanded);
+            arrow.setText(expanded ? "▶" : "▼");
+
+            if (!expanded) {
+                card.setMinHeight(Region.USE_COMPUTED_SIZE);
+                card.setPrefHeight(Region.USE_COMPUTED_SIZE);
+                card.setMaxHeight(Region.USE_COMPUTED_SIZE);
+            } else {
+                card.setMinHeight(80);
+                card.setPrefHeight(80);
+                card.setMaxHeight(80);
+            }
+        });
+
         card.setOnMouseClicked(e -> {
             selectedGroup = group;
 
@@ -97,22 +138,7 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
             card.setStyle("-fx-border-color: #4A90E2; -fx-padding: 10; -fx-background-color: #E8F0FE;");
         });
 
-        header.setOnMouseClicked(e -> {
-            boolean expanded = coursesBox.isVisible();
-            coursesBox.setVisible(!expanded);
-            arrow.setText(expanded ? "▶" : "▼");
-        });
-
         card.getChildren().addAll(header, coursesBox);
-
-        Button addStudentBtn = new Button("Add student");
-        addStudentBtn.setStyle("-fx-background-color: #4A90E2; -fx-text-fill: white;");
-        addStudentBtn.setOnAction(e -> showAddStudentDialog(group));
-
-        Button showStudentsBtn = new Button("Show students");
-        showStudentsBtn.setOnAction(e -> showGroupStudentsWindow(group));
-
-        card.getChildren().addAll(addStudentBtn, showStudentsBtn);
 
         return card;
     }
@@ -265,14 +291,12 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
         Dialog<Integer> dialog = new Dialog<>();
         dialog.setTitle("Add student to group: " + group.getName());
 
-        // Берём всех студентов
         List<StudentDTO> allStudents = new StudentService().findAllDTO();
 
         ComboBox<StudentDTO> studentCombo = new ComboBox<>();
         studentCombo.setItems(FXCollections.observableArrayList(allStudents));
-        studentCombo.setEditable(false); // просто дроплист
+        studentCombo.setEditable(false);
 
-        // как показывать студента в списке
         studentCombo.setCellFactory(cb -> new ListCell<>() {
             @Override
             protected void updateItem(StudentDTO item, boolean empty) {
@@ -286,7 +310,6 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
             }
         });
 
-        // как показывать выбранного студента в самом комбобоксе
         studentCombo.setButtonCell(new ListCell<>() {
             @Override
             protected void updateItem(StudentDTO item, boolean empty) {
@@ -314,7 +337,7 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
                     new Alert(Alert.AlertType.ERROR, "Select a student").showAndWait();
                     return null;
                 }
-                // у тебя id студента — это getStudentId()
+
                 return selected.getStudentId();
             }
             return null;
@@ -323,7 +346,6 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
         Integer studentId = dialog.showAndWait().orElse(null);
 
         if (studentId != null) {
-            // тут твой сервис добавляет студента в группу
             groupService.addStudentToGroup(studentId, group.getId());
             loadAndShowItems();
         }
@@ -334,7 +356,6 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
         Stage stage = new Stage();
         stage.setTitle("Students in group: " + group.getName());
 
-        // Загружаем студентов группы
         List<StudentDTO> students = new StudentService().findAllDTO()
                 .stream()
                 .filter(s -> group.getId().equals(s.getAcademicGroupId()))
@@ -366,7 +387,6 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
         stage.setScene(new Scene(root, 600, 400));
         stage.show();
     }
-
 
     @Override
     protected void onView() {}
