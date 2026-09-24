@@ -2,6 +2,7 @@ package com.edujournal.view.teacher;
 
 import com.edujournal.backend.service.AcademicGroupService;
 import com.edujournal.backend.service.AssessmentsService;
+import com.edujournal.backend.service.CourseGradeService;
 import com.edujournal.backend.service.StudentService;
 import com.edujournal.backend.service.UserService;
 import com.edujournal.dao.EnrollmentDAO;
@@ -67,7 +68,8 @@ public class GradesTab {
         int colCount = assessments.size();
 
         // Display data and TextFields side by side
-        String[][] data = new String[rowCount][colCount + 1];
+        // data columns: [0]=name, [1..colCount]=scores, [colCount+1]=final grade
+        String[][] data = new String[rowCount][colCount + 2];
         TextField[][] tfs = new TextField[rowCount][colCount];
 
         for (int r = 0; r < rowCount; r++) {
@@ -86,6 +88,7 @@ public class GradesTab {
                 data[r][c + 1] = val;
                 tfs[r][c] = new TextField(val.equals("—") ? "" : val);
             }
+            data[r][colCount + 1] = computeFinalGrade(assessments, studentGrades, colCount);
         }
 
         TableView<String[]> table = new TableView<>();
@@ -129,25 +132,40 @@ public class GradesTab {
             table.getColumns().add(scoreCol);
         }
 
+        TableColumn<String[], String> finalGradeCol = new TableColumn<>("Final Grade");
+        finalGradeCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue()[colCount + 1]));
+        finalGradeCol.setCellFactory(tc -> new TableCell<>() {
+            @Override protected void updateItem(String s, boolean empty) {
+                super.updateItem(s, empty);
+                setText(empty || s == null ? null : s);
+                setStyle(empty ? "" : "-fx-background-color: #DBEAFE; -fx-font-weight: bold; -fx-text-fill: #1a3a6b;");
+            }
+        });
+        finalGradeCol.setPrefWidth(110);
+        finalGradeCol.setMinWidth(110);
+        table.getColumns().add(finalGradeCol);
+
         if (table.getItems().isEmpty()) {
             table.setPlaceholder(new Label("No grades recorded for \"" + course + "\" yet."));
         }
         table.getItems().addAll(List.of(data));
 
-        String[] exportHeaders = new String[2 + colCount];
+        String[] exportHeaders = new String[3 + colCount];
         exportHeaders[0] = "#";
         exportHeaders[1] = "Student";
         for (int i = 0; i < colCount; i++) exportHeaders[2 + i] = assessments.get(i).getTitle();
+        exportHeaders[2 + colCount] = "Final Grade";
 
         Button csvBtn = new Button("Export CSV");
         csvBtn.setStyle(BLUE_BTN);
         csvBtn.setOnAction(e -> {
             List<String[]> rows = new ArrayList<>();
             for (int r = 0; r < rowCount; r++) {
-                String[] row = new String[2 + colCount];
+                String[] row = new String[3 + colCount];
                 row[0] = String.valueOf(r + 1);
                 row[1] = data[r][0];
                 for (int c = 0; c < colCount; c++) row[2 + c] = data[r][c + 1];
+                row[2 + colCount] = data[r][colCount + 1];
                 rows.add(row);
             }
             ExportUtil.exportCsv(csvBtn.getScene().getWindow(), "gradebook", exportHeaders, rows);
@@ -158,10 +176,11 @@ public class GradesTab {
         pdfBtn.setOnAction(e -> {
             List<String[]> rows = new ArrayList<>();
             for (int r = 0; r < rowCount; r++) {
-                String[] row = new String[2 + colCount];
+                String[] row = new String[3 + colCount];
                 row[0] = String.valueOf(r + 1);
                 row[1] = data[r][0];
                 for (int c = 0; c < colCount; c++) row[2 + c] = data[r][c + 1];
+                row[2 + colCount] = data[r][colCount + 1];
                 rows.add(row);
             }
             String subtitle = "Course: " + course + (group != null && !group.isEmpty() ? "   Group: " + group : "");
@@ -181,6 +200,13 @@ public class GradesTab {
                         if (text.isEmpty()) continue;
                         try {
                             double score = Double.parseDouble(text);
+                            double maxScore = assessments.get(c).getMaxScore();
+                            if (score > maxScore) {
+                                new Alert(Alert.AlertType.WARNING,
+                                        "\"" + assessments.get(c).getTitle() + "\": score " + score +
+                                        " exceeds max score " + maxScore + ".").showAndWait();
+                                continue;
+                            }
                             Grades grade = studentGrades != null
                                     ? studentGrades.get(assessments.get(c).getId()) : null;
                             if (grade != null) {
@@ -198,6 +224,7 @@ public class GradesTab {
                             data[r][c + 1] = text;
                         } catch (NumberFormatException ignored) {}
                     }
+                    data[r][colCount + 1] = computeFinalGrade(assessments, gradeMap.get(enrollmentId), colCount);
                 }
             }
             editing[0] = !editing[0];
@@ -211,5 +238,29 @@ public class GradesTab {
         VBox vbox = new VBox(8, btnRow, table);
         VBox.setVgrow(table, Priority.ALWAYS);
         return vbox;
+    }
+
+    private static String computeFinalGrade(List<Assessments> assessments, Map<Integer, Grades> studentGrades, int colCount) {
+        if (studentGrades == null || studentGrades.size() < colCount
+                || studentGrades.values().stream().anyMatch(g -> g.getScore() == null)) {
+            return "—";
+        }
+        try {
+            double percent = new CourseGradeService().calculateFinalGrade(
+                    assessments, new ArrayList<>(studentGrades.values()));
+            return String.format("%d (%.1f%%)", toGrade(percent), percent);
+        } catch (Exception e) {
+            System.err.println("[FinalGrade] " + e.getMessage());
+            return "—";
+        }
+    }
+
+    private static int toGrade(double percent) {
+        if (percent >= 83) return 5;
+        if (percent >= 72) return 4;
+        if (percent >= 62) return 3;
+        if (percent >= 50) return 2;
+        if (percent >= 40) return 1;
+        return 0;
     }
 }

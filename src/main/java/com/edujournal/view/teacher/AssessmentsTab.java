@@ -6,8 +6,10 @@ import com.edujournal.entity.Assessments;
 import com.edujournal.entity.Course;
 import com.edujournal.model.AssessmentsDTO;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -85,15 +87,23 @@ public class AssessmentsTab {
 
         weightCol.setCellValueFactory(
                 d -> new SimpleStringProperty(
-                        String.valueOf(
-                                d.getValue().getWeight()
-                        )
+                        String.valueOf(d.getValue().getWeight())
+                )
+        );
+
+        TableColumn<AssessmentsDTO, String> maxScoreCol =
+                new TableColumn<>("Max Pts");
+
+        maxScoreCol.setCellValueFactory(
+                d -> new SimpleStringProperty(
+                        String.valueOf(d.getValue().getMaxScore())
                 )
         );
 
         nameCol.setPrefWidth(160);
         typeCol.setPrefWidth(160);
         weightCol.setPrefWidth(60);
+        maxScoreCol.setPrefWidth(70);
 
         // --- Table ---
         TableView<AssessmentsDTO> table =
@@ -103,7 +113,8 @@ public class AssessmentsTab {
                 List.of(
                         nameCol,
                         typeCol,
-                        weightCol
+                        weightCol,
+                        maxScoreCol
                 )
         );
 
@@ -154,14 +165,18 @@ public class AssessmentsTab {
         );
 
         Label totalName =
-                new Label("Total (Weighted)");
+                new Label("Total Weight");
 
         Label totalType = new Label();
-        totalType.setStyle("-fx-text-fill: #6B7280;");
+        totalType.setStyle("-fx-text-fill: #6B7280; -fx-font-weight: bold;");
 
         Runnable updateTotal = () -> {
-            double sum = data.stream().mapToDouble(AssessmentsDTO::getWeight).sum();
-            totalType.setText(String.format("%.2f", sum));
+            Set<AssessmentType> seen = new HashSet<>();
+            double sum = 0;
+            for (AssessmentsDTO dto : data) {
+                if (seen.add(dto.getType())) sum += dto.getWeight();
+            }
+            totalType.setText(String.valueOf(sum));
         };
         updateTotal.run();
         data.addListener((javafx.collections.ListChangeListener<AssessmentsDTO>) c -> updateTotal.run());
@@ -224,9 +239,13 @@ public class AssessmentsTab {
                 AssessmentType.values()
         );
 
-        typeCombo.setPromptText(
-                "Choose the type"
-        );
+        typeCombo.setPromptText("Choose the type of task");
+        typeCombo.setButtonCell(new javafx.scene.control.ListCell<>() {
+            @Override protected void updateItem(AssessmentType item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(item == null ? "Choose the type of task" : item.name());
+            }
+        });
 
         typeCombo.setMaxWidth(
                 Double.MAX_VALUE
@@ -237,14 +256,25 @@ public class AssessmentsTab {
         TextField weightField =
                 new TextField();
 
-        weightField.setPromptText(
-                "Type the weight (e.g. 0.1)"
-        );
+        weightField.setPromptText("Weight (e.g. 0.3)");
 
         weightField.setStyle(LIGHT_INPUT);
         weightField.setMaxWidth(
                 Double.MAX_VALUE
         );
+
+        typeCombo.setOnAction(e -> {
+            AssessmentType sel = typeCombo.getValue();
+            if (sel != null) {
+                data.stream().filter(dto -> dto.getType() == sel).findFirst()
+                    .ifPresent(dto -> weightField.setText(String.valueOf(dto.getWeight())));
+            }
+        });
+
+        TextField maxScoreField = new TextField();
+        maxScoreField.setPromptText("Max points (e.g. 100)");
+        maxScoreField.setStyle(LIGHT_INPUT);
+        maxScoreField.setMaxWidth(Double.MAX_VALUE);
 
         ComboBox<Integer> posCombo =
                 new ComboBox<>();
@@ -321,9 +351,11 @@ public class AssessmentsTab {
                                     selected.getType()
                             );
 
-                            weightField.setText(
+                            weightField.setText(String.valueOf(selected.getWeight()));
+
+                            maxScoreField.setText(
                                     String.valueOf(
-                                            selected.getWeight()
+                                            selected.getMaxScore()
                                     )
                             );
 
@@ -472,6 +504,17 @@ public class AssessmentsTab {
                 return;
             }
 
+            Set<AssessmentType> seenTypes = new HashSet<>();
+            double currentTotal = 0;
+            for (AssessmentsDTO dto : data) {
+                if (dto.getType() != type && seenTypes.add(dto.getType())) currentTotal += dto.getWeight();
+            }
+            if (currentTotal + weight > 1.0) {
+                new Alert(Alert.AlertType.WARNING,
+                        "Total type weights cannot exceed 1.0. Other types use: " + currentTotal + ".").showAndWait();
+                return;
+            }
+
             Assessments assessment = new Assessments();
 
             Course courseEntity = assessmentsService.getCourseByName(course);
@@ -489,13 +532,25 @@ public class AssessmentsTab {
 
                 assessment.setType(type);
 
-                assessment.setMaxScore(
-                        100.0
-                );
+                String maxScoreText = maxScoreField.getText().trim();
+                if (maxScoreText.isEmpty()) {
+                    new Alert(Alert.AlertType.WARNING, "Please enter the max points.").showAndWait();
+                    return;
+                }
+                double maxScore;
+                try {
+                    maxScore = Double.parseDouble(maxScoreText);
+                    if (maxScore <= 0) {
+                        new Alert(Alert.AlertType.WARNING, "Max points must be greater than 0.").showAndWait();
+                        return;
+                    }
+                } catch (NumberFormatException ex) {
+                    new Alert(Alert.AlertType.WARNING, "Max points must be a valid number.").showAndWait();
+                    return;
+                }
+                assessment.setMaxScore(maxScore);
 
-                assessment.setWeight(
-                        weight
-                );
+                assessment.setWeight(weight);
 
                 assessment.setDueDate(
                         null
@@ -521,6 +576,7 @@ public class AssessmentsTab {
                 nameField.clear();
                 typeCombo.setValue(null);
                 weightField.clear();
+                maxScoreField.clear();
                 posCombo.setValue(null);
 
                 posCombo.getItems().clear();
@@ -566,6 +622,18 @@ public class AssessmentsTab {
                 return;
             }
 
+            Set<AssessmentType> seenTypes = new HashSet<>();
+            double currentTotal = 0;
+            for (AssessmentsDTO dto : data) {
+                if (dto == selectedAssessment[0]) continue;
+                if (dto.getType() != type && seenTypes.add(dto.getType())) currentTotal += dto.getWeight();
+            }
+            if (currentTotal + weight > 1.0) {
+                new Alert(Alert.AlertType.WARNING,
+                        "Total type weights cannot exceed 1.0. Other types use: " + currentTotal + ".").showAndWait();
+                return;
+            }
+
             Assessments assessment =
                     assessmentsService.findById(
                             selected.getId()
@@ -575,9 +643,27 @@ public class AssessmentsTab {
                 return;
             }
 
+            String maxScoreText = maxScoreField.getText().trim();
+            if (maxScoreText.isEmpty()) {
+                new Alert(Alert.AlertType.WARNING, "Please enter the max points.").showAndWait();
+                return;
+            }
+            double maxScore;
+            try {
+                maxScore = Double.parseDouble(maxScoreText);
+                if (maxScore <= 0) {
+                    new Alert(Alert.AlertType.WARNING, "Max points must be greater than 0.").showAndWait();
+                    return;
+                }
+            } catch (NumberFormatException ex) {
+                new Alert(Alert.AlertType.WARNING, "Max points must be a valid number.").showAndWait();
+                return;
+            }
+
             assessment.setTitle(name);
             assessment.setType(type);
             assessment.setWeight(weight);
+            assessment.setMaxScore(maxScore);
 
             assessmentsService.update(
                     assessment
@@ -605,6 +691,7 @@ public class AssessmentsTab {
             nameField.clear();
             typeCombo.setValue(null);
             weightField.clear();
+            maxScoreField.clear();
 
             selectedAssessment[0] = null;
 
@@ -628,6 +715,7 @@ public class AssessmentsTab {
                         nameField,
                         typeCombo,
                         weightField,
+                        maxScoreField,
                         posCombo,
                         saveBtn,
                         updateBtn

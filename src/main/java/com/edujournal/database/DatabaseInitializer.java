@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.stream.Collectors;
 
@@ -51,8 +52,21 @@ public class DatabaseInitializer {
             executeSqlFile(connection, "/database/schema.sql");
             System.out.println("Database tables are ready.");
 
-            executeSqlFile(connection, "/database/data.sql");
-            System.out.println("Database data is ready.");
+            boolean alreadySeeded = false;
+            try (Statement st = connection.createStatement();
+                 ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM seed_log")) {
+                if (rs.next() && rs.getInt(1) > 0) alreadySeeded = true;
+            } catch (Exception ignored) {}
+
+            if (!alreadySeeded) {
+                executeSqlFile(connection, "/database/data.sql");
+                try (Statement st = connection.createStatement()) {
+                    st.executeUpdate("INSERT INTO seed_log (id) VALUES (1)");
+                }
+                System.out.println("Database data is ready.");
+            } else {
+                System.out.println("Database already seeded, skipping data.sql.");
+            }
 
         } catch (Exception e) {
             throw new RuntimeException(

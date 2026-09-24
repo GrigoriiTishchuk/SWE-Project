@@ -479,7 +479,7 @@ SELECT
     'Midterm Exam',
     'EXAM1',
     100,
-    30,
+    0.3,
     '2026-10-15'
 FROM courses c
 WHERE c.code = 'SE01'
@@ -503,7 +503,7 @@ SELECT
     'Database Assignment',
     'HOMETASK',
     100,
-    30,
+    0.3,
     '2026-10-20'
 FROM courses c
 WHERE c.code = 'DB01'
@@ -527,7 +527,7 @@ SELECT
     'Programming Project',
     'PROJECT',
     100,
-    40,
+    0.4,
     '2026-11-01'
 FROM courses c
 WHERE c.code = 'PR01'
@@ -551,7 +551,7 @@ SELECT
     'Mathematics Exam',
     'EXAM2',
     100,
-    30,
+    0.3,
     '2026-10-25'
 FROM courses c
 WHERE c.code = 'MA01'
@@ -653,7 +653,6 @@ WHERE s.student_number = 'S003'
       AND g.assessment_id = a.id
 );
 
-
 INSERT INTO grades (
     enrollment_id,
     assessment_id,
@@ -666,12 +665,9 @@ SELECT
     92,
     'Excellent result'
 FROM enrollments e
-         JOIN students s
-              ON e.student_id = s.id
-         JOIN courses c
-              ON e.course_id = c.id
-         JOIN assessments a
-              ON a.course_id = c.id
+         JOIN students s ON e.student_id = s.id
+         JOIN courses c ON e.course_id = c.id
+         JOIN assessments a ON a.course_id = c.id
 WHERE s.student_number = 'S004'
   AND c.code = 'MA01'
   AND a.title = 'Mathematics Exam'

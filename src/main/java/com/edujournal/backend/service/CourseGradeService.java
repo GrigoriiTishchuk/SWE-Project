@@ -28,12 +28,10 @@ public class CourseGradeService {
 
         for (AssessmentType type : assessmentsForType.keySet()) {
             if (type.name().contains("EXAM")) {
-                double average = processExamCategory(assessmentsForType.get(type), gradesForAssessment);
-                typeAverages.add(average);
+                typeAverages.add(processExamCategory(assessmentsForType.get(type), gradesForAssessment));
                 typeWeights.add(assessmentsForType.get(type).get(0).getWeight());
             } else {
-                double avg = calculateTypeAverage(assessmentsForType.get(type), gradesForAssessment);
-                typeAverages.add(avg);
+                typeAverages.add(calculateTypeAverage(assessmentsForType.get(type), gradesForAssessment));
                 typeWeights.add(assessmentsForType.get(type).get(0).getWeight());
             }
         }
@@ -89,7 +87,7 @@ public class CourseGradeService {
             }
         }
 
-        return GradeCalculator.calculateAverage(
+        return bestScore.getBestScore(
                 bestExamScores.stream().mapToDouble(Double::doubleValue).toArray()
         );
     }

@@ -1,14 +1,23 @@
 package com.edujournal.view.common;
 
 import com.edujournal.backend.service.AcademicGroupService;
+import com.edujournal.backend.service.AssessmentsService;
 import com.edujournal.backend.service.CourseService;
+import com.edujournal.backend.service.EnrollmentService;
 import com.edujournal.backend.service.StudentService;
-import com.edujournal.dao.AssessmentsDAO;
+import com.edujournal.backend.utils.UserSession;
 import com.edujournal.dao.UserDAO;
+import com.edujournal.entity.Enrollment;
 import com.edujournal.entity.Role;
+import com.edujournal.model.CourseDTO;
 import com.edujournal.view.StatCard;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 public class DashboardStatCards {
 
@@ -18,15 +27,24 @@ public class DashboardStatCards {
 
         switch (role) {
             case TEACHER -> {
-                int courses     = new CourseService().findAll().size();
-                int groups      = new AcademicGroupService().findAll().size();
-                int students    = new StudentService().findAll().size();
-                int assessments = new AssessmentsDAO().findAll().size();
+                Integer teacherId = UserSession.getInstance().getCurrentUser().getId();
+                List<CourseDTO> teacherCourses = new CourseService().findByUserId(teacherId);
+                AssessmentsService assessmentsService = new AssessmentsService();
+                EnrollmentService enrollmentService = new EnrollmentService();
+                Set<Integer> studentIds = new HashSet<>();
+                int assessments = 0;
+                for (CourseDTO c : teacherCourses) {
+                    assessments += assessmentsService.getByCourseId(c.getId()).size();
+                    for (Enrollment e : enrollmentService.findByCourseId(c.getId()))
+                        studentIds.add(e.getStudentId());
+                }
+                int groups = (int) teacherCourses.stream()
+                        .map(CourseDTO::getGroupId).filter(Objects::nonNull).distinct().count();
                 box.getChildren().addAll(
-                        new StatCard("Courses",     String.valueOf(courses),     "/images/course_icon.png"),
-                        new StatCard("Groups",      String.valueOf(groups),      "/images/group_icon.png"),
-                        new StatCard("Students",    String.valueOf(students),    "/images/student_icon.png"),
-                        new StatCard("Assessments", String.valueOf(assessments), "/images/assessement_icon.png")
+                        new StatCard("Courses",     String.valueOf(teacherCourses.size()), "/images/course_icon.png"),
+                        new StatCard("Groups",      String.valueOf(groups),                "/images/group_icon.png"),
+                        new StatCard("Students",    String.valueOf(studentIds.size()),     "/images/student_icon.png"),
+                        new StatCard("Assessments", String.valueOf(assessments),           "/images/assessement_icon.png")
                 );
             }
             case STUDENT -> box.getChildren().addAll(

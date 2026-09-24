@@ -69,3 +69,4 @@ CREATE TABLE IF NOT EXISTS grades (
     FOREIGN KEY (enrollment_id) REFERENCES enrollments(id),
     FOREIGN KEY (assessment_id) REFERENCES assessments(id)
 );
+CREATE TABLE IF NOT EXISTS seed_log (id INT PRIMARY KEY);
