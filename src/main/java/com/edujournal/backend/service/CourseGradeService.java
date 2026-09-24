@@ -1,10 +1,13 @@
 package com.edujournal.backend.service;
 
 import com.edujournal.backend.utils.BestScore;
+import com.edujournal.backend.utils.GradeCalculator;
 import com.edujournal.backend.utils.GradeNormalizer;
+import com.edujournal.entity.AssessmentType;
 import com.edujournal.entity.Assessments;
 import com.edujournal.entity.Grades;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -14,36 +17,78 @@ public class CourseGradeService {
     private final BestScore bestScore = new BestScore();
 
     public double calculateFinalGrade(List<Assessments> assessments, List<Grades> grades) {
-        Map<Integer, List<Grades>> gradesByAssessment = grades.stream()
-                .collect(Collectors.groupingBy(Grades::getAssessmentId));
+        // Group assessments by enum type
+        Map<AssessmentType, List<Assessments>> assessmentsForType = assessments.stream().collect(Collectors.groupingBy(Assessments::getType));
 
-        double weightedSum = 0;
-        double totalWeight = 0;
+        // Group grades by assessmentId
+        Map<Integer, List<Grades>> gradesForAssessment = grades.stream().collect(Collectors.groupingBy(Grades::getAssessmentId));
+
+        List<Double> typeAverages = new ArrayList<>();
+        List<Double> typeWeights = new ArrayList<>();
+
+        for (AssessmentType type : assessmentsForType.keySet()) {
+            if (type.name().contains("EXAM")) {
+                typeAverages.add(processExamCategory(assessmentsForType.get(type), gradesForAssessment));
+                typeWeights.add(assessmentsForType.get(type).get(0).getWeight());
+            } else {
+                typeAverages.add(calculateTypeAverage(assessmentsForType.get(type), gradesForAssessment));
+                typeWeights.add(assessmentsForType.get(type).get(0).getWeight());
+            }
+        }
+        return GradeCalculator.calculateWeightedAverage(typeAverages.stream().mapToDouble(Double::doubleValue).toArray(),
+                typeWeights.stream().mapToDouble(Double::doubleValue).toArray()
+        );
+    }
+
+    // Method to calculate the average score for a category of assessments
+    private double calculateTypeAverage(List<Assessments> assessments, Map<Integer, List<Grades>> gradesForAssessment) {
+        List<Double> normalizedScores = new ArrayList<>();
 
         for (Assessments a : assessments) {
-            List<Grades> assessmentGrades = gradesByAssessment.getOrDefault(a.getId(), List.of());
-            if (assessmentGrades.isEmpty()) {
-                throw new IllegalArgumentException("No grades for assessment: " + a.getTitle());
+            // Create list (empty if no values)
+            List<Grades> g = gradesForAssessment.getOrDefault(a.getId(), List.of());
+            if (g.isEmpty()) {
+                throw new IllegalArgumentException("No Grades for Assessments with id " + a.getId());
             }
-
-            double[] rawScores = assessmentGrades.stream().mapToDouble(Grades::getScore).toArray();
-            double score = bestScore.getBestScore(rawScores);
-
-            if (score > a.getMaxScore()) {
-                throw new IllegalArgumentException(
-                        "Score " + score + " exceeds max score " + a.getMaxScore()
-                );
+            for (Grades grade : g) {
+                if (grade.getScore() > a.getMaxScore()) {
+                    throw new IllegalArgumentException(
+                            "Score " + grade.getScore() + " exceeds max score " + a.getMaxScore()
+                    );
+                }
+                double normalizedScore = normalizer.normalizer(grade.getScore(), a.getMaxScore());
+                normalizedScores.add(normalizedScore);
             }
+        }
+        return GradeCalculator.calculateAverage(normalizedScores.stream().mapToDouble(Double::doubleValue).toArray());
+    }
 
-            double normalized = normalizer.normalizer(score, a.getMaxScore());
-            weightedSum += normalized * a.getWeight();
-            totalWeight += a.getWeight();
+    private double processExamCategory(List<Assessments> exams, Map<Integer, List<Grades>> gradesForAssessment) {
+        List<Double> bestExamScores = new ArrayList<>();
+
+        for (Assessments exam : exams) {
+            List<Grades> examGrades = gradesForAssessment.getOrDefault(exam.getId(), List.of());
+
+            if (!examGrades.isEmpty()) {
+                double[] rawScores = examGrades.stream().mapToDouble(Grades::getScore).toArray();
+
+                for (double score : rawScores) {
+                    if (score > exam.getMaxScore()) {
+                        throw new IllegalArgumentException(
+                                "Score " + score + " exceeds max score " + exam.getMaxScore()
+                        );
+                    }
+                }
+
+                double bestRaw = bestScore.getBestScore(rawScores);
+                double normalized = normalizer.normalizer(bestRaw, exam.getMaxScore());
+
+                bestExamScores.add(normalized);
+            }
         }
 
-        if (totalWeight == 0) {
-            throw new IllegalArgumentException("Total weight cannot be zero");
-        }
-
-        return Math.round((weightedSum / totalWeight) * 100.0) / 100.0;
+        return bestScore.getBestScore(
+                bestExamScores.stream().mapToDouble(Double::doubleValue).toArray()
+        );
     }
 }
