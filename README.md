@@ -197,7 +197,7 @@ mvn test
 Generate the JaCoCo code coverage report:
 
 ```bash
-mvn verify
+mvn clean verify
 ```
 
 The coverage report is generated in `public_html/`.
@@ -205,7 +205,7 @@ The coverage report is generated in `public_html/`.
 Run performance tests:
 
 ```bash
-mvn verify -Pperformance
+mvn clean verify -Pperformance
 ```
 
 Performance test results are saved in `performance-results/`.
