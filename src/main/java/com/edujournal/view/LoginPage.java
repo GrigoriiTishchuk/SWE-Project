@@ -50,14 +50,16 @@ public class LoginPage extends HBox {
         ImageView logo = new ImageView(new Image(
                 getClass().getResourceAsStream("/images/edujournal_logo.png")));
         logo.setFitHeight(48);
+        VBox.setMargin(logo, new Insets(0, 0, 35, 0));
         logo.setPreserveRatio(true);
 
         Label tagline = new Label("Teacher's Gradebook\nand Report Card System");
-        tagline.setStyle("-fx-font-size: 40px; -fx-font-weight: bold; -fx-text-fill: #2F6FED;");
+        tagline.setStyle("-fx-font-size: 40px; -fx-font-weight: bold; -fx-text-fill: #0d06b6;");
 
         VBox spacer = new VBox();
         VBox.setVgrow(spacer, Priority.ALWAYS);
 
+        VBox.setMargin(tagline, new Insets(0, 0, 25, 0));
         VBox content = new VBox(logo, spacer, tagline);
         content.setPadding(new Insets(32));
 
