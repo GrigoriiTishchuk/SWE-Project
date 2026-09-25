@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS courses (
     user_id INT,
     academic_group_id INT,
     start_date DATE,
-     end_date DATE,
+    end_date DATE,
 
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (academic_group_id) REFERENCES academic_groups(id)

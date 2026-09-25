@@ -63,15 +63,24 @@ public class TeacherDashboardPage extends BorderPane {
         Button addGrade = new Button("Add grade");
         addGrade.setOnAction(e -> Main.showPage(new TeacherGradebookPage(0)));
 
-        HBox row1 = new HBox(8, addAssessment, viewCourses);
         Button viewProfile = new Button("View own profile");
         viewProfile.setOnAction(e -> Main.showPage(new OwnProfilePage(TeacherSidebar.build("Own Profile"), Role.TEACHER)));
 
         Button generateReport = new Button("Generate Course's report");
         generateReport.setOnAction(e -> Main.showPage(new CourseReportPage(TeacherSidebar.build("Course's report"), Role.TEACHER)));
 
+        HBox row1 = new HBox(8, addAssessment, viewCourses);
         HBox row2 = new HBox(8, addGrade, viewProfile);
         HBox row3 = new HBox(8, generateReport);
+
+        java.util.List<Button> all = java.util.List.of(addAssessment, viewCourses, addGrade, viewProfile, generateReport);
+
+        search.textProperty().addListener((obs, old, text) -> {
+            if (text.isEmpty()) box.setMinWidth(0);
+            else if (old.isEmpty()) box.setMinWidth(box.getWidth());
+            String q = text.toLowerCase();
+            all.forEach(b -> { b.setVisible(b.getText().toLowerCase().contains(q)); b.setManaged(b.isVisible()); });
+        });
 
         box.getChildren().addAll(heading, search, row1, row2, row3);
         return box;

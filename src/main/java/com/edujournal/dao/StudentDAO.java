@@ -35,6 +35,21 @@ public class StudentDAO {
         }
     }
 
+    public Student findByUserId(Integer userId) {
+        EntityManager entityManager =
+                JPAUtil.getEntityManagerFactory()
+                        .createEntityManager();
+        try {
+            return entityManager.createQuery(
+                            "SELECT s FROM Student s WHERE s.userId = :userId",
+                            Student.class)
+                    .setParameter("userId", userId)
+                    .getResultStream().findFirst().orElse(null);
+        } finally {
+            entityManager.close();
+        }
+    }
+
     public Student findByStudentNumber(String studentNumber) {
         EntityManager entityManager =
                 JPAUtil.getEntityManagerFactory()

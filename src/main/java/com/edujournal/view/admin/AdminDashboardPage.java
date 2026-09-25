@@ -18,6 +18,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import java.util.List;
+
 // Everything is hardcoded
 
 public class AdminDashboardPage extends BorderPane {
@@ -96,10 +98,22 @@ public class AdminDashboardPage extends BorderPane {
         Button viewGroups = new Button("View all groups");
         viewGroups.setOnAction(e -> Main.showPage(new AdminGroupPage(AdminSidebar.build("Academic Groups"), Role.ADMINISTRATOR)));
 
-        HBox addButtons  = new HBox(8, addStudent, addTeacher, addCourse, addGroup);
-        HBox viewButtons = new HBox(8, viewStudents, viewTeachers, viewCourses, viewGroups);
+        HBox row1 = new HBox(8, addStudent, addTeacher);
+        HBox row2 = new HBox(8, addCourse, addGroup);
+        HBox row3 = new HBox(8, viewStudents, viewTeachers);
+        HBox row4 = new HBox(8, viewCourses, viewGroups);
 
-        box.getChildren().addAll(heading, search, addButtons, viewButtons);
+        List<Button> all = List.of(addStudent, addTeacher, addCourse, addGroup,
+                viewStudents, viewTeachers, viewCourses, viewGroups);
+
+        search.textProperty().addListener((obs, old, text) -> {
+            if (text.isEmpty()) box.setMinWidth(0);
+            else if (old.isEmpty()) box.setMinWidth(box.getWidth());
+            String q = text.toLowerCase();
+            all.forEach(b -> { b.setVisible(b.getText().toLowerCase().contains(q)); b.setManaged(b.isVisible()); });
+        });
+
+        box.getChildren().addAll(heading, search, row1, row2, row3, row4);
         return box;
     }
 }

@@ -19,9 +19,9 @@ public class CoursePage extends BorderPane {
         VBox box = new VBox(12);
         box.setPadding(new Insets(24));
 
-        box.getChildren().add(TopBar.build("Courses", role, true));
-
         CourseController controller = new CourseController(role);
+
+        box.getChildren().add(TopBar.build("Courses", role, true, controller::setYear));
         box.getChildren().add(controller);
 
         return box;
