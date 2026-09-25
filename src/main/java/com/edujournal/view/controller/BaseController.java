@@ -4,9 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +21,7 @@ public abstract class BaseController<T> extends BorderPane {
     protected Button editBtn = new Button("Edit");
     protected Button deleteBtn = new Button("Delete");
     protected Button viewBtn = new Button("View");
+    protected Button reportBtn = new Button("Student Report");
 
     protected boolean useCards = false;
     protected Function<T, Node> cardBuilder = null;
@@ -81,8 +80,14 @@ public abstract class BaseController<T> extends BorderPane {
         editBtn.setOnAction(e -> showEditDialog());
         deleteBtn.setOnAction(e -> showDeleteDialog());
         viewBtn.setOnAction(e -> onView());
+        reportBtn.setDisable(true);
+        reportBtn.setVisible(false);
+        reportBtn.setManaged(false);
 
-        HBox bottom = new HBox(10, addBtn, editBtn, deleteBtn, viewBtn);
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        HBox bottom = new HBox(10, addBtn, editBtn, deleteBtn, viewBtn, spacer, reportBtn);
         bottom.setPadding(new Insets(10));
 
         setBottom(bottom);

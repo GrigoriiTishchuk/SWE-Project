@@ -20,7 +20,7 @@ public class StudentSidebar {
                         () -> Main.showPage(new OwnProfilePage(StudentSidebar.build("Own profile"), Role.STUDENT))),
                 new Sidebar.SectionHeader("REPORTS"),
                 new Sidebar.NavItem("Student's report", active.equals("Student's report"),
-                        () -> Main.showPage(new StudentReportPage(StudentSidebar.build("Student's report"), Role.STUDENT)))
+                        () -> Main.showPage(new StudentReportPage(StudentSidebar.build("Student's report"), Role.STUDENT, null)))
         );
     }
 }

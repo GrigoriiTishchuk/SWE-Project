@@ -2,6 +2,7 @@ package com.edujournal.view.admin;
 
 import com.edujournal.Main;
 import com.edujournal.entity.Role;
+import com.edujournal.entity.Student;
 import com.edujournal.view.Sidebar;
 import com.edujournal.view.common.CoursePage;
 import com.edujournal.view.common.CourseReportPage;
@@ -30,7 +31,7 @@ public class AdminSidebar {
                         () -> Main.showPage(new OwnProfilePage(AdminSidebar.build("Own Profile"), Role.ADMINISTRATOR))),
                 new Sidebar.SectionHeader("REPORTS"),
                 new Sidebar.NavItem("Student's report", active.equals("Student's report"),
-                        () -> Main.showPage(new StudentReportPage(AdminSidebar.build("Student's report"), Role.ADMINISTRATOR))),
+                        () -> Main.showPage(new StudentReportPage(AdminSidebar.build("Student's report"), Role.ADMINISTRATOR, null))),
                 new Sidebar.NavItem("Course's report", active.equals("Course's report"),
                         () -> Main.showPage(new CourseReportPage(AdminSidebar.build("Course's report"), Role.ADMINISTRATOR)))
         );

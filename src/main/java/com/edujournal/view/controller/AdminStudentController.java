@@ -1,5 +1,6 @@
 package com.edujournal.view.controller;
 
+import com.edujournal.Main;
 import com.edujournal.backend.service.StudentService;
 import com.edujournal.backend.service.UserService;
 import com.edujournal.backend.utils.GeneratorUtil;
@@ -7,6 +8,8 @@ import com.edujournal.entity.Role;
 import com.edujournal.entity.Student;
 import com.edujournal.model.StudentDTO;
 import com.edujournal.entity.User;
+import com.edujournal.view.admin.AdminSidebar;
+import com.edujournal.view.common.StudentReportPage;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -23,6 +26,16 @@ public class AdminStudentController extends BaseController<StudentDTO> {
     public AdminStudentController(Role role) {
         configureColumns();
         loadAndShowItems();
+        reportBtn.setVisible(true);
+        reportBtn.setManaged(true);
+        reportBtn.setDisable(true);
+
+        table.getSelectionModel()
+                .selectedItemProperty()
+                .addListener((obs, oldStudent, newStudent) -> {
+                    reportBtn.setDisable(newStudent == null);
+                });
+        reportBtn.setOnAction(e -> openStudentReport());
     }
 
     @Override
@@ -138,6 +151,23 @@ public class AdminStudentController extends BaseController<StudentDTO> {
         );
 
         filterCombo.setValue("All");
+    }
+
+    private void openStudentReport() {
+        StudentDTO selectedStudent =
+                table.getSelectionModel().getSelectedItem();
+
+        Main.showPage(
+                new StudentReportPage(
+                        AdminSidebar.build("Student's report"),
+                        Role.ADMINISTRATOR,
+                        selectedStudent.getStudentId()
+                )
+        );
+
+        if (selectedStudent == null) {
+            return;
+        }
     }
 
     @Override
