@@ -31,28 +31,60 @@ public class Course {
     public Course() {
     }
 
-    public Integer getId() { return id; }
+    public Integer getId() {
+        return id;
+    }
+
     public void setId(Integer id) { this.id = id; }
 
-    public String getCode() { return code; }
-    public void setCode(String code) { this.code = code; }
+    public String getCode() {
+        return code;
+    }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public void setCode(String code) {
+        this.code = code;
+    }
 
-    public Integer getUserId() { return userId; }
-    public void setUserId(Integer userId) { this.userId = userId; }
+    public String getName() {
+        return name;
+    }
 
-    public Integer getAcademicGroupId() { return academicGroupId; }
-    public void setAcademicGroupId(Integer academicGroupId) { this.academicGroupId = academicGroupId; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public LocalDate getStartDate() { return startDate; }
-    public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
+    public Integer getUserId() {
+        return userId;
+    }
 
-    public LocalDate getEndDate() { return endDate; }
-    public void setEndDate(LocalDate endDate) { this.endDate = endDate; }
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 
-    /** Derives academic year from start_date. Null start_date → default "2026/2027". */
+    public Integer getAcademicGroupId() {
+        return academicGroupId;
+    }
+
+    public void setAcademicGroupId(Integer academicGroupId) {
+        this.academicGroupId = academicGroupId;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
     public String getAcademicYear() {
         if (startDate == null) return "2026/2027";
         int y = startDate.getMonthValue() >= 8 ? startDate.getYear() : startDate.getYear() - 1;
