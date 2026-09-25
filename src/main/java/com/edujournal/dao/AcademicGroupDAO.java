@@ -2,6 +2,8 @@ package com.edujournal.dao;
 
 import com.edujournal.config.JPAUtil;
 import com.edujournal.entity.AcademicGroup;
+import com.edujournal.entity.Student;
+import com.edujournal.entity.User;
 import jakarta.persistence.EntityManager;
 
 import java.util.List;
@@ -35,6 +37,24 @@ public class AcademicGroupDAO {
         }
     }
 
+    public List<Integer> findStudentIdsByGroupId(Integer groupId) {
+        EntityManager entityManager =
+                JPAUtil.getEntityManagerFactory()
+                        .createEntityManager();
+
+        try {
+            return entityManager.createQuery(
+                            "SELECT s.id FROM Student s WHERE s.academicGroupId = :groupId",
+                            Integer.class
+                    )
+                    .setParameter("groupId", groupId)
+                    .getResultList();
+
+        } finally {
+            entityManager.close();
+        }
+    }
+
     public AcademicGroup findByName(String name) {
         EntityManager entityManager =
                 JPAUtil.getEntityManagerFactory()
@@ -49,6 +69,50 @@ public class AcademicGroupDAO {
                     .getResultStream()
                     .findFirst()
                     .orElse(null);
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    public void addStudentToGroup(Integer studentId, Integer groupId) {
+        EntityManager entityManager =
+                JPAUtil.getEntityManagerFactory()
+                        .createEntityManager();
+
+        try {
+            entityManager.getTransaction().begin();
+
+            Student student = entityManager.find(Student.class, studentId);
+
+            if (student != null) {
+                student.setAcademicGroupId(groupId);
+                entityManager.merge(student);
+            }
+
+            entityManager.getTransaction().commit();
+
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    public void removeStudentFromGroup(Integer studentId, Integer groupId) {
+        EntityManager entityManager =
+                JPAUtil.getEntityManagerFactory()
+                        .createEntityManager();
+
+        try {
+            entityManager.getTransaction().begin();
+
+            Student student = entityManager.find(Student.class, studentId);
+
+            if (student != null && groupId.equals(student.getAcademicGroupId())) {
+                student.setAcademicGroupId(null);
+                entityManager.merge(student);
+            }
+
+            entityManager.getTransaction().commit();
+
         } finally {
             entityManager.close();
         }

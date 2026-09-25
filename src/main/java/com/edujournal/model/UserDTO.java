@@ -76,4 +76,9 @@ public class UserDTO {
     public void setRole(Role role) {
         this.role = role;
     }
+
+    @Override
+    public String toString() {
+        return firstName + " " + lastName;
+    }
 }

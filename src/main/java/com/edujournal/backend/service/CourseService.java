@@ -1,11 +1,11 @@
 package com.edujournal.backend.service;
 
 import com.edujournal.backend.utils.CourseMapper;
+import com.edujournal.dao.AcademicGroupDAO;
 import com.edujournal.dao.CourseDAO;
+import com.edujournal.dao.StudentDAO;
 import com.edujournal.dao.UserDAO;
-import com.edujournal.entity.Course;
-import com.edujournal.entity.Role;
-import com.edujournal.entity.User;
+import com.edujournal.entity.*;
 import com.edujournal.model.CourseDTO;
 
 import java.util.List;
@@ -14,6 +14,8 @@ public class CourseService {
     private final CourseDAO courseDAO = new CourseDAO();
     private final CourseMapper courseMapper = new CourseMapper();
     private final UserDAO userDAO = new UserDAO();
+    private final AcademicGroupDAO academicGroupDAO = new AcademicGroupDAO();
+    private final EnrollmentService enrollmentService = new EnrollmentService();
 
     public CourseDTO getById(Integer id) {
         Course course = courseDAO.findById(id);
@@ -63,11 +65,48 @@ public class CourseService {
         courseDAO.update(course);
     }
 
+    public void assignStudentsToEnrollments(Integer courseId, Integer groupId) {
+        Course course = courseDAO.findById(courseId);
+        if (course == null) {
+            throw new IllegalArgumentException("Course not found");
+        }
+
+        AcademicGroup group = academicGroupDAO.findById(groupId);
+        if (group == null) {
+            throw new IllegalArgumentException("Group not found");
+        }
+
+        List<Integer> studentIds =
+                academicGroupDAO.findStudentIdsByGroupId(groupId);
+
+        for (Integer studentId : studentIds) {
+
+            Enrollment existing =
+                    enrollmentService.findByStudentAndCourse(
+                            studentId,
+                            courseId
+                    );
+
+            if (existing == null) {
+                Enrollment enrollment = new Enrollment();
+
+                enrollment.setStudentId(studentId);
+                enrollment.setCourseId(courseId);
+                enrollment.setAcademicGroupId(groupId);
+                enrollment.setStatus("ENROLLED");
+
+                enrollmentService.save(enrollment);
+            }
+        }
+    }
+
     public void save(Course course) {
         if (existsByCode(course.getCode())) {
             throw new IllegalArgumentException("Course code already exists");
         }
         courseDAO.save(course);
+        if (course.getAcademicGroupId() != null) {assignStudentsToEnrollments(course.getId(), course.getAcademicGroupId());
+        }
     }
 
     public void update(Course course) {
@@ -75,6 +114,7 @@ public class CourseService {
     }
 
     public void delete(Integer id) {
+        enrollmentService.deleteByCourseId(id);
         courseDAO.delete(id);
     }
 
