@@ -52,25 +52,27 @@ public class AcademicGroupService {
 
     public void addStudentToGroup(Integer studentId, Integer groupId) {
         academicGroupDAO.addStudentToGroup(studentId, groupId);
-
         List<CourseDTO> courses = courseService.findByGroupId(groupId);
+
         for (CourseDTO course : courses) {
-            Enrollment existing = enrollmentService.findByStudentAndCourse(studentId, course.getId());
-
-            if (existing == null) {
-                Enrollment enrollment = new Enrollment();
-
-                enrollment.setStudentId(studentId);
-                enrollment.setCourseId(course.getId());
-                enrollment.setAcademicGroupId(groupId);
-                enrollment.setStatus("ENROLLED");
-
-                enrollmentService.save(enrollment);
-            }
+            enrollmentService.createIfNotExists(
+                    studentId,
+                    course.getId(),
+                    groupId
+            );
         }
     }
 
     public void removeStudentFromGroup(Integer studentId, Integer groupId) {
-        academicGroupDAO.removeStudentFromGroup(studentId, groupId);
+
+        academicGroupDAO.removeStudentFromGroup(
+                studentId,
+                groupId
+        );
+
+        enrollmentService.deleteByStudentAndAcademicGroup(
+                studentId,
+                groupId
+        );
     }
 }

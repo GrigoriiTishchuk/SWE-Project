@@ -192,6 +192,8 @@ public class CourseController extends BaseController<CourseDTO> {
                 AcademicGroupDTO selectedGroup = groupCombo.getValue();
                 dto.setGroupId(selectedGroup == null ? null : selectedGroup.getId());
 
+
+
                 return dto;
             }
             return null;

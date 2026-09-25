@@ -1,6 +1,8 @@
 package com.edujournal.backend.service;
 
 import com.edujournal.dao.EnrollmentDAO;
+import com.edujournal.entity.AcademicGroup;
+import com.edujournal.entity.Course;
 import com.edujournal.entity.Enrollment;
 
 import java.util.List;
@@ -37,6 +39,26 @@ public class EnrollmentService {
         return enrollmentDAO.findByStudentAndCourse(studentId, courseId);
     }
 
+    public void createIfNotExists(
+            Integer studentId,
+            Integer courseId,
+            Integer academicGroupId) {
+
+        Enrollment existing =
+                findByStudentAndCourse(studentId, courseId);
+
+        if (existing == null) {
+            Enrollment enrollment = new Enrollment();
+
+            enrollment.setStudentId(studentId);
+            enrollment.setCourseId(courseId);
+            enrollment.setAcademicGroupId(academicGroupId);
+            enrollment.setStatus("ENROLLED");
+
+            save(enrollment);
+        }
+    }
+
     public void save(Enrollment enrollment) {
         enrollmentDAO.save(enrollment);
     }
@@ -47,5 +69,19 @@ public class EnrollmentService {
 
     public void delete(Integer id) {
         enrollmentDAO.delete(id);
+    }
+
+    public void deleteByStudentAndAcademicGroup(
+            Integer studentId,
+            Integer academicGroupId) {
+
+        enrollmentDAO.deleteByStudentAndAcademicGroup(
+                studentId,
+                academicGroupId
+        );
+    }
+
+    public void deleteByCourseId(Integer courseId) {
+        enrollmentDAO.deleteByCourseId(courseId);
     }
 }

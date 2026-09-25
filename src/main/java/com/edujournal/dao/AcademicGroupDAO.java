@@ -37,6 +37,24 @@ public class AcademicGroupDAO {
         }
     }
 
+    public List<Integer> findStudentIdsByGroupId(Integer groupId) {
+        EntityManager entityManager =
+                JPAUtil.getEntityManagerFactory()
+                        .createEntityManager();
+
+        try {
+            return entityManager.createQuery(
+                            "SELECT s.id FROM Student s WHERE s.academicGroupId = :groupId",
+                            Integer.class
+                    )
+                    .setParameter("groupId", groupId)
+                    .getResultList();
+
+        } finally {
+            entityManager.close();
+        }
+    }
+
     public AcademicGroup findByName(String name) {
         EntityManager entityManager =
                 JPAUtil.getEntityManagerFactory()
