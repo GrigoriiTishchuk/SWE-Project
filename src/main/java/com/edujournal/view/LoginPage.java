@@ -96,7 +96,7 @@ public class LoginPage extends HBox {
                 errorLabel,
                 forgotPassword, signIn
         );
-        form.setPadding(new Insets(40));
+        form.setPadding(new Insets(40, 40, 40, 70));
         form.setPrefWidth(400);
         form.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
         return form;
