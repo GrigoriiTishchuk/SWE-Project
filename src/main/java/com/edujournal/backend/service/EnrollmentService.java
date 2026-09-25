@@ -33,6 +33,10 @@ public class EnrollmentService {
         return enrollmentDAO.findByAcademicGroupId(academicGroupId);
     }
 
+    public Enrollment findByStudentAndCourse(Integer studentId, Integer courseId) {
+        return enrollmentDAO.findByStudentAndCourse(studentId, courseId);
+    }
+
     public void save(Enrollment enrollment) {
         enrollmentDAO.save(enrollment);
     }

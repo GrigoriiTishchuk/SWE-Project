@@ -81,5 +81,4 @@ public class UserDTO {
     public String toString() {
         return firstName + " " + lastName;
     }
-
 }

@@ -86,6 +86,27 @@ public class EnrollmentDAO {
         }
     }
 
+    public Enrollment findByStudentAndCourse(Integer studentId, Integer courseId) {
+                EntityManager em =
+                JPAUtil.getEntityManagerFactory()
+                        .createEntityManager();
+
+        try {
+            return em.createQuery(
+                            "SELECT e FROM Enrollment e WHERE e.studentId = :studentId AND e.courseId = :courseId",
+                            Enrollment.class
+                    )
+                    .setParameter("studentId", studentId)
+                    .setParameter("courseId", courseId)
+                    .getResultStream()
+                    .findFirst()
+                    .orElse(null);
+
+        } finally {
+            em.close();
+        }
+    }
+
     public void save(Enrollment enrollment) {
         EntityManager entityManager =
                 JPAUtil.getEntityManagerFactory()

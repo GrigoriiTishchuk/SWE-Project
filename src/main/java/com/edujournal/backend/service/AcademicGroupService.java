@@ -3,7 +3,9 @@ package com.edujournal.backend.service;
 import com.edujournal.backend.utils.AcademicGroupMapper;
 import com.edujournal.dao.AcademicGroupDAO;
 import com.edujournal.entity.AcademicGroup;
+import com.edujournal.entity.Enrollment;
 import com.edujournal.model.AcademicGroupDTO;
+import com.edujournal.model.CourseDTO;
 
 import java.util.List;
 
@@ -11,6 +13,8 @@ public class AcademicGroupService {
 
     private final AcademicGroupDAO academicGroupDAO;
     private final AcademicGroupMapper agMapper = new AcademicGroupMapper();
+    private final CourseService courseService = new CourseService();
+    private final EnrollmentService enrollmentService = new EnrollmentService();
 
     public AcademicGroupService() {
         this.academicGroupDAO = new AcademicGroupDAO();
@@ -48,6 +52,22 @@ public class AcademicGroupService {
 
     public void addStudentToGroup(Integer studentId, Integer groupId) {
         academicGroupDAO.addStudentToGroup(studentId, groupId);
+
+        List<CourseDTO> courses = courseService.findByGroupId(groupId);
+        for (CourseDTO course : courses) {
+            Enrollment existing = enrollmentService.findByStudentAndCourse(studentId, course.getId());
+
+            if (existing == null) {
+                Enrollment enrollment = new Enrollment();
+
+                enrollment.setStudentId(studentId);
+                enrollment.setCourseId(course.getId());
+                enrollment.setAcademicGroupId(groupId);
+                enrollment.setStatus("ENROLLED");
+
+                enrollmentService.save(enrollment);
+            }
+        }
     }
 
     public void removeStudentFromGroup(Integer studentId, Integer groupId) {
