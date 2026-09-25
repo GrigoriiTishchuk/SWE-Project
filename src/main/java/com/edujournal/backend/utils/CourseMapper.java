@@ -49,8 +49,9 @@ public class CourseMapper {
                 entity.getAcademicGroupId(),
                 groupName
         );
-
-        // dto.setStudentsCount(...);
+        dto.setAcademicYear(entity.getAcademicYear());
+        dto.setStartDate(entity.getStartDate());
+        dto.setEndDate(entity.getEndDate());
 
         return dto;
     }
@@ -63,6 +64,8 @@ public class CourseMapper {
         entity.setName(dto.getName());
         entity.setUserId(dto.getUserId());
         entity.setAcademicGroupId(dto.getGroupId());
+        entity.setStartDate(dto.getStartDate());
+        entity.setEndDate(dto.getEndDate());
         return entity;
     }
 }

@@ -26,8 +26,11 @@ public class CourseReportPage extends BorderPane {
     private final AssessmentsService assessmentsService = new AssessmentsService();
     private final AcademicGroupService academicGroupService = new AcademicGroupService();
 
+    private static final String DEFAULT_YEAR = "2026/2027";
+
     private TableView<Course> table;
     private final Role role;
+    private String selectedYear = DEFAULT_YEAR;
 
     public CourseReportPage(VBox sidebar, Role role) {
         this.role = role;
@@ -51,8 +54,23 @@ public class CourseReportPage extends BorderPane {
         HBox toolbar = new HBox(exportBtn);
         toolbar.setAlignment(Pos.CENTER_RIGHT);
 
-        box.getChildren().addAll(TopBar.build("Course's report", role, true), toolbar, table);
+        box.getChildren().addAll(
+                TopBar.build("Course's report", role, true, year -> { selectedYear = year; reloadTable(); }),
+                toolbar, table);
         return box;
+    }
+
+    private List<Course> loadCourses() {
+        List<Course> all = (role == Role.TEACHER)
+                ? courseDAO.findByUserId(UserSession.getInstance().getCurrentUser().getId())
+                : courseDAO.findAll();
+        return all.stream()
+                .filter(c -> selectedYear.equals(c.getAcademicYear()))
+                .toList();
+    }
+
+    private void reloadTable() {
+        table.getItems().setAll(loadCourses());
     }
 
     private TableView<Course> buildTable() {
@@ -84,10 +102,7 @@ public class CourseReportPage extends BorderPane {
         });
 
         t.getColumns().addAll(List.of(codeCol, nameCol, groupCol, studentsCol, assessmentsCol));
-        List<Course> courses = (role == Role.TEACHER)
-                ? courseDAO.findByUserId(UserSession.getInstance().getCurrentUser().getId())
-                : courseDAO.findAll();
-        t.getItems().addAll(courses);
+        t.getItems().addAll(loadCourses());
         return t;
     }
 

@@ -28,13 +28,20 @@ public class CourseController extends BaseController<CourseDTO> {
     private final UserService userService = new UserService();
     private final AcademicGroupService academicGroupService = new AcademicGroupService();
 
+    private static final String DEFAULT_YEAR = "2026/2027";
     private final Role role;
+    private String selectedYear = DEFAULT_YEAR;
 
     public CourseController(Role role) {
         this.role = role;
         configureColumns();
         setupRoleButtons();
         loadAndShowItems();
+    }
+
+    public void setYear(String year) {
+        this.selectedYear = year;
+        applyFilter();
     }
 
     private void setupRoleButtons() {
@@ -54,11 +61,12 @@ public class CourseController extends BaseController<CourseDTO> {
 
     @Override
     protected List<CourseDTO> loadAllItems() {
-        if (role == Role.TEACHER) {
-            Integer teacherId = UserSession.getInstance().getCurrentUser().getId();
-            return courseService.findByUserId(teacherId);
-        }
-        return courseService.findAll();
+        List<CourseDTO> all = (role == Role.TEACHER)
+                ? courseService.findByUserId(UserSession.getInstance().getCurrentUser().getId())
+                : courseService.findAll();
+        return all.stream()
+                .filter(c -> selectedYear.equals(c.getAcademicYear()))
+                .toList();
     }
 
     @Override
@@ -171,7 +179,12 @@ public class CourseController extends BaseController<CourseDTO> {
                 AcademicGroupDTO::getName
         );
 
-        VBox box = new VBox(10, nameField, codeField, teacherCombo, groupCombo);
+        DatePicker startDatePicker = new DatePicker();
+        startDatePicker.setPromptText("Start date");
+        DatePicker endDatePicker = new DatePicker();
+        endDatePicker.setPromptText("End date");
+
+        VBox box = new VBox(10, nameField, codeField, teacherCombo, groupCombo, startDatePicker, endDatePicker);
         box.setPadding(new Insets(10));
         dialog.getDialogPane().setContent(box);
 
@@ -196,6 +209,9 @@ public class CourseController extends BaseController<CourseDTO> {
 
                 AcademicGroupDTO selectedGroup = groupCombo.getValue();
                 dto.setGroupId(selectedGroup == null ? null : selectedGroup.getId());
+
+                dto.setStartDate(startDatePicker.getValue());
+                dto.setEndDate(endDatePicker.getValue());
 
                 return dto;
             }
@@ -254,7 +270,10 @@ public class CourseController extends BaseController<CourseDTO> {
                 AcademicGroupDTO::getName
         );
 
-        VBox box = new VBox(10, nameField, codeField, teacherCombo, groupCombo);
+        DatePicker startDatePicker = new DatePicker(course.getStartDate());
+        DatePicker endDatePicker = new DatePicker(course.getEndDate());
+
+        VBox box = new VBox(10, nameField, codeField, teacherCombo, groupCombo, startDatePicker, endDatePicker);
         box.setPadding(new Insets(10));
         dialog.getDialogPane().setContent(box);
 
@@ -293,6 +312,9 @@ public class CourseController extends BaseController<CourseDTO> {
 
                 AcademicGroupDTO g = groupCombo.getValue();
                 course.setGroupId(g == null ? null : g.getId());
+
+                course.setStartDate(startDatePicker.getValue());
+                course.setEndDate(endDatePicker.getValue());
 
                 return course;
             }

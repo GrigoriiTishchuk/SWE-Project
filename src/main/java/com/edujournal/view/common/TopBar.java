@@ -16,13 +16,19 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
+import java.util.function.Consumer;
+
 // name, role, year
 
 public class TopBar {
 
     public static HBox build(String title, Role role, boolean showYear) {
+        return build(title, role, showYear, null);
+    }
+
+    public static HBox build(String title, Role role, boolean showYear, Consumer<String> onYearChange) {
         Label titleLabel = new Label(title);
-        titleLabel.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
+        titleLabel.setStyle("-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #111827;");
 
         HBox spacer = new HBox();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -31,6 +37,8 @@ public class TopBar {
         studyingYear.getItems().addAll("2026/2027", "2025/2026", "2024/2025");
         studyingYear.setValue("2026/2027");
         studyingYear.setVisible(showYear);
+        if (onYearChange != null)
+            studyingYear.valueProperty().addListener((obs, old, val) -> onYearChange.accept(val));
 
         Circle avatar = new Circle(20, Color.web("#9CA3AF"));
 

@@ -1,5 +1,7 @@
 package com.edujournal.model;
 
+import java.time.LocalDate;
+
 public class CourseDTO {
     private Integer id;
     private String code;
@@ -8,6 +10,9 @@ public class CourseDTO {
     private String teacherName;
     private Integer groupId;
     private String groupName;
+    private String academicYear;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     // private Integer studentsCount;
 
@@ -52,4 +57,13 @@ public class CourseDTO {
 
     public String getGroupName() { return groupName; }
     public void setGroupName(String groupName) { this.groupName = groupName; }
+
+    public String getAcademicYear() { return academicYear; }
+    public void setAcademicYear(String academicYear) { this.academicYear = academicYear; }
+
+    public LocalDate getStartDate() { return startDate; }
+    public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
+
+    public LocalDate getEndDate() { return endDate; }
+    public void setEndDate(LocalDate endDate) { this.endDate = endDate; }
 }
