@@ -115,13 +115,22 @@ public abstract class BaseController<T> extends BorderPane {
             for (T item : items) {
                 list.getChildren().add(cardBuilder.apply(item));
             }
-            setCenter(list);
+            ScrollPane scroll = new ScrollPane(list);
+            scroll.setFitToWidth(true);
+            scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+
+            setCenter(scroll);
         } else {
             table.setItems(FXCollections.observableArrayList(items));
-            setCenter(table);
+            ScrollPane scroll = new ScrollPane(table);
+            scroll.setFitToWidth(true);
+            scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+
+            setCenter(scroll);
         }
     }
-
 
     protected void applyFilter() {
         String filter = filterCombo.getValue();
@@ -139,10 +148,21 @@ public abstract class BaseController<T> extends BorderPane {
             for (T item : filtered) {
                 list.getChildren().add(cardBuilder.apply(item));
             }
-            setCenter(list);
+
+            ScrollPane scroll = new ScrollPane(list);
+            scroll.setFitToWidth(true);
+            scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+
+            setCenter(scroll);
         } else {
             table.setItems(FXCollections.observableArrayList(filtered));
-            setCenter(table);
+            ScrollPane scroll = new ScrollPane(table);
+            scroll.setFitToWidth(true);
+            scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+
+            setCenter(scroll);
         }
     }
 

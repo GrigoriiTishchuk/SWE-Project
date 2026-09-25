@@ -86,6 +86,41 @@ public class EnrollmentDAO {
         }
     }
 
+    public List<Enrollment> findByCourseAndGroup(int courseId, int groupId) {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        try {
+            return em.createQuery(
+                            "SELECT e FROM Enrollment e WHERE e.courseId = :courseId AND e.academicGroupId = :groupId",
+                            Enrollment.class)
+                    .setParameter("courseId", courseId)
+                    .setParameter("groupId", groupId)
+                    .getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    public Enrollment findByStudentAndCourse(Integer studentId, Integer courseId) {
+                EntityManager em =
+                JPAUtil.getEntityManagerFactory()
+                        .createEntityManager();
+
+        try {
+            return em.createQuery(
+                            "SELECT e FROM Enrollment e WHERE e.studentId = :studentId AND e.courseId = :courseId",
+                            Enrollment.class
+                    )
+                    .setParameter("studentId", studentId)
+                    .setParameter("courseId", courseId)
+                    .getResultStream()
+                    .findFirst()
+                    .orElse(null);
+
+        } finally {
+            em.close();
+        }
+    }
+
     public void save(Enrollment enrollment) {
         EntityManager entityManager =
                 JPAUtil.getEntityManagerFactory()
@@ -153,17 +188,65 @@ public class EnrollmentDAO {
         }
     }
 
-    public List<Enrollment> findByCourseAndGroup(int courseId, int groupId) {
-        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+    public void deleteByStudentAndAcademicGroup(
+            Integer studentId,
+            Integer academicGroupId) {
+
+        EntityManager entityManager =
+                JPAUtil.getEntityManagerFactory()
+                        .createEntityManager();
+
         try {
-            return em.createQuery(
-                    "SELECT e FROM Enrollment e WHERE e.courseId = :courseId AND e.academicGroupId = :groupId",
-                    Enrollment.class)
-                    .setParameter("courseId", courseId)
-                    .setParameter("groupId", groupId)
-                    .getResultList();
+            entityManager.getTransaction().begin();
+
+            entityManager.createQuery(
+                            "DELETE FROM Enrollment e " +
+                                    "WHERE e.studentId = :studentId " +
+                                    "AND e.academicGroupId = :academicGroupId"
+                    )
+                    .setParameter("studentId", studentId)
+                    .setParameter("academicGroupId", academicGroupId)
+                    .executeUpdate();
+
+            entityManager.getTransaction().commit();
+
+        } catch (Exception e) {
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
+            }
+            throw e;
+
         } finally {
-            em.close();
+            entityManager.close();
+        }
+    }
+
+    public void deleteByCourseId(Integer courseId) {
+
+        EntityManager entityManager =
+                JPAUtil.getEntityManagerFactory()
+                        .createEntityManager();
+
+        try {
+            entityManager.getTransaction().begin();
+
+            entityManager.createQuery(
+                            "DELETE FROM Enrollment e " +
+                                    "WHERE e.courseId = :courseId"
+                    )
+                    .setParameter("courseId", courseId)
+                    .executeUpdate();
+
+            entityManager.getTransaction().commit();
+
+        } catch (Exception e) {
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
+            }
+            throw e;
+
+        } finally {
+            entityManager.close();
         }
     }
 }

@@ -104,12 +104,26 @@ public class AdminStudentController extends BaseController<StudentDTO> {
                 cell -> new SimpleStringProperty(cell.getValue().getLastName())
         );
 
+        TableColumn<StudentDTO, String> emailCol =
+                new TableColumn<>("Email");
+        emailCol.setCellValueFactory(
+                cell -> new SimpleStringProperty(cell.getValue().getEmail())
+        );
+
+        TableColumn<StudentDTO, String> phoneCol =
+                new TableColumn<>("Phone Number");
+        phoneCol.setCellValueFactory(
+                cell -> new SimpleStringProperty(cell.getValue().getPhone())
+        );
+
         table.getColumns().addAll(
                 idCol,
                 studentNumberCol,
                 usernameCol,
                 firstNameCol,
-                lastNameCol
+                lastNameCol,
+                emailCol,
+                phoneCol
         );
 
         filterCombo.getItems().addAll(
@@ -118,7 +132,9 @@ public class AdminStudentController extends BaseController<StudentDTO> {
                 "Student Number",
                 "Username",
                 "First Name",
-                "Last Name"
+                "Last Name",
+                "Email",
+                "Phone Number"
         );
 
         filterCombo.setValue("All");
