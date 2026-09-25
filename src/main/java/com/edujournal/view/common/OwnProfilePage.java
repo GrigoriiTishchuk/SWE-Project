@@ -1,12 +1,24 @@
 package com.edujournal.view.common;
 
+import com.edujournal.backend.service.AcademicGroupService;
+import com.edujournal.backend.service.StudentService;
+import com.edujournal.backend.service.UserService;
+import com.edujournal.backend.utils.UserSession;
+import com.edujournal.entity.AcademicGroup;
 import com.edujournal.entity.Role;
+import com.edujournal.entity.Student;
+import com.edujournal.entity.User;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OwnProfilePage extends BorderPane {
 
@@ -21,11 +33,25 @@ public class OwnProfilePage extends BorderPane {
 
     public OwnProfilePage(VBox sidebar, Role role) {
         setLeft(sidebar);
-        setCenter(buildContent(role));
+        ScrollPane scroll = new ScrollPane(buildContent(role));
+        scroll.setFitToWidth(true);
+        scroll.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
+        setCenter(scroll);
     }
 
     private VBox buildContent(Role role) {
-        HBox body = new HBox(16, buildAvatarCard(role), buildFormCard(role));
+        Integer userId = UserSession.getInstance().getCurrentUser().getId();
+        User user = new UserService().findById(userId);
+
+        Student student = null;
+        if (role == Role.STUDENT) {
+            student = new StudentService().findByUserId(userId);
+        }
+
+        Label nameLabel = new Label(user.getFirstName() + " " + user.getLastName());
+        nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
+        HBox body = new HBox(16, buildAvatarCard(role, nameLabel), buildFormCard(user, student, role, nameLabel));
         body.setAlignment(Pos.TOP_LEFT);
 
         VBox content = new VBox(20);
@@ -34,17 +60,14 @@ public class OwnProfilePage extends BorderPane {
         return content;
     }
 
-    private VBox buildAvatarCard(Role role) {
+    private VBox buildAvatarCard(Role role, Label nameLabel) {
         Circle avatar = new Circle(40, Color.web("#9CA3AF"));
-
-        Label name = new Label("Name Surname");
-        name.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
         Label badge = new Label(role.getDisplayName());
         badge.setStyle("-fx-background-color: #DBEAFE; -fx-text-fill: #1a3a6b; "
                 + "-fx-font-size: 11px; -fx-padding: 4 12; -fx-background-radius: 12;");
 
-        VBox card = new VBox(14, avatar, name, badge);
+        VBox card = new VBox(14, avatar, nameLabel, badge);
         card.setAlignment(Pos.TOP_CENTER);
         card.setPadding(new Insets(28));
         card.setStyle(PANEL);
@@ -52,48 +75,114 @@ public class OwnProfilePage extends BorderPane {
         return card;
     }
 
-    private VBox buildFormCard(Role role) {
+    private VBox buildFormCard(User user, Student student, Role role, Label nameLabel) {
         Label title = new Label("Personal Information");
         title.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
-        VBox form = new VBox(12, title,
-                row("First Name", "Name", false),
-                row("Last Name", "Surname", false),
-                row("Email", "name.surname@metropolia.fi", false),
-                row("Phone", "+358 00 000 0000", false)
-        );
+        TextField firstName  = createField(user.getFirstName());
+        TextField lastName   = createField(user.getLastName());
+        TextField username   = createField(user.getUsername());
+        TextField email      = createField(user.getEmail());
+        TextField phone      = createField(user.getPhone());
+        TextField roleField  = createField(role.getDisplayName());
+        roleField.setEditable(false);
 
-        if (role == Role.STUDENT) {
-            form.getChildren().addAll(
-                    row("Student ID", "e.g. 2300001", false),
-                    row("Group", "e.g. TVT25K", false)
-            );
-        } else if (role == Role.TEACHER) {
-            form.getChildren().add(row("Department", "e.g. ICT", false));
+        List<TextField> editableFields = new ArrayList<>(List.of(email, phone));
+        if (role == Role.ADMINISTRATOR) {
+            editableFields.add(0, lastName);
+            editableFields.add(0, firstName);
         }
 
-        form.getChildren().add(row("Role", role.getDisplayName(), true));
+        VBox form = new VBox(12, title,
+                row("First Name", firstName),
+                row("Last Name",  lastName),
+                row("Username",   username),
+                row("Email",      email),
+                row("Phone",      phone)
+        );
 
-        Button saveBtn = new Button("Save Changes");
-        saveBtn.setStyle(BLUE_BTN);
-        form.getChildren().add(saveBtn);
+        TextField dobField = null;
+        if (role == Role.STUDENT && student != null) {
+            TextField studentNumber = createField(student.getStudentNumber());
 
+            dobField = createField(student.getDateOfBirth() != null ? student.getDateOfBirth().toString() : "");
+            editableFields.add(dobField);
+
+            String groupName = "-";
+            if (student.getAcademicGroupId() != null) {
+                AcademicGroup group = new AcademicGroupService().findById(student.getAcademicGroupId());
+                if (group != null) groupName = group.getName();
+            }
+            TextField groupField = createField(groupName);
+
+            form.getChildren().addAll(
+                    row("Student Number", studentNumber),
+                    row("Date of Birth",  dobField),
+                    row("Group",          groupField)
+            );
+        }
+
+        form.getChildren().add(row("Role", roleField));
+
+        boolean[] editing = {false};
+        Button editSaveBtn = new Button("Edit");
+        editSaveBtn.setStyle(BLUE_BTN);
+
+        final Student finalStudent = student;
+        final TextField finalDob = dobField;
+
+        editSaveBtn.setOnAction(e -> {
+            if (!editing[0]) {
+                for (TextField tf : editableFields) {
+                    tf.setEditable(true);
+                    tf.setStyle(LIGHT_INPUT);
+                }
+                editSaveBtn.setText("Save Changes");
+            } else {
+                user.setFirstName(firstName.getText().trim());
+                user.setLastName(lastName.getText().trim());
+                user.setUsername(username.getText().trim());
+                user.setEmail(email.getText().trim());
+                user.setPhone(phone.getText().trim());
+                new UserService().update(user);
+
+                if (role == Role.STUDENT && finalStudent != null && finalDob != null) {
+                    String dob = finalDob.getText().trim();
+                    if (!dob.isEmpty()) {
+                        try { finalStudent.setDateOfBirth(LocalDate.parse(dob)); } catch (Exception ignored) {}
+                    }
+                    new StudentService().update(finalStudent);
+                }
+
+                nameLabel.setText(user.getFirstName() + " " + user.getLastName());
+
+                for (TextField tf : editableFields) {
+                    tf.setEditable(false);
+                    tf.setStyle(READONLY_INPUT);
+                }
+                editSaveBtn.setText("Edit");
+            }
+            editing[0] = !editing[0];
+        });
+
+        form.getChildren().add(editSaveBtn);
         form.setPadding(new Insets(24));
         form.setStyle(PANEL);
         HBox.setHgrow(form, Priority.ALWAYS);
         return form;
     }
 
-    private VBox row(String label, String prompt, boolean readOnly) {
+    private TextField createField(String value) {
+        TextField tf = new TextField(value != null ? value : "");
+        tf.setEditable(false);
+        tf.setStyle(READONLY_INPUT);
+        tf.setMaxWidth(Double.MAX_VALUE);
+        return tf;
+    }
+
+    private VBox row(String label, TextField tf) {
         Label lbl = new Label(label);
         lbl.setStyle("-fx-font-size: 11px; -fx-text-fill: #6B7280;");
-
-        TextField tf = new TextField(readOnly ? prompt : "");
-        tf.setPromptText(readOnly ? "" : prompt);
-        tf.setEditable(!readOnly);
-        tf.setStyle(readOnly ? READONLY_INPUT : LIGHT_INPUT);
-        tf.setMaxWidth(Double.MAX_VALUE);
-
         return new VBox(4, lbl, tf);
     }
 }

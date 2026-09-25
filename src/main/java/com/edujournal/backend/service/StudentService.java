@@ -37,6 +37,10 @@ public class StudentService {
         return studentDAO.findById(id);
     }
 
+    public Student findByUserId(Integer userId) {
+        return studentDAO.findByUserId(userId);
+    }
+
     public List<Student> findAll() {
         return studentDAO.findAll();
     }

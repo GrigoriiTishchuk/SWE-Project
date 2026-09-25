@@ -39,7 +39,7 @@ public class TopBar {
                 ? currentUser.getFirstName() + " " + currentUser.getLastName()
                 : "Unknown";
         Label name = new Label(fullName);
-        name.setStyle("-fx-font-weight: bold;");
+        name.setStyle("-fx-font-weight: bold; -fx-text-fill: #111827;");
         Label roleLabel = new Label(role.getDisplayName());
         roleLabel.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 11px;");
 

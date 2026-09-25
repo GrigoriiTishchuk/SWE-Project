@@ -35,6 +35,8 @@ public class UserService {
         existing.setFirstName(user.getFirstName());
         existing.setLastName(user.getLastName());
         existing.setUsername(user.getUsername());
+        existing.setEmail(user.getEmail());
+        existing.setPhone(user.getPhone());
 
         userDAO.update(existing);
     }
