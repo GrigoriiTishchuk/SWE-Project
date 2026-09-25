@@ -7,6 +7,8 @@ import com.edujournal.entity.Role;
 import com.edujournal.entity.User;
 import com.edujournal.model.UserDTO;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -63,9 +65,10 @@ public class UserService {
 
         // Generate temporary password
         String tempPassword = UUID.randomUUID().toString().substring(0, 8);
+        System.out.println("[TEMP] Teacher login — username: " + username + ", password: " + tempPassword);
 
         // Password hashing
-        String hashedPassword = Integer.toHexString(tempPassword.hashCode());
+        String hashedPassword = BCrypt.hashpw(tempPassword, BCrypt.gensalt());
 
         // Create entity
         User user = new User();
@@ -86,7 +89,8 @@ public class UserService {
         String username = generateUniqueUsername(firstName, lastName);
         String email = generateEmail(username);
         String tempPassword = UUID.randomUUID().toString().substring(0, 8);
-        String hashedPassword = Integer.toHexString(tempPassword.hashCode());
+        System.out.println("[TEMP] Student login — username: " + username + ", password: " + tempPassword);
+        String hashedPassword = BCrypt.hashpw(tempPassword, BCrypt.gensalt());
 
         User user = new User();
         user.setUsername(username);
