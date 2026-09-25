@@ -1,0 +1,2 @@
+Benchmark                                         Mode  Cnt  Score   Error  Units
+AssessmentsAdditionPerformanceTest.addAssessment  avgt    3  0,138 ± 0,070  ms/op

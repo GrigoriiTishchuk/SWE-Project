@@ -186,13 +186,30 @@ Run the application using Docker
 
 ## Testing Instructions
 
-Unit tests are written with JUnit and can be run with Maven from the project root:
+The project uses JUnit 5 for unit testing, Mockito for mocking, JMH for performance testing, and JaCoCo for code coverage.
+
+Run unit tests:
 
 ```bash
 mvn test
 ```
 
----
+Generate the JaCoCo code coverage report:
+
+```bash
+mvn verify
+```
+
+The coverage report is generated in `public_html/`.
+
+Run performance tests:
+
+```bash
+mvn verify -Pperformance
+```
+
+Performance test results are saved in `performance-results/`.
+
 
 ## Repository Structure
 

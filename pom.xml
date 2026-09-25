@@ -67,6 +67,20 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-core</artifactId>
+            <version>1.37</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-generator-annprocess</artifactId>
+            <version>1.37</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -112,6 +126,273 @@
                     <mainClass>com.edujournal.Main</mainClass>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.openjdk.jmh</groupId>
+                            <artifactId>jmh-generator-annprocess</artifactId>
+                            <version>1.37</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.3</version>
+
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>org.openjdk.jmh.Main</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>performance</id>
+
+            <build>
+                <plugins>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <skipTests>true</skipTests>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>3.1.0</version>
+
+                        <executions>
+                            <execution>
+                                <id>run-performance-tests</id>
+                                <phase>verify</phase>
+
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+
+                                <configuration>
+                                    <target>
+
+                                        <mkdir dir="${project.basedir}/performance-results"/>
+
+                                        <sequential>
+
+                                            <java
+                                                    classname="org.openjdk.jmh.Main"
+                                                    fork="true"
+                                                    failonerror="true">
+
+                                                <classpath>
+                                                    <pathelement location="${project.build.testOutputDirectory}"/>
+                                                    <pathelement location="${project.build.outputDirectory}"/>
+                                                    <path refid="maven.test.classpath"/>
+                                                </classpath>
+
+                                                <arg value="LoginPerformanceTest"/>
+                                                <arg value="-wi"/>
+                                                <arg value="2"/>
+                                                <arg value="-i"/>
+                                                <arg value="3"/>
+                                                <arg value="-f"/>
+                                                <arg value="1"/>
+                                                <arg value="-rf"/>
+                                                <arg value="text"/>
+                                                <arg value="-rff"/>
+                                                <arg value="${project.basedir}/performance-results/login-performance.txt"/>
+
+                                            </java>
+
+
+                                            <java
+                                                    classname="org.openjdk.jmh.Main"
+                                                    fork="true"
+                                                    failonerror="true">
+
+                                                <classpath>
+                                                    <pathelement location="${project.build.testOutputDirectory}"/>
+                                                    <pathelement location="${project.build.outputDirectory}"/>
+                                                    <path refid="maven.test.classpath"/>
+                                                </classpath>
+
+                                                <arg value="TeacherListPerformanceTest"/>
+                                                <arg value="-wi"/>
+                                                <arg value="2"/>
+                                                <arg value="-i"/>
+                                                <arg value="3"/>
+                                                <arg value="-f"/>
+                                                <arg value="1"/>
+                                                <arg value="-rf"/>
+                                                <arg value="text"/>
+                                                <arg value="-rff"/>
+                                                <arg value="${project.basedir}/performance-results/teacher-list-performance.txt"/>
+
+                                            </java>
+
+                                            <java
+                                                    classname="org.openjdk.jmh.Main"
+                                                    fork="true"
+                                                    failonerror="true">
+
+                                                <classpath>
+                                                    <pathelement location="${project.build.testOutputDirectory}"/>
+                                                    <pathelement location="${project.build.outputDirectory}"/>
+                                                    <path refid="maven.test.classpath"/>
+                                                </classpath>
+
+                                                <arg value="StudentListPerformanceTest"/>
+                                                <arg value="-wi"/>
+                                                <arg value="2"/>
+                                                <arg value="-i"/>
+                                                <arg value="3"/>
+                                                <arg value="-f"/>
+                                                <arg value="1"/>
+                                                <arg value="-rf"/>
+                                                <arg value="text"/>
+                                                <arg value="-rff"/>
+                                                <arg value="${project.basedir}/performance-results/student-list-performance.txt"/>
+
+                                            </java>
+
+                                            <java
+                                                    classname="org.openjdk.jmh.Main"
+                                                    fork="true"
+                                                    failonerror="true">
+
+                                                <classpath>
+                                                    <pathelement location="${project.build.testOutputDirectory}"/>
+                                                    <pathelement location="${project.build.outputDirectory}"/>
+                                                    <path refid="maven.test.classpath"/>
+                                                </classpath>
+
+                                                <arg value="CourseAdditionPerformanceTest"/>
+                                                <arg value="-wi"/>
+                                                <arg value="2"/>
+                                                <arg value="-i"/>
+                                                <arg value="3"/>
+                                                <arg value="-f"/>
+                                                <arg value="1"/>
+                                                <arg value="-rf"/>
+                                                <arg value="text"/>
+                                                <arg value="-rff"/>
+                                                <arg value="${project.basedir}/performance-results/course-add-performance.txt"/>
+
+                                            </java>
+
+                                            <java
+                                                    classname="org.openjdk.jmh.Main"
+                                                    fork="true"
+                                                    failonerror="true">
+
+                                                <classpath>
+                                                    <pathelement location="${project.build.testOutputDirectory}"/>
+                                                    <pathelement location="${project.build.outputDirectory}"/>
+                                                    <path refid="maven.test.classpath"/>
+                                                </classpath>
+
+                                                <arg value="AssessmentsAdditionPerformanceTest"/>
+                                                <arg value="-wi"/>
+                                                <arg value="2"/>
+                                                <arg value="-i"/>
+                                                <arg value="3"/>
+                                                <arg value="-f"/>
+                                                <arg value="1"/>
+                                                <arg value="-rf"/>
+                                                <arg value="text"/>
+                                                <arg value="-rff"/>
+                                                <arg value="${project.basedir}/performance-results/assessment-addition-performance.txt"/>
+
+                                            </java>
+
+                                            <java
+                                                    classname="org.openjdk.jmh.Main"
+                                                    fork="true"
+                                                    failonerror="true">
+
+                                                <classpath>
+                                                    <pathelement location="${project.build.testOutputDirectory}"/>
+                                                    <pathelement location="${project.build.outputDirectory}"/>
+                                                    <path refid="maven.test.classpath"/>
+                                                </classpath>
+
+                                                <arg value="GradesAdditionPerformanceTest"/>
+                                                <arg value="-wi"/>
+                                                <arg value="2"/>
+                                                <arg value="-i"/>
+                                                <arg value="3"/>
+                                                <arg value="-f"/>
+                                                <arg value="1"/>
+                                                <arg value="-rf"/>
+                                                <arg value="text"/>
+                                                <arg value="-rff"/>
+                                                <arg value="${project.basedir}/performance-results/grade-addition-performance.txt"/>
+
+                                            </java>
+
+                                            <java
+                                                    classname="org.openjdk.jmh.Main"
+                                                    fork="true"
+                                                    failonerror="true">
+
+                                                <classpath>
+                                                    <pathelement location="${project.build.testOutputDirectory}"/>
+                                                    <pathelement location="${project.build.outputDirectory}"/>
+                                                    <path refid="maven.test.classpath"/>
+                                                </classpath>
+
+                                                <arg value="StudentDataPerformanceTest"/>
+                                                <arg value="-wi"/>
+                                                <arg value="2"/>
+                                                <arg value="-i"/>
+                                                <arg value="3"/>
+                                                <arg value="-f"/>
+                                                <arg value="1"/>
+                                                <arg value="-rf"/>
+                                                <arg value="text"/>
+                                                <arg value="-rff"/>
+                                                <arg value="${project.basedir}/performance-results/student-data-performance.txt"/>
+
+                                            </java>
+
+                                        </sequential>
+
+                                    </target>
+                                </configuration>
+
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                </plugins>
+            </build>
+
+        </profile>
+    </profiles>
+
 </project>
