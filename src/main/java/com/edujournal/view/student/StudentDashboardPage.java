@@ -1,6 +1,12 @@
 package com.edujournal.view.student;
 
+import com.edujournal.backend.service.CourseService;
+import com.edujournal.backend.service.EnrollmentService;
+import com.edujournal.backend.service.StudentService;
+import com.edujournal.backend.utils.UserSession;
 import com.edujournal.entity.Role;
+import com.edujournal.entity.Student;
+import com.edujournal.model.CourseDTO;
 import com.edujournal.view.common.ChartPlaceholder;
 import com.edujournal.view.common.DashboardStatCards;
 import com.edujournal.view.common.TopBar;
@@ -11,7 +17,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-// Everything is hardcoded
+import java.util.List;
 
 public class StudentDashboardPage extends BorderPane {
 
@@ -49,18 +55,50 @@ public class StudentDashboardPage extends BorderPane {
         TextField search = new TextField();
         search.setPromptText("Type the name of course");
 
-        box.getChildren().addAll(
-                heading, search,
-                courseRow("Software Engineering Project 1", "TXK3000-112"),
-                courseRow("Software Engineering Project 2", "TXK3000-113"),
-                courseRow("WEB-Project", "TXK3000-105")
-        );
+        List<CourseDTO> courses = loadStudentCourses();
+
+        VBox courseList = new VBox(8);
+        courses.forEach(c -> courseList.getChildren().add(courseRow(c)));
+
+        search.textProperty().addListener((obs, old, text) -> {
+            String q = text.toLowerCase();
+            courseList.getChildren().clear();
+            courses.stream()
+                    .filter(c -> c.getName().toLowerCase().contains(q) || c.getCode().toLowerCase().contains(q))
+                    .forEach(c -> courseList.getChildren().add(courseRow(c)));
+        });
+
+        box.getChildren().addAll(heading, search, courseList);
         return box;
     }
 
-    private HBox courseRow(String name, String code) {
-        VBox text = new VBox(2, new Label(name), new Label(code));
-        HBox row = new HBox(text);
+    private List<CourseDTO> loadStudentCourses() {
+        Integer userId = UserSession.getInstance().getCurrentUser().getId();
+        Student student = new StudentService().findByUserId(userId);
+        if (student == null) return List.of();
+
+        EnrollmentService enrollmentService = new EnrollmentService();
+        CourseService courseService = new CourseService();
+
+        return enrollmentService.findByStudentId(student.getId()).stream()
+                .map(e -> courseService.getById(e.getCourseId()))
+                .filter(c -> c != null)
+                .toList();
+    }
+
+    private HBox courseRow(CourseDTO course) {
+        Label icon = new Label("📚");
+        icon.setStyle("-fx-font-size: 22px;");
+
+        Label name = new Label(course.getName());
+        name.setStyle("-fx-font-weight: bold; -fx-font-size: 15px;");
+
+        Label code = new Label(course.getCode());
+        code.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 13px;");
+
+        VBox text = new VBox(2, name, code);
+
+        HBox row = new HBox(10, icon, text);
         row.setPadding(new Insets(8));
         row.setStyle("-fx-background-color: #F3F4F6; -fx-background-radius: 6;");
         return row;
