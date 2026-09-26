@@ -49,6 +49,7 @@ public class AdminDashboardPage extends BorderPane {
         box.setPadding(new Insets(16));
         box.setStyle("-fx-background-color: white; -fx-border-color: #E5E7EB; "
                 + "-fx-border-radius: 8; -fx-background-radius: 8;");
+        box.getStylesheets().add(AdminDashboardPage.class.getResource("/css/button.css").toExternalForm());
 
         Label heading = new Label("Quick Actions");
         heading.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
@@ -95,6 +96,9 @@ public class AdminDashboardPage extends BorderPane {
 
         Button viewGroups = new Button("View all groups");
         viewGroups.setOnAction(e -> Main.showPage(new AdminGroupPage(AdminSidebar.build("Academic Groups"), Role.ADMINISTRATOR)));
+
+        List.of(addStudent, addTeacher, addCourse, addGroup, viewStudents, viewTeachers, viewCourses, viewGroups)
+                .forEach(b -> b.getStyleClass().add("btn-primary"));
 
         HBox row1 = new HBox(8, addStudent, addTeacher);
         HBox row2 = new HBox(8, addCourse, addGroup);

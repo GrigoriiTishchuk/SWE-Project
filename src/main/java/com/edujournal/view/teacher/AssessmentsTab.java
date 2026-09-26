@@ -26,9 +26,6 @@ public class AssessmentsTab {
             "-fx-background-color: white; -fx-border-color: #E5E7EB; " +
                     "-fx-border-radius: 8; -fx-background-radius: 8;";
 
-    private static final String BLUE_BTN =
-            "-fx-background-color: #1a3a6b; -fx-text-fill: white; " +
-                    "-fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 10;";
 
     private static final String LIGHT_INPUT =
             "-fx-background-color: #DBEAFE; -fx-background-radius: 6; " +
@@ -124,13 +121,7 @@ public class AssessmentsTab {
 
         table.setPrefHeight(320);
 
-        table.getStylesheets().add(
-                String.valueOf(
-                        AssessmentsTab.class.getResource(
-                                "/css/table.css"
-                        )
-                )
-        );
+        table.getStylesheets().add(AssessmentsTab.class.getResource("/css/table.css").toExternalForm());
 
 
 
@@ -300,7 +291,7 @@ public class AssessmentsTab {
                 Double.MAX_VALUE
         );
 
-        saveBtn.setStyle(BLUE_BTN);
+        saveBtn.getStyleClass().add("btn-primary");
 
         Button updateBtn =
                 new Button("Update");
@@ -309,7 +300,7 @@ public class AssessmentsTab {
                 Double.MAX_VALUE
         );
 
-        updateBtn.setStyle(BLUE_BTN);
+        updateBtn.getStyleClass().add("btn-primary");
 
         updateBtn.setVisible(false);
 
@@ -332,7 +323,8 @@ public class AssessmentsTab {
                             new Button("🗑");
 
                     {
-                        deleteBtn.setStyle("-fx-background-color: #DC2626; -fx-text-fill: white; -fx-background-radius: 6;");
+                        editBtn.getStyleClass().add("btn-secondary");
+                        deleteBtn.getStyleClass().add("btn-delete");
                         editBtn.setOnAction(e -> {
 
                             AssessmentsDTO selected =
@@ -745,9 +737,8 @@ public class AssessmentsTab {
                         rightPanel
                 );
 
-        layout.setAlignment(
-                Pos.TOP_LEFT
-        );
+        layout.setAlignment(Pos.TOP_LEFT);
+        layout.getStylesheets().add(AssessmentsTab.class.getResource("/css/button.css").toExternalForm());
         return layout;
     }
 }

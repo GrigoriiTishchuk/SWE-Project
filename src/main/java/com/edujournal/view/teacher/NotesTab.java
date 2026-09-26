@@ -14,9 +14,6 @@ import java.util.Map;
 
 public class NotesTab {
 
-    private static final String BLUE_BTN =
-            "-fx-background-color: #1a3a6b; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16;";
-
     private static final Map<String, String> STORE = new HashMap<>();
 
     public static Node build(String course, String group) {
@@ -31,7 +28,7 @@ public class NotesTab {
         saved.setVisible(false);
 
         Button saveBtn = new Button("Save");
-        saveBtn.setStyle(BLUE_BTN);
+        saveBtn.getStyleClass().add("btn-primary");
         saveBtn.setOnAction(e -> {
             STORE.put(key, area.getText());
             saved.setVisible(true);
@@ -43,6 +40,7 @@ public class NotesTab {
         btnRow.setAlignment(Pos.CENTER_RIGHT);
 
         VBox vbox = new VBox(8, area, btnRow);
+        vbox.getStylesheets().add(NotesTab.class.getResource("/css/button.css").toExternalForm());
         VBox.setVgrow(area, Priority.ALWAYS);
         return vbox;
     }

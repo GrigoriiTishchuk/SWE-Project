@@ -103,6 +103,7 @@ public class CourseReportPage extends BorderPane {
 
         t.getColumns().addAll(List.of(codeCol, nameCol, groupCol, studentsCol, assessmentsCol));
         t.getItems().addAll(loadCourses());
+        t.getStylesheets().add(CourseReportPage.class.getResource("/css/table.css").toExternalForm());
         return t;
     }
 

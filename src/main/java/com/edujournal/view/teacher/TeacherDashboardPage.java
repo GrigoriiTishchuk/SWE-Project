@@ -45,6 +45,7 @@ public class TeacherDashboardPage extends BorderPane {
         box.setPadding(new Insets(16));
         box.setStyle("-fx-background-color: white; -fx-border-color: #E5E7EB; "
                 + "-fx-border-radius: 8; -fx-background-radius: 8;");
+        box.getStylesheets().add(TeacherDashboardPage.class.getResource("/css/button.css").toExternalForm());
 
         Label heading = new Label("Quick Actions");
         heading.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
@@ -66,6 +67,9 @@ public class TeacherDashboardPage extends BorderPane {
 
         Button generateReport = new Button("Generate Course's report");
         generateReport.setOnAction(e -> Main.showPage(new CourseReportPage(TeacherSidebar.build("Course's report"), Role.TEACHER)));
+
+        java.util.List.of(addAssessment, viewCourses, addGrade, viewProfile, generateReport)
+                .forEach(b -> b.getStyleClass().add("btn-primary"));
 
         HBox row1 = new HBox(8, addAssessment, viewCourses);
         HBox row2 = new HBox(8, addGrade, viewProfile);

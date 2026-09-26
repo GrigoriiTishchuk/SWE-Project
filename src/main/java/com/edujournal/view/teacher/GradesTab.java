@@ -20,8 +20,6 @@ import java.util.*;
 
 public class GradesTab {
 
-    private static final String BLUE_BTN =
-            "-fx-background-color: #1a3a6b; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16;";
 
     public static Node build(String course, String group) {
         AssessmentsService assessmentsService = new AssessmentsService();
@@ -94,7 +92,7 @@ public class GradesTab {
         TableView<String[]> table = new TableView<>();
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         table.setPrefHeight(400);
-        table.getStylesheets().add(String.valueOf(GradesTab.class.getResource("/css/table.css")));
+        table.getStylesheets().add(GradesTab.class.getResource("/css/table.css").toExternalForm());
 
         TableColumn<String[], String> numCol = new TableColumn<>("#");
         numCol.setCellValueFactory(d -> new SimpleStringProperty(
@@ -157,7 +155,7 @@ public class GradesTab {
         exportHeaders[2 + colCount] = "Final Grade";
 
         Button csvBtn = new Button("Export CSV");
-        csvBtn.setStyle(BLUE_BTN);
+        csvBtn.getStyleClass().add("btn-primary");
         csvBtn.setOnAction(e -> {
             List<String[]> rows = new ArrayList<>();
             for (int r = 0; r < rowCount; r++) {
@@ -172,7 +170,7 @@ public class GradesTab {
         });
 
         Button pdfBtn = new Button("Export PDF");
-        pdfBtn.setStyle(BLUE_BTN);
+        pdfBtn.getStyleClass().add("btn-primary");
         pdfBtn.setOnAction(e -> {
             List<String[]> rows = new ArrayList<>();
             for (int r = 0; r < rowCount; r++) {
@@ -188,7 +186,7 @@ public class GradesTab {
         });
 
         Button fixSave = new Button("Fix / Edit");
-        fixSave.setStyle(BLUE_BTN);
+        fixSave.getStyleClass().add("btn-primary");
 
         fixSave.setOnAction(e -> {
             if (editing[0]) {
@@ -236,6 +234,8 @@ public class GradesTab {
         btnRow.setAlignment(Pos.CENTER_RIGHT);
 
         VBox vbox = new VBox(8, btnRow, table);
+        vbox.getStylesheets().add(GradesTab.class.getResource("/css/table.css").toExternalForm());
+        vbox.getStylesheets().add(GradesTab.class.getResource("/css/button.css").toExternalForm());
         VBox.setVgrow(table, Priority.ALWAYS);
         return vbox;
     }
