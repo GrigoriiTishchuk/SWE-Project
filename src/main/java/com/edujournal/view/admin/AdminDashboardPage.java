@@ -59,25 +59,29 @@ public class AdminDashboardPage extends BorderPane {
 
         Button addStudent  = new Button("Add student");
         addStudent.setOnAction(e -> {
-            new AdminStudentController(Role.ADMINISTRATOR).showAddDialog();
+            AdminStudentController sController = new AdminStudentController(Role.ADMINISTRATOR);
+            sController.showAddDialog();
             Main.showPage(new AdminStudentPage(AdminSidebar.build("Students"), Role.ADMINISTRATOR));
         });
 
         Button addTeacher  = new Button("Add teacher");
         addTeacher.setOnAction(e -> {
-            new AdminTeacherController(Role.ADMINISTRATOR).showAddDialog();
+            AdminTeacherController tController = new AdminTeacherController(Role.ADMINISTRATOR);
+            tController.showAddDialog();
             Main.showPage(new AdminTeacherPage(AdminSidebar.build("Teachers"), Role.ADMINISTRATOR));
         });
 
         Button addCourse   = new Button("Add course");
         addCourse.setOnAction(e -> {
-            new CourseController(Role.ADMINISTRATOR).showAddDialog();
+            CourseController cController = new CourseController(Role.ADMINISTRATOR);
+            cController.showAddDialog();
             Main.showPage(new CoursePage(AdminSidebar.build("Courses"), Role.ADMINISTRATOR));
         });
 
         Button addGroup    = new Button("Add group");
         addGroup.setOnAction(e -> {
-            new AdminGroupController(Role.ADMINISTRATOR).showAddDialog();
+            AdminGroupController gController = new AdminGroupController(Role.ADMINISTRATOR);
+            gController.showAddDialog();
             Main.showPage(new AdminGroupPage(AdminSidebar.build("Groups"), Role.ADMINISTRATOR));
         });
 
