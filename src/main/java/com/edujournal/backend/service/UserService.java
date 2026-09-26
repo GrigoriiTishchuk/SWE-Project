@@ -60,7 +60,7 @@ public class UserService {
     public UserDTO createTeacher(String firstName, String lastName, String phone) {
         String username = generateUniqueUsername(firstName, lastName);
 
-        // Generate eamil
+        // Generate email
         String email = generateEmail(username);
 
         // Generate temporary password

@@ -16,8 +16,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-// Everything is hardcoded
-
 public class TeacherDashboardPage extends BorderPane {
 
     public TeacherDashboardPage() {

@@ -20,8 +20,6 @@ import javafx.scene.layout.VBox;
 
 import java.util.List;
 
-// Everything is hardcoded
-
 public class AdminDashboardPage extends BorderPane {
 
     public AdminDashboardPage() {
