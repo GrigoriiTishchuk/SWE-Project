@@ -323,8 +323,7 @@ public class AssessmentsTab {
                             new Button("🗑");
 
                     {
-                        editBtn.getStyleClass().add("btn-secondary");
-                        deleteBtn.getStyleClass().add("btn-delete");
+                        deleteBtn.setStyle("-fx-background-color: #DC2626; -fx-text-fill: white; -fx-background-radius: 6;");
                         editBtn.setOnAction(e -> {
 
                             AssessmentsDTO selected =

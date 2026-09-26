@@ -154,6 +154,9 @@ public class GradesTab {
         for (int i = 0; i < colCount; i++) exportHeaders[2 + i] = assessments.get(i).getTitle();
         exportHeaders[2 + colCount] = "Final Grade";
 
+        Button fixSave = new Button("Fix / Edit");
+        fixSave.getStyleClass().add("btn-primary");
+
         Button csvBtn = new Button("Export CSV");
         csvBtn.getStyleClass().add("btn-primary");
         csvBtn.setOnAction(e -> {
@@ -184,9 +187,6 @@ public class GradesTab {
             String subtitle = "Course: " + course + (group != null && !group.isEmpty() ? "   Group: " + group : "");
             ExportUtil.exportPdf(pdfBtn.getScene().getWindow(), "gradebook", "Gradebook", subtitle, exportHeaders, rows);
         });
-
-        Button fixSave = new Button("Fix / Edit");
-        fixSave.getStyleClass().add("btn-primary");
 
         fixSave.setOnAction(e -> {
             if (editing[0]) {
@@ -230,7 +230,7 @@ public class GradesTab {
             fixSave.setText(editing[0] ? "Save Changes" : "Fix / Edit");
         });
 
-        HBox btnRow = new HBox(8, csvBtn, pdfBtn, fixSave);
+        HBox btnRow = new HBox(8, fixSave, csvBtn, pdfBtn);
         btnRow.setAlignment(Pos.CENTER_RIGHT);
 
         VBox vbox = new VBox(8, btnRow, table);

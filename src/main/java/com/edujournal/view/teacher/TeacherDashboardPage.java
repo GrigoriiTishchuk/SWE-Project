@@ -68,14 +68,12 @@ public class TeacherDashboardPage extends BorderPane {
         Button generateReport = new Button("Generate Course's report");
         generateReport.setOnAction(e -> Main.showPage(new CourseReportPage(TeacherSidebar.build("Course's report"), Role.TEACHER)));
 
-        java.util.List.of(addAssessment, viewCourses, addGrade, viewProfile, generateReport)
-                .forEach(b -> b.getStyleClass().add("btn-primary"));
+        java.util.List<Button> all = java.util.List.of(addAssessment, viewCourses, addGrade, viewProfile, generateReport);
+        all.forEach(b -> b.getStyleClass().add("btn-primary"));
 
         HBox row1 = new HBox(8, addAssessment, viewCourses);
         HBox row2 = new HBox(8, addGrade, viewProfile);
         HBox row3 = new HBox(8, generateReport);
-
-        java.util.List<Button> all = java.util.List.of(addAssessment, viewCourses, addGrade, viewProfile, generateReport);
 
         search.textProperty().addListener((obs, old, text) -> {
             if (text.isEmpty()) box.setMinWidth(0);
