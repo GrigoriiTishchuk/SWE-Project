@@ -1,0 +1,35 @@
+.btn-primary {
+    -fx-background-color: #1a3a6b;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-padding: 8 16;
+}
+
+.btn-primary:hover {
+    -fx-background-color: #243f7a;
+}
+
+.btn-secondary {
+    -fx-background-color: #6B7280;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-padding: 8 16;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: #4B5563;
+}
+
+.btn-delete {
+    -fx-background-color: #DC2626;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-padding: 8 16;
+}
+
+.btn-delete:hover {
+    -fx-background-color: #B91C1C;
+}
