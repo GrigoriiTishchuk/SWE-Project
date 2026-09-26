@@ -44,15 +44,17 @@ public class CourseReportPage extends BorderPane {
 
         table = buildTable();
 
-        MenuButton exportBtn = new MenuButton("Export");
-        MenuItem csvItem = new MenuItem("Export CSV");
-        MenuItem pdfItem = new MenuItem("Export PDF");
-        csvItem.setOnAction(e -> ExportUtil.exportCsv(getScene().getWindow(), "courses_report", HEADERS, buildRows()));
-        pdfItem.setOnAction(e -> ExportUtil.exportPdf(getScene().getWindow(), "courses_report", "Courses Report", null, HEADERS, buildRows()));
-        exportBtn.getItems().addAll(csvItem, pdfItem);
+        Button csvBtn = new Button("Export CSV");
+        csvBtn.getStyleClass().add("btn-primary");
+        csvBtn.setOnAction(e -> ExportUtil.exportCsv(getScene().getWindow(), "courses_report", HEADERS, buildRows()));
 
-        HBox toolbar = new HBox(exportBtn);
+        Button pdfBtn = new Button("Export PDF");
+        pdfBtn.getStyleClass().add("btn-primary");
+        pdfBtn.setOnAction(e -> ExportUtil.exportPdf(getScene().getWindow(), "courses_report", "Courses Report", null, HEADERS, buildRows()));
+
+        HBox toolbar = new HBox(8, csvBtn, pdfBtn);
         toolbar.setAlignment(Pos.CENTER_RIGHT);
+        toolbar.getStylesheets().add(CourseReportPage.class.getResource("/css/button.css").toExternalForm());
 
         box.getChildren().addAll(
                 TopBar.build("Course's report", role, true, year -> { selectedYear = year; reloadTable(); }),
@@ -103,6 +105,7 @@ public class CourseReportPage extends BorderPane {
 
         t.getColumns().addAll(List.of(codeCol, nameCol, groupCol, studentsCol, assessmentsCol));
         t.getItems().addAll(loadCourses());
+        t.getStylesheets().add(CourseReportPage.class.getResource("/css/table.css").toExternalForm());
         return t;
     }
 

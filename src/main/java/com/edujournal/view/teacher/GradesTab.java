@@ -20,8 +20,6 @@ import java.util.*;
 
 public class GradesTab {
 
-    private static final String BLUE_BTN =
-            "-fx-background-color: #1a3a6b; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16;";
 
     public static Node build(String course, String group) {
         AssessmentsService assessmentsService = new AssessmentsService();
@@ -94,7 +92,7 @@ public class GradesTab {
         TableView<String[]> table = new TableView<>();
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         table.setPrefHeight(400);
-        table.getStylesheets().add(String.valueOf(GradesTab.class.getResource("/css/table.css")));
+        table.getStylesheets().add(GradesTab.class.getResource("/css/table.css").toExternalForm());
 
         TableColumn<String[], String> numCol = new TableColumn<>("#");
         numCol.setCellValueFactory(d -> new SimpleStringProperty(
@@ -156,8 +154,11 @@ public class GradesTab {
         for (int i = 0; i < colCount; i++) exportHeaders[2 + i] = assessments.get(i).getTitle();
         exportHeaders[2 + colCount] = "Final Grade";
 
+        Button fixSave = new Button("Fix / Edit");
+        fixSave.getStyleClass().add("btn-primary");
+
         Button csvBtn = new Button("Export CSV");
-        csvBtn.setStyle(BLUE_BTN);
+        csvBtn.getStyleClass().add("btn-primary");
         csvBtn.setOnAction(e -> {
             List<String[]> rows = new ArrayList<>();
             for (int r = 0; r < rowCount; r++) {
@@ -172,7 +173,7 @@ public class GradesTab {
         });
 
         Button pdfBtn = new Button("Export PDF");
-        pdfBtn.setStyle(BLUE_BTN);
+        pdfBtn.getStyleClass().add("btn-primary");
         pdfBtn.setOnAction(e -> {
             List<String[]> rows = new ArrayList<>();
             for (int r = 0; r < rowCount; r++) {
@@ -186,9 +187,6 @@ public class GradesTab {
             String subtitle = "Course: " + course + (group != null && !group.isEmpty() ? "   Group: " + group : "");
             ExportUtil.exportPdf(pdfBtn.getScene().getWindow(), "gradebook", "Gradebook", subtitle, exportHeaders, rows);
         });
-
-        Button fixSave = new Button("Fix / Edit");
-        fixSave.setStyle(BLUE_BTN);
 
         fixSave.setOnAction(e -> {
             if (editing[0]) {
@@ -232,15 +230,17 @@ public class GradesTab {
             fixSave.setText(editing[0] ? "Save Changes" : "Fix / Edit");
         });
 
-        HBox btnRow = new HBox(8, csvBtn, pdfBtn, fixSave);
+        HBox btnRow = new HBox(8, fixSave, csvBtn, pdfBtn);
         btnRow.setAlignment(Pos.CENTER_RIGHT);
 
         VBox vbox = new VBox(8, btnRow, table);
+        vbox.getStylesheets().add(GradesTab.class.getResource("/css/table.css").toExternalForm());
+        vbox.getStylesheets().add(GradesTab.class.getResource("/css/button.css").toExternalForm());
         VBox.setVgrow(table, Priority.ALWAYS);
         return vbox;
     }
 
-    private static String computeFinalGrade(List<Assessments> assessments, Map<Integer, Grades> studentGrades, int colCount) {
+    public static String computeFinalGrade(List<Assessments> assessments, Map<Integer, Grades> studentGrades, int colCount) {
         if (studentGrades == null || studentGrades.size() < colCount
                 || studentGrades.values().stream().anyMatch(g -> g.getScore() == null)) {
             return "—";

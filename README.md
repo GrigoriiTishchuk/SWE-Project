@@ -126,12 +126,18 @@ sprints.
 
 ---
 
-## Sprint 3 – Feature Implementation and Testing (Planned)
+## Sprint 3 – CI/CD Integration, Feature Extension, Basic Docker Image, and Testing
 
 - Implement student and grade management features
 - Complete grade calculation logic
 - Implement report card generation
 - Perform unit testing using JUnit
+- Integrated Jenkins CI/CD pipeline (checkout, Maven build, JUnit tests, JaCoCo coverage report)
+- Created and tested a local Docker image of the project
+- Extended unit test suite with JaCoCo code coverage reporting
+- User authentication with input validation and jBCrypt password hashing
+- Admin reporting and analytics dashboard
+- CSV and PDF export for gradebook and course report
 
 ---
 

@@ -70,15 +70,15 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
         arrow.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
         Button addStudentBtn = new Button("Add");
-        addStudentBtn.setStyle("-fx-background-color: #4A90E2; -fx-text-fill: white;");
+        addStudentBtn.getStyleClass().add("btn-primary");
         addStudentBtn.setOnAction(e -> showAddStudentDialog(group));
 
         Button removeStudentBtn = new Button("Remove");
-        removeStudentBtn.setStyle("-fx-background-color: #4A90E2; -fx-text-fill: white;");
+        removeStudentBtn.getStyleClass().add("btn-delete");
         removeStudentBtn.setOnAction(e -> showRemoveStudentDialog(group));
 
         Button showStudentsBtn = new Button("Show students");
-        showStudentsBtn.setStyle("-fx-background-color: #4A90E2; -fx-text-fill: white;");
+        showStudentsBtn.getStyleClass().add("btn-secondary");
         showStudentsBtn.setOnAction(e -> showGroupStudentsWindow(group));
 
         HBox header = new HBox(nameLabel, arrow);
@@ -393,6 +393,7 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
         phoneCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPhone()));
 
         table.getColumns().addAll(firstNameCol, lastNameCol, numberCol, emailCol, phoneCol);
+        table.getStylesheets().add(AdminGroupController.class.getResource("/css/table.css").toExternalForm());
 
         ScrollPane scrollPane = new ScrollPane(table);
         scrollPane.setFitToWidth(true);
