@@ -240,7 +240,7 @@ public class GradesTab {
         return vbox;
     }
 
-    private static String computeFinalGrade(List<Assessments> assessments, Map<Integer, Grades> studentGrades, int colCount) {
+    public static String computeFinalGrade(List<Assessments> assessments, Map<Integer, Grades> studentGrades, int colCount) {
         if (studentGrades == null || studentGrades.size() < colCount
                 || studentGrades.values().stream().anyMatch(g -> g.getScore() == null)) {
             return "—";
