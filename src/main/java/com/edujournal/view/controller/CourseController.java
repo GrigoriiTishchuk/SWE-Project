@@ -114,7 +114,6 @@ public class CourseController extends BaseController<CourseDTO> {
 
     @Override
     protected void configureColumns() {
-        // TODO: Setup columns width
         TableColumn<CourseDTO, String> idCol = new TableColumn<>("ID");
         idCol.setCellValueFactory(c -> new SimpleStringProperty(String.valueOf(c.getValue().getId())));
 

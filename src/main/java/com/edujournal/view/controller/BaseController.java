@@ -17,16 +17,26 @@ public abstract class BaseController<T> extends BorderPane {
     protected TextField searchField = new TextField();
     protected ComboBox<String> filterCombo = new ComboBox<>();
 
-    protected Button addBtn = new Button("Add");
-    protected Button editBtn = new Button("Edit");
+    protected Button addBtn    = new Button("Add");
+    protected Button editBtn   = new Button("Edit");
     protected Button deleteBtn = new Button("Delete");
     protected Button viewBtn = new Button("View");
     protected Button reportBtn = new Button("Student Report");
+
+    {
+        addBtn.getStyleClass().add("btn-primary");
+        editBtn.getStyleClass().add("btn-secondary");
+        deleteBtn.getStyleClass().add("btn-delete");
+        viewBtn.getStyleClass().add("btn-secondary");
+        reportBtn.getStyleClass().add("btn-secondary");
+    }
 
     protected boolean useCards = false;
     protected Function<T, Node> cardBuilder = null;
 
     public BaseController() {
+        getStylesheets().add(BaseController.class.getResource("/css/table.css").toExternalForm());
+        getStylesheets().add(BaseController.class.getResource("/css/button.css").toExternalForm());
         setupSearchHandlers();
         setupLayout();
         setupButtons();
