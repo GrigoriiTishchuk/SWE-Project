@@ -14,10 +14,12 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +65,7 @@ public class StudentReportController {
         }
 
         addCourseSections(root, report);
-        root.getChildren().add(buildOverallGradeSection());
+        //root.getChildren().add(buildOverallGradeSection());
         return root;
     }
 
@@ -107,25 +109,50 @@ public class StudentReportController {
         }
     }
 
-    private TableView<StudentReportDTO> createCourseTable(List<StudentReportDTO> records) {
-        TableView<StudentReportDTO> table = new TableView<>();
-        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+    private ScrollPane createCourseTable(List<StudentReportDTO> records) {
+        TableView<List<String>> table = new TableView<>();
+        table.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
-        TableColumn<StudentReportDTO, String> assessmentColumn = new TableColumn<>("Assessment");
-        assessmentColumn.setCellValueFactory(data ->
-                        new SimpleStringProperty(data.getValue().getAssessmentTitle())
+        TableColumn<List<String>, String> labelColumn = new TableColumn<>("Assessment");
+        labelColumn.setPrefWidth(140);
+        labelColumn.setCellValueFactory(data ->
+                new SimpleStringProperty(data.getValue().get(0))
         );
+        table.getColumns().add(labelColumn);
 
-        TableColumn<StudentReportDTO, Double>  scoreColumn = new TableColumn<>("Score");
-        scoreColumn.setCellValueFactory(
-                data ->
-                        new SimpleObjectProperty<>(data.getValue().getScore())
-        );
 
-        table.getColumns().addAll(assessmentColumn, scoreColumn);
-        table.setItems(FXCollections.observableArrayList(records));
+        for (int i = 0; i < records.size(); i++) {
+            StudentReportDTO dto = records.get(i);
+            final int columnIndex = i + 1;
+            TableColumn<List<String>, String> column = new TableColumn<>(dto.getAssessmentTitle());
+            column.setPrefWidth(180);
+            column.setCellValueFactory(data ->
+                    new SimpleStringProperty(data.getValue().get(columnIndex))
+            );
+            table.getColumns().add(column);
+        }
 
-        return table;
+        List<String> scoreRow = new ArrayList<>();
+        scoreRow.add("Score");
+        for (StudentReportDTO dto : records) {
+            scoreRow.add(dto.getScore() != null ? dto.getScore().toString() : "-");
+        }
+
+        table.setItems(FXCollections.observableArrayList(List.of(scoreRow)));
+
+        table.setFixedCellSize(30);
+        table.setPrefHeight(60);
+        table.setMaxHeight(60);
+        table.setSelectionModel(null);
+
+        ScrollPane scrollPane = new ScrollPane(table);
+        scrollPane.setFitToHeight(true);
+        scrollPane.setFitToWidth(false);
+
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+
+        return scrollPane;
     }
 
     private VBox buildOverallGradeSection() {
