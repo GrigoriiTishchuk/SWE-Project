@@ -53,6 +53,7 @@ pipeline {
                 script {
                     withEnv(['PATH+DOCKER=C:\\Program Files\\Docker\\Docker\\resources\\bin']) {
                                 bat 'docker build -t edujournal-frontend:latest .'
+                    }
                 }
             }
         }
