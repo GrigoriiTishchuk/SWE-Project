@@ -4,27 +4,22 @@ import com.edujournal.backend.service.AcademicGroupService;
 import com.edujournal.backend.service.AssessmentsService;
 import com.edujournal.backend.service.CourseService;
 import com.edujournal.backend.service.EnrollmentService;
+import com.edujournal.backend.service.StudentReportService;
 import com.edujournal.backend.service.StudentService;
 import com.edujournal.backend.utils.UserSession;
-import com.edujournal.dao.GradesDAO;
 import com.edujournal.dao.UserDAO;
-import com.edujournal.entity.Assessments;
 import com.edujournal.entity.Enrollment;
-import com.edujournal.entity.Grades;
 import com.edujournal.entity.Role;
 import com.edujournal.model.CourseDTO;
 import com.edujournal.view.StatCard;
-import com.edujournal.view.teacher.GradesTab;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class DashboardStatCards {
 
@@ -59,36 +54,25 @@ public class DashboardStatCards {
                 com.edujournal.entity.Student student = new StudentService().findByUserId(userId);
                 EnrollmentService enrollmentService = new EnrollmentService();
                 AssessmentsService assessmentsService = new AssessmentsService();
-                GradesDAO gradesDAO = new GradesDAO();
+                CourseService courseService = new CourseService();
 
                 int enrolledCourses = 0;
                 int assessments = 0;
                 int completed = 0;
-                double gradeSum = 0;
-                int gradeCount = 0;
-                CourseService courseService = new CourseService();
+                String avgGrade = "—";
 
                 if (student != null) {
                     List<Enrollment> enrollments = enrollmentService.findByStudentId(student.getId());
                     enrolledCourses = enrollments.size();
                     for (Enrollment e : enrollments) {
-                        List<Assessments> courseAssessments = assessmentsService.getByCourseId(e.getCourseId());
-                        assessments += courseAssessments.size();
-                        Map<Integer, Grades> gradeMap = gradesDAO.findByEnrollment(e.getId()).stream()
-                                .collect(Collectors.toMap(Grades::getAssessmentId, g -> g));
-                        String result = GradesTab.computeFinalGrade(courseAssessments, gradeMap, courseAssessments.size());
-                        if (!result.equals("—")) {
-                            gradeSum += Integer.parseInt(result.substring(0, 1));
-                            gradeCount++;
-                        }
+                        assessments += assessmentsService.getByCourseId(e.getCourseId()).size();
                         CourseDTO course = courseService.getById(e.getCourseId());
                         if (course != null && course.getEndDate() != null && course.getEndDate().isBefore(LocalDate.now())) {
                             completed++;
                         }
                     }
+                    avgGrade = new StudentReportService().computeAverageGrade(student.getId());
                 }
-
-                String avgGrade = gradeCount == 0 ? "—" : String.format("%.1f", gradeSum / gradeCount);
 
                 box.getChildren().addAll(
                         new StatCard("Average Grade",   avgGrade,                      "/images/av_grade_icon.png"),

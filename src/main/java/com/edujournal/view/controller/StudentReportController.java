@@ -1,15 +1,19 @@
 package com.edujournal.view.controller;
 
 import com.edujournal.backend.service.AcademicGroupService;
+import com.edujournal.backend.service.AssessmentsService;
+import com.edujournal.backend.service.EnrollmentService;
 import com.edujournal.backend.service.StudentReportService;
 import com.edujournal.backend.service.StudentService;
+import com.edujournal.dao.GradesDAO;
 import com.edujournal.entity.AcademicGroup;
-import com.edujournal.entity.AssessmentType;
+import com.edujournal.entity.Assessments;
+import com.edujournal.entity.Enrollment;
+import com.edujournal.entity.Grades;
 import com.edujournal.entity.Role;
-import com.edujournal.model.AcademicGroupDTO;
 import com.edujournal.model.StudentDTO;
 import com.edujournal.model.StudentReportDTO;
-import javafx.beans.property.SimpleObjectProperty;
+import com.edujournal.view.teacher.GradesTab;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -33,6 +37,9 @@ public class StudentReportController {
     private final StudentService studentService = new StudentService();
     private final StudentReportService reportService = new StudentReportService();
     private final AcademicGroupService groupService = new AcademicGroupService();
+    private final EnrollmentService enrollmentService = new EnrollmentService();
+    private final AssessmentsService assessmentsService = new AssessmentsService();
+    private final GradesDAO gradesDAO = new GradesDAO();
 
     public StudentReportController(Role role, Integer studentId) {
         this.role = role;
@@ -55,7 +62,7 @@ public class StudentReportController {
             return root;
         }
 
-        root.getChildren().add(buildStudentCard(student));
+        root.getChildren().add(buildStudentCard(student, reportService.computeAverageGrade(studentId)));
 
         List<StudentReportDTO> report = reportService.buildReport(studentId);
 
@@ -69,17 +76,19 @@ public class StudentReportController {
         return root;
     }
 
-    private VBox buildStudentCard(StudentDTO student) {
+    private VBox buildStudentCard(StudentDTO student, String avgGrade) {
         String groupName = findGroupName(student.getAcademicGroupId());
 
         VBox card = new VBox(5);
         card.getChildren().addAll(
                 new Label(student.getFirstName() + " " + student.getLastName()),
                 new Label("Group: " + groupName),
-                new Label("Student Number: " + student.getStudentNumber())
+                new Label("Student Number: " + student.getStudentNumber()),
+                new Label("Average Grade: " + avgGrade)
         );
         return card;
     }
+
 
     private String findGroupName(Integer groupId) {
         if (groupId == null) {
@@ -105,11 +114,11 @@ public class StudentReportController {
             Label courseTitle = new Label(first.getCourseName());
 
             root.getChildren().add(courseTitle);
-            root.getChildren().add(createCourseTable(records));
+            root.getChildren().add(createCourseTable(records, first.getCourseId()));
         }
     }
 
-    private ScrollPane createCourseTable(List<StudentReportDTO> records) {
+    private ScrollPane createCourseTable(List<StudentReportDTO> records, Integer courseId) {
         TableView<List<String>> table = new TableView<>();
         table.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
@@ -137,6 +146,19 @@ public class StudentReportController {
         for (StudentReportDTO dto : records) {
             scoreRow.add(dto.getScore() != null ? dto.getScore().toString() : "-");
         }
+
+        Enrollment enrollment = enrollmentService.findByStudentId(studentId).stream()
+                .filter(e -> e.getCourseId().equals(courseId)).findFirst().orElse(null);
+        List<Assessments> assessments = assessmentsService.getByCourseId(courseId);
+        Map<Integer, Grades> gradeMap = enrollment == null ? Map.of() :
+                gradesDAO.findByEnrollment(enrollment.getId()).stream()
+                        .collect(Collectors.toMap(Grades::getAssessmentId, g -> g));
+        String finalGrade = GradesTab.computeFinalGrade(assessments, gradeMap, assessments.size());
+
+        TableColumn<List<String>, String> finalGradeCol = new TableColumn<>("Final Grade");
+        finalGradeCol.setPrefWidth(120);
+        finalGradeCol.setCellValueFactory(data -> new SimpleStringProperty(finalGrade));
+        table.getColumns().add(finalGradeCol);
 
         table.setItems(FXCollections.observableArrayList(List.of(scoreRow)));
 

@@ -2,7 +2,6 @@ package com.edujournal.view.admin;
 
 import com.edujournal.Main;
 import com.edujournal.entity.Role;
-import com.edujournal.entity.Student;
 import com.edujournal.view.Sidebar;
 import com.edujournal.view.common.CoursePage;
 import com.edujournal.view.common.CourseReportPage;

@@ -42,7 +42,7 @@ public class StudentReportPage extends BorderPane {
         VBox box = new VBox(12);
         box.setPadding(new Insets(24));
 
-        box.getChildren().add(TopBar.build("Students", role, false));
+        box.getChildren().add(TopBar.build("Student's Report", role, false));
 
         StudentReportController controller =
                 new StudentReportController(role, studentId);

@@ -157,6 +157,10 @@ public class AdminStudentController extends BaseController<StudentDTO> {
         StudentDTO selectedStudent =
                 table.getSelectionModel().getSelectedItem();
 
+        if (selectedStudent == null) {
+            return;
+        }
+
         Main.showPage(
                 new StudentReportPage(
                         AdminSidebar.build("Student's report"),
@@ -164,10 +168,6 @@ public class AdminStudentController extends BaseController<StudentDTO> {
                         selectedStudent.getStudentId()
                 )
         );
-
-        if (selectedStudent == null) {
-            return;
-        }
     }
 
     @Override
