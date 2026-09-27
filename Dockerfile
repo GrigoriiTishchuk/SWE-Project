@@ -9,4 +9,18 @@ COPY src ./src
 
 RUN mvn clean package -DskipTests
 
+
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libx11-6 \
+    libxext6 \
+    libxrender1 \
+    libxtst6 \
+    libxi6 \
+    libgtk-3-0 \
+    libgl1-mesa-glx \
+    libasound2 \
+    && rm -rf /var/lib/apt/lists/*
+
+
 CMD ["java", "-cp", "target/edujournal-frontend-0.1.0.jar", "com.edujournal.Launcher"]
