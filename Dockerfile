@@ -12,6 +12,7 @@ RUN mvn clean package -DskipTests
 
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    xvfb \
     libx11-6 \
     libxext6 \
     libxrender1 \
@@ -23,4 +24,4 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 
-CMD ["java", "-cp", "target/edujournal-frontend-0.1.0.jar", "com.edujournal.Launcher"]
+CMD ["xvfb-run", "--auto-servernum", "java", "-cp", "target/edujournal-frontend-0.1.0.jar", "com.edujournal.Launcher"]
