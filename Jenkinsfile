@@ -6,12 +6,9 @@ pipeline {
     }
 
     environment {
-        // Path to Docker Desktop on Windows
-        PATH = "C:\\Program Files\\Docker\\Docker\\resources\\bin;${env.PATH}"
-        // id for Docker Hub credentials in Jenkins (you need to create this credential in Jenkins)
-        DOCKERHUB_CREDENTIALS_ID = 'ca3e514b-32b9-4ac2-ab59-c733071649c5'
 
-        //account name and repo name on Docker Hub
+        PATH = "C:\\Program Files\\Docker\\Docker\\resources\\bin;${env.PATH}"
+        DOCKERHUB_CREDENTIALS_ID = 'ca3e514b-32b9-4ac2-ab59-c733071649c5'
         DOCKERHUB_REPO = 'gregtish/edujournal-frontend'
         DOCKER_IMAGE_TAG = 'latest'
     }
@@ -52,7 +49,7 @@ pipeline {
             steps {
                 script {
                     withEnv(['PATH+DOCKER=C:\\Program Files\\Docker\\Docker\\resources\\bin']) {
-                                bat 'docker build -t edujournal-frontend:latest .'
+                        bat "docker build -t ${DOCKERHUB_REPO}:${DOCKER_IMAGE_TAG} ."
                     }
                 }
             }
@@ -61,7 +58,6 @@ pipeline {
         stage('Push Docker Image to Docker Hub') {
             steps {
                 script {
-                    // authorisation and sending container to Docker Hub
                     docker.withRegistry('', DOCKERHUB_CREDENTIALS_ID) {
                         docker.image("${DOCKERHUB_REPO}:${DOCKER_IMAGE_TAG}").push()
                     }
