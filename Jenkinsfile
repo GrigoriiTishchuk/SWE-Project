@@ -27,19 +27,16 @@ pipeline {
                                                   usernameVariable: 'DB_USER',
                                                   passwordVariable: 'DB_PASS')]) {
                     bat '''
-                        cat > .env <<EOF
-                        DB_HOST=localhost
-                        DB_PORT=3306
-                        DB_NAME=edujournal
-                        DB_USERNAME=$DB_USER
-                        DB_PASSWORD=$DB_PASS
-                        DB_URL=jdbc:mariadb://localhost:3306/edujournal
-                        EOF
-                        '''
+                        echo DB_HOST=localhost > .env
+                        echo DB_PORT=3306 >> .env
+                        echo DB_NAME=edujournal >> .env
+                        echo DB_USERNAME=%DB_USER% >> .env
+                        echo DB_PASSWORD=%DB_PASS% >> .env
+                        echo DB_URL=jdbc:mariadb://localhost:3306/edujournal >> .env
+                    '''
                 }
             }
         }
-
 
 
         stage('Run Tests & Build') {
