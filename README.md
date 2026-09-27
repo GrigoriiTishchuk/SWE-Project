@@ -217,6 +217,12 @@ mvn clean verify -Pperformance
 Performance test results are saved in `performance-results/`.
 
 
+## Documentation
+
+- [Feature Documentation](Documents/Features.md) – full description of implemented features by role
+
+---
+
 ## Repository Structure
 
 ```
