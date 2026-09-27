@@ -10,7 +10,9 @@ import com.edujournal.backend.service.UserService;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
+import com.edujournal.view.LoginPage;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 
@@ -23,6 +25,12 @@ public class AdminE2ETest extends ApplicationTest {
     public void start(Stage stage) {
         new Main().start(stage);
         stage.show();
+    }
+
+    @BeforeEach
+    void resetToLoginPage() {
+        interact(() -> Main.showPage(new LoginPage()));
+        sleep(800);
     }
 
     @AfterEach
@@ -338,10 +346,10 @@ public class AdminE2ETest extends ApplicationTest {
         waitForFxEvents();
 
         clickOn("Start date");
-        write("01/09/2026");
+        write("09/01/2026");
 
         clickOn("End date");
-        write("30/06/2027");
+        write("06/30/2027");
 
         clickOn("Save");
         sleep(1200);
@@ -456,10 +464,10 @@ public class AdminE2ETest extends ApplicationTest {
         selectGroup(groupName);
 
         clickOn("Start date");
-        write("01/09/2026");
+        write("09/01/2026");
 
         clickOn("End date");
-        write("30/06/2027");
+        write("06/30/2027");
 
         clickOn("Save");
         sleep(1000);
