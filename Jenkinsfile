@@ -20,7 +20,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/GrigoriiTishchuk/SWE-Project.git'
+                git branch: 'grigorii_sprint_3_prep', url: 'https://github.com/GrigoriiTishchuk/SWE-Project.git'
             }
         }
 
