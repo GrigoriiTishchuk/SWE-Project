@@ -139,6 +139,10 @@ sprints.
 - Admin reporting and analytics dashboard
 - CSV and PDF export for gradebook and course report
 
+🔗 [Sprint 3 Planning](Documents/Sprint_Reports/Sprint3/Sprint_3_Planning_Report.md)
+🔗 [Sprint 3 Review](Documents/Sprint_Reports/Sprint3/Sprint_3_Review_Report.md)
+🔗 [JaCoCo Code Coverage Report](https://users.metropolia.fi/~grigorit/devops/jacoco/)
+
 ---
 
 ## Sprint 4 – Finalization and Presentation (Planned)
@@ -216,6 +220,12 @@ mvn clean verify -Pperformance
 
 Performance test results are saved in `performance-results/`.
 
+
+## Documentation
+
+- [Feature Documentation](Documents/Features.md) – full description of implemented features by role
+
+---
 
 ## Repository Structure
 
