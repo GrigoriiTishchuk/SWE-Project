@@ -35,6 +35,7 @@ replay_pid*
 target/
 
 .env
+.env.docker
 
 cp.txt
 dependency-reduced-pom.xml
