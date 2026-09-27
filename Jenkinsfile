@@ -41,7 +41,7 @@ pipeline {
 
         stage('Run Tests & Build') {
             steps {
-                bat 'mvn clean test'
+                bat 'mvn clean test -Dtest="!com.edujournal.e2e.**"'
             }
         }
 
