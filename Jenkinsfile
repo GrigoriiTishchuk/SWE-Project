@@ -21,6 +21,24 @@ pipeline {
             }
         }
 
+        stage('Create .env') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'edujournal-db',
+                                                  usernameVariable: 'DB_USER',
+                                                  passwordVariable: 'DB_PASS')]) {
+                    bat '''
+                        echo DB_HOST=localhost > .env
+                        echo DB_PORT=3306 >> .env
+                        echo DB_NAME=edujournal >> .env
+                        echo DB_USERNAME=%DB_USER% >> .env
+                        echo DB_PASSWORD=%DB_PASS% >> .env
+                        echo DB_URL=jdbc:mariadb://localhost:3306/edujournal >> .env
+                    '''
+                }
+            }
+        }
+
+
         stage('Run Tests & Build') {
             steps {
                 bat 'mvn clean test'
