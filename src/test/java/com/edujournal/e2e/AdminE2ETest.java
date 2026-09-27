@@ -10,9 +10,7 @@ import com.edujournal.backend.service.UserService;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
-import com.edujournal.view.LoginPage;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 
@@ -25,12 +23,6 @@ public class AdminE2ETest extends ApplicationTest {
     public void start(Stage stage) {
         new Main().start(stage);
         stage.show();
-    }
-
-    @BeforeEach
-    void resetToLoginPage() {
-        interact(() -> Main.showPage(new LoginPage()));
-        sleep(800);
     }
 
     @AfterEach
