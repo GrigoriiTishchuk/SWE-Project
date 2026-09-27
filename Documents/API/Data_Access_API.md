@@ -6,13 +6,15 @@ The desktop application and the data access logic run in the same process.
 ## Architecture
 
 ```
-JavaFX UI  →  Service layer  →  DAO layer  →  JPA (Hibernate)  →  MariaDB
+JavaFX UI  →  DTO layer (+ Mapper layer)  →  Service layer  →  DAO layer  →  MariaDB
 ```
 
 - **UI layer** — JavaFX views and controllers (screens, buttons, forms)
+- **DTO layer** — data transfer objects (e.g. `UserDTO`, `StudentDTO`) passed between UI and services; Mappers convert entities to DTOs
 - **Service layer** — business logic (e.g. `AuthService`, `CourseGradeService`, `StudentReportService`)
 - **DAO layer** — database queries via JPA/Hibernate (e.g. `UserDAO`, `GradesDAO`)
 - **JPA / Hibernate** — maps Java entities to MariaDB tables using `EntityManager` and JPQL
+- **MariaDB** — relational database storing all application data
 
 ---
 
