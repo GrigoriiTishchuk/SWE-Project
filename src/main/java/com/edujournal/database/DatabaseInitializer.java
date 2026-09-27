@@ -19,8 +19,9 @@ public class DatabaseInitializer {
         String username = EnvConfig.get("DB_USERNAME");
         String password = EnvConfig.get("DB_PASSWORD");
         String databasePort = EnvConfig.get("DB_PORT");
+        String databaseHost = EnvConfig.get("DB_HOST");
 
-        String serverUrl = "jdbc:mariadb://localhost:" + databasePort;
+        String serverUrl = "jdbc:mariadb://" + databaseHost + ":" + databasePort;
 
         try (Connection connection =
                      DriverManager.getConnection(serverUrl, username, password);
@@ -40,7 +41,7 @@ public class DatabaseInitializer {
         }
 
         String databaseUrl =
-                "jdbc:mariadb://localhost:" + databasePort + "/" + databaseName;
+                "jdbc:mariadb://" + databaseHost + ":" + databasePort + "/" + databaseName;
 
         try (Connection connection =
                      DriverManager.getConnection(
