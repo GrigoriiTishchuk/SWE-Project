@@ -12,7 +12,7 @@ pipeline {
         DOCKERHUB_CREDENTIALS_ID = 'ca3e514b-32b9-4ac2-ab59-c733071649c5'
 
         //account name and repo name on Docker Hub
-        DOCKERHUB_REPO = 'gregtish/edujournal-frontend:latest'
+        DOCKERHUB_REPO = 'gregtish/edujournal-frontend'
         DOCKER_IMAGE_TAG = 'latest'
     }
 
