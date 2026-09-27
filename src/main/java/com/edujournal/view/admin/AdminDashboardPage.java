@@ -2,10 +2,7 @@ package com.edujournal.view.admin;
 
 import com.edujournal.Main;
 import com.edujournal.entity.Role;
-import com.edujournal.view.common.ChartPlaceholder;
-import com.edujournal.view.common.DashboardStatCards;
-import com.edujournal.view.common.CoursePage;
-import com.edujournal.view.common.TopBar;
+import com.edujournal.view.common.*;
 import com.edujournal.view.controller.AdminGroupController;
 import com.edujournal.view.controller.AdminStudentController;
 import com.edujournal.view.controller.AdminTeacherController;
@@ -21,12 +18,12 @@ import javafx.scene.layout.VBox;
 import java.util.List;
 
 public class AdminDashboardPage extends BorderPane {
+    GradeDistributionCard distributionCard = new GradeDistributionCard(Role.ADMINISTRATOR);
 
     public AdminDashboardPage() {
         setLeft(AdminSidebar.build("Dashboard"));
         setCenter(buildContent());
     }
-
     private VBox buildContent() {
         VBox content = new VBox(20);
         content.setPadding(new Insets(24));
@@ -39,7 +36,7 @@ public class AdminDashboardPage extends BorderPane {
     }
 
     private HBox buildBottomRow() {
-        HBox box = new HBox(16, buildQuickActions(), ChartPlaceholder.build("Average Grade"));
+        HBox box = new HBox(16, buildQuickActions(), distributionCard);
         box.setAlignment(javafx.geometry.Pos.CENTER);
         return box;
     }
