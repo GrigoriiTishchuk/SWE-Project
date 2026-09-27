@@ -5,6 +5,7 @@ import com.edujournal.dao.EnrollmentDAO;
 import com.edujournal.dao.GradesDAO;
 import com.edujournal.entity.*;
 import com.edujournal.model.GradeDistributionDTO;
+import com.edujournal.view.teacher.GradesTab;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -20,19 +21,33 @@ public class DashboardStatisticsService {
     private final EnrollmentDAO enrollmentDAO = new EnrollmentDAO();
     private final AssessmentsService assessmentsService = new AssessmentsService();
     private final CourseGradeService courseGradeService = new CourseGradeService();
+    private final EnrollmentService enrollmentService = new EnrollmentService();
+    private final StudentService studentService = new StudentService();
 
-    public void loadDistribution(Role role) {
-
+    public GradeDistributionDTO getGradeDistribution(Role role, Integer userId) {
         switch (role) {
 
-            case STUDENT:
-                break;
+            case ADMINISTRATOR:
+                return calculateDistribution(
+                        getAdministratorGrades()
+                );
 
             case TEACHER:
-                break;
+                return calculateDistribution(
+                        getTeacherGrades(userId)
+                );
 
-            case ADMINISTRATOR:
-                break;
+            case STUDENT:
+
+                Student student =
+                        studentService.findByUserId(userId);
+
+                return calculateDistribution(
+                        getStudentGrades(student.getId())
+                );
+
+            default:
+                return new GradeDistributionDTO();
         }
     }
 
@@ -103,7 +118,163 @@ public class DashboardStatisticsService {
         return finalGrades;
     }
 
-    public GradeDistributionDTO calculateDistribution(
+    public List<Integer> getStudentGrades(Integer studentId) {
+        System.out.println("Student ID = " + studentId);
+
+        List<Integer> finalGrades = new ArrayList<>();
+
+        List<Enrollment> enrollments =
+                enrollmentService.findByStudentId(studentId);
+
+        for (Enrollment enrollment : enrollments) {
+
+            Integer courseId = enrollment.getCourseId();
+
+            List<Assessments> assessments =
+                    assessmentsService.getByCourseId(courseId);
+
+            Map<Integer, Grades> gradeMap =
+                    gradesDAO.findByEnrollment(enrollment.getId())
+                            .stream()
+                            .collect(Collectors.toMap(
+                                    Grades::getAssessmentId,
+                                    g -> g
+                            ));
+
+            if (assessments.isEmpty()) {
+                continue;
+            }
+
+            if (gradeMap.isEmpty()) {
+                continue;
+            }
+
+            if (gradeMap.size() < assessments.size()) {
+                continue;
+            }
+
+            if (gradeMap.values().stream()
+                    .anyMatch(g -> g.getScore() == null)) {
+                continue;
+            }
+
+            try {
+                String result =
+                        GradesTab.computeFinalGrade(
+                                assessments,
+                                gradeMap,
+                                assessments.size()
+                        );
+
+                if (!result.equals("—")) {
+
+                    int finalGrade =
+                            Integer.parseInt(
+                                    result.substring(0, 1)
+                            );
+
+                    finalGrades.add(finalGrade);
+                }
+
+            } catch (Exception e) {
+
+                System.err.println(
+                        "[Statistics] Student "
+                                + studentId
+                                + ", enrollment "
+                                + enrollment.getId()
+                                + ": "
+                                + e.getMessage()
+                );
+            }
+        }
+
+        return finalGrades;
+    }
+
+    public List<Integer> getTeacherGrades(Integer teacherUserId) {
+
+        List<Integer> finalGrades = new ArrayList<>();
+
+        List<Course> courses =
+                courseDAO.findByUserId(teacherUserId);
+
+        System.out.println("Teacher courses: " + courses.size());
+
+        for (Course course : courses) {
+
+            List<Enrollment> enrollments =
+                    enrollmentDAO.findByCourseId(course.getId());
+
+            List<Assessments> assessments =
+                    assessmentsService.getByCourseId(course.getId());
+
+            System.out.println(
+                    "Course " + course.getName()
+                            + ", enrollments: "
+                            + enrollments.size()
+            );
+
+            for (Enrollment enrollment : enrollments) {
+
+                Map<Integer, Grades> gradeMap =
+                        gradesDAO.findByEnrollment(enrollment.getId())
+                                .stream()
+                                .collect(Collectors.toMap(
+                                        Grades::getAssessmentId,
+                                        g -> g
+                                ));
+
+                if (course.getEndDate() == null ||
+                        !course.getEndDate().isBefore(LocalDate.now())) {
+                    continue;
+                }
+
+                if (assessments.isEmpty()) {
+                    continue;
+                }
+
+                if (gradeMap.isEmpty()) {
+                    continue;
+                }
+
+                if (gradeMap.size() < assessments.size()) {
+                    continue;
+                }
+
+                try {
+
+                    String result =
+                            GradesTab.computeFinalGrade(
+                                    assessments,
+                                    gradeMap,
+                                    assessments.size()
+                            );
+
+                    if (!result.equals("—")) {
+
+                        int finalGrade =
+                                Integer.parseInt(
+                                        result.substring(0, 1)
+                                );
+
+                        finalGrades.add(finalGrade);
+                    }
+
+                } catch (Exception e) {
+
+                    System.err.println(
+                            "[TeacherStatistics] "
+                                    + e.getMessage()
+                    );
+                }
+            }
+        }
+
+        return finalGrades;
+    }
+
+    private GradeDistributionDTO calculateDistribution(
             List<Integer> grades
     ) {
 
@@ -140,4 +311,5 @@ public class DashboardStatisticsService {
                 fail * 100.0 / total
         );
     }
+
 }

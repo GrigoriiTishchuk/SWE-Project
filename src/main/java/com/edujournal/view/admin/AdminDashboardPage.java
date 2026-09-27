@@ -18,7 +18,7 @@ import javafx.scene.layout.VBox;
 import java.util.List;
 
 public class AdminDashboardPage extends BorderPane {
-    GradeDistributionCard distributionCard = new GradeDistributionCard(Role.ADMINISTRATOR);
+    GradeDistributionCard distributionCard = new GradeDistributionCard(Role.ADMINISTRATOR, null);
 
     public AdminDashboardPage() {
         setLeft(AdminSidebar.build("Dashboard"));

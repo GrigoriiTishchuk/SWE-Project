@@ -15,14 +15,10 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
-import java.util.List;
-
 public class GradeDistributionCard extends VBox {
-    private final Role role;
     private final BarChart<String, Number> chart;
 
-    public GradeDistributionCard(Role role) {
-        this.role = role;
+    public GradeDistributionCard(Role role, Integer userId) {
         DashboardStatisticsService statisticsService = new DashboardStatisticsService();
 
         setSpacing(10);
@@ -32,9 +28,9 @@ public class GradeDistributionCard extends VBox {
 
         Label title = new Label("");
         if (role == Role.ADMINISTRATOR) {
-            title.setText("Average Grade");
+            title.setText("Overall Grade Distribution");
         } else if (role == Role.TEACHER) {
-            title.setText("My Courses Average Grade");
+            title.setText("My Courses Grade Distribution");
         } else {
             title.setText("Personal Grade Distribution");
         }
@@ -52,9 +48,11 @@ public class GradeDistributionCard extends VBox {
         setPrefWidth(300);
 
         GradeDistributionDTO dto =
-                statisticsService.calculateDistribution(
-                        statisticsService.getAdministratorGrades()
-                );
+                statisticsService.getGradeDistribution(role, userId);
+
+        if (dto == null) {
+            dto = new GradeDistributionDTO();
+        }
 
         fillChart(
                 dto.getExcellent(),

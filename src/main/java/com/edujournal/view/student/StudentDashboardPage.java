@@ -9,6 +9,7 @@ import com.edujournal.entity.Student;
 import com.edujournal.model.CourseDTO;
 import com.edujournal.view.common.ChartPlaceholder;
 import com.edujournal.view.common.DashboardStatCards;
+import com.edujournal.view.common.GradeDistributionCard;
 import com.edujournal.view.common.TopBar;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -20,6 +21,8 @@ import javafx.scene.layout.VBox;
 import java.util.List;
 
 public class StudentDashboardPage extends BorderPane {
+    Integer userId = UserSession.getInstance().getCurrentUser().getId();
+    GradeDistributionCard distributionCard = new GradeDistributionCard(Role.STUDENT, userId);
 
     public StudentDashboardPage() {
         setLeft(StudentSidebar.build("Dashboard"));
@@ -38,7 +41,7 @@ public class StudentDashboardPage extends BorderPane {
     }
 
     private HBox buildBottomRow() {
-        HBox box = new HBox(16, buildCourseOverview(), ChartPlaceholder.build("Personal Grade Distribution"));
+        HBox box = new HBox(16, buildCourseOverview(), distributionCard);
         box.setAlignment(javafx.geometry.Pos.CENTER);
         return box;
     }
@@ -73,7 +76,6 @@ public class StudentDashboardPage extends BorderPane {
     }
 
     private List<CourseDTO> loadStudentCourses() {
-        Integer userId = UserSession.getInstance().getCurrentUser().getId();
         Student student = new StudentService().findByUserId(userId);
         if (student == null) return List.of();
 
