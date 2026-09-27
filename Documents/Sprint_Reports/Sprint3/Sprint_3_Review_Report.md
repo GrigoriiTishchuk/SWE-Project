@@ -181,7 +181,7 @@ Daily Scrum discussions covered:
 | Team Member | Tasks                                                                                                  | Hours Spent | In-class tasks |
 |---|--------------------------------------------------------------------------------------------------------|---|---|
 | **Bayram Erdogan** | Backend and Testing.                                                                                   | 40 h 10 min | Submitted |
-| **Grigorii Tishchuk** | Jenkins CI/CD pipeline; Docker image; JaCoCo; GitHub and Trello maintenance.                           | 20 h | Submitted |
+| **Grigorii Tishchuk** | Login and CI/CD setup. | 21 h | Submitted |
 | **Olena Petrova** | Backend, Frontend & Integration.                                                                       | 64 h 40 min | Submitted |
 | **Maria Kuznetsova**<br>*(Scrum Master)* | Sprint coordination; Trello and meetings; PR reviews; UI, frontend-backend integration; documentation. | 54 h | Submitted |
 
