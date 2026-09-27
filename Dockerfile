@@ -9,4 +9,4 @@ COPY src ./src
 
 RUN mvn clean package -DskipTests
 
-CMD ["java", "-cp", "target/edujournal-frontend-0.1.0.jar", "com.edujournal.Main"]
+CMD ["java", "-cp", "target/edujournal-frontend-0.1.0.jar", "com.edujournal.Launcher"]
