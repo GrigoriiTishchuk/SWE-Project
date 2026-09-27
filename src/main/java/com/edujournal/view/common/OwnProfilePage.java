@@ -5,6 +5,7 @@ import com.edujournal.backend.service.StudentService;
 import com.edujournal.backend.service.UserService;
 import com.edujournal.backend.utils.UserSession;
 import com.edujournal.entity.AcademicGroup;
+import com.edujournal.model.UserDTO;
 import com.edujournal.entity.Role;
 import com.edujournal.entity.Student;
 import com.edujournal.entity.User;
@@ -40,12 +41,21 @@ public class OwnProfilePage extends BorderPane {
     }
 
     private VBox buildContent(Role role) {
-        Integer userId = UserSession.getInstance().getCurrentUser().getId();
-        User user = new UserService().findById(userId);
+        UserDTO sessionUser = UserSession.getInstance().getCurrentUser();
+
+        // Build User from session — avoids a DB fetch just to display the form
+        User user = new User();
+        user.setId(sessionUser.getId());
+        user.setFirstName(sessionUser.getFirstName());
+        user.setLastName(sessionUser.getLastName());
+        user.setUsername(sessionUser.getUsername());
+        user.setEmail(sessionUser.getEmail());
+        user.setPhone(sessionUser.getPhone());
+        user.setRole(sessionUser.getRole());
 
         Student student = null;
         if (role == Role.STUDENT) {
-            student = new StudentService().findByUserId(userId);
+            student = new StudentService().findByUserId(sessionUser.getId());
         }
 
         Label nameLabel = new Label(user.getFirstName() + " " + user.getLastName());
@@ -145,6 +155,13 @@ public class OwnProfilePage extends BorderPane {
                 user.setEmail(email.getText().trim());
                 user.setPhone(phone.getText().trim());
                 new UserService().update(user);
+
+                UserDTO session = UserSession.getInstance().getCurrentUser();
+                session.setFirstName(user.getFirstName());
+                session.setLastName(user.getLastName());
+                session.setUsername(user.getUsername());
+                session.setEmail(user.getEmail());
+                session.setPhone(user.getPhone());
 
                 if (role == Role.STUDENT && finalStudent != null && finalDob != null) {
                     String dob = finalDob.getText().trim();
