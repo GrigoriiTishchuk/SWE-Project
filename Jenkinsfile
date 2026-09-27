@@ -17,9 +17,30 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/GrigoriiTishchuk/SWE-Project.git'
+                git branch: 'grigorii_sprint_3_prep', url: 'https://github.com/GrigoriiTishchuk/SWE-Project.git'
             }
         }
+
+        stage('Create .env') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'edujournal-db',
+                                                  usernameVariable: 'DB_USER',
+                                                  passwordVariable: 'DB_PASS')]) {
+                    bat '''
+                        cat > .env <<EOF
+                        DB_HOST=localhost
+                        DB_PORT=3306
+                        DB_NAME=edujournal
+                        DB_USERNAME=$DB_USER
+                        DB_PASSWORD=$DB_PASS
+                        DB_URL=jdbc:mariadb://localhost:3306/edujournal
+                        EOF
+                        '''
+                }
+            }
+        }
+
+
 
         stage('Run Tests & Build') {
             steps {
