@@ -41,7 +41,7 @@ pipeline {
 
         stage('Run Tests & Build') {
             steps {
-                bat 'mvn clean test'
+                bat 'mvn clean test -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.text=t2k'
             }
         }
 
