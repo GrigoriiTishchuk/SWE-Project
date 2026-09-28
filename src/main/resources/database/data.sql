@@ -77,163 +77,6 @@ SELECT
     WHERE username = 'teacher3'
 );
 
-
-/*
- Students
- */
-
--- Student 1
-INSERT INTO users (
-    username,
-    password_hash,
-    first_name,
-    last_name,
-    role
-)
-SELECT
-    'student1',
-    '$2a$10$dT96PvmFO9u5rV.Qo9FMle5Fr5HnVDKpsUm3S4KMadh8ygRYL5/aO',
-    'Heikki',
-    'Heikkinen',
-    'STUDENT'
-WHERE NOT EXISTS (
-    SELECT 1
-    FROM users
-    WHERE username = 'student1'
-);
-
-INSERT INTO students (
-    student_number,
-    date_of_birth,
-    user_id
-)
-SELECT
-    'S001',
-    '2005-04-15',
-    u.id
-FROM users u
-WHERE u.username = 'student1'
-  AND NOT EXISTS (
-    SELECT 1
-    FROM students
-    WHERE student_number = 'S001'
-);
-
-
--- Student 2
-INSERT INTO users (
-    username,
-    password_hash,
-    first_name,
-    last_name,
-    role
-)
-SELECT
-    'student2',
-    '$2a$10$dT96PvmFO9u5rV.Qo9FMle5Fr5HnVDKpsUm3S4KMadh8ygRYL5/aO',
-    'Anna',
-    'Laine',
-    'STUDENT'
-WHERE NOT EXISTS (
-    SELECT 1
-    FROM users
-    WHERE username = 'student2'
-);
-
-INSERT INTO students (
-    student_number,
-    date_of_birth,
-    user_id
-)
-SELECT
-    'S002',
-    '2006-02-20',
-    u.id
-FROM users u
-WHERE u.username = 'student2'
-  AND NOT EXISTS (
-    SELECT 1
-    FROM students
-    WHERE student_number = 'S002'
-);
-
-
--- Student 3
-INSERT INTO users (
-    username,
-    password_hash,
-    first_name,
-    last_name,
-    role
-)
-SELECT
-    'student3',
-    '$2a$10$dT96PvmFO9u5rV.Qo9FMle5Fr5HnVDKpsUm3S4KMadh8ygRYL5/aO',
-    'Matti',
-    'Nieminen',
-    'STUDENT'
-WHERE NOT EXISTS (
-    SELECT 1
-    FROM users
-    WHERE username = 'student3'
-);
-
-INSERT INTO students (
-    student_number,
-    date_of_birth,
-    user_id
-)
-SELECT
-    'S003',
-    '2005-09-12',
-    u.id
-FROM users u
-WHERE u.username = 'student3'
-  AND NOT EXISTS (
-    SELECT 1
-    FROM students
-    WHERE student_number = 'S003'
-);
-
-
--- Student 4
-INSERT INTO users (
-    username,
-    password_hash,
-    first_name,
-    last_name,
-    role
-)
-SELECT
-    'student4',
-    '$2a$10$dT96PvmFO9u5rV.Qo9FMle5Fr5HnVDKpsUm3S4KMadh8ygRYL5/aO',
-    'Sofia',
-    'Virtanen',
-    'STUDENT'
-WHERE NOT EXISTS (
-    SELECT 1
-    FROM users
-    WHERE username = 'student4'
-);
-
-INSERT INTO students (
-    student_number,
-    date_of_birth,
-    user_id
-)
-SELECT
-    'S004',
-    '2006-06-05',
-    u.id
-FROM users u
-WHERE u.username = 'student4'
-  AND NOT EXISTS (
-    SELECT 1
-    FROM students
-    WHERE student_number = 'S004'
-);
-
-
 /*
  Academic Groups
  */
@@ -269,6 +112,174 @@ SELECT
     SELECT 1
     FROM academic_groups
     WHERE name = 'Group 3'
+);
+
+
+/*
+ Students
+ */
+
+-- Student 1
+INSERT INTO users (
+    username,
+    password_hash,
+    first_name,
+    last_name,
+    role
+)
+SELECT
+    'student1',
+    '$2a$10$dT96PvmFO9u5rV.Qo9FMle5Fr5HnVDKpsUm3S4KMadh8ygRYL5/aO',
+    'Heikki',
+    'Heikkinen',
+    'STUDENT'
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM users
+    WHERE username = 'student1'
+);
+
+INSERT INTO students (
+    student_number,
+    date_of_birth,
+    user_id,
+    academic_group_id
+)
+SELECT
+    'S001',
+    '2005-04-15',
+    u.id,
+    ag.id
+FROM users u
+         JOIN academic_groups ag ON ag.name = 'TVT25K-0'
+WHERE u.username = 'student1'
+  AND NOT EXISTS (
+    SELECT 1
+    FROM students
+    WHERE student_number = 'S001'
+);
+
+
+-- Student 2
+INSERT INTO users (
+    username,
+    password_hash,
+    first_name,
+    last_name,
+    role
+)
+SELECT
+    'student2',
+    '$2a$10$dT96PvmFO9u5rV.Qo9FMle5Fr5HnVDKpsUm3S4KMadh8ygRYL5/aO',
+    'Anna',
+    'Laine',
+    'STUDENT'
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM users
+    WHERE username = 'student2'
+);
+
+INSERT INTO students (
+    student_number,
+    date_of_birth,
+    user_id,
+    academic_group_id
+)
+SELECT
+    'S002',
+    '2006-02-20',
+    u.id,
+    ag.id
+FROM users u
+         JOIN academic_groups ag ON ag.name = 'Group 2'
+WHERE u.username = 'student2'
+  AND NOT EXISTS (
+    SELECT 1
+    FROM students
+    WHERE student_number = 'S002'
+);
+
+
+-- Student 3
+INSERT INTO users (
+    username,
+    password_hash,
+    first_name,
+    last_name,
+    role
+)
+SELECT
+    'student3',
+    '$2a$10$dT96PvmFO9u5rV.Qo9FMle5Fr5HnVDKpsUm3S4KMadh8ygRYL5/aO',
+    'Matti',
+    'Nieminen',
+    'STUDENT'
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM users
+    WHERE username = 'student3'
+);
+
+INSERT INTO students (
+    student_number,
+    date_of_birth,
+    user_id,
+    academic_group_id
+)
+SELECT
+    'S003',
+    '2005-09-12',
+    u.id,
+    ag.id
+FROM users u
+         JOIN academic_groups ag ON ag.name = 'Group 3'
+WHERE u.username = 'student3'
+  AND NOT EXISTS (
+    SELECT 1
+    FROM students
+    WHERE student_number = 'S003'
+);
+
+
+-- Student 4
+INSERT INTO users (
+    username,
+    password_hash,
+    first_name,
+    last_name,
+    role
+)
+SELECT
+    'student4',
+    '$2a$10$dT96PvmFO9u5rV.Qo9FMle5Fr5HnVDKpsUm3S4KMadh8ygRYL5/aO',
+    'Sofia',
+    'Virtanen',
+    'STUDENT'
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM users
+    WHERE username = 'student4'
+);
+
+INSERT INTO students (
+    student_number,
+    date_of_birth,
+    user_id,
+    academic_group_id
+)
+SELECT
+    'S004',
+    '2006-06-05',
+    u.id,
+    ag.id
+FROM users u
+         JOIN academic_groups ag ON ag.name = 'Group 3'
+WHERE u.username = 'student4'
+  AND NOT EXISTS (
+    SELECT 1
+    FROM students
+    WHERE student_number = 'S004'
 );
 
 

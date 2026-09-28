@@ -155,7 +155,8 @@ During the Sprint 3 Review, the team will demonstrate:
 - **E2E test stability:** End-to-end tests required extra debugging due to shared application state between test methods and date format handling differences across environments. Full stability will be addressed in Sprint 4.
 - **Performance optimization:** Database queries and caching mechanisms were not fully optimized within the sprint timeframe. This is planned for Sprint 4.
 - **Security testing:** While basic input validation was implemented, a more thorough security review (e.g., SQL injection, XSS hardening) was not completed due to time constraints. The team worked hard to implement the available mitigations.
-- **Docker deployment:** Full deployment automation (e.g., Docker Compose for combined app + database) was not completed in this sprint. Currently the image runs locally with manual steps.
+- **Docker image (GUI):** A full GUI Docker image for the complete application (frontend + backend) was not completed in this sprint. This is planned for Sprint 4, including writing a proper Dockerfile, building, and testing the image locally with `docker run`.
+- **Docker Hub publishing:** Pushing the image to Docker Hub and verifying public availability is planned for Sprint 4.
 - **Notification configuration for Jenkins:** Email notification for build results was identified as optional and was not configured in this sprint.
 
 ---
@@ -179,11 +180,11 @@ Daily Scrum discussions covered:
 ## Team Contributions
 
 | Team Member | Tasks                                                                                                  | Hours Spent | In-class tasks |
-|---|--------------------------------------------------------------------------------------------------------|---|---|
+|---|--------------------------------------------------------------------------------------------------------|-------------|---|
 | **Bayram Erdogan** | Backend and Testing.                                                                                   | 40 h 10 min | Submitted |
-| **Grigorii Tishchuk** | Login and CI/CD setup. | 21 h | Submitted |
+| **Grigorii Tishchuk** | Login and CI/CD setup. | 21 h        | Submitted |
 | **Olena Petrova** | Backend, Frontend & Integration.                                                                       | 64 h 40 min | Submitted |
-| **Maria Kuznetsova**<br>*(Scrum Master)* | Sprint coordination; Trello and meetings; PR reviews; UI, frontend-backend integration; documentation. | 54 h | Submitted |
+| **Maria Kuznetsova**<br>*(Scrum Master)* | Sprint coordination; Trello and meetings; PR reviews; UI, frontend-backend integration; documentation. | 56 h        | Submitted |
 
 ---
 
@@ -191,10 +192,9 @@ Daily Scrum discussions covered:
 
 The following areas are planned for Sprint 4:
 
-- Finalize and polish all UI views.
+- **Finalize product functionality:** Complete remaining feature implementations, fix UI rendering issues, validate authentication and database operations, and perform integration testing.
+- **Create GUI Docker image:** Write a Dockerfile for the full application (frontend + backend), build with `docker build`, and test locally with `docker run`.
+- **Push Docker image to Docker Hub:** Tag and publish the image publicly, verify availability, and test using Docker Play.
+- **Prototype sharing and presentation:** Prepare a PowerPoint presentation, collect peer feedback, update project documentation on GitHub, and submit the final Sprint Report.
 - Resolve remaining E2E test stability issues.
-- Complete performance optimization and database query improvements.
-- Expand Docker deployment with Docker Compose.
-- Conduct a more thorough security review.
 - Prepare final project documentation.
-- Deliver final project presentation.
