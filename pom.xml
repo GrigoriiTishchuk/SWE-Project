@@ -127,6 +127,9 @@
                             <formats>
                                 <format>HTML</format>
                             </formats>
+                            <excludes>
+                                <exclude>com/edujournal/view/**</exclude>
+                            </excludes>
                         </configuration>
                     </execution>
 
