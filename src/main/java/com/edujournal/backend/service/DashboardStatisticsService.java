@@ -254,9 +254,7 @@ public class DashboardStatisticsService {
                     if (!result.equals("—")) {
 
                         int finalGrade =
-                                Integer.parseInt(
-                                        result.substring(0, 1)
-                                );
+                                Integer.parseInt(result.substring(0, 1));
 
                         finalGrades.add(finalGrade);
                     }
