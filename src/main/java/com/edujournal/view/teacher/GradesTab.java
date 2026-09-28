@@ -255,7 +255,7 @@ public class GradesTab {
         }
     }
 
-    private static int toGrade(double percent) {
+    public static int toGrade(double percent) {
         if (percent >= 83) return 5;
         if (percent >= 72) return 4;
         if (percent >= 62) return 3;

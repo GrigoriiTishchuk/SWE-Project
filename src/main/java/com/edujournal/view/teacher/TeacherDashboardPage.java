@@ -1,13 +1,9 @@
 package com.edujournal.view.teacher;
 
 import com.edujournal.Main;
+import com.edujournal.backend.utils.UserSession;
 import com.edujournal.entity.Role;
-import com.edujournal.view.common.ChartPlaceholder;
-import com.edujournal.view.common.CourseReportPage;
-import com.edujournal.view.common.DashboardStatCards;
-import com.edujournal.view.common.CoursePage;
-import com.edujournal.view.common.OwnProfilePage;
-import com.edujournal.view.common.TopBar;
+import com.edujournal.view.common.*;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -17,6 +13,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class TeacherDashboardPage extends BorderPane {
+    Integer userId = UserSession.getInstance().getCurrentUser().getId();
+    GradeDistributionCard distributionCard = new GradeDistributionCard(Role.TEACHER, userId);
 
     public TeacherDashboardPage() {
         setLeft(TeacherSidebar.build("Dashboard"));
@@ -35,7 +33,7 @@ public class TeacherDashboardPage extends BorderPane {
     }
 
     private HBox buildBottomRow() {
-        HBox box = new HBox(16, buildQuickActions(), ChartPlaceholder.build("My Courses Average Grade"));
+        HBox box = new HBox(16, buildQuickActions(), distributionCard);
         box.setAlignment(javafx.geometry.Pos.CENTER);
         return box;
     }
