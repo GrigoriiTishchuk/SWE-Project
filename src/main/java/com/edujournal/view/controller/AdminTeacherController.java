@@ -157,8 +157,8 @@ public class AdminTeacherController extends BaseController<UserDTO> {
         Dialog<UserDTO> dialog = new Dialog<>();
         dialog.setTitle("Edit Teacher");
 
-        TextField firstNameField = new TextField(teacher.getFirstName());
-        TextField lastNameField = new TextField(teacher.getLastName());
+        TextField firstNameField = new TextField(teacher.getFirstName() != null ? teacher.getFirstName() : "");
+        TextField lastNameField = new TextField(teacher.getLastName() != null ? teacher.getLastName() : "");
 
         VBox box = new VBox(10, firstNameField, lastNameField);
         box.setPadding(new Insets(10));

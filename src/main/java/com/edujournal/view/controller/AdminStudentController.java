@@ -233,9 +233,9 @@ public class AdminStudentController extends BaseController<StudentDTO> {
         Dialog<Boolean> dialog = new Dialog<>();
         dialog.setTitle("Edit Student");
 
-        TextField firstNameField = new TextField(dto.getFirstName());
-        TextField lastNameField = new TextField(dto.getLastName());
-        TextField phoneField = new TextField(dto.getPhone());
+        TextField firstNameField = new TextField(dto.getFirstName() != null ? dto.getFirstName() : "");
+        TextField lastNameField = new TextField(dto.getLastName() != null ? dto.getLastName() : "");
+        TextField phoneField = new TextField(dto.getPhone() != null ? dto.getPhone() : "");
 
         VBox box = new VBox(10, firstNameField, lastNameField, phoneField);
         box.setPadding(new Insets(10));
