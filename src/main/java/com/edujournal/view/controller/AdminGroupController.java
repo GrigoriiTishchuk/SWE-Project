@@ -222,7 +222,7 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
         Dialog<AcademicGroupDTO> dialog = new Dialog<>();
         dialog.setTitle("Edit Academic Group");
 
-        TextField nameField = new TextField(group.getName());
+        TextField nameField = new TextField(group.getName() != null ? group.getName() : "");
 
         VBox box = new VBox(10, nameField);
         box.setPadding(new Insets(10));
