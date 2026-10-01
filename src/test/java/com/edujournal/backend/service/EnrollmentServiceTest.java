@@ -184,4 +184,82 @@ class EnrollmentServiceTest {
                 enrollmentService.findById(id)
         );
     }
+
+    @Test
+    void findByStudentAndCourse() {
+        Enrollment found =
+                enrollmentService.findByStudentAndCourse(1, 1);
+
+        assertNotNull(found);
+        assertEquals(1, found.getStudentId());
+        assertEquals(1, found.getCourseId());
+    }
+
+    @Test
+    void findByStudentAndCourseReturnsNullForNonExistingCombination() {
+        Enrollment found =
+                enrollmentService.findByStudentAndCourse(
+                        999999,
+                        999999
+                );
+
+        assertNull(found);
+    }
+
+    @Test
+    void createIfNotExists() {
+        enrollmentService.createIfNotExists(
+                1,
+                2,
+                2
+        );
+
+        Enrollment found =
+                enrollmentService.findByStudentAndCourse(1, 2);
+
+        assertNotNull(found);
+        assertEquals(1, found.getStudentId());
+        assertEquals(2, found.getCourseId());
+        assertEquals(2, found.getAcademicGroupId());
+        assertEquals("ENROLLED", found.getStatus());
+
+        createdIds.add(found.getId());
+    }
+
+    @Test
+    void deleteByStudentAndAcademicGroup() {
+        Enrollment enrollment = new Enrollment();
+
+        enrollment.setStudentId(2);
+        enrollment.setCourseId(1);
+        enrollment.setAcademicGroupId(1);
+        enrollment.setStatus("ACTIVE");
+
+        enrollmentService.save(enrollment);
+
+        Integer id = enrollment.getId();
+        createdIds.add(id);
+
+        assertNotNull(
+                enrollmentService.findById(id)
+        );
+
+        enrollmentService.deleteByStudentAndAcademicGroup(
+                2,
+                1
+        );
+
+        assertNull(
+                enrollmentService.findById(id)
+        );
+    }
+
+    @Test
+    void deleteByCourseId() {
+        enrollmentService.deleteByCourseId(999999);
+
+        assertTrue(
+                enrollmentService.findByCourseId(999999).isEmpty()
+        );
+    }
 }

@@ -1,13 +1,23 @@
 package com.edujournal.dao;
 
+import com.edujournal.config.JPAUtil;
 import com.edujournal.entity.Enrollment;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Query;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 class EnrollmentDAOTest {
 
@@ -179,5 +189,186 @@ class EnrollmentDAOTest {
         enrollmentDAO.delete(id);
 
         assertNull(enrollmentDAO.findById(id));
+    }
+
+    @Test
+    void findByCourseAndGroup() {
+        System.out.println(">>> findByCourseAndGroup TEST CALISTI <<<");
+
+        Enrollment enrollment = new Enrollment();
+
+        enrollment.setStudentId(1);
+        enrollment.setCourseId(1);
+        enrollment.setAcademicGroupId(1);
+        enrollment.setStatus("ACTIVE");
+
+        enrollmentDAO.save(enrollment);
+
+        createdIds.add(enrollment.getId());
+
+        List<Enrollment> results =
+                enrollmentDAO.findByCourseAndGroup(1, 1);
+
+        assertNotNull(results);
+
+        assertTrue(
+                results.stream()
+                        .anyMatch(e ->
+                                e.getId().equals(enrollment.getId())
+                        )
+        );
+    }
+
+    @Test
+    void findByCourseAndGroupReturnsEmptyListForNonExistingCombination() {
+        List<Enrollment> results =
+                enrollmentDAO.findByCourseAndGroup(999999, 999999);
+
+        assertNotNull(results);
+        assertTrue(results.isEmpty());
+    }
+
+    @Test
+    void findByStudentAndCourse() {
+        Enrollment enrollment = new Enrollment();
+
+        enrollment.setStudentId(2);
+        enrollment.setCourseId(1);
+        enrollment.setAcademicGroupId(1);
+        enrollment.setStatus("ACTIVE");
+
+        enrollmentDAO.save(enrollment);
+
+        createdIds.add(enrollment.getId());
+
+        Enrollment found =
+                enrollmentDAO.findByStudentAndCourse(2, 1);
+
+        assertNotNull(found);
+        assertEquals(enrollment.getId(), found.getId());
+        assertEquals(2, found.getStudentId());
+        assertEquals(1, found.getCourseId());
+    }
+
+    @Test
+    void findByStudentAndCourseReturnsNullForNonExistingCombination() {
+        Enrollment found =
+                enrollmentDAO.findByStudentAndCourse(999999, 999999);
+
+        assertNull(found);
+    }
+
+    @Test
+    void deleteByStudentAndAcademicGroup() {
+        Enrollment enrollment = new Enrollment();
+
+        enrollment.setStudentId(2);
+        enrollment.setCourseId(1);
+        enrollment.setAcademicGroupId(1);
+        enrollment.setStatus("ACTIVE");
+
+        enrollmentDAO.save(enrollment);
+
+        Integer id = enrollment.getId();
+        createdIds.add(id);
+
+        assertNotNull(enrollmentDAO.findById(id));
+
+        enrollmentDAO.deleteByStudentAndAcademicGroup(2, 1);
+
+        assertNull(enrollmentDAO.findById(id));
+    }
+
+    @Test
+    void deleteByCourseId() {
+        enrollmentDAO.deleteByCourseId(999999);
+
+        assertTrue(
+                enrollmentDAO.findByCourseId(999999).isEmpty()
+        );
+    }
+
+    @Test
+    void saveThrowsExceptionForNullEnrollment() {
+        assertThrows(
+                Exception.class,
+                () -> enrollmentDAO.save(null)
+        );
+    }
+
+    @Test
+    void updateThrowsExceptionForNullEnrollment() {
+        assertThrows(
+                Exception.class,
+                () -> enrollmentDAO.update(null)
+        );
+    }
+
+    @Test
+    void deleteThrowsExceptionForNullId() {
+        assertThrows(
+                Exception.class,
+                () -> enrollmentDAO.delete(null)
+        );
+    }
+
+    @Test
+    void deleteByStudentAndAcademicGroupRollsBackOnException() {
+        EntityManagerFactory factory = mock(EntityManagerFactory.class);
+        EntityManager entityManager = mock(EntityManager.class);
+        EntityTransaction transaction = mock(EntityTransaction.class);
+        Query query = mock(Query.class);
+
+        when(factory.createEntityManager()).thenReturn(entityManager);
+        when(entityManager.getTransaction()).thenReturn(transaction);
+        when(transaction.isActive()).thenReturn(true);
+        when(entityManager.createQuery(anyString())).thenReturn(query);
+
+        doThrow(new RuntimeException("test exception"))
+                .when(query)
+                .executeUpdate();
+
+        try (MockedStatic<JPAUtil> mocked = mockStatic(JPAUtil.class)) {
+            mocked.when(JPAUtil::getEntityManagerFactory)
+                    .thenReturn(factory);
+
+            assertThrows(
+                    RuntimeException.class,
+                    () -> enrollmentDAO.deleteByStudentAndAcademicGroup(1, 1)
+            );
+        }
+
+        verify(transaction).rollback();
+        verify(entityManager).close();
+    }
+
+    @Test
+    void deleteByCourseIdRollsBackOnException() {
+        EntityManagerFactory factory = mock(EntityManagerFactory.class);
+        EntityManager entityManager = mock(EntityManager.class);
+        EntityTransaction transaction = mock(EntityTransaction.class);
+        Query query = mock(Query.class);
+
+        when(factory.createEntityManager()).thenReturn(entityManager);
+        when(entityManager.getTransaction()).thenReturn(transaction);
+        when(transaction.isActive()).thenReturn(true);
+        when(entityManager.createQuery(anyString())).thenReturn(query);
+
+        doThrow(new RuntimeException("test exception"))
+                .when(query)
+                .executeUpdate();
+
+        try (MockedStatic<JPAUtil> mocked = mockStatic(JPAUtil.class)) {
+            mocked.when(JPAUtil::getEntityManagerFactory)
+                    .thenReturn(factory);
+
+            assertThrows(
+                    RuntimeException.class,
+                    () -> enrollmentDAO.deleteByCourseId(1)
+            );
+        }
+
+        verify(transaction).rollback();
+        verify(entityManager).close();
     }
 }
