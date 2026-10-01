@@ -59,7 +59,7 @@ pipeline {
 
         stage('Publish Coverage Report') {
             steps {
-                jacoco(exclusionPattern: '**/view/**/*.class')
+                jacoco(exclusionPattern: '**/view/**/*.class,**/Main.class,**/DatabaseTest.class,**/Launcher.class')
             }
         }
 

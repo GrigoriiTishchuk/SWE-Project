@@ -129,6 +129,9 @@
                             </formats>
                             <excludes>
                                 <exclude>com/edujournal/view/**</exclude>
+                                <exclude>com/edujournal/Main.class</exclude>
+                                <exclude>com/edujournal/DatabaseTest.class</exclude>
+                                <exclude>com/edujournal/Launcher.class</exclude>
                             </excludes>
                         </configuration>
                     </execution>
