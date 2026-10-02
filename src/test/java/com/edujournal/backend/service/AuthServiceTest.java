@@ -79,6 +79,11 @@ class AuthServiceTest {
     }
 
     @Test
+    void loginWithNullPassword() {
+        assertFalse(authService.login("admin", null));
+    }
+
+    @Test
     void resetPasswordThenLoginWithNewPassword() {
         User user = new User();
         user.setUsername("auth_test_reset_user");

@@ -274,6 +274,35 @@ class CourseServiceTest {
     }
 
     @Test
+    void findByCodeReturnsNullForNonExistent() {
+        assertNull(courseService.findByCode("SVC_NONEXISTENT_CODE_XYZ_999"));
+    }
+
+    @Test
+    void assignTeacherToCourseThrowsForNonExistentUser() {
+        Course course = buildCourse("SVC_TEST_NULLUSR", "Null User Course");
+        courseService.save(course);
+        createdCourseIds.add(course.getId());
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> courseService.assignTeacherToCourse(course.getId(), 999999)
+        );
+    }
+
+    @Test
+    void assignStudentsToEnrollmentsThrowsForNonExistentGroup() {
+        Course course = buildCourse("SVC_TEST_NULLGRP", "Null Group Course");
+        courseService.save(course);
+        createdCourseIds.add(course.getId());
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> courseService.assignStudentsToEnrollments(course.getId(), 999999)
+        );
+    }
+
+    @Test
     void assignStudentsToEnrollments() {
         StudentService studentService = new StudentService();
         EnrollmentService enrollmentService = new EnrollmentService();
