@@ -13,6 +13,8 @@ import javafx.stage.Stage;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
+import javafx.scene.control.DatePicker;
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
@@ -454,13 +456,25 @@ public class AdminE2ETest extends ApplicationTest {
         );
 
         selectGroup(groupName);
-
+/*
         clickOn("Start date");
         write("09/01/2026");
 
         clickOn("End date");
         write("06/30/2027");
+*/
+        DatePicker startDatePicker =
+                lookup(".date-picker").nth(0)
+                        .queryAs(DatePicker.class);
 
+        DatePicker endDatePicker =
+                lookup(".date-picker").nth(1)
+                        .queryAs(DatePicker.class);
+
+        interact(() -> {
+            startDatePicker.setValue(LocalDate.of(2026, 9, 1));
+            endDatePicker.setValue(LocalDate.of(2027, 6, 30));
+        });
         clickOn("Save");
         sleep(1000);
 

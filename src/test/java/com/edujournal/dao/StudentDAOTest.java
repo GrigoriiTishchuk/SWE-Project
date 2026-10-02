@@ -237,4 +237,118 @@ class StudentDAOTest {
                 studentDAO.findById(id)
         );
     }
+
+    @Test
+    void findByUserId() {
+        User user = new User();
+
+        user.setUsername("user_id_test");
+        user.setPasswordHash("test");
+        user.setFirstName("User");
+        user.setLastName("Test");
+        user.setRole(Role.STUDENT);
+
+        userDAO.save(user);
+        createdUsers.add(user);
+
+        Student student = new Student();
+
+        student.setStudentNumber("TEST005");
+        student.setDateOfBirth(
+                LocalDate.of(2002, 3, 15)
+        );
+        student.setUserId(user.getId());
+
+        studentDAO.save(student);
+        createdStudentIds.add(student.getId());
+
+        Student found =
+                studentDAO.findByUserId(user.getId());
+
+        assertNotNull(found);
+        assertEquals(
+                student.getId(),
+                found.getId()
+        );
+        assertEquals(
+                user.getId(),
+                found.getUserId()
+        );
+        assertEquals(
+                "TEST005",
+                found.getStudentNumber()
+        );
+    }
+
+    @Test
+    void saveRollsBackWhenStudentIsInvalid() {
+        Student student = new Student();
+
+        assertThrows(
+                Exception.class,
+                () -> studentDAO.save(student)
+        );
+
+        assertNull(student.getId());
+    }
+
+    @Test
+    void saveRollsBackWhenUserDoesNotExist() {
+        Student student = new Student();
+
+        student.setStudentNumber("INVALID_USER");
+        student.setUserId(999999);
+
+        assertThrows(
+                Exception.class,
+                () -> studentDAO.save(student)
+        );
+
+        assertNull(student.getId());
+    }
+
+    @Test
+    void updateRollsBackWhenUserDoesNotExist() {
+        User user = new User();
+
+        user.setUsername("update_invalid_test");
+        user.setPasswordHash("test");
+        user.setFirstName("Update");
+        user.setLastName("Test");
+        user.setRole(Role.STUDENT);
+
+        userDAO.save(user);
+        createdUsers.add(user);
+
+        Student student = new Student();
+
+        student.setStudentNumber("UPDATE_INVALID");
+        student.setUserId(user.getId());
+
+        studentDAO.save(student);
+        createdStudentIds.add(student.getId());
+
+        student.setUserId(999999);
+
+        assertThrows(
+                Exception.class,
+                () -> studentDAO.update(student)
+        );
+    }
+
+    @Test
+    void updateRollsBackWhenStudentIsNull() {
+        assertThrows(
+                Exception.class,
+                () -> studentDAO.update(null)
+        );
+    }
+
+    @Test
+    void deleteRollsBackWhenIdIsNull() {
+        assertThrows(
+                Exception.class,
+                () -> studentDAO.delete(null)
+        );
+    }
 }
