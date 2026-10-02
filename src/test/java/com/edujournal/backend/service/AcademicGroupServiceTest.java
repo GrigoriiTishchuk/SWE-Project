@@ -1,6 +1,12 @@
 package com.edujournal.backend.service;
 
+import com.edujournal.dao.UserDAO;
 import com.edujournal.entity.AcademicGroup;
+import com.edujournal.entity.Course;
+import com.edujournal.entity.Enrollment;
+import com.edujournal.entity.Role;
+import com.edujournal.entity.Student;
+import com.edujournal.entity.User;
 import com.edujournal.model.AcademicGroupDTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -335,5 +341,83 @@ class AcademicGroupServiceTest {
         assertThrows(Exception.class, () ->
                 academicGroupService.save(group)
         );
+    }
+
+    @Test
+    void addStudentToGroupAndRemoveStudent() {
+        StudentService studentService = new StudentService();
+        UserDAO userDAO = new UserDAO();
+
+        User user = new User();
+        user.setUsername("ag_test_student_user");
+        user.setPasswordHash("test");
+        user.setFirstName("AG");
+        user.setLastName("Student");
+        user.setRole(Role.STUDENT);
+        userDAO.save(user);
+
+        Student student = new Student();
+        student.setStudentNumber("AG_TEST_001");
+        student.setUserId(user.getId());
+        studentService.save(student);
+
+        AcademicGroup group = new AcademicGroup();
+        group.setName("AG Student Add Test Group");
+        academicGroupService.save(group);
+        createdIds.add(group.getId());
+
+        assertDoesNotThrow(
+                () -> academicGroupService.addStudentToGroup(student.getId(), group.getId())
+        );
+
+        assertDoesNotThrow(
+                () -> academicGroupService.removeStudentFromGroup(student.getId(), group.getId())
+        );
+
+        studentService.delete(student.getId());
+        userDAO.delete(user);
+    }
+
+    @Test
+    void addStudentToGroupEnrollsInCourses() {
+        StudentService studentService = new StudentService();
+        CourseService courseService = new CourseService();
+        UserDAO userDAO = new UserDAO();
+        EnrollmentService enrollmentService = new EnrollmentService();
+
+        AcademicGroup group = new AcademicGroup();
+        group.setName("AG Enroll Test Group");
+        academicGroupService.save(group);
+        createdIds.add(group.getId());
+
+        Course course = new Course();
+        course.setCode("AG_ENRL_TEST");
+        course.setName("AG Enroll Course");
+        course.setAcademicGroupId(group.getId());
+        courseService.save(course);
+
+        User user = new User();
+        user.setUsername("ag_enroll_student_user");
+        user.setPasswordHash("test");
+        user.setFirstName("AGEnroll");
+        user.setLastName("Student");
+        user.setRole(Role.STUDENT);
+        userDAO.save(user);
+
+        Student student = new Student();
+        student.setStudentNumber("AG_ENRL_001");
+        student.setUserId(user.getId());
+        studentService.save(student);
+
+        academicGroupService.addStudentToGroup(student.getId(), group.getId());
+
+        Enrollment enrollment =
+                enrollmentService.findByStudentAndCourse(student.getId(), course.getId());
+        assertNotNull(enrollment);
+
+        academicGroupService.removeStudentFromGroup(student.getId(), group.getId());
+        courseService.delete(course.getId());
+        studentService.delete(student.getId());
+        userDAO.delete(user);
     }
 }

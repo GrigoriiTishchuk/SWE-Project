@@ -1,6 +1,3 @@
-public_html/com.*
-public_html/jacoco-sessions.html
-
 # .idea
 .idea/
 *.iml
@@ -39,4 +36,4 @@ target/
 
 cp.txt
 dependency-reduced-pom.xml
-public_html
+public_html/**
