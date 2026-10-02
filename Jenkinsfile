@@ -33,6 +33,13 @@ pipeline {
                         echo DB_USERNAME=%DB_USER% >> .env
                         echo DB_PASSWORD=%DB_PASS% >> .env
                         echo DB_URL=jdbc:mariadb://localhost:3306/edujournal >> .env
+
+                        echo DB_HOST=host.docker.internal > .env.docker
+                        echo DB_PORT=3306 >> .env.docker
+                        echo DB_NAME=edujournal >> .env.docker
+                        echo DB_USERNAME=%DB_USER% >> .env.docker
+                        echo DB_PASSWORD=%DB_PASS% >> .env.docker
+                        echo DB_URL=jdbc:mariadb://host.docker.internal:3306/edujournal >> .env.docker
                     '''
                 }
             }

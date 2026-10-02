@@ -32,7 +32,7 @@ RUN mkdir -p /javafx-sdk \
 
 # Копируем собранный JAR Copy from the build stage JAR file to the final image
 COPY --from=build /app/target/edujournal-frontend-0.1.0.jar app.jar
-
+COPY .env.docker .env
 # Redirecting graphics output to Xming (Windows)
 ENV DISPLAY=host.docker.internal:0.0
 
