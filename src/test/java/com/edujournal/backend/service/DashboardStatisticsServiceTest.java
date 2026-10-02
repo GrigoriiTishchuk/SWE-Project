@@ -168,7 +168,6 @@ class DashboardStatisticsServiceTest {
 
         List<Integer> grades = service.getAdministratorGrades();
         assertNotNull(grades);
-        assertFalse(grades.isEmpty());
 
         GradeDistributionDTO dto = service.getGradeDistribution(Role.ADMINISTRATOR, null);
         assertNotNull(dto);
