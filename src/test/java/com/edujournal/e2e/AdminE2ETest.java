@@ -340,10 +340,10 @@ public class AdminE2ETest extends ApplicationTest {
         waitForFxEvents();
 
         clickOn("Start date");
-        write("01/09/2026");
+        write("09/01/2026");
 
         clickOn("End date");
-        write("30/06/2027");
+        write("06/30/2027");
 
         clickOn("Save");
         sleep(1200);
