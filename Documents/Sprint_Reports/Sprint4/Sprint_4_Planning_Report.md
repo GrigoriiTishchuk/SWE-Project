@@ -54,12 +54,12 @@ The following Product Backlog Items are planned for Sprint 4:
 
 ## 4. Roles and Responsibilities
 
-| Team Member                           | Responsibilities                                                                                                            |
-|---------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
-| **Olena Petrova**<br>*(Scrum Master)* | Sprint planning and coordination, backlog management, documentation, testing activities, code reviews, meeting facilitation |
-| **Bayram Erdogan**                    | Unit testing, JaCoCo coverage analysis, bug fixing, quality assurance activities                                            |
-| **Grigorii Tishchuk**                 | GUI Docker image creation, Docker Hub publication, deployment validation, technical integration support                     |
-| **Maria Kuznetsova**                  | Functional testing, acceptance testing, issue verification, feedback collection and validation                              |
+| Team Member                           | Responsibilities                                                                                                                      |
+|---------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------|
+| **Olena Petrova**<br>*(Scrum Master)* | Sprint planning and coordination, backlog management, documentation, testing activities, code reviews, meeting facilitation           |
+| **Bayram Erdogan**                    | Unit testing, JaCoCo coverage analysis, bug fixing, quality assurance activities                                                      |
+| **Grigorii Tishchuk**                 | GUI Docker image creation, Docker Hub publication, deployment validation, technical integration support                               |
+| **Maria Kuznetsova**                  | Functional testing, Unit and integration tests coverage improvement, JaCoCo reports updates, verification results through Jenkins CI. |
 
 ---
 

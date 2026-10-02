@@ -128,12 +128,12 @@ Regular communication helped ensure transparency, accountability, and timely com
 
 ## 8. Team Contributions
 
-| Team Member                           | Tasks                                                                                                         | Hours Spent | In-class tasks |
-|---------------------------------------|---------------------------------------------------------------------------------------------------------------|-------------|---|
-| **Bayram Erdogan**                    | Unit testing, JaCoCo analysis, bug fixing, quality assurance                                                  | h  min      | Submitted |
-| **Grigorii Tishchuk**                 | GUI Docker image creation, Docker Hub publication, deployment validation                                      | h  min      | Submitted |
-| **Maria Kuznetsova**                  | Functional testing, acceptance testing, bug verification, feedback collection                                 | h  min      | Submitted |
-| **Olena Petrova**<br>*(Scrum Master)* | Sprint coordination, Trello management, documentation, testing activities, code reviews, meeting facilitation | h  min      | Submitted |
+| Team Member                           | Tasks                                                                                                                                 | Hours Spent | In-class tasks |
+|---------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------|-------------|---|
+| **Bayram Erdogan**                    | Unit testing, JaCoCo analysis, bug fixing, quality assurance                                                                          | h  min      | Submitted |
+| **Grigorii Tishchuk**                 | GUI Docker image creation, Docker Hub publication, deployment validation                                                              | h  min      | Submitted |
+| **Maria Kuznetsova**                  | Functional testing, Unit and integration tests coverage improvement, JaCoCo reports updates, verification results through Jenkins CI. | h  min      | Submitted |
+| **Olena Petrova**<br>*(Scrum Master)* | Sprint coordination, Trello management, documentation, testing activities, code reviews, meeting facilitation                         | h  min      | Submitted |
 
 ---
 
