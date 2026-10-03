@@ -454,32 +454,21 @@ class StudentServiceTest {
 
         assertNotNull(dto);
 
+        createdIds.add(dto.getStudentId());
+        createdUsers.add(userDAO.findById(dto.getUserId()));
+
         assertNotNull(dto.getStudentId());
         assertNotNull(dto.getUserId());
         assertNotNull(dto.getStudentNumber());
 
-        assertEquals(
-                "Created",
-                dto.getFirstName()
-        );
+        assertEquals("Created", dto.getFirstName());
+        assertEquals("Student", dto.getLastName());
 
-        assertEquals(
-                "Student",
-                dto.getLastName()
-        );
-
-        Student student =
-                studentService.findById(dto.getStudentId());
-
+        Student student = studentService.findById(dto.getStudentId());
         assertNotNull(student);
 
-        createdIds.add(student.getId());
-
-        User user =
-                userDAO.findById(dto.getUserId());
-
+        User user = userDAO.findById(dto.getUserId());
         assertNotNull(user);
-        createdUsers.add(user);
     }
 
     @Test

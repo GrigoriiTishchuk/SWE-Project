@@ -447,4 +447,140 @@ class DashboardStatisticsServiceTest {
         assertTrue(result.isEmpty());
     }
 
+    @Test
+    void getTeacherGradesSkipsWhenNoAssessments() {
+        User teacher = new User();
+        teacher.setUsername("dash_tch_noassess_user");
+        teacher.setPasswordHash("test");
+        teacher.setFirstName("Dash");
+        teacher.setLastName("NoAssess");
+        teacher.setRole(Role.TEACHER);
+        userDAO.save(teacher);
+        createdUser = teacher;
+
+        Course course = new Course();
+        course.setCode("DASH_TCH_NA_001");
+        course.setName("Dash Teacher No Assess Course");
+        course.setStartDate(LocalDate.of(2024, 9, 1));
+        course.setEndDate(LocalDate.of(2024, 12, 31));
+        course.setUserId(teacher.getId());
+        courseDAO.save(course);
+        createdCourseId = course.getId();
+
+        Enrollment enrollment = new Enrollment();
+        enrollment.setStudentId(1);
+        enrollment.setCourseId(course.getId());
+        enrollment.setAcademicGroupId(1);
+        enrollment.setStatus("ENROLLED");
+        enrollmentService.save(enrollment);
+        createdEnrollmentId = enrollment.getId();
+
+        List<Integer> result = service.getTeacherGrades(teacher.getId());
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void getTeacherGradesSkipsWhenNoGrades() {
+        User teacher = new User();
+        teacher.setUsername("dash_tch_nograde_user");
+        teacher.setPasswordHash("test");
+        teacher.setFirstName("Dash");
+        teacher.setLastName("NoGrade");
+        teacher.setRole(Role.TEACHER);
+        userDAO.save(teacher);
+        createdUser = teacher;
+
+        Course course = new Course();
+        course.setCode("DASH_TCH_NG_001");
+        course.setName("Dash Teacher No Grade Course");
+        course.setStartDate(LocalDate.of(2024, 9, 1));
+        course.setEndDate(LocalDate.of(2024, 12, 31));
+        course.setUserId(teacher.getId());
+        courseDAO.save(course);
+        createdCourseId = course.getId();
+
+        Assessments assessment = new Assessments();
+        assessment.setCourseId(course.getId());
+        assessment.setTitle("Dash TCH No Grade Exam");
+        assessment.setType(AssessmentType.EXAM1);
+        assessment.setMaxScore(100.0);
+        assessment.setWeight(100.0);
+        assessmentsService.save(assessment);
+        createdAssessmentId = assessment.getId();
+
+        Enrollment enrollment = new Enrollment();
+        enrollment.setStudentId(1);
+        enrollment.setCourseId(course.getId());
+        enrollment.setAcademicGroupId(1);
+        enrollment.setStatus("ENROLLED");
+        enrollmentService.save(enrollment);
+        createdEnrollmentId = enrollment.getId();
+
+        List<Integer> result = service.getTeacherGrades(teacher.getId());
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void getTeacherGradesSkipsPartialGrades() {
+        User teacher = new User();
+        teacher.setUsername("dash_tch_partial_user");
+        teacher.setPasswordHash("test");
+        teacher.setFirstName("Dash");
+        teacher.setLastName("Partial");
+        teacher.setRole(Role.TEACHER);
+        userDAO.save(teacher);
+        createdUser = teacher;
+
+        Course course = new Course();
+        course.setCode("DASH_TCH_PT_001");
+        course.setName("Dash Teacher Partial Grade Course");
+        course.setStartDate(LocalDate.of(2024, 9, 1));
+        course.setEndDate(LocalDate.of(2024, 12, 31));
+        course.setUserId(teacher.getId());
+        courseDAO.save(course);
+        createdCourseId = course.getId();
+
+        Assessments assessment1 = new Assessments();
+        assessment1.setCourseId(course.getId());
+        assessment1.setTitle("Dash TCH Partial Exam 1");
+        assessment1.setType(AssessmentType.EXAM1);
+        assessment1.setMaxScore(100.0);
+        assessment1.setWeight(50.0);
+        assessmentsService.save(assessment1);
+        createdAssessmentId = assessment1.getId();
+
+        Assessments assessment2 = new Assessments();
+        assessment2.setCourseId(course.getId());
+        assessment2.setTitle("Dash TCH Partial Exam 2");
+        assessment2.setType(AssessmentType.EXAM2);
+        assessment2.setMaxScore(100.0);
+        assessment2.setWeight(50.0);
+        assessmentsService.save(assessment2);
+
+        Enrollment enrollment = new Enrollment();
+        enrollment.setStudentId(1);
+        enrollment.setCourseId(course.getId());
+        enrollment.setAcademicGroupId(1);
+        enrollment.setStatus("ENROLLED");
+        enrollmentService.save(enrollment);
+        createdEnrollmentId = enrollment.getId();
+
+        Grades grade = new Grades();
+        grade.setEnrollmentId(enrollment.getId());
+        grade.setAssessmentId(assessment1.getId());
+        grade.setScore(85.0);
+        gradesDAO.save(grade);
+        createdGradeId = grade.getId();
+
+        try {
+            List<Integer> result = service.getTeacherGrades(teacher.getId());
+            assertNotNull(result);
+            assertTrue(result.isEmpty());
+        } finally {
+            assessmentsService.delete(assessment2);
+        }
+    }
+
 }

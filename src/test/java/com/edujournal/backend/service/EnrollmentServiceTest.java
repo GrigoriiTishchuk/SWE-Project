@@ -262,4 +262,16 @@ class EnrollmentServiceTest {
                 enrollmentService.findByCourseId(999999).isEmpty()
         );
     }
+
+    @Test
+    void createIfNotExistsDoesNothingWhenAlreadyExists() {
+        Enrollment existing = enrollmentService.findByStudentAndCourse(1, 1);
+        assertNotNull(existing);
+
+        int countBefore = enrollmentService.findByStudentId(1).size();
+        enrollmentService.createIfNotExists(1, 1, 1);
+        int countAfter = enrollmentService.findByStudentId(1).size();
+
+        assertEquals(countBefore, countAfter);
+    }
 }

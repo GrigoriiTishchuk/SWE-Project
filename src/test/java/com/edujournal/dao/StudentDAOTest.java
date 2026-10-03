@@ -1,16 +1,22 @@
 package com.edujournal.dao;
 
+import com.edujournal.config.JPAUtil;
 import com.edujournal.entity.Role;
 import com.edujournal.entity.Student;
 import com.edujournal.entity.User;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class StudentDAOTest {
 
@@ -350,5 +356,65 @@ class StudentDAOTest {
                 Exception.class,
                 () -> studentDAO.delete(null)
         );
+    }
+
+    @Test
+    void saveDoesNotRollbackWhenTransactionNotActive() {
+        EntityManagerFactory factory = mock(EntityManagerFactory.class);
+        EntityManager em = mock(EntityManager.class);
+        EntityTransaction tx = mock(EntityTransaction.class);
+
+        when(factory.createEntityManager()).thenReturn(em);
+        when(em.getTransaction()).thenReturn(tx);
+        when(tx.isActive()).thenReturn(false);
+        doThrow(new RuntimeException("forced")).when(tx).commit();
+
+        try (MockedStatic<JPAUtil> mocked = mockStatic(JPAUtil.class)) {
+            mocked.when(JPAUtil::getEntityManagerFactory).thenReturn(factory);
+            assertThrows(RuntimeException.class, () -> studentDAO.save(new Student()));
+        }
+
+        verify(tx, never()).rollback();
+        verify(em).close();
+    }
+
+    @Test
+    void updateDoesNotRollbackWhenTransactionNotActive() {
+        EntityManagerFactory factory = mock(EntityManagerFactory.class);
+        EntityManager em = mock(EntityManager.class);
+        EntityTransaction tx = mock(EntityTransaction.class);
+
+        when(factory.createEntityManager()).thenReturn(em);
+        when(em.getTransaction()).thenReturn(tx);
+        when(tx.isActive()).thenReturn(false);
+        doThrow(new RuntimeException("forced")).when(tx).commit();
+
+        try (MockedStatic<JPAUtil> mocked = mockStatic(JPAUtil.class)) {
+            mocked.when(JPAUtil::getEntityManagerFactory).thenReturn(factory);
+            assertThrows(RuntimeException.class, () -> studentDAO.update(new Student()));
+        }
+
+        verify(tx, never()).rollback();
+        verify(em).close();
+    }
+
+    @Test
+    void deleteDoesNotRollbackWhenTransactionNotActive() {
+        EntityManagerFactory factory = mock(EntityManagerFactory.class);
+        EntityManager em = mock(EntityManager.class);
+        EntityTransaction tx = mock(EntityTransaction.class);
+
+        when(factory.createEntityManager()).thenReturn(em);
+        when(em.getTransaction()).thenReturn(tx);
+        when(tx.isActive()).thenReturn(false);
+        doThrow(new RuntimeException("forced")).when(tx).commit();
+
+        try (MockedStatic<JPAUtil> mocked = mockStatic(JPAUtil.class)) {
+            mocked.when(JPAUtil::getEntityManagerFactory).thenReturn(factory);
+            assertThrows(RuntimeException.class, () -> studentDAO.delete(1));
+        }
+
+        verify(tx, never()).rollback();
+        verify(em).close();
     }
 }

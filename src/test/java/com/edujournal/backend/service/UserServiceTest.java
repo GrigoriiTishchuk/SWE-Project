@@ -137,8 +137,28 @@ class UserServiceTest {
     }
 
     @Test
+    void updateDoesNothingForNonExistentUser() {
+        User ghost = new User();
+        ghost.setId(999999);
+        ghost.setFirstName("Ghost");
+        ghost.setLastName("User");
+
+        assertDoesNotThrow(() -> userService.update(ghost));
+    }
+
+    @Test
     void generateUniqueUsernameIsUnique() {
         String username = userService.generateUniqueUsername("Unique", "User");
+
+        assertNotNull(username);
+        assertFalse(username.isBlank());
+        assertNull(userDAO.findByUsername(username));
+    }
+
+    @Test
+    void generateUniqueUsernameWithShortNamesUsesFallback() {
+        // Short names produce no 8-char candidates → triggers candidates.isEmpty() branch
+        String username = userService.generateUniqueUsername("Al", "Jo");
 
         assertNotNull(username);
         assertFalse(username.isBlank());
