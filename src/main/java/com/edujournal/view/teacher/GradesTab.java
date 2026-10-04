@@ -196,8 +196,18 @@ public class GradesTab {
                     for (int c = 0; c < colCount; c++) {
                         String text = tfs[r][c].getText().trim();
                         if (text.isEmpty()) continue;
+                        if (!text.matches("\\d+(\\.\\d{1,2})?")) {
+                            new Alert(Alert.AlertType.WARNING,
+                                    "\"" + assessments.get(c).getTitle() + "\": enter a valid score (max 2 decimal places, no negative).").showAndWait();
+                            continue;
+                        }
                         try {
                             double score = Double.parseDouble(text);
+                            if (score < 0) {
+                                new Alert(Alert.AlertType.WARNING,
+                                        "\"" + assessments.get(c).getTitle() + "\": score cannot be negative.").showAndWait();
+                                continue;
+                            }
                             double maxScore = assessments.get(c).getMaxScore();
                             if (score > maxScore) {
                                 new Alert(Alert.AlertType.WARNING,
