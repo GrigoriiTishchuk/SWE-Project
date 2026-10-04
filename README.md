@@ -64,6 +64,7 @@ The project will be successful if the gradebook system is completed on time, mee
 - Trello - sprint planning and task management
 - Discord - team communication
 - jBCrypt - password hashing
+- Figma - UI design and prototyping
 
 ### Why We Chose These Technologies
 
@@ -79,6 +80,7 @@ The project will be successful if the gradebook system is completed on time, mee
 - **Discord** - our team's main channel for daily communication and quick questions.
 - **jBCrypt** - securely hashes passwords so raw passwords are never stored in the database.
 - **Maven** - manages our project's dependencies and build process automatically.
+- **Figma** - lets us design and prototype the user interface before coding, so we can plan the layout and flow of the application.
 
 ---
 
@@ -145,12 +147,17 @@ sprints.
 
 ---
 
-## Sprint 4 – Finalization and Presentation (Planned)
+## Sprint 4 – Finalization and Presentation
 
-- Integrate final features
-- Fix bugs and stabilize the system
-- Complete project documentation
-- Prepare and deliver final project presentation
+- Final features integrated
+- Bugs fixed and system stabilized
+- Project documentation completed
+- Final project presentation prepared
+- GUI-enabled Docker image created for the JavaFX application
+
+🔗 [Sprint 4 Planning](Documents/Sprint_Reports/Sprint4/Sprint_4_Planning_Report.md)
+🔗 [Sprint 4 Review](Documents/Sprint_Reports/Sprint4/Sprint_4_Review_Report.md)
+🔗 [JaCoCo Code Coverage Report](https://users.metropolia.fi/~grigorit/devops/jacoco/)
 
 ---
 
@@ -190,7 +197,25 @@ Run the application using Maven:
 ```
  OR
 
-Run the application using Docker
+### Run with Docker
+
+Pull the Docker image from Docker Hub:
+
+```bash
+  docker pull gregtish/edujournal-frontend:latest
+```
+
+Run the container:
+
+```bash
+  docker run --rm -it 
+  -e DISPLAY=host.docker.internal:0.0 
+  gregtish/edujournal-frontend:latest
+```
+
+Docker Hub repository:
+
+[DockerHub](https://hub.docker.com/repository/docker/gregtish/edujournal-frontend/general)
 
 ---
 
@@ -230,7 +255,9 @@ Performance test results are saved in `performance-results/`.
 ## Repository Structure
 
 ```
-/Documents → Documentation and reports  
+/Documents → Documentation and reports
+/performance-results → Performance test results
+/public_html → JaCoCo code coverage report
 /src       → Source code and tests
 ```
 
@@ -246,4 +273,4 @@ Performance test results are saved in `performance-results/`.
 Course name and semester:
 
 - Software Engineering Project TX00EY27-3012
-- Semester 3 & 4, 2026
+- Academic Year 2026–2027
