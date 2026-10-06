@@ -1,4 +1,4 @@
-# EduJournal – Teacher's Gradebook and Report Card System
+# EduJournal - Teacher's Gradebook and Report Card System
 
 A Java-based desktop application that helps teachers manage student academic records - recording marks, calculating averages and weighted grades, and generating report cards - instead of doing it manually on paper or in scattered tools. Teachers enter and manage grades, admins manage courses and accounts, and students can view (but not edit) their own grades and report cards.
 
@@ -49,50 +49,50 @@ The project will be successful if the gradebook system is completed on time, mee
 
 #### Development
 - Java Development Kit (JDK) 21
-- JavaFX 21 – desktop user interface
-- IntelliJ IDEA – IDE
-- Maven 3.x – build management
+- JavaFX 21 - desktop user interface
+- IntelliJ IDEA - IDE
+- Maven 3.x - build management
 
 #### Database
-- MariaDB – data storage
+- MariaDB - data storage
 - MariaDB Java Client 3.5.1
-- JPA / Hibernate ORM 6.6.1 – data access
+- JPA / Hibernate ORM 6.6.1 - data access
 
 #### Testing
-- JUnit Jupiter 5.14.0 – unit testing
-- Mockito 5.11.0 – mocking
-- TestFX 4.0.16 – JavaFX UI testing
-- JMH 1.37 – performance benchmarking
-- JaCoCo 0.8.12 – code coverage
+- JUnit Jupiter 5.14.0 - unit testing
+- Mockito 5.11.0 - mocking
+- TestFX 4.0.16 - JavaFX UI testing
+- JMH 1.37 - performance benchmarking
+- JaCoCo 0.8.12 - code coverage
 
 #### DevOps
-- Jenkins – CI/CD pipeline
-- Docker – containerization (MariaDB and application image)
-- Kubernetes – orchestration (deploying the MariaDB container)
+- Jenkins - CI/CD pipeline
+- Docker - containerization (MariaDB and application image)
+- Kubernetes - orchestration (deploying the MariaDB container)
 
 #### Other Tools & Libraries
-- GitHub – version control
-- Trello – sprint planning and task management
-- Discord – team communication
-- jBCrypt 0.4 – password hashing
-- OpenPDF 1.3.43 – PDF report export
-- Figma – UI design and prototyping
+- GitHub - version control
+- Trello - sprint planning and task management
+- Discord - team communication
+- jBCrypt 0.4 - password hashing
+- OpenPDF 1.3.43 - PDF report export
+- Figma - UI design and prototyping
 
 ### Why We Chose These Technologies
 
-- **JavaFX** – the whole team codes in one language, no switching between frontend and backend languages.
-- **MariaDB** – a reliable relational database, good fit for structured data like students, grades, and courses.
-- **JPA (Hibernate)** – lets us work with Java classes instead of writing raw SQL by hand, which means less repetitive code and fewer manual query mistakes.
-- **Docker** – packages MariaDB the same way for every team member, so nobody has database setup problems on their own machine.
-- **Kubernetes** – deploys that Docker container.
-- **Jenkins** – automates building and testing the project on every change, catching mistakes earlier.
-- **JUnit** – lets us test grade calculations and other logic automatically, instead of checking everything by hand.
-- **Git / GitHub** – standard, reliable version control; lets the whole team work on the code without overwriting each other's work.
-- **Trello** – simple visual board for tracking sprint tasks and progress.
-- **Discord** – our team's main channel for daily communication and quick questions.
-- **jBCrypt** – securely hashes passwords so raw passwords are never stored in the database.
-- **Maven** – manages our project's dependencies and build process automatically.
-- **Figma** – lets us design and prototype the user interface before coding, so we can plan the layout and flow of the application.
+- **JavaFX** - the whole team codes in one language, no switching between frontend and backend languages.
+- **MariaDB** - a reliable relational database, good fit for structured data like students, grades, and courses.
+- **JPA (Hibernate)** - lets us work with Java classes instead of writing raw SQL by hand, which means less repetitive code and fewer manual query mistakes.
+- **Docker** - packages MariaDB the same way for every team member, so nobody has database setup problems on their own machine.
+- **Kubernetes** - deploys that Docker container.
+- **Jenkins** - automates building and testing the project on every change, catching mistakes earlier.
+- **JUnit** - lets us test grade calculations and other logic automatically, instead of checking everything by hand.
+- **Git / GitHub** - standard, reliable version control; lets the whole team work on the code without overwriting each other's work.
+- **Trello** - simple visual board for tracking sprint tasks and progress.
+- **Discord** - our team's main channel for daily communication and quick questions.
+- **jBCrypt** - securely hashes passwords so raw passwords are never stored in the database.
+- **Maven** - manages our project's dependencies and build process automatically.
+- **Figma** - lets us design and prototype the user interface before coding, so we can plan the layout and flow of the application.
 
 ---
 
@@ -228,7 +228,7 @@ docker run --rm -it -e DISPLAY=host.docker.internal:0.0 gregtish/edujournal-fron
 
 ## Sprint History
 
-### Sprint 1 – Requirement and Planning
+### Sprint 1 - Requirement and Planning
 
 Focus: understanding the project and planning the work for upcoming sprints.
 
@@ -244,7 +244,7 @@ Focus: understanding the project and planning the work for upcoming sprints.
 
 ---
 
-### Sprint 2 – Design and Core Development
+### Sprint 2 - Design and Core Development
 
 - Designed and implemented database schema (MariaDB tables, CRUD operations)
 - Developed initial JavaFX UI views referencing Figma designs
@@ -258,7 +258,7 @@ Focus: understanding the project and planning the work for upcoming sprints.
 
 ---
 
-### Sprint 3 – CI/CD Integration, Feature Extension, Basic Docker Image, and Testing
+### Sprint 3 - CI/CD Integration, Feature Extension, Basic Docker Image, and Testing
 
 - Implement student and grade management features
 - Complete grade calculation logic
@@ -277,7 +277,7 @@ Focus: understanding the project and planning the work for upcoming sprints.
 
 ---
 
-### Sprint 4 – Finalization and Presentation
+### Sprint 4 - Finalization and Presentation
 
 - Final features integrated
 - Bugs fixed and system stabilized
@@ -293,7 +293,7 @@ Focus: understanding the project and planning the work for upcoming sprints.
 
 ## Documentation
 
-- [Feature Documentation](Documents/Features.md) – full description of implemented features by role
+- [Feature Documentation](Documents/Features.md) - full description of implemented features by role
 
 ---
 
@@ -318,4 +318,4 @@ Focus: understanding the project and planning the work for upcoming sprints.
 Course name and semester:
 
 - Software Engineering Project TX00EY27-3012
-- Academic Year 2026–2027
+- Academic Year 2026-2027
