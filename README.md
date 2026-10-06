@@ -186,6 +186,7 @@ Performance test results are saved in `performance-results/`.
 - MariaDB
 - Git
 - Docker (optional, for containerized run)
+- Xming or VcXsrv (Windows only, required for Docker GUI — start XLaunch before running the container)
 
 ### Steps
 
@@ -216,10 +217,10 @@ Pull the Docker image from Docker Hub:
 docker pull gregtish/edujournal-frontend:latest
 ```
 
-Run the container:
+Make sure the MariaDB container (`edujournal-db`) is running first, then run the application container:
 
 ```bash
-docker run --rm -it -e DISPLAY=host.docker.internal:0.0 gregtish/edujournal-frontend:latest
+docker run --rm -e DISPLAY=host.docker.internal:0.0 --network container:edujournal-db -v ".env.docker:/app/.env" --entrypoint sh gregtish/edujournal-frontend:latest -c "java -cp /app/target/edujournal-frontend-0.1.0.jar com.edujournal.Launcher"
 ```
 
 [DockerHub Repository](https://hub.docker.com/r/gregtish/edujournal-frontend)
