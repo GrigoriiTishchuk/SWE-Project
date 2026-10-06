@@ -187,6 +187,7 @@ Performance test results are saved in `performance-results/`.
 - Git
 - Docker (optional, for containerized run)
 - Xming or VcXsrv (Windows only, required for Docker GUI — start XLaunch before running the container)
+- XQuartz (macOS only, required for Docker GUI — start XQuartz before running the container)
 
 ### Steps
 
