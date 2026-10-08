@@ -39,6 +39,11 @@ Our goal is to make managing student grades and academic performance easier for 
 - Display student grades and academic results in an organized way
 - Provide feedback / comments
 
+
+### Use Cases
+
+<img src="Documents/Diagrams/Use-Case-Diagram.png" alt="Use Cases" width="100%">
+
 ### Definition of Success
 
 The project will be successful if the gradebook system is completed on time, meets requirements, calculates grades accurately, and offers a reliable, user-friendly solution for teachers.
