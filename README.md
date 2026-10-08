@@ -42,7 +42,7 @@ Our goal is to make managing student grades and academic performance easier for 
 
 ### Use Cases
 
-<img src="Documents/Diagrams/Use-Case%20Diagram.png" alt="Use Cases" width="100%">
+<img src="Documents/Diagrams/Use-Case-Diagram.png" alt="Use Cases" width="100%">
 
 ### Definition of Success
 
