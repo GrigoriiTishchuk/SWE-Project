@@ -8,7 +8,7 @@ Course: Software Engineering Project 1 (SEP1) · Team: **Lucky7**
 
 ## Demo
 
-<video src="https://github.com/user-attachments/assets/76eb1713-3c7f-47b5-8c9c-df7d5a7a4d88" controls width="100%"></video>
+[![Demo – click to watch](https://img.shields.io/badge/▶%20Watch%20Demo-blue?style=for-the-badge)](https://github.com/user-attachments/assets/76eb1713-3c7f-47b5-8c9c-df7d5a7a4d88)
 
 ---
 
