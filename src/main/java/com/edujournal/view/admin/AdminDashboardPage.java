@@ -16,6 +16,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.util.List;
+import com.edujournal.config.LocalizationManager;
 
 public class AdminDashboardPage extends BorderPane {
     GradeDistributionCard distributionCard = new GradeDistributionCard(Role.ADMINISTRATOR, null);
@@ -27,7 +28,7 @@ public class AdminDashboardPage extends BorderPane {
     private VBox buildContent() {
         VBox content = new VBox(20);
         content.setPadding(new Insets(24));
-        content.getChildren().addAll(TopBar.build("Dashboard", Role.ADMINISTRATOR, false), buildStatCards(), buildBottomRow());
+        content.getChildren().addAll(TopBar.build(LocalizationManager.get("dashboard"), Role.ADMINISTRATOR, false), buildStatCards(), buildBottomRow());
         return content;
     }
 
@@ -48,50 +49,49 @@ public class AdminDashboardPage extends BorderPane {
                 + "-fx-border-radius: 8; -fx-background-radius: 8;");
         box.getStylesheets().add(AdminDashboardPage.class.getResource("/css/button.css").toExternalForm());
 
-        Label heading = new Label("Quick Actions");
+        Label heading = new Label(LocalizationManager.get("quickActions"));
         heading.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
         TextField search = new TextField();
-        search.setPromptText("Type the name");
-
-        Button addStudent  = new Button("Add student");
+        search.setPromptText(LocalizationManager.get("search"));
+        Button addStudent  = new Button(LocalizationManager.get("addStudent"));
         addStudent.setOnAction(e -> {
             AdminStudentController sController = new AdminStudentController(Role.ADMINISTRATOR);
             sController.showAddDialog();
             Main.showPage(new AdminStudentPage(AdminSidebar.build("Students"), Role.ADMINISTRATOR));
         });
 
-        Button addTeacher  = new Button("Add teacher");
+        Button addTeacher  = new Button(LocalizationManager.get("addTeacher"));
         addTeacher.setOnAction(e -> {
             AdminTeacherController tController = new AdminTeacherController(Role.ADMINISTRATOR);
             tController.showAddDialog();
             Main.showPage(new AdminTeacherPage(AdminSidebar.build("Teachers"), Role.ADMINISTRATOR));
         });
 
-        Button addCourse   = new Button("Add course");
+        Button addCourse   = new Button(LocalizationManager.get("addCourse"));
         addCourse.setOnAction(e -> {
             CourseController cController = new CourseController(Role.ADMINISTRATOR);
             cController.showAddDialog();
             Main.showPage(new CoursePage(AdminSidebar.build("Courses"), Role.ADMINISTRATOR));
         });
 
-        Button addGroup    = new Button("Add group");
+        Button addGroup    = new Button(LocalizationManager.get("addGroup"));
         addGroup.setOnAction(e -> {
             AdminGroupController gController = new AdminGroupController(Role.ADMINISTRATOR);
             gController.showAddDialog();
             Main.showPage(new AdminGroupPage(AdminSidebar.build("Groups"), Role.ADMINISTRATOR));
         });
 
-        Button viewStudents = new Button("View all students");
+        Button viewStudents = new Button(LocalizationManager.get("viewStudents"));
         viewStudents.setOnAction(e -> Main.showPage(new AdminStudentPage(AdminSidebar.build("Students"), Role.ADMINISTRATOR)));
 
-        Button viewTeachers = new Button("View all teachers");
+        Button viewTeachers = new Button(LocalizationManager.get("viewTeachers"));
         viewTeachers.setOnAction(e -> Main.showPage(new AdminTeacherPage(AdminSidebar.build("Teachers"), Role.ADMINISTRATOR)));
 
-        Button viewCourses = new Button("View all courses");
+        Button viewCourses = new Button(LocalizationManager.get("viewCourses"));
         viewCourses.setOnAction(e -> Main.showPage(new CoursePage(AdminSidebar.build("Courses"), Role.ADMINISTRATOR)));
 
-        Button viewGroups = new Button("View all groups");
+        Button viewGroups = new Button(LocalizationManager.get("viewGroups"));
         viewGroups.setOnAction(e -> Main.showPage(new AdminGroupPage(AdminSidebar.build("Academic Groups"), Role.ADMINISTRATOR)));
 
         List.of(addStudent, addTeacher, addCourse, addGroup, viewStudents, viewTeachers, viewCourses, viewGroups)

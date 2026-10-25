@@ -7,6 +7,8 @@ import javafx.geometry.Insets;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
+import com.edujournal.config.LocalizationManager;
+
 public class AdminGroupPage extends BorderPane {
     private final Role role;
 
@@ -20,7 +22,7 @@ public class AdminGroupPage extends BorderPane {
         VBox box = new VBox(12);
         box.setPadding(new Insets(24));
 
-        box.getChildren().add(TopBar.build("Academic Groups", role, false));
+        box.getChildren().add(TopBar.build(LocalizationManager.get("academicGroups"), role, false));
 
         AdminGroupController controller = new AdminGroupController(role);
 

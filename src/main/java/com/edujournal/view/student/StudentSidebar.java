@@ -6,6 +6,7 @@ import com.edujournal.view.Sidebar;
 import com.edujournal.view.common.OwnProfilePage;
 import com.edujournal.view.common.StudentReportPage;
 import javafx.scene.layout.VBox;
+import com.edujournal.config.LocalizationManager;
 
 // every student page just calls StudentSidebar.build("<its own label>")
 
@@ -13,13 +14,13 @@ public class StudentSidebar {
 
     public static VBox build(String active) {
         return Sidebar.build(
-                new Sidebar.NavItem("Dashboard", active.equals("Dashboard"),
+                new Sidebar.NavItem(LocalizationManager.get("dashboard"), active.equals(LocalizationManager.get("dashboard")),
                         () -> Main.showPage(new StudentDashboardPage())),
-                new Sidebar.SectionHeader("MANAGEMENT"),
-                new Sidebar.NavItem("Own profile", active.equals("Own profile"),
+                new Sidebar.SectionHeader(LocalizationManager.get("management")),
+                new Sidebar.NavItem(LocalizationManager.get("profile"), active.equals("Own profile"),
                         () -> Main.showPage(new OwnProfilePage(StudentSidebar.build("Own profile"), Role.STUDENT))),
-                new Sidebar.SectionHeader("REPORTS"),
-                new Sidebar.NavItem("Student's report", active.equals("Student's report"),
+                new Sidebar.SectionHeader(LocalizationManager.get("reports")),
+                new Sidebar.NavItem(LocalizationManager.get("studentReport"), active.equals("Student's report"),
                         () -> Main.showPage(new StudentReportPage(StudentSidebar.build("Student's report"), Role.STUDENT, null)))
         );
     }

@@ -5,7 +5,7 @@ import java.util.ResourceBundle;
 
 public class LocalizationManager {
 
-    private static Locale currentLocale = new Locale("en", "US");
+    private static Locale currentLocale = new Locale("ar", "SA");
     private static ResourceBundle bundle = ResourceBundle.getBundle("MessagesBundle", currentLocale);
 
     public static void setLocale(Locale locale) {
