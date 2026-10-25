@@ -40,6 +40,10 @@ public class TopBar {
         if (onYearChange != null)
             studyingYear.valueProperty().addListener((obs, old, val) -> onYearChange.accept(val));
 
+        ComboBox<String> languageSelector = new ComboBox<>();
+        languageSelector.getItems().addAll("English", "Turkish", "Russian", "Arabic");
+        languageSelector.setValue("English");
+
         Circle avatar = new Circle(20, Color.web("#9CA3AF"));
 
         UserDTO currentUser = UserSession.getInstance().getCurrentUser();
@@ -62,7 +66,7 @@ public class TopBar {
         exitBtn.setOnMouseExited(e -> exitBtn.setStyle("-fx-background-color: transparent; -fx-font-size: 30px; -fx-text-fill: #6B7280; -fx-cursor: hand;"));
         exitBtn.setOnAction(e -> Main.showPage(new LoginPage()));
 
-        HBox rightBox = new HBox(16, studyingYear, userBox, exitBtn);
+        HBox rightBox = new HBox(16, studyingYear, languageSelector, userBox, exitBtn);
         rightBox.setAlignment(Pos.CENTER);
 
         HBox topBar = new HBox(16, titleLabel, spacer, rightBox);
