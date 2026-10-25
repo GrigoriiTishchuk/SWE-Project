@@ -19,20 +19,21 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.util.List;
+import com.edujournal.config.LocalizationManager;
 
 public class StudentDashboardPage extends BorderPane {
     Integer userId = UserSession.getInstance().getCurrentUser().getId();
     GradeDistributionCard distributionCard = new GradeDistributionCard(Role.STUDENT, userId);
 
     public StudentDashboardPage() {
-        setLeft(StudentSidebar.build("Dashboard"));
+        setLeft(StudentSidebar.build(LocalizationManager.get("dashboard")));
         setCenter(buildContent());
     }
 
     private VBox buildContent() {
         VBox content = new VBox(20);
         content.setPadding(new Insets(24));
-        content.getChildren().addAll(TopBar.build("Dashboard", Role.STUDENT, false), buildStatCards(), buildBottomRow());
+        content.getChildren().addAll(TopBar.build(LocalizationManager.get("dashboard"), Role.STUDENT, false), buildStatCards(), buildBottomRow());
         return content;
     }
 
@@ -52,11 +53,11 @@ public class StudentDashboardPage extends BorderPane {
         box.setStyle("-fx-background-color: white; -fx-border-color: #E5E7EB; "
                 + "-fx-border-radius: 8; -fx-background-radius: 8;");
 
-        Label heading = new Label("Course Overview");
+        Label heading = new Label(LocalizationManager.get("courseOverview"));
         heading.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
         TextField search = new TextField();
-        search.setPromptText("Type the name of course");
+        search.setPromptText(LocalizationManager.get("typeCourseName"));
 
         List<CourseDTO> courses = loadStudentCourses();
 

@@ -7,6 +7,7 @@ import com.edujournal.view.controller.AdminTeacherController;
 import javafx.geometry.Insets;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import com.edujournal.config.LocalizationManager;
 
 public class AdminStudentPage extends BorderPane {
 
@@ -22,7 +23,7 @@ public class AdminStudentPage extends BorderPane {
         VBox box = new VBox(12);
         box.setPadding(new Insets(24));
 
-        box.getChildren().add(TopBar.build("Students", role, false));
+        box.getChildren().add(TopBar.build(LocalizationManager.get("students"), role, false));
 
         AdminStudentController controller = new AdminStudentController(role);
         box.getChildren().add(controller);
