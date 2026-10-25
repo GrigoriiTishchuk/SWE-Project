@@ -14,7 +14,7 @@ public class StudentSidebar {
 
     public static VBox build(String active) {
         return Sidebar.build(
-                new Sidebar.NavItem(LocalizationManager.get("dashboard"), active.equals(LocalizationManager.get("dashboard")),
+                new Sidebar.NavItem(LocalizationManager.get("dashboard"), active.equals("Dashboard"),
                         () -> Main.showPage(new StudentDashboardPage())),
                 new Sidebar.SectionHeader(LocalizationManager.get("management")),
                 new Sidebar.NavItem(LocalizationManager.get("profile"), active.equals("Own profile"),
