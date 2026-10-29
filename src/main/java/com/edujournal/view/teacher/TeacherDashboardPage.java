@@ -2,6 +2,7 @@ package com.edujournal.view.teacher;
 
 import com.edujournal.Main;
 import com.edujournal.backend.utils.UserSession;
+import com.edujournal.config.LocalizationManager;
 import com.edujournal.entity.Role;
 import com.edujournal.view.common.*;
 import javafx.geometry.Insets;
@@ -17,6 +18,7 @@ public class TeacherDashboardPage extends BorderPane {
     GradeDistributionCard distributionCard = new GradeDistributionCard(Role.TEACHER, userId);
 
     public TeacherDashboardPage() {
+        Main.setCurrentPageSupplier(TeacherDashboardPage::new);
         setLeft(TeacherSidebar.build("Dashboard"));
         setCenter(buildContent());
     }
@@ -24,7 +26,7 @@ public class TeacherDashboardPage extends BorderPane {
     private VBox buildContent() {
         VBox content = new VBox(20);
         content.setPadding(new Insets(24));
-        content.getChildren().addAll(TopBar.build("Dashboard", Role.TEACHER, false), buildStatCards(), buildBottomRow());
+        content.getChildren().addAll(TopBar.build(LocalizationManager.get("dashboard"), Role.TEACHER, false), buildStatCards(), buildBottomRow());
         return content;
     }
 
@@ -45,25 +47,25 @@ public class TeacherDashboardPage extends BorderPane {
                 + "-fx-border-radius: 8; -fx-background-radius: 8;");
         box.getStylesheets().add(TeacherDashboardPage.class.getResource("/css/button.css").toExternalForm());
 
-        Label heading = new Label("Quick Actions");
+        Label heading = new Label(LocalizationManager.get("quickActions"));
         heading.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
         TextField search = new TextField();
-        search.setPromptText("Type the name");
+        search.setPromptText(LocalizationManager.get("typeName"));
 
-        Button addAssessment = new Button("Add assessment");
+        Button addAssessment = new Button(LocalizationManager.get("addAssessment"));
         addAssessment.setOnAction(e -> Main.showPage(new TeacherGradebookPage(1)));
 
-        Button viewCourses = new Button("View all courses");
+        Button viewCourses = new Button(LocalizationManager.get("viewCourses"));
         viewCourses.setOnAction(e -> Main.showPage(new CoursePage(TeacherSidebar.build("Courses"), Role.TEACHER)));
 
-        Button addGrade = new Button("Add grade");
+        Button addGrade = new Button(LocalizationManager.get("addGrade"));
         addGrade.setOnAction(e -> Main.showPage(new TeacherGradebookPage(0)));
 
-        Button viewProfile = new Button("View own profile");
+        Button viewProfile = new Button(LocalizationManager.get("viewProfile"));
         viewProfile.setOnAction(e -> Main.showPage(new OwnProfilePage(TeacherSidebar.build("Own Profile"), Role.TEACHER)));
 
-        Button generateReport = new Button("Generate Course's report");
+        Button generateReport = new Button(LocalizationManager.get("generateCourseReport"));
         generateReport.setOnAction(e -> Main.showPage(new CourseReportPage(TeacherSidebar.build("Course's report"), Role.TEACHER)));
 
         java.util.List<Button> all = java.util.List.of(addAssessment, viewCourses, addGrade, viewProfile, generateReport);

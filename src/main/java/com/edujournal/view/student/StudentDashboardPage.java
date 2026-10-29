@@ -19,6 +19,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.util.List;
+import com.edujournal.Main;
 import com.edujournal.config.LocalizationManager;
 
 public class StudentDashboardPage extends BorderPane {
@@ -26,6 +27,7 @@ public class StudentDashboardPage extends BorderPane {
     GradeDistributionCard distributionCard = new GradeDistributionCard(Role.STUDENT, userId);
 
     public StudentDashboardPage() {
+        Main.setCurrentPageSupplier(StudentDashboardPage::new);
         setLeft(StudentSidebar.build(LocalizationManager.get("dashboard")));
         setCenter(buildContent());
     }

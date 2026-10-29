@@ -1,6 +1,7 @@
 package com.edujournal.view.common;
 
 import com.edujournal.backend.service.DashboardStatisticsService;
+import com.edujournal.config.LocalizationManager;
 import com.edujournal.entity.Role;
 import com.edujournal.model.GradeDistributionDTO;
 import javafx.application.Platform;
@@ -28,11 +29,11 @@ public class GradeDistributionCard extends VBox {
 
         Label title = new Label("");
         if (role == Role.ADMINISTRATOR) {
-            title.setText("Overall Grade Distribution");
+            title.setText(LocalizationManager.get("overallDistribution"));
         } else if (role == Role.TEACHER) {
-            title.setText("My Courses Grade Distribution");
+            title.setText(LocalizationManager.get("myCoursesDistribution"));
         } else {
-            title.setText("Personal Grade Distribution");
+            title.setText(LocalizationManager.get("personalDistribution"));
         }
 
         title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
@@ -66,36 +67,12 @@ public class GradeDistributionCard extends VBox {
         VBox legend = new VBox(5);
 
         legend.getChildren().addAll(
-                createLegendItem(
-                        "Excellent",
-                        "#5B4EE4",
-                        dto.getExcellent()
-                ),
-                createLegendItem(
-                        "Very Good",
-                        "#1E88E5",
-                        dto.getVeryGood()
-                ),
-                createLegendItem(
-                        "Good",
-                        "#4CAF50",
-                        dto.getGood()
-                ),
-                createLegendItem(
-                        "Satisfactory",
-                        "#E6C200",
-                        dto.getSatisfactory()
-                ),
-                createLegendItem(
-                        "Sufficient",
-                        "#FF8C00",
-                        dto.getSufficient()
-                ),
-                createLegendItem(
-                        "Fail",
-                        "#FF3B3B",
-                        dto.getFail()
-                )
+                createLegendItem(LocalizationManager.get("excellent"),    "#5B4EE4", dto.getExcellent()),
+                createLegendItem(LocalizationManager.get("veryGood"),     "#1E88E5", dto.getVeryGood()),
+                createLegendItem(LocalizationManager.get("good"),         "#4CAF50", dto.getGood()),
+                createLegendItem(LocalizationManager.get("satisfactory"), "#E6C200", dto.getSatisfactory()),
+                createLegendItem(LocalizationManager.get("sufficient"),   "#FF8C00", dto.getSufficient()),
+                createLegendItem(LocalizationManager.get("fail"),         "#FF3B3B", dto.getFail())
         );
 
         getChildren().addAll(title, chart, legend);

@@ -14,6 +14,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
+import com.edujournal.config.LocalizationManager;
 import com.edujournal.view.common.ExportUtil;
 
 import java.util.*;
@@ -100,7 +101,7 @@ public class GradesTab {
         numCol.setMaxWidth(35);
         numCol.setMinWidth(35);
 
-        TableColumn<String[], String> studentCol = new TableColumn<>("Student");
+        TableColumn<String[], String> studentCol = new TableColumn<>(LocalizationManager.get("students"));
         studentCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue()[0]));
         studentCol.setPrefWidth(150);
 
@@ -130,7 +131,7 @@ public class GradesTab {
             table.getColumns().add(scoreCol);
         }
 
-        TableColumn<String[], String> finalGradeCol = new TableColumn<>("Final Grade");
+        TableColumn<String[], String> finalGradeCol = new TableColumn<>(LocalizationManager.get("finalGrade"));
         finalGradeCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue()[colCount + 1]));
         finalGradeCol.setCellFactory(tc -> new TableCell<>() {
             @Override protected void updateItem(String s, boolean empty) {
@@ -154,10 +155,10 @@ public class GradesTab {
         for (int i = 0; i < colCount; i++) exportHeaders[2 + i] = assessments.get(i).getTitle();
         exportHeaders[2 + colCount] = "Final Grade";
 
-        Button fixSave = new Button("Fix / Edit");
+        Button fixSave = new Button(LocalizationManager.get("edit"));
         fixSave.getStyleClass().add("btn-primary");
 
-        Button csvBtn = new Button("Export CSV");
+        Button csvBtn = new Button(LocalizationManager.get("exportCSV"));
         csvBtn.getStyleClass().add("btn-primary");
         csvBtn.setOnAction(e -> {
             List<String[]> rows = new ArrayList<>();
@@ -172,7 +173,7 @@ public class GradesTab {
             ExportUtil.exportCsv(csvBtn.getScene().getWindow(), "gradebook", exportHeaders, rows);
         });
 
-        Button pdfBtn = new Button("Export PDF");
+        Button pdfBtn = new Button(LocalizationManager.get("exportPDF"));
         pdfBtn.getStyleClass().add("btn-primary");
         pdfBtn.setOnAction(e -> {
             List<String[]> rows = new ArrayList<>();
@@ -237,7 +238,7 @@ public class GradesTab {
             }
             editing[0] = !editing[0];
             table.refresh();
-            fixSave.setText(editing[0] ? "Save Changes" : "Fix / Edit");
+            fixSave.setText(editing[0] ? LocalizationManager.get("saveChanges") : LocalizationManager.get("edit"));
         });
 
         HBox btnRow = new HBox(8, fixSave, csvBtn, pdfBtn);

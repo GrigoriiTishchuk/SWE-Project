@@ -1,6 +1,8 @@
 package com.edujournal.view.common;
 
+import com.edujournal.Main;
 import com.edujournal.backend.service.AcademicGroupService;
+import com.edujournal.config.LocalizationManager;
 import com.edujournal.backend.service.StudentService;
 import com.edujournal.backend.service.UserService;
 import com.edujournal.backend.utils.UserSession;
@@ -9,6 +11,9 @@ import com.edujournal.model.UserDTO;
 import com.edujournal.entity.Role;
 import com.edujournal.entity.Student;
 import com.edujournal.entity.User;
+import com.edujournal.view.admin.AdminSidebar;
+import com.edujournal.view.student.StudentSidebar;
+import com.edujournal.view.teacher.TeacherSidebar;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -33,11 +38,20 @@ public class OwnProfilePage extends BorderPane {
             "-fx-background-color: #F3F4F6; -fx-background-radius: 6; -fx-border-color: transparent; -fx-text-fill: #374151;";
 
     public OwnProfilePage(VBox sidebar, Role role) {
+        Main.setCurrentPageSupplier(() -> new OwnProfilePage(buildSidebar(role), role));
         setLeft(sidebar);
         ScrollPane scroll = new ScrollPane(buildContent(role));
         scroll.setFitToWidth(true);
         scroll.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
         setCenter(scroll);
+    }
+
+    private static VBox buildSidebar(Role role) {
+        return switch (role) {
+            case ADMINISTRATOR -> AdminSidebar.build("Own Profile");
+            case TEACHER -> TeacherSidebar.build("Own Profile");
+            default -> StudentSidebar.build("Own profile");
+        };
     }
 
     private VBox buildContent(Role role) {
@@ -66,7 +80,7 @@ public class OwnProfilePage extends BorderPane {
 
         VBox content = new VBox(20);
         content.setPadding(new Insets(24));
-        content.getChildren().addAll(TopBar.build("Own Profile", role, false), body);
+        content.getChildren().addAll(TopBar.build(LocalizationManager.get("profile"), role, false), body);
         return content;
     }
 
@@ -86,7 +100,7 @@ public class OwnProfilePage extends BorderPane {
     }
 
     private VBox buildFormCard(User user, Student student, Role role, Label nameLabel) {
-        Label title = new Label("Personal Information");
+        Label title = new Label(LocalizationManager.get("personalInfo"));
         title.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
         TextField firstName  = createField(user.getFirstName());
@@ -104,11 +118,11 @@ public class OwnProfilePage extends BorderPane {
         }
 
         VBox form = new VBox(12, title,
-                row("First Name", firstName),
-                row("Last Name",  lastName),
-                row("Username",   username),
-                row("Email",      email),
-                row("Phone",      phone)
+                row(LocalizationManager.get("firstName"), firstName),
+                row(LocalizationManager.get("lastName"),  lastName),
+                row(LocalizationManager.get("username"),  username),
+                row(LocalizationManager.get("email"),     email),
+                row(LocalizationManager.get("phone"),     phone)
         );
 
         TextField dobField = null;
@@ -126,16 +140,16 @@ public class OwnProfilePage extends BorderPane {
             TextField groupField = createField(groupName);
 
             form.getChildren().addAll(
-                    row("Student Number", studentNumber),
-                    row("Date of Birth",  dobField),
-                    row("Group",          groupField)
+                    row(LocalizationManager.get("studentNumber"), studentNumber),
+                    row(LocalizationManager.get("dateOfBirth"),   dobField),
+                    row(LocalizationManager.get("group"),         groupField)
             );
         }
 
-        form.getChildren().add(row("Role", roleField));
+        form.getChildren().add(row(LocalizationManager.get("role"), roleField));
 
         boolean[] editing = {false};
-        Button editSaveBtn = new Button("Edit");
+        Button editSaveBtn = new Button(LocalizationManager.get("edit"));
         editSaveBtn.setStyle(BLUE_BTN);
 
         final Student finalStudent = student;
@@ -147,7 +161,7 @@ public class OwnProfilePage extends BorderPane {
                     tf.setEditable(true);
                     tf.setStyle(LIGHT_INPUT);
                 }
-                editSaveBtn.setText("Save Changes");
+                editSaveBtn.setText(LocalizationManager.get("saveChanges"));
             } else {
                 user.setFirstName(firstName.getText().trim());
                 user.setLastName(lastName.getText().trim());
@@ -177,7 +191,7 @@ public class OwnProfilePage extends BorderPane {
                     tf.setEditable(false);
                     tf.setStyle(READONLY_INPUT);
                 }
-                editSaveBtn.setText("Edit");
+                editSaveBtn.setText(LocalizationManager.get("edit"));
             }
             editing[0] = !editing[0];
         });

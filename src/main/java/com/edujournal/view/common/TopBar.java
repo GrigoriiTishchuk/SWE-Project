@@ -2,6 +2,7 @@ package com.edujournal.view.common;
 
 import com.edujournal.Main;
 import com.edujournal.backend.utils.UserSession;
+import com.edujournal.config.LocalizationManager;
 import com.edujournal.entity.Role;
 import com.edujournal.model.UserDTO;
 import com.edujournal.view.LoginPage;
@@ -16,11 +17,19 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
+import java.util.Locale;
 import java.util.function.Consumer;
 
 // name, role, year
 
 public class TopBar {
+
+    private static String localeToLanguage(Locale locale) {
+        return switch (locale.getLanguage()) {
+            case "ru" -> "Russian";
+            default -> "English";
+        };
+    }
 
     public static HBox build(String title, Role role, boolean showYear) {
         return build(title, role, showYear, null);
@@ -42,7 +51,15 @@ public class TopBar {
 
         ComboBox<String> languageSelector = new ComboBox<>();
         languageSelector.getItems().addAll("English", "Turkish", "Russian", "Arabic");
-        languageSelector.setValue("English");
+        languageSelector.setValue(localeToLanguage(LocalizationManager.getCurrentLocale()));
+        languageSelector.valueProperty().addListener((obs, old, val) -> {
+            Locale locale = switch (val) {
+                case "Russian" -> new Locale("ru", "RU");
+                default -> new Locale("en", "US");
+            };
+            LocalizationManager.setLocale(locale);
+            Main.reloadPage();
+        });
 
         Circle avatar = new Circle(20, Color.web("#9CA3AF"));
 

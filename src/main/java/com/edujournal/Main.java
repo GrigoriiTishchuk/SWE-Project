@@ -7,11 +7,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.util.function.Supplier;
+
 // Run via Launcher to avoid missing error
 
 public class Main extends Application {
 
     private static Stage stage;
+    private static Supplier<Parent> currentPageSupplier;
 
     @Override
     public void start(Stage primaryStage) {
@@ -27,6 +30,14 @@ public class Main extends Application {
         Scene scene = new Scene(page, 1280, 720);
         scene.getRoot().setStyle("-fx-font-family: 'Consolas'; -fx-font-size: 14px;");
         stage.setScene(scene);
+    }
+
+    public static void setCurrentPageSupplier(Supplier<Parent> supplier) {
+        currentPageSupplier = supplier;
+    }
+
+    public static void reloadPage() {
+        if (currentPageSupplier != null) showPage(currentPageSupplier.get());
     }
 
     public static void main(String[] args) {
