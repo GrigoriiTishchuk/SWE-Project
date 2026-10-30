@@ -22,6 +22,7 @@ public class AdminDashboardPage extends BorderPane {
     GradeDistributionCard distributionCard = new GradeDistributionCard(Role.ADMINISTRATOR, null);
 
     public AdminDashboardPage() {
+        Main.setCurrentPageSupplier(AdminDashboardPage::new);
         setLeft(AdminSidebar.build("Dashboard"));
         setCenter(buildContent());
     }

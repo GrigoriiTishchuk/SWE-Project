@@ -1,5 +1,6 @@
 package com.edujournal.view.controller;
 
+import com.edujournal.config.LocalizationManager;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -17,11 +18,11 @@ public abstract class BaseController<T> extends BorderPane {
     protected TextField searchField = new TextField();
     protected ComboBox<String> filterCombo = new ComboBox<>();
 
-    protected Button addBtn    = new Button("Add");
-    protected Button editBtn   = new Button("Edit");
-    protected Button deleteBtn = new Button("Delete");
-    protected Button viewBtn = new Button("View");
-    protected Button reportBtn = new Button("Student Report");
+    protected Button addBtn    = new Button(LocalizationManager.get("add"));
+    protected Button editBtn   = new Button(LocalizationManager.get("edit"));
+    protected Button deleteBtn = new Button(LocalizationManager.get("delete"));
+    protected Button viewBtn   = new Button(LocalizationManager.get("view"));
+    protected Button reportBtn = new Button(LocalizationManager.get("studentReport"));
 
     {
         addBtn.getStyleClass().add("btn-primary");
@@ -56,17 +57,17 @@ public abstract class BaseController<T> extends BorderPane {
     // Layout
     private void setupLayout() {
 
-        searchField.setPromptText("Search...");
+        table.setPlaceholder(new Label(LocalizationManager.get("noContent")));
+        searchField.setPromptText(LocalizationManager.get("search"));
         searchField.setPrefWidth(250);
 
-        Button clearButton = new Button("Clear");
+        Button clearButton = new Button(LocalizationManager.get("clear"));
 
         HBox filterBar = new HBox(10);
         filterBar.setPadding(new Insets(10, 0, 10, 0));
         filterBar.getChildren().addAll(
-                new Label("Search:"),
                 searchField,
-                new Label("Filter by:"),
+                new Label(LocalizationManager.get("filterBy")),
                 filterCombo,
                 clearButton
         );

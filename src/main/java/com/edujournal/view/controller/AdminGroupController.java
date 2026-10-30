@@ -5,6 +5,7 @@ import com.edujournal.backend.service.CourseService;
 import com.edujournal.backend.service.StudentService;
 import com.edujournal.backend.service.UserService;
 import com.edujournal.backend.utils.AcademicGroupMapper;
+import com.edujournal.config.LocalizationManager;
 import com.edujournal.entity.AcademicGroup;
 import com.edujournal.entity.Course;
 import com.edujournal.entity.Role;
@@ -26,6 +27,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.List;
+import java.util.Map;
 
 public class AdminGroupController extends BaseController<AcademicGroupDTO> {
 
@@ -45,7 +47,7 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
     @Override
     protected void configureColumns() {
         TableColumn<AcademicGroupDTO, String> nameCol =
-                new TableColumn<>("Group Name");
+                new TableColumn<>(LocalizationManager.get("name"));
         nameCol.setCellValueFactory(c ->
                 new SimpleStringProperty(c.getValue().getName()));
 
@@ -53,6 +55,26 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
 
         filterCombo.getItems().addAll("All", "Name");
         filterCombo.setValue("All");
+
+        Map<String, String> filterKeyMap = Map.of("All", "all", "Name", "name");
+        filterCombo.setCellFactory(list -> new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) { setText(null); return; }
+                String key = filterKeyMap.get(item);
+                setText(key != null ? LocalizationManager.get(key) : item);
+            }
+        });
+        filterCombo.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) { setText(null); return; }
+                String key = filterKeyMap.get(item);
+                setText(key != null ? LocalizationManager.get(key) : item);
+            }
+        });
     }
 
     private VBox buildGroupCard(AcademicGroupDTO group) {
@@ -69,15 +91,15 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
         Label arrow = new Label("▶");
         arrow.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
-        Button addStudentBtn = new Button("Add");
+        Button addStudentBtn = new Button(LocalizationManager.get("add"));
         addStudentBtn.getStyleClass().add("btn-primary");
         addStudentBtn.setOnAction(e -> showAddStudentDialog(group));
 
-        Button removeStudentBtn = new Button("Remove");
+        Button removeStudentBtn = new Button(LocalizationManager.get("remove"));
         removeStudentBtn.getStyleClass().add("btn-delete");
         removeStudentBtn.setOnAction(e -> showRemoveStudentDialog(group));
 
-        Button showStudentsBtn = new Button("Show students");
+        Button showStudentsBtn = new Button(LocalizationManager.get("showStudents"));
         showStudentsBtn.getStyleClass().add("btn-secondary");
         showStudentsBtn.setOnAction(e -> showGroupStudentsWindow(group));
 
@@ -170,16 +192,16 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
     @Override
     public void showAddDialog() {
         Dialog<AcademicGroupDTO> dialog = new Dialog<>();
-        dialog.setTitle("Add Academic Group");
+        dialog.setTitle(LocalizationManager.get("addGroup"));
 
         TextField nameField = new TextField();
-        nameField.setPromptText("Academic group name");
+        nameField.setPromptText(LocalizationManager.get("name"));
 
         VBox box = new VBox(10, nameField);
         box.setPadding(new Insets(10));
         dialog.getDialogPane().setContent(box);
 
-        ButtonType saveBtn = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        ButtonType saveBtn = new ButtonType(LocalizationManager.get("save"), ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(saveBtn, ButtonType.CANCEL);
 
         dialog.setResultConverter(button -> {
@@ -377,19 +399,19 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
         TableView<StudentDTO> table = new TableView<>();
         table.setItems(FXCollections.observableArrayList(students));
 
-        TableColumn<StudentDTO, String> firstNameCol = new TableColumn<>("First Name");
+        TableColumn<StudentDTO, String> firstNameCol = new TableColumn<>(LocalizationManager.get("firstName"));
         firstNameCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getFirstName()));
 
-        TableColumn<StudentDTO, String> lastNameCol = new TableColumn<>("Last Name");
+        TableColumn<StudentDTO, String> lastNameCol = new TableColumn<>(LocalizationManager.get("lastName"));
         lastNameCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getLastName()));
 
-        TableColumn<StudentDTO, String> numberCol = new TableColumn<>("Student Number");
+        TableColumn<StudentDTO, String> numberCol = new TableColumn<>(LocalizationManager.get("studentNumberCol"));
         numberCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getStudentNumber()));
 
-        TableColumn<StudentDTO, String> emailCol = new TableColumn<>("Email");
+        TableColumn<StudentDTO, String> emailCol = new TableColumn<>(LocalizationManager.get("email"));
         emailCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getEmail()));
 
-        TableColumn<StudentDTO, String> phoneCol = new TableColumn<>("Phone");
+        TableColumn<StudentDTO, String> phoneCol = new TableColumn<>(LocalizationManager.get("phone"));
         phoneCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPhone()));
 
         table.getColumns().addAll(firstNameCol, lastNameCol, numberCol, emailCol, phoneCol);

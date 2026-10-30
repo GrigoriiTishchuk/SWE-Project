@@ -3,6 +3,7 @@ package com.edujournal.view.controller;
 import com.edujournal.backend.service.CourseService;
 import com.edujournal.backend.service.UserService;
 import com.edujournal.backend.utils.UserMapper;
+import com.edujournal.config.LocalizationManager;
 import com.edujournal.entity.Role;
 import com.edujournal.entity.User;
 import com.edujournal.model.CourseDTO;
@@ -14,6 +15,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.util.List;
+import java.util.Map;
 
 public class AdminTeacherController extends BaseController<UserDTO> {
     private final UserService userService = new UserService();
@@ -77,50 +79,73 @@ public class AdminTeacherController extends BaseController<UserDTO> {
 
     @Override
     protected void configureColumns() {
-        TableColumn<UserDTO, String> idCol = new TableColumn<>("ID");
+        TableColumn<UserDTO, String> idCol = new TableColumn<>(LocalizationManager.get("id"));
         idCol.setCellValueFactory(c -> new SimpleStringProperty(String.valueOf(c.getValue().getId())));
 
-        TableColumn<UserDTO, String> usernameCol = new TableColumn<>("Username");
+        TableColumn<UserDTO, String> usernameCol = new TableColumn<>(LocalizationManager.get("username"));
         usernameCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getUsername()));
 
-        TableColumn<UserDTO, String> firstNameCol = new TableColumn<>("First name");
+        TableColumn<UserDTO, String> firstNameCol = new TableColumn<>(LocalizationManager.get("firstName"));
         firstNameCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getFirstName()));
 
-        TableColumn<UserDTO, String> lastNameCol = new TableColumn<>("Last Name");
+        TableColumn<UserDTO, String> lastNameCol = new TableColumn<>(LocalizationManager.get("lastName"));
         lastNameCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getLastName()));
 
-        TableColumn<UserDTO, String> emailCol = new TableColumn<>("Email");
+        TableColumn<UserDTO, String> emailCol = new TableColumn<>(LocalizationManager.get("email"));
         emailCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getEmail()));
 
-        TableColumn<UserDTO, String> phoneCol = new TableColumn<>("Phone Number");
+        TableColumn<UserDTO, String> phoneCol = new TableColumn<>(LocalizationManager.get("phone"));
         phoneCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPhone()));
 
         table.getColumns().addAll(idCol, usernameCol, firstNameCol, lastNameCol, emailCol, phoneCol);
 
         filterCombo.getItems().addAll("All", "ID", "Username", "First Name", "Last Name", "Phone Number");
         filterCombo.setValue("All");
+
+        Map<String, String> filterKeyMap = Map.of(
+                "All", "all", "ID", "id", "Username", "username",
+                "First Name", "firstName", "Last Name", "lastName", "Phone Number", "phone"
+        );
+        filterCombo.setCellFactory(list -> new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) { setText(null); return; }
+                String key = filterKeyMap.get(item);
+                setText(key != null ? LocalizationManager.get(key) : item);
+            }
+        });
+        filterCombo.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) { setText(null); return; }
+                String key = filterKeyMap.get(item);
+                setText(key != null ? LocalizationManager.get(key) : item);
+            }
+        });
     }
 
     // Dialogs
     @Override
     public void showAddDialog() {
         Dialog<UserDTO> dialog = new Dialog<>();
-        dialog.setTitle("Add Teacher");
+        dialog.setTitle(LocalizationManager.get("addTeacher"));
 
         TextField firstNameField = new TextField();
-        firstNameField.setPromptText("First Name");
+        firstNameField.setPromptText(LocalizationManager.get("firstName"));
 
         TextField lastNameField = new TextField();
-        lastNameField.setPromptText("Last Name");
+        lastNameField.setPromptText(LocalizationManager.get("lastName"));
 
         TextField phoneField = new TextField();
-        phoneField.setPromptText("Phone Number");
+        phoneField.setPromptText(LocalizationManager.get("phone"));
 
         VBox box = new VBox(10, firstNameField, lastNameField, phoneField);
         box.setPadding(new Insets(10));
         dialog.getDialogPane().setContent(box);
 
-        ButtonType saveBtn = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        ButtonType saveBtn = new ButtonType(LocalizationManager.get("save"), ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(saveBtn, ButtonType.CANCEL);
 
         dialog.setResultConverter(button -> {

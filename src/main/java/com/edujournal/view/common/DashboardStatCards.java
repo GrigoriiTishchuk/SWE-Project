@@ -7,6 +7,7 @@ import com.edujournal.backend.service.EnrollmentService;
 import com.edujournal.backend.service.StudentReportService;
 import com.edujournal.backend.service.StudentService;
 import com.edujournal.backend.utils.UserSession;
+import com.edujournal.config.LocalizationManager;
 import com.edujournal.dao.UserDAO;
 import com.edujournal.entity.Enrollment;
 import com.edujournal.entity.Role;
@@ -43,10 +44,10 @@ public class DashboardStatCards {
                 int groups = (int) teacherCourses.stream()
                         .map(CourseDTO::getGroupId).filter(Objects::nonNull).distinct().count();
                 box.getChildren().addAll(
-                        new StatCard("Courses",     String.valueOf(teacherCourses.size()), "/images/course_icon.png"),
-                        new StatCard("Groups",      String.valueOf(groups),                "/images/group_icon.png"),
-                        new StatCard("Students",    String.valueOf(studentIds.size()),     "/images/student_icon.png"),
-                        new StatCard("Assessments", String.valueOf(assessments),           "/images/assessement_icon.png")
+                        new StatCard(LocalizationManager.get("courses"),     String.valueOf(teacherCourses.size()), "/images/course_icon.png"),
+                        new StatCard(LocalizationManager.get("groups"),      String.valueOf(groups),                "/images/group_icon.png"),
+                        new StatCard(LocalizationManager.get("students"),    String.valueOf(studentIds.size()),     "/images/student_icon.png"),
+                        new StatCard(LocalizationManager.get("assessments"), String.valueOf(assessments),           "/images/assessement_icon.png")
                 );
             }
             case STUDENT -> {
@@ -75,10 +76,10 @@ public class DashboardStatCards {
                 }
 
                 box.getChildren().addAll(
-                        new StatCard("Average Grade",   avgGrade,                      "/images/av_grade_icon.png"),
-                        new StatCard("Assessments",     String.valueOf(assessments),    "/images/assessement_icon.png"),
-                        new StatCard("Current Courses", String.valueOf(enrolledCourses),"/images/current_course_icon.png"),
-                        new StatCard("Completed",       String.valueOf(completed),      "/images/course_icon.png")
+                        new StatCard(LocalizationManager.get("averageGrade"),   avgGrade,                      "/images/av_grade_icon.png"),
+                        new StatCard(LocalizationManager.get("assessments"),    String.valueOf(assessments),    "/images/assessement_icon.png"),
+                        new StatCard(LocalizationManager.get("currentCourses"), String.valueOf(enrolledCourses),"/images/current_course_icon.png"),
+                        new StatCard(LocalizationManager.get("completed"),      String.valueOf(completed),      "/images/course_icon.png")
                 );
             }
             case ADMINISTRATOR -> {
@@ -88,10 +89,10 @@ public class DashboardStatCards {
                 int courses  = new CourseService().findAll().size();
                 int groups   = new AcademicGroupService().findAll().size();
                 box.getChildren().addAll(
-                        new StatCard("Students", String.valueOf(students), "/images/student_icon.png"),
-                        new StatCard("Teachers", String.valueOf(teachers), "/images/teacher_icon.png"),
-                        new StatCard("Courses",  String.valueOf(courses),  "/images/course_icon.png"),
-                        new StatCard("Groups",   String.valueOf(groups),   "/images/group_icon.png")
+                        new StatCard(LocalizationManager.get("students"), String.valueOf(students), "/images/student_icon.png"),
+                        new StatCard(LocalizationManager.get("teachers"), String.valueOf(teachers), "/images/teacher_icon.png"),
+                        new StatCard(LocalizationManager.get("courses"),  String.valueOf(courses),  "/images/course_icon.png"),
+                        new StatCard(LocalizationManager.get("groups"),   String.valueOf(groups),   "/images/group_icon.png")
                 );
             }
         }

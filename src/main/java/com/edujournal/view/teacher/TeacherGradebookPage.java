@@ -1,8 +1,10 @@
 package com.edujournal.view.teacher;
 
+import com.edujournal.Main;
 import com.edujournal.backend.service.AcademicGroupService;
 import com.edujournal.backend.service.CourseService;
 import com.edujournal.backend.utils.UserSession;
+import com.edujournal.config.LocalizationManager;
 import com.edujournal.entity.AcademicGroup;
 import com.edujournal.entity.Role;
 import com.edujournal.model.CourseDTO;
@@ -24,7 +26,11 @@ public class TeacherGradebookPage extends BorderPane {
     private static final String INACTIVE_UNDERLINE =
             "-fx-background-color: transparent; -fx-min-height: 2; -fx-max-height: 2;";
 
-    private final String[] TAB_NAMES = {"Grades", "Assessments", "Notes"};
+    private final String[] TAB_NAMES = {
+        LocalizationManager.get("grades"),
+        LocalizationManager.get("assessments"),
+        LocalizationManager.get("notes")
+    };
     private final Label[] tabLabels = new Label[TAB_NAMES.length];
     private final Region[] tabUnderlines = new Region[TAB_NAMES.length];
     private final StackPane contentArea = new StackPane();
@@ -44,6 +50,7 @@ public class TeacherGradebookPage extends BorderPane {
     }
 
     public TeacherGradebookPage(int initialTab, String course) {
+        Main.setCurrentPageSupplier(TeacherGradebookPage::new);
         activeTab = initialTab;
         preSelectedCourse = course;
         setLeft(TeacherSidebar.build("Gradebook"));
@@ -54,7 +61,7 @@ public class TeacherGradebookPage extends BorderPane {
         VBox content = new VBox(16);
         content.setPadding(new Insets(24));
         content.getChildren().addAll(
-                TopBar.build("Gradebook", Role.TEACHER, false),
+                TopBar.build(LocalizationManager.get("gradebook"), Role.TEACHER, false),
                 buildFilterRow(),
                 buildTabs(),
                 contentArea
@@ -65,14 +72,14 @@ public class TeacherGradebookPage extends BorderPane {
 
     private HBox buildFilterRow() {
         courseCombo = new ComboBox<>();
-        courseCombo.setPromptText("Choose the course");
+        courseCombo.setPromptText(LocalizationManager.get("chooseCourse"));
         courseCombo.setPrefWidth(220);
         Integer userId = UserSession.getInstance().getCurrentUser().getId();
         for (CourseDTO c : courseService.findByUserId(userId))
             courseCombo.getItems().add(c.getName());
 
         groupCombo = new ComboBox<>();
-        groupCombo.setPromptText("Group");
+        groupCombo.setPromptText(LocalizationManager.get("groups"));
         groupCombo.setPrefWidth(160);
         for (AcademicGroup g : new AcademicGroupService().findAll())
             groupCombo.getItems().add(g.getName());
@@ -130,8 +137,7 @@ public class TeacherGradebookPage extends BorderPane {
         contentArea.getChildren().clear();
 
         if (courseCombo.getValue() == null) {
-            String action = TAB_NAMES[activeTab].toLowerCase();
-            Label hint = new Label("Choose a course to view " + action + ".");
+            Label hint = new Label(LocalizationManager.get("chooseCourse"));
             hint.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 14px;");
             StackPane.setAlignment(hint, Pos.TOP_LEFT);
             contentArea.getChildren().add(hint);

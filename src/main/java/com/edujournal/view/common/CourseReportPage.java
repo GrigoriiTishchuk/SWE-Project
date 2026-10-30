@@ -1,6 +1,8 @@
 package com.edujournal.view.common;
 
+import com.edujournal.Main;
 import com.edujournal.backend.service.AcademicGroupService;
+import com.edujournal.config.LocalizationManager;
 import com.edujournal.backend.service.AssessmentsService;
 import com.edujournal.backend.service.EnrollmentService;
 import com.edujournal.backend.utils.UserSession;
@@ -8,6 +10,8 @@ import com.edujournal.dao.CourseDAO;
 import com.edujournal.entity.AcademicGroup;
 import com.edujournal.entity.Course;
 import com.edujournal.entity.Role;
+import com.edujournal.view.admin.AdminSidebar;
+import com.edujournal.view.teacher.TeacherSidebar;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -33,9 +37,17 @@ public class CourseReportPage extends BorderPane {
     private String selectedYear = DEFAULT_YEAR;
 
     public CourseReportPage(VBox sidebar, Role role) {
+        Main.setCurrentPageSupplier(() -> new CourseReportPage(buildSidebar(role), role));
         this.role = role;
         setLeft(sidebar);
         setCenter(buildContent(role));
+    }
+
+    private static VBox buildSidebar(Role role) {
+        return switch (role) {
+            case ADMINISTRATOR -> AdminSidebar.build("Course's report");
+            default -> TeacherSidebar.build("Course's report");
+        };
     }
 
     private VBox buildContent(Role role) {
@@ -44,11 +56,11 @@ public class CourseReportPage extends BorderPane {
 
         table = buildTable();
 
-        Button csvBtn = new Button("Export CSV");
+        Button csvBtn = new Button(LocalizationManager.get("exportCSV"));
         csvBtn.getStyleClass().add("btn-primary");
         csvBtn.setOnAction(e -> ExportUtil.exportCsv(getScene().getWindow(), "courses_report", HEADERS, buildRows()));
 
-        Button pdfBtn = new Button("Export PDF");
+        Button pdfBtn = new Button(LocalizationManager.get("exportPDF"));
         pdfBtn.getStyleClass().add("btn-primary");
         pdfBtn.setOnAction(e -> ExportUtil.exportPdf(getScene().getWindow(), "courses_report", "Courses Report", null, HEADERS, buildRows()));
 
@@ -57,7 +69,7 @@ public class CourseReportPage extends BorderPane {
         toolbar.getStylesheets().add(CourseReportPage.class.getResource("/css/button.css").toExternalForm());
 
         box.getChildren().addAll(
-                TopBar.build("Course's report", role, true, year -> { selectedYear = year; reloadTable(); }),
+                TopBar.build(LocalizationManager.get("courseReport"), role, true, year -> { selectedYear = year; reloadTable(); }),
                 toolbar, table);
         return box;
     }
@@ -78,26 +90,26 @@ public class CourseReportPage extends BorderPane {
     private TableView<Course> buildTable() {
         TableView<Course> t = new TableView<>();
 
-        TableColumn<Course, String> codeCol = new TableColumn<>("Code");
+        TableColumn<Course, String> codeCol = new TableColumn<>(LocalizationManager.get("code"));
         codeCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getCode()));
 
-        TableColumn<Course, String> nameCol = new TableColumn<>("Name");
+        TableColumn<Course, String> nameCol = new TableColumn<>(LocalizationManager.get("name"));
         nameCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getName()));
 
-        TableColumn<Course, String> groupCol = new TableColumn<>("Group");
+        TableColumn<Course, String> groupCol = new TableColumn<>(LocalizationManager.get("academicGroups"));
         groupCol.setCellValueFactory(c -> {
             Integer groupId = c.getValue().getAcademicGroupId();
             AcademicGroup group = groupId != null ? academicGroupService.findById(groupId) : null;
             return new SimpleStringProperty(group != null ? group.getName() : "-");
         });
 
-        TableColumn<Course, String> studentsCol = new TableColumn<>("Students");
+        TableColumn<Course, String> studentsCol = new TableColumn<>(LocalizationManager.get("students"));
         studentsCol.setCellValueFactory(c -> {
             int count = enrollmentService.findByCourseId(c.getValue().getId()).size();
             return new SimpleStringProperty(String.valueOf(count));
         });
 
-        TableColumn<Course, String> assessmentsCol = new TableColumn<>("Assessments");
+        TableColumn<Course, String> assessmentsCol = new TableColumn<>(LocalizationManager.get("assessments"));
         assessmentsCol.setCellValueFactory(c -> {
             int count = assessmentsService.getByCourseId(c.getValue().getId()).size();
             return new SimpleStringProperty(String.valueOf(count));

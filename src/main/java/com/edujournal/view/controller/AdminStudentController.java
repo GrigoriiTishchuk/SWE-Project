@@ -4,6 +4,7 @@ import com.edujournal.Main;
 import com.edujournal.backend.service.StudentService;
 import com.edujournal.backend.service.UserService;
 import com.edujournal.backend.utils.GeneratorUtil;
+import com.edujournal.config.LocalizationManager;
 import com.edujournal.entity.Role;
 import com.edujournal.entity.Student;
 import com.edujournal.model.StudentDTO;
@@ -17,6 +18,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 
 import java.util.List;
+import java.util.Map;
 
 public class AdminStudentController extends BaseController<StudentDTO> {
 
@@ -84,7 +86,7 @@ public class AdminStudentController extends BaseController<StudentDTO> {
     @Override
     protected void configureColumns() {
 
-        TableColumn<StudentDTO, String> idCol = new TableColumn<>("ID");
+        TableColumn<StudentDTO, String> idCol = new TableColumn<>(LocalizationManager.get("id"));
         idCol.setCellValueFactory(
                 cell -> new SimpleStringProperty(
                         cell.getValue().getStudentId() != null
@@ -94,37 +96,37 @@ public class AdminStudentController extends BaseController<StudentDTO> {
         );
 
         TableColumn<StudentDTO, String> studentNumberCol =
-                new TableColumn<>("Student Number");
+                new TableColumn<>(LocalizationManager.get("studentNumberCol"));
         studentNumberCol.setCellValueFactory(
                 new PropertyValueFactory<>("studentNumber")
         );
 
         TableColumn<StudentDTO, String> usernameCol =
-                new TableColumn<>("Username");
+                new TableColumn<>(LocalizationManager.get("username"));
         usernameCol.setCellValueFactory(
                 cell -> new SimpleStringProperty(cell.getValue().getUsername())
         );
 
         TableColumn<StudentDTO, String> firstNameCol =
-                new TableColumn<>("First Name");
+                new TableColumn<>(LocalizationManager.get("firstName"));
         firstNameCol.setCellValueFactory(
                 cell -> new SimpleStringProperty(cell.getValue().getFirstName())
         );
 
         TableColumn<StudentDTO, String> lastNameCol =
-                new TableColumn<>("Last Name");
+                new TableColumn<>(LocalizationManager.get("lastName"));
         lastNameCol.setCellValueFactory(
                 cell -> new SimpleStringProperty(cell.getValue().getLastName())
         );
 
         TableColumn<StudentDTO, String> emailCol =
-                new TableColumn<>("Email");
+                new TableColumn<>(LocalizationManager.get("email"));
         emailCol.setCellValueFactory(
                 cell -> new SimpleStringProperty(cell.getValue().getEmail())
         );
 
         TableColumn<StudentDTO, String> phoneCol =
-                new TableColumn<>("Phone Number");
+                new TableColumn<>(LocalizationManager.get("phone"));
         phoneCol.setCellValueFactory(
                 cell -> new SimpleStringProperty(cell.getValue().getPhone())
         );
@@ -149,8 +151,31 @@ public class AdminStudentController extends BaseController<StudentDTO> {
                 "Email",
                 "Phone Number"
         );
-
         filterCombo.setValue("All");
+
+        Map<String, String> filterKeyMap = Map.of(
+                "All", "all", "ID", "id", "Student Number", "studentNumberCol",
+                "Username", "username", "First Name", "firstName",
+                "Last Name", "lastName", "Email", "email", "Phone Number", "phone"
+        );
+        filterCombo.setCellFactory(list -> new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) { setText(null); return; }
+                String key = filterKeyMap.get(item);
+                setText(key != null ? LocalizationManager.get(key) : item);
+            }
+        });
+        filterCombo.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) { setText(null); return; }
+                String key = filterKeyMap.get(item);
+                setText(key != null ? LocalizationManager.get(key) : item);
+            }
+        });
     }
 
     private void openStudentReport() {
@@ -173,21 +198,21 @@ public class AdminStudentController extends BaseController<StudentDTO> {
     @Override
     public void showAddDialog() {
         Dialog<StudentDTO> dialog = new Dialog<>();
-        dialog.setTitle("Add Student");
+        dialog.setTitle(LocalizationManager.get("addStudent"));
 
         TextField firstNameField = new TextField();
         TextField lastNameField = new TextField();
         TextField phoneField = new TextField();
 
-        firstNameField.setPromptText("First Name");
-        lastNameField.setPromptText("Last Name");
-        phoneField.setPromptText("Phone Number");
+        firstNameField.setPromptText(LocalizationManager.get("firstName"));
+        lastNameField.setPromptText(LocalizationManager.get("lastName"));
+        phoneField.setPromptText(LocalizationManager.get("phone"));
 
         VBox box = new VBox(10, firstNameField, lastNameField, phoneField);
         box.setPadding(new Insets(10));
         dialog.getDialogPane().setContent(box);
 
-        ButtonType saveBtn = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        ButtonType saveBtn = new ButtonType(LocalizationManager.get("save"), ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(saveBtn, ButtonType.CANCEL);
 
         dialog.setResultConverter(button -> {

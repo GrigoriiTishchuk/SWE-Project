@@ -1,5 +1,6 @@
 package com.edujournal.view.admin;
 
+import com.edujournal.Main;
 import com.edujournal.entity.Role;
 import com.edujournal.view.common.TopBar;
 import com.edujournal.view.controller.AdminGroupController;
@@ -13,6 +14,7 @@ public class AdminGroupPage extends BorderPane {
     private final Role role;
 
     public AdminGroupPage(VBox sidebar, Role role) {
+        Main.setCurrentPageSupplier(() -> new AdminGroupPage(AdminSidebar.build("Groups"), Role.ADMINISTRATOR));
         this.role = role;
         setLeft(sidebar);
         setCenter(buildContent());

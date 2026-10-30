@@ -10,6 +10,7 @@ import com.edujournal.entity.AcademicGroup;
 import com.edujournal.entity.Assessments;
 import com.edujournal.entity.Enrollment;
 import com.edujournal.entity.Grades;
+import com.edujournal.config.LocalizationManager;
 import com.edujournal.entity.Role;
 import com.edujournal.model.StudentDTO;
 import com.edujournal.model.StudentReportDTO;
@@ -51,7 +52,7 @@ public class StudentReportController {
         root.setPadding(new Insets(10));
 
         if (studentId == null) {
-            root.getChildren().add(new Label("Select a student from Student Management to generate a report."));
+            root.getChildren().add(new Label(LocalizationManager.get("selectStudentForReport")));
             return root;
         }
 
@@ -82,9 +83,9 @@ public class StudentReportController {
         VBox card = new VBox(5);
         card.getChildren().addAll(
                 new Label(student.getFirstName() + " " + student.getLastName()),
-                new Label("Group: " + groupName),
-                new Label("Student Number: " + student.getStudentNumber()),
-                new Label("Average Grade: " + avgGrade)
+                new Label(LocalizationManager.get("group") + " " + groupName),
+                new Label(LocalizationManager.get("studentNumber") + " " + student.getStudentNumber()),
+                new Label(LocalizationManager.get("averageGrade2") + " " + avgGrade)
         );
         return card;
     }
@@ -122,7 +123,7 @@ public class StudentReportController {
         TableView<List<String>> table = new TableView<>();
         table.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
-        TableColumn<List<String>, String> labelColumn = new TableColumn<>("Assessment");
+        TableColumn<List<String>, String> labelColumn = new TableColumn<>(LocalizationManager.get("assessment"));
         labelColumn.setPrefWidth(140);
         labelColumn.setCellValueFactory(data ->
                 new SimpleStringProperty(data.getValue().get(0))
@@ -142,7 +143,7 @@ public class StudentReportController {
         }
 
         List<String> scoreRow = new ArrayList<>();
-        scoreRow.add("Score");
+        scoreRow.add(LocalizationManager.get("score"));
         for (StudentReportDTO dto : records) {
             scoreRow.add(dto.getScore() != null ? dto.getScore().toString() : "-");
         }
@@ -155,7 +156,7 @@ public class StudentReportController {
                         .collect(Collectors.toMap(Grades::getAssessmentId, g -> g));
         String finalGrade = GradesTab.computeFinalGrade(assessments, gradeMap, assessments.size());
 
-        TableColumn<List<String>, String> finalGradeCol = new TableColumn<>("Final Grade");
+        TableColumn<List<String>, String> finalGradeCol = new TableColumn<>(LocalizationManager.get("finalGrade"));
         finalGradeCol.setPrefWidth(120);
         finalGradeCol.setCellValueFactory(data -> new SimpleStringProperty(finalGrade));
         table.getColumns().add(finalGradeCol);

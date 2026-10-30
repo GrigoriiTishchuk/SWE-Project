@@ -1,17 +1,19 @@
 package com.edujournal.entity;
 
+import com.edujournal.config.LocalizationManager;
+
 public enum Role {
-    ADMINISTRATOR("Administrator"),
-    TEACHER("Teacher"),
-    STUDENT("Student");
+    ADMINISTRATOR("roleAdministrator"),
+    TEACHER("roleTeacher"),
+    STUDENT("roleStudent");
 
-    private final String displayName;
+    private final String key;
 
-    Role(String displayName) {
-        this.displayName = displayName;
+    Role(String key) {
+        this.key = key;
     }
 
     public String getDisplayName() {
-        return displayName;
+        return LocalizationManager.get(key);
     }
 }
