@@ -57,6 +57,7 @@ public abstract class BaseController<T> extends BorderPane {
     // Layout
     private void setupLayout() {
 
+        table.setPlaceholder(new Label(LocalizationManager.get("noContent")));
         searchField.setPromptText(LocalizationManager.get("search"));
         searchField.setPrefWidth(250);
 

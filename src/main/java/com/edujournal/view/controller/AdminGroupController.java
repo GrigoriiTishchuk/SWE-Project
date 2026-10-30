@@ -91,15 +91,15 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
         Label arrow = new Label("▶");
         arrow.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
-        Button addStudentBtn = new Button("Add");
+        Button addStudentBtn = new Button(LocalizationManager.get("add"));
         addStudentBtn.getStyleClass().add("btn-primary");
         addStudentBtn.setOnAction(e -> showAddStudentDialog(group));
 
-        Button removeStudentBtn = new Button("Remove");
+        Button removeStudentBtn = new Button(LocalizationManager.get("remove"));
         removeStudentBtn.getStyleClass().add("btn-delete");
         removeStudentBtn.setOnAction(e -> showRemoveStudentDialog(group));
 
-        Button showStudentsBtn = new Button("Show students");
+        Button showStudentsBtn = new Button(LocalizationManager.get("showStudents"));
         showStudentsBtn.getStyleClass().add("btn-secondary");
         showStudentsBtn.setOnAction(e -> showGroupStudentsWindow(group));
 
@@ -399,19 +399,19 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
         TableView<StudentDTO> table = new TableView<>();
         table.setItems(FXCollections.observableArrayList(students));
 
-        TableColumn<StudentDTO, String> firstNameCol = new TableColumn<>("First Name");
+        TableColumn<StudentDTO, String> firstNameCol = new TableColumn<>(LocalizationManager.get("firstName"));
         firstNameCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getFirstName()));
 
-        TableColumn<StudentDTO, String> lastNameCol = new TableColumn<>("Last Name");
+        TableColumn<StudentDTO, String> lastNameCol = new TableColumn<>(LocalizationManager.get("lastName"));
         lastNameCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getLastName()));
 
-        TableColumn<StudentDTO, String> numberCol = new TableColumn<>("Student Number");
+        TableColumn<StudentDTO, String> numberCol = new TableColumn<>(LocalizationManager.get("studentNumberCol"));
         numberCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getStudentNumber()));
 
-        TableColumn<StudentDTO, String> emailCol = new TableColumn<>("Email");
+        TableColumn<StudentDTO, String> emailCol = new TableColumn<>(LocalizationManager.get("email"));
         emailCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getEmail()));
 
-        TableColumn<StudentDTO, String> phoneCol = new TableColumn<>("Phone");
+        TableColumn<StudentDTO, String> phoneCol = new TableColumn<>(LocalizationManager.get("phone"));
         phoneCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPhone()));
 
         table.getColumns().addAll(firstNameCol, lastNameCol, numberCol, emailCol, phoneCol);

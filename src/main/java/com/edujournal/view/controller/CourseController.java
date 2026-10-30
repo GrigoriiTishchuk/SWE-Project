@@ -5,6 +5,7 @@ import com.edujournal.backend.service.CourseService;
 import com.edujournal.backend.service.UserService;
 import com.edujournal.backend.utils.UserSession;
 import com.edujournal.backend.utils.CourseMapper;
+import com.edujournal.config.LocalizationManager;
 import com.edujournal.entity.Course;
 import com.edujournal.entity.Role;
 import com.edujournal.model.AcademicGroupDTO;
@@ -19,6 +20,7 @@ import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 public class CourseController extends BaseController<CourseDTO> {
@@ -54,7 +56,7 @@ public class CourseController extends BaseController<CourseDTO> {
             addBtn.setVisible(false);
             editBtn.setVisible(false);
             deleteBtn.setVisible(false);
-            viewBtn.setText("Add Assessment");
+            viewBtn.setText(LocalizationManager.get("addAssessment"));
             viewBtn.setOnAction(e -> openAddAssessmentPage());
         }
     }
@@ -114,16 +116,16 @@ public class CourseController extends BaseController<CourseDTO> {
 
     @Override
     protected void configureColumns() {
-        TableColumn<CourseDTO, String> idCol = new TableColumn<>("ID");
+        TableColumn<CourseDTO, String> idCol = new TableColumn<>(LocalizationManager.get("id"));
         idCol.setCellValueFactory(c -> new SimpleStringProperty(String.valueOf(c.getValue().getId())));
 
-        TableColumn<CourseDTO, String> codeCol = new TableColumn<>("Code");
+        TableColumn<CourseDTO, String> codeCol = new TableColumn<>(LocalizationManager.get("code"));
         codeCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getCode()));
 
-        TableColumn<CourseDTO, String> nameCol = new TableColumn<>("Name");
+        TableColumn<CourseDTO, String> nameCol = new TableColumn<>(LocalizationManager.get("name"));
         nameCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getName()));
 
-        TableColumn<CourseDTO, String> teacherCol = new TableColumn<>("Teacher");
+        TableColumn<CourseDTO, String> teacherCol = new TableColumn<>(LocalizationManager.get("teacher"));
         teacherCol.setCellValueFactory(c ->
                 new SimpleStringProperty(
                         c.getValue().getTeacherName() == null
@@ -132,7 +134,7 @@ public class CourseController extends BaseController<CourseDTO> {
                 )
         );
 
-        TableColumn<CourseDTO, String> groupCol = new TableColumn<>("Academic Group");
+        TableColumn<CourseDTO, String> groupCol = new TableColumn<>(LocalizationManager.get("academicGroup"));
         groupCol.setCellValueFactory(c ->
                 new SimpleStringProperty(
                         c.getValue().getGroupName() == null
@@ -145,6 +147,29 @@ public class CourseController extends BaseController<CourseDTO> {
 
         filterCombo.getItems().addAll("All", "ID", "Name", "Code", "Teacher", "Academic Group");
         filterCombo.setValue("All");
+
+        Map<String, String> filterKeyMap = Map.of(
+                "All", "all", "ID", "id", "Name", "name", "Code", "code",
+                "Teacher", "teacher", "Academic Group", "academicGroup"
+        );
+        filterCombo.setCellFactory(list -> new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) { setText(null); return; }
+                String key = filterKeyMap.get(item);
+                setText(key != null ? LocalizationManager.get(key) : item);
+            }
+        });
+        filterCombo.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) { setText(null); return; }
+                String key = filterKeyMap.get(item);
+                setText(key != null ? LocalizationManager.get(key) : item);
+            }
+        });
     }
 
     @Override

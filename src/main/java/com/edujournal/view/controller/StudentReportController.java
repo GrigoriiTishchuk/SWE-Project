@@ -52,7 +52,7 @@ public class StudentReportController {
         root.setPadding(new Insets(10));
 
         if (studentId == null) {
-            root.getChildren().add(new Label("Select a student from Student Management to generate a report."));
+            root.getChildren().add(new Label(LocalizationManager.get("selectStudentForReport")));
             return root;
         }
 
