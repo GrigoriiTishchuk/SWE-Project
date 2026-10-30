@@ -5,6 +5,7 @@ import com.edujournal.backend.service.CourseService;
 import com.edujournal.backend.service.StudentService;
 import com.edujournal.backend.service.UserService;
 import com.edujournal.backend.utils.AcademicGroupMapper;
+import com.edujournal.config.LocalizationManager;
 import com.edujournal.entity.AcademicGroup;
 import com.edujournal.entity.Course;
 import com.edujournal.entity.Role;
@@ -26,6 +27,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.List;
+import java.util.Map;
 
 public class AdminGroupController extends BaseController<AcademicGroupDTO> {
 
@@ -45,7 +47,7 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
     @Override
     protected void configureColumns() {
         TableColumn<AcademicGroupDTO, String> nameCol =
-                new TableColumn<>("Group Name");
+                new TableColumn<>(LocalizationManager.get("name"));
         nameCol.setCellValueFactory(c ->
                 new SimpleStringProperty(c.getValue().getName()));
 
@@ -53,6 +55,26 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
 
         filterCombo.getItems().addAll("All", "Name");
         filterCombo.setValue("All");
+
+        Map<String, String> filterKeyMap = Map.of("All", "all", "Name", "name");
+        filterCombo.setCellFactory(list -> new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) { setText(null); return; }
+                String key = filterKeyMap.get(item);
+                setText(key != null ? LocalizationManager.get(key) : item);
+            }
+        });
+        filterCombo.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) { setText(null); return; }
+                String key = filterKeyMap.get(item);
+                setText(key != null ? LocalizationManager.get(key) : item);
+            }
+        });
     }
 
     private VBox buildGroupCard(AcademicGroupDTO group) {
