@@ -27,7 +27,9 @@ public class TopBar {
     private static String localeToLanguage(Locale locale) {
         return switch (locale.getLanguage()) {
             case "ru" -> "Russian";
-            default -> "English";
+            case "tr" -> "Turkish";
+            case "ar" -> "Arabic";
+            default   -> "English";
         };
     }
 
@@ -55,7 +57,9 @@ public class TopBar {
         languageSelector.valueProperty().addListener((obs, old, val) -> {
             Locale locale = switch (val) {
                 case "Russian" -> new Locale("ru", "RU");
-                default -> new Locale("en", "US");
+                case "Turkish" -> new Locale("tr", "TR");
+                case "Arabic"  -> new Locale("ar", "SA");
+                default        -> new Locale("en", "US");
             };
             LocalizationManager.setLocale(locale);
             Main.reloadPage();
