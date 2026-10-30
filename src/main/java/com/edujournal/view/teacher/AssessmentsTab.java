@@ -127,10 +127,7 @@ public class AssessmentsTab {
 
 
             Label placeholder =
-                    new Label(
-                            "Data for \"" + course +
-                                    "\" will be loaded from DB"
-                    );
+                    new Label(LocalizationManager.get("noContent"));
 
             placeholder.setWrapText(true);
             placeholder.setMaxWidth(348);
@@ -378,10 +375,8 @@ public class AssessmentsTab {
                                             Alert.AlertType.CONFIRMATION
                                     );
 
-                            confirm.setTitle("Delete Assessment");
-                            confirm.setHeaderText(
-                                    "Delete this assessment?"
-                            );
+                            confirm.setTitle(LocalizationManager.get("deleteAssessmentTitle"));
+                            confirm.setHeaderText(LocalizationManager.get("deleteAssessmentQuestion"));
 
                             confirm.setContentText(
                                     selected.getTitle()
@@ -409,12 +404,12 @@ public class AssessmentsTab {
 
                             if (assessmentsService.hasGrades(selected.getId())) {
                                 Alert warning = new Alert(Alert.AlertType.CONFIRMATION);
-                                warning.setTitle("Delete Assessment");
-                                warning.setHeaderText("This assessment has grades.");
-                                warning.setContentText("All associated grades will also be deleted. Delete anyway?");
+                                warning.setTitle(LocalizationManager.get("deleteAssessmentTitle"));
+                                warning.setHeaderText(LocalizationManager.get("assessmentHasGrades"));
+                                warning.setContentText(LocalizationManager.get("deleteGradesConfirm"));
 
-                                ButtonType yes = new ButtonType("Delete anyway", ButtonBar.ButtonData.OK_DONE);
-                                ButtonType no = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+                                ButtonType yes = new ButtonType(LocalizationManager.get("deleteAnyway"), ButtonBar.ButtonData.OK_DONE);
+                                ButtonType no = new ButtonType(LocalizationManager.get("cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
                                 warning.getButtonTypes().setAll(yes, no);
 
                                 if (warning.showAndWait().orElse(no) != yes) return;
@@ -484,15 +479,15 @@ public class AssessmentsTab {
             }
 
             if (name.isEmpty()) {
-                new Alert(Alert.AlertType.WARNING, "Please enter the assessment name.").showAndWait();
+                new Alert(Alert.AlertType.WARNING, LocalizationManager.get("enterAssessmentName")).showAndWait();
                 return;
             }
             if (type == null) {
-                new Alert(Alert.AlertType.WARNING, "Please choose the assessment type.").showAndWait();
+                new Alert(Alert.AlertType.WARNING, LocalizationManager.get("chooseAssessmentType")).showAndWait();
                 return;
             }
             if (pos == null) {
-                new Alert(Alert.AlertType.WARNING, "Please choose the position.").showAndWait();
+                new Alert(Alert.AlertType.WARNING, LocalizationManager.get("choosePosition")).showAndWait();
                 return;
             }
 
@@ -503,7 +498,7 @@ public class AssessmentsTab {
             }
             if (currentTotal + weight > 1.0) {
                 new Alert(Alert.AlertType.WARNING,
-                        "Total type weights cannot exceed 1.0. Other types use: " + currentTotal + ".").showAndWait();
+                        LocalizationManager.get("weightExceedsLimit") + " " + currentTotal + ".").showAndWait();
                 return;
             }
 
@@ -512,7 +507,7 @@ public class AssessmentsTab {
             Course courseEntity = assessmentsService.getCourseByName(course);
 
             if (courseEntity == null) {
-                new Alert(Alert.AlertType.ERROR, "Course not found.").showAndWait();
+                new Alert(Alert.AlertType.ERROR, LocalizationManager.get("courseNotFound")).showAndWait();
                 return;
             }
 
@@ -526,18 +521,18 @@ public class AssessmentsTab {
 
                 String maxScoreText = maxScoreField.getText().trim();
                 if (maxScoreText.isEmpty()) {
-                    new Alert(Alert.AlertType.WARNING, "Please enter the max points.").showAndWait();
+                    new Alert(Alert.AlertType.WARNING, LocalizationManager.get("enterMaxPoints")).showAndWait();
                     return;
                 }
                 double maxScore;
                 try {
                     maxScore = Double.parseDouble(maxScoreText);
                     if (maxScore <= 0) {
-                        new Alert(Alert.AlertType.WARNING, "Max points must be greater than 0.").showAndWait();
+                        new Alert(Alert.AlertType.WARNING, LocalizationManager.get("maxPointsPositive")).showAndWait();
                         return;
                     }
                 } catch (NumberFormatException ex) {
-                    new Alert(Alert.AlertType.WARNING, "Max points must be a valid number.").showAndWait();
+                    new Alert(Alert.AlertType.WARNING, LocalizationManager.get("maxPointsInvalid")).showAndWait();
                     return;
                 }
                 assessment.setMaxScore(maxScore);
@@ -622,7 +617,7 @@ public class AssessmentsTab {
             }
             if (currentTotal + weight > 1.0) {
                 new Alert(Alert.AlertType.WARNING,
-                        "Total type weights cannot exceed 1.0. Other types use: " + currentTotal + ".").showAndWait();
+                        LocalizationManager.get("weightExceedsLimit") + " " + currentTotal + ".").showAndWait();
                 return;
             }
 
@@ -637,18 +632,18 @@ public class AssessmentsTab {
 
             String maxScoreText = maxScoreField.getText().trim();
             if (maxScoreText.isEmpty()) {
-                new Alert(Alert.AlertType.WARNING, "Please enter the max points.").showAndWait();
+                new Alert(Alert.AlertType.WARNING, LocalizationManager.get("enterMaxPoints")).showAndWait();
                 return;
             }
             double maxScore;
             try {
                 maxScore = Double.parseDouble(maxScoreText);
                 if (maxScore <= 0) {
-                    new Alert(Alert.AlertType.WARNING, "Max points must be greater than 0.").showAndWait();
+                    new Alert(Alert.AlertType.WARNING, LocalizationManager.get("maxPointsPositive")).showAndWait();
                     return;
                 }
             } catch (NumberFormatException ex) {
-                new Alert(Alert.AlertType.WARNING, "Max points must be a valid number.").showAndWait();
+                new Alert(Alert.AlertType.WARNING, LocalizationManager.get("maxPointsInvalid")).showAndWait();
                 return;
             }
 

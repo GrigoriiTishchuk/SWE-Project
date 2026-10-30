@@ -192,16 +192,16 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
     @Override
     public void showAddDialog() {
         Dialog<AcademicGroupDTO> dialog = new Dialog<>();
-        dialog.setTitle("Add Academic Group");
+        dialog.setTitle(LocalizationManager.get("addGroup"));
 
         TextField nameField = new TextField();
-        nameField.setPromptText("Academic group name");
+        nameField.setPromptText(LocalizationManager.get("name"));
 
         VBox box = new VBox(10, nameField);
         box.setPadding(new Insets(10));
         dialog.getDialogPane().setContent(box);
 
-        ButtonType saveBtn = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        ButtonType saveBtn = new ButtonType(LocalizationManager.get("save"), ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(saveBtn, ButtonType.CANCEL);
 
         dialog.setResultConverter(button -> {

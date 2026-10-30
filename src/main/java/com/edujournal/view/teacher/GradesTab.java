@@ -31,7 +31,7 @@ public class GradesTab {
         List<Assessments> assessments = assessmentsService.getByCourseName(course);
 
         if (assessments.isEmpty()) {
-            Label lbl = new Label("No assessments found for \"" + course + "\".");
+            Label lbl = new Label(LocalizationManager.get("noAssessmentsFound"));
             lbl.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 14px;");
             return lbl;
         }
@@ -145,7 +145,7 @@ public class GradesTab {
         table.getColumns().add(finalGradeCol);
 
         if (table.getItems().isEmpty()) {
-            table.setPlaceholder(new Label("No grades recorded for \"" + course + "\" yet."));
+            table.setPlaceholder(new Label(LocalizationManager.get("noGradesRecorded")));
         }
         table.getItems().addAll(List.of(data));
 
@@ -199,21 +199,21 @@ public class GradesTab {
                         if (text.isEmpty()) continue;
                         if (!text.matches("\\d+(\\.\\d{1,2})?")) {
                             new Alert(Alert.AlertType.WARNING,
-                                    "\"" + assessments.get(c).getTitle() + "\": enter a valid score (max 2 decimal places, no negative).").showAndWait();
+                                    "\"" + assessments.get(c).getTitle() + "\": " + LocalizationManager.get("scoreInvalid")).showAndWait();
                             continue;
                         }
                         try {
                             double score = Double.parseDouble(text);
                             if (score < 0) {
                                 new Alert(Alert.AlertType.WARNING,
-                                        "\"" + assessments.get(c).getTitle() + "\": score cannot be negative.").showAndWait();
+                                        "\"" + assessments.get(c).getTitle() + "\": " + LocalizationManager.get("scoreNegative")).showAndWait();
                                 continue;
                             }
                             double maxScore = assessments.get(c).getMaxScore();
                             if (score > maxScore) {
                                 new Alert(Alert.AlertType.WARNING,
-                                        "\"" + assessments.get(c).getTitle() + "\": score " + score +
-                                        " exceeds max score " + maxScore + ".").showAndWait();
+                                        "\"" + assessments.get(c).getTitle() + "\": " + score +
+                                        " " + LocalizationManager.get("scoreExceedsMax") + " " + maxScore + ".").showAndWait();
                                 continue;
                             }
                             Grades grade = studentGrades != null

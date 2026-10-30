@@ -175,13 +175,13 @@ public class CourseController extends BaseController<CourseDTO> {
     @Override
     public void showAddDialog() {
         Dialog<CourseDTO> dialog = new Dialog<>();
-        dialog.setTitle("Add Course");
+        dialog.setTitle(LocalizationManager.get("addCourse"));
 
         TextField nameField = new TextField();
-        nameField.setPromptText("Course name");
+        nameField.setPromptText(LocalizationManager.get("name"));
 
         TextField codeField = new TextField();
-        codeField.setPromptText("Course code");
+        codeField.setPromptText(LocalizationManager.get("code"));
 
         // Teacher ComboBox
         List<UserDTO> teachers = userService.findAllTeachers();
@@ -212,7 +212,7 @@ public class CourseController extends BaseController<CourseDTO> {
         box.setPadding(new Insets(10));
         dialog.getDialogPane().setContent(box);
 
-        ButtonType saveBtn = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        ButtonType saveBtn = new ButtonType(LocalizationManager.get("save"), ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(saveBtn, ButtonType.CANCEL);
 
         dialog.setResultConverter(button -> {
@@ -301,7 +301,7 @@ public class CourseController extends BaseController<CourseDTO> {
         box.setPadding(new Insets(10));
         dialog.getDialogPane().setContent(box);
 
-        ButtonType saveBtn = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        ButtonType saveBtn = new ButtonType(LocalizationManager.get("save"), ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(saveBtn, ButtonType.CANCEL);
 
         dialog.setResultConverter(btn -> {
@@ -380,7 +380,7 @@ public class CourseController extends BaseController<CourseDTO> {
     private void openAddAssessmentPage() {
         CourseDTO course = table.getSelectionModel().getSelectedItem();
         if (course == null) {
-            new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.WARNING, "Please select a course first.").showAndWait();
+            new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.WARNING, LocalizationManager.get("selectCourseFirst")).showAndWait();
             return;
         }
         com.edujournal.Main.showPage(new com.edujournal.view.teacher.TeacherGradebookPage(1, course.getName()));

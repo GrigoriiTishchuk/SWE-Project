@@ -198,21 +198,21 @@ public class AdminStudentController extends BaseController<StudentDTO> {
     @Override
     public void showAddDialog() {
         Dialog<StudentDTO> dialog = new Dialog<>();
-        dialog.setTitle("Add Student");
+        dialog.setTitle(LocalizationManager.get("addStudent"));
 
         TextField firstNameField = new TextField();
         TextField lastNameField = new TextField();
         TextField phoneField = new TextField();
 
-        firstNameField.setPromptText("First Name");
-        lastNameField.setPromptText("Last Name");
-        phoneField.setPromptText("Phone Number");
+        firstNameField.setPromptText(LocalizationManager.get("firstName"));
+        lastNameField.setPromptText(LocalizationManager.get("lastName"));
+        phoneField.setPromptText(LocalizationManager.get("phone"));
 
         VBox box = new VBox(10, firstNameField, lastNameField, phoneField);
         box.setPadding(new Insets(10));
         dialog.getDialogPane().setContent(box);
 
-        ButtonType saveBtn = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        ButtonType saveBtn = new ButtonType(LocalizationManager.get("save"), ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(saveBtn, ButtonType.CANCEL);
 
         dialog.setResultConverter(button -> {
