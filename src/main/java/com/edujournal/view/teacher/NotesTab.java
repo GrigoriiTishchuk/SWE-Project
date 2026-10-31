@@ -29,7 +29,7 @@ public class NotesTab {
         saved.setStyle("-fx-text-fill: #6B7280;");
         saved.setVisible(false);
 
-        Button saveBtn = new Button("Save");
+        Button saveBtn = new Button(LocalizationManager.get("save"));
         saveBtn.getStyleClass().add("btn-primary");
         saveBtn.setOnAction(e -> {
             STORE.put(key, area.getText());

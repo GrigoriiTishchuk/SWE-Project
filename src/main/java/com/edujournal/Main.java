@@ -1,5 +1,6 @@
 package com.edujournal;
 
+import com.edujournal.config.LocalizationManager;
 import com.edujournal.database.DatabaseInitializer;
 import com.edujournal.view.LoginPage;
 import javafx.application.Application;
@@ -27,6 +28,10 @@ public class Main extends Application {
 
     /** Switches the whole window to a different page. */
     public static void showPage(Parent page) {
+        page.setNodeOrientation(
+                LocalizationManager.getOrientation()
+        );
+
         Scene scene = new Scene(page, 1280, 720);
         scene.getRoot().setStyle("-fx-font-family: 'Consolas'; -fx-font-size: 14px;");
         stage.setScene(scene);
