@@ -26,9 +26,9 @@ public class TopBar {
 
     private static String localeToLanguage(Locale locale) {
         return switch (locale.getLanguage()) {
-            case "ru" -> "Russian";
+            case "ru" -> "Русский";
             case "tr" -> "Turkish";
-            case "ar" -> "Arabic";
+            case "ar" -> "العربية";
             default   -> "English";
         };
     }
@@ -52,13 +52,13 @@ public class TopBar {
             studyingYear.valueProperty().addListener((obs, old, val) -> onYearChange.accept(val));
 
         ComboBox<String> languageSelector = new ComboBox<>();
-        languageSelector.getItems().addAll("English", "Turkish", "Russian", "Arabic");
+        languageSelector.getItems().addAll("English", "Turkish", "Русский", "العربية");
         languageSelector.setValue(localeToLanguage(LocalizationManager.getCurrentLocale()));
         languageSelector.valueProperty().addListener((obs, old, val) -> {
             Locale locale = switch (val) {
-                case "Russian" -> new Locale("ru", "RU");
+                case "Русский" -> new Locale("ru", "RU");
                 case "Turkish" -> new Locale("tr", "TR");
-                case "Arabic"  -> new Locale("ar", "SA");
+                case "العربية"  -> new Locale("ar", "SA");
                 default        -> new Locale("en", "US");
             };
             LocalizationManager.setLocale(locale);
@@ -85,7 +85,10 @@ public class TopBar {
         exitBtn.setStyle("-fx-background-color: transparent; -fx-font-size: 30px; -fx-text-fill: #6B7280; -fx-cursor: hand;");
         exitBtn.setOnMouseEntered(e -> exitBtn.setStyle("-fx-background-color: transparent; -fx-font-size: 30px; -fx-text-fill: #EF4444; -fx-cursor: hand;"));
         exitBtn.setOnMouseExited(e -> exitBtn.setStyle("-fx-background-color: transparent; -fx-font-size: 30px; -fx-text-fill: #6B7280; -fx-cursor: hand;"));
-        exitBtn.setOnAction(e -> Main.showPage(new LoginPage()));
+        exitBtn.setOnAction(e -> {
+            LocalizationManager.setLocale(new Locale("en", "US"));
+            Main.showPage(new LoginPage());
+        });
 
         HBox rightBox = new HBox(16, studyingYear, languageSelector, userBox, exitBtn);
         rightBox.setAlignment(Pos.CENTER);
