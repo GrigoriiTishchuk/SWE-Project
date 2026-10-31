@@ -1,5 +1,6 @@
 package com.edujournal.view.teacher;
 
+import com.edujournal.config.LocalizationManager;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -9,6 +10,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +22,7 @@ public class NotesTab {
         String key = course + "|" + group;
 
         TextArea area = new TextArea(STORE.getOrDefault(key, ""));
-        area.setPromptText("Type notes for " + course + " / " + group + "...");
+        area.setPromptText(MessageFormat.format(LocalizationManager.get("notes.prompt"), course, group));
         area.setWrapText(true);
 
         Label saved = new Label("Saved.");
