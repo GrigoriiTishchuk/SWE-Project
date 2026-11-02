@@ -5,7 +5,7 @@ COPY pom.xml .
 COPY src ./src
 RUN mvn clean package -DskipTests
 
-# --- Этап 2: Preparing GUI environment of JavaFX ---
+# --- Stage 2: Preparing GUI environment of JavaFX ---
 FROM eclipse-temurin:21-jdk
 LABEL authors="EduJournal Team"
 WORKDIR /app
