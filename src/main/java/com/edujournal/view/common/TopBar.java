@@ -27,7 +27,7 @@ public class TopBar {
     private static String localeToLanguage(Locale locale) {
         return switch (locale.getLanguage()) {
             case "ru" -> "Русский";
-            case "tr" -> "Turkish";
+            case "tr" -> "Türkçe";
             case "ar" -> "العربية";
             default   -> "English";
         };
@@ -52,12 +52,12 @@ public class TopBar {
             studyingYear.valueProperty().addListener((obs, old, val) -> onYearChange.accept(val));
 
         ComboBox<String> languageSelector = new ComboBox<>();
-        languageSelector.getItems().addAll("English", "Turkish", "Русский", "العربية");
+        languageSelector.getItems().addAll("English", "Türkçe", "Русский", "العربية");
         languageSelector.setValue(localeToLanguage(LocalizationManager.getCurrentLocale()));
         languageSelector.valueProperty().addListener((obs, old, val) -> {
             Locale locale = switch (val) {
                 case "Русский" -> new Locale("ru", "RU");
-                case "Turkish" -> new Locale("tr", "TR");
+                case "Türkçe" -> new Locale("tr", "TR");
                 case "العربية"  -> new Locale("ar", "SA");
                 default        -> new Locale("en", "US");
             };

@@ -4,11 +4,13 @@ import com.edujournal.Main;
 import com.edujournal.backend.service.AuthService;
 import com.edujournal.backend.utils.UserSession;
 import com.edujournal.backend.utils.InputValidator;
+import com.edujournal.config.LocalizationManager;
 import com.edujournal.entity.Role;
 import com.edujournal.view.admin.AdminDashboardPage;
 import com.edujournal.view.student.StudentDashboardPage;
 import com.edujournal.view.teacher.TeacherDashboardPage;
 import javafx.geometry.Insets;
+import java.util.Locale;
 /*
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
@@ -28,7 +30,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
-public class LoginPage extends HBox {
+public class LoginPage extends StackPane {
 
     private final TextField usernameField = new TextField();
     private final PasswordField passwordField = new PasswordField();
@@ -36,7 +38,28 @@ public class LoginPage extends HBox {
     private final AuthService authService = new AuthService();
 
     public LoginPage() {
-        getChildren().addAll(buildBanner(), buildForm());
+        Main.setCurrentPageSupplier(LoginPage::new);
+
+        HBox main = new HBox(buildBanner(), buildForm());
+
+        ComboBox<String> languageSelector = new ComboBox<>();
+        languageSelector.getItems().addAll("English", "Türkçe", "Русский", "العربية");
+        languageSelector.setValue(localeToLanguage(LocalizationManager.getCurrentLocale()));
+        languageSelector.valueProperty().addListener((obs, old, val) -> {
+            Locale locale = switch (val) {
+                case "Русский" -> new Locale("ru", "RU");
+                case "Türkçe"  -> new Locale("tr", "TR");
+                case "العربية"  -> new Locale("ar", "SA");
+                default        -> new Locale("en", "US");
+            };
+            LocalizationManager.setLocale(locale);
+            Main.reloadPage();
+        });
+
+        StackPane.setAlignment(languageSelector, javafx.geometry.Pos.TOP_RIGHT);
+        StackPane.setMargin(languageSelector, new Insets(10, 16, 0, 0));
+
+        getChildren().addAll(main, languageSelector);
     }
 
     private StackPane buildBanner() {
@@ -53,7 +76,7 @@ public class LoginPage extends HBox {
         VBox.setMargin(logo, new Insets(0, 0, 35, 0));
         logo.setPreserveRatio(true);
 
-        Label tagline = new Label("Teacher's Gradebook\nand Report Card System");
+        Label tagline = new Label(LocalizationManager.get("projectTitle"));
         tagline.setStyle("-fx-font-size: 40px; -fx-font-weight: bold; -fx-text-fill: #0d06b6;");
 
         VBox spacer = new VBox();
@@ -72,27 +95,27 @@ public class LoginPage extends HBox {
     }
 
     private VBox buildForm() {
-        usernameField.setPromptText("Enter your username");
-        passwordField.setPromptText("Enter your password");
+        usernameField.setPromptText(LocalizationManager.get("enterUsername"));
+        passwordField.setPromptText(LocalizationManager.get("enterPassword"));
 
         errorLabel.setStyle("-fx-text-fill: #d9534f; -fx-font-size: 13px;");
 
-        Hyperlink forgotPassword = new Hyperlink("Forgot password?");
+        Hyperlink forgotPassword = new Hyperlink(LocalizationManager.get("forgotPassword"));
         forgotPassword.setOnAction(e -> onForgotPassword());
 
-        Button signIn = new Button("Sign in");
+        Button signIn = new Button(LocalizationManager.get("signIn"));
         signIn.setMaxWidth(Double.MAX_VALUE);
         signIn.setStyle("-fx-background-color: #2F6FED; -fx-text-fill: white; -fx-padding: 10;");
         signIn.setOnAction(e -> onSignIn());
 
-        Label welcome = new Label("Welcome back");
+        Label welcome = new Label(LocalizationManager.get("welcome"));
         welcome.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
 
         VBox form = new VBox(12,
                 welcome,
-                new Label("Sign into your account"),
-                new Label("Username"), usernameField,
-                new Label("Password"), passwordField,
+                new Label(LocalizationManager.get("signInto")),
+                new Label(LocalizationManager.get("username")), usernameField,
+                new Label(LocalizationManager.get("password")), passwordField,
                 errorLabel,
                 forgotPassword, signIn
         );
@@ -100,6 +123,15 @@ public class LoginPage extends HBox {
         form.setPrefWidth(400);
         form.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
         return form;
+    }
+
+    private static String localeToLanguage(Locale locale) {
+        return switch (locale.getLanguage()) {
+            case "ru" -> "Русский";
+            case "tr" -> "Türkçe";
+            case "ar" -> "العربية";
+            default   -> "English";
+        };
     }
 
     private void onSignIn() {
@@ -111,7 +143,7 @@ public class LoginPage extends HBox {
             Role role = UserSession.getInstance().getCurrentUser().getRole();
             navigateToDashboard(role);
         } else {
-            errorLabel.setText("Invalid username or password.");
+            errorLabel.setText(LocalizationManager.get("invalidNamePassword"));
         }
     }
 
@@ -129,17 +161,17 @@ public class LoginPage extends HBox {
                 Main.showPage(new StudentDashboardPage());
                 break;
             default:
-                errorLabel.setText("Unknown user role.");
+                errorLabel.setText(LocalizationManager.get("unknownRole"));
                 break;
         }
     }
 
     private void onForgotPassword() {
         Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setTitle("Reset Password");
-        dialog.setHeaderText("Enter your username and new password");
+        dialog.setTitle(LocalizationManager.get("resetPassword"));
+        dialog.setHeaderText(LocalizationManager.get("resetPasswordHeader"));
 
-        ButtonType resetButtonType = new ButtonType("Reset Password", ButtonBar.ButtonData.OK_DONE);
+        ButtonType resetButtonType = new ButtonType(LocalizationManager.get("resetPassword"), ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(resetButtonType, ButtonType.CANCEL);
 
         GridPane grid = new GridPane();
@@ -148,14 +180,14 @@ public class LoginPage extends HBox {
         grid.setPadding(new Insets(20, 20, 10, 10));
 
         TextField usernameInput = new TextField();
-        usernameInput.setPromptText("Username");
+        usernameInput.setPromptText(LocalizationManager.get("username"));
 
         PasswordField newPasswordInput = new PasswordField();
-        newPasswordInput.setPromptText("New password (min 9 chars)");
+        newPasswordInput.setPromptText(LocalizationManager.get("newPasswordPrompt"));
 
-        grid.add(new Label("Username:"), 0, 0);
+        grid.add(new Label(LocalizationManager.get("username") + ":"), 0, 0);
         grid.add(usernameInput, 1, 0);
-        grid.add(new Label("New Password:"), 0, 1);
+        grid.add(new Label(LocalizationManager.get("newPasswordLabel")), 0, 1);
         grid.add(newPasswordInput, 1, 1);
 
         dialog.getDialogPane().setContent(grid);
@@ -166,26 +198,26 @@ public class LoginPage extends HBox {
                 String newPassword = newPasswordInput.getText();
 
                 if (!InputValidator.isValidName(username)) {
-                    showResultAlert(false, "Username cannot be empty.");
+                    showResultAlert(false, LocalizationManager.get("usernameEmpty"));
                     return;
                 }
 
                 if (!InputValidator.isValidPassword(newPassword)) {
-                    showResultAlert(false, "Password must be at least 9 characters long.");
+                    showResultAlert(false, LocalizationManager.get("passwordMinLength"));
                     return;
                 }
 
                 boolean success = authService.resetPassword(username, newPassword);
                 showResultAlert(success, success
-                        ? "Password successfully updated! You can now sign in."
-                        : "User not found. Check your Username.");
+                        ? LocalizationManager.get("passwordResetSuccess")
+                        : LocalizationManager.get("userNotFound"));
             }
         });
     }
 
     private void showResultAlert(boolean isSuccess, String message) {
         Alert alert = new Alert(isSuccess ? Alert.AlertType.INFORMATION : Alert.AlertType.ERROR);
-        alert.setTitle("Password Reset Result");
+        alert.setTitle(LocalizationManager.get("passwordResetResult"));
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
