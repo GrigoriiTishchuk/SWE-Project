@@ -39,6 +39,17 @@ Our goal is to make managing student grades and academic performance easier for 
 - Display student grades and academic results in an organized way
 - Provide feedback / comments
 
+### UI Localization (Multi-language Support)
+
+EduJournal supports full multilingual user interface (UI) to accommodate diverse users. Static texts, labels, buttons, tables, and messages are externalized using Java `ResourceBundle` mechanism.
+
+- **Supported Languages (4):**
+    - 🇬🇧 English (`en_US`) — Default
+    - 🇷🇺 Russian (`ru_RU`) — Cyrillic support
+    - 🇹🇷 Turkish (`tr_TR`)
+    - 🇸🇦 Arabic (`ar_SA`) — Full Right-to-Left (RTL) layout orientation support via JavaFX `NodeOrientation`
+- **Dynamic Language Switcher:** Users can seamlessly switch languages on-the-fly directly from the GUI using the integrated header `ComboBox` selector without needing to restart the application.
+
 
 ### Use Cases
 
@@ -194,6 +205,7 @@ Performance test results are saved in `performance-results/`.
 - Xming or VcXsrv (Windows only, required for Docker GUI — start XLaunch before running the container)
 - XQuartz (macOS only, required for Docker GUI — start XQuartz before running the container)
 
+
 ### Steps
 
 **1.** Clone the repository
@@ -230,6 +242,11 @@ docker run --rm -e DISPLAY=host.docker.internal:0.0 --network container:edujourn
 ```
 
 [DockerHub Repository](https://hub.docker.com/r/gregtish/edujournal-frontend)
+
+### Language Selection
+Upon launching the application, you can choose your preferred language (**English, Russian, Turkish, or Arabic**) instantly using the language selection dropdown located at the top of the main window. For Arabic, the application layout automatically adjusts to Right-to-Left (RTL) mode.
+
+
 
 ---
 
@@ -295,6 +312,19 @@ Focus: understanding the project and planning the work for upcoming sprints.
 🔗 [Sprint 4 Planning](Documents/Sprint_Reports/Sprint4/Sprint_4_Planning_Report.md)
 🔗 [Sprint 4 Review](Documents/Sprint_Reports/Sprint4/Sprint_4_Review_Report.md)
 🔗 [JaCoCo Code Coverage Report](https://users.metropolia.fi/~grigorit/devops/jacoco/)
+
+---
+
+### Sprint 5 - UI Localization
+
+- Externalized all static text elements into `ResourceBundle` property files
+- Implemented dynamic in-GUI language selector (`ComboBox`) for real-time locale switching
+- Added support for 4 languages: English, Russian, Turkish, and Arabic
+- Implemented automatic layout direction adjustment (RTL support for Arabic)
+- Updated project documentation and GitHub repository
+
+🔗 [Sprint 5 Planning](Documents/Sprint_Reports/Sprint5/Sprint_5_Planning_Report.md)
+🔗 [Sprint 5 Review](Documents/Sprint_Reports/Sprint5/Sprint_5_Review_Report.md)
 
 ---
 
