@@ -1,0 +1,131 @@
+(UI Component / File),(Name), (English),(Turkish - tr),(Russian - ru),"(Arabic - ar, RTL)"
+Global / Common,eduJournal,EduJournal,EduJournal,EduJournal,إيدوجورنال
+Global / Common,projectTitle,Teacher's Gradebook and Report Card System,Öğretmen Not Defteri ve Karne Sistemi,Система классного журнала и табелей успеваемости,نظام دفتر علامات المعلم وتقارير الطلاب
+Global / Common,signIn,Sign in,Giriş Yap,Войти,تسجيل الدخول
+Global / Common,username,Username,Kullanıcı Adı,Имя пользователя,اسم المستخدم
+Global / Common,password,Password,Şifre,Пароль,كلمة المرور
+Global / Common,save,Save,Kaydet,Сохранить,حفظ
+Global / Common,update,Update,Güncelle,Обновить,تحديث
+Global / Common,delete,Delete,Sil,Удалить,حذف
+Global / Common,edit,Edit,Düzenle,Редактировать,تعديل
+Global / Common,view,View,Görüntüle,Просмотр,عرض
+Global / Common,add,Add,Ekle,Добавить,إضافة
+Global / Common,cancel,Cancel,İptal,Отмена,إلغاء
+Global / Common,search,Search...,Ara...,Поиск...,بحث...
+Global / Common,filterBy,Filter by:,Şuna göre filtrele:,Фильтровать по:,تصفية حسب:
+Global / Common,clear,Clear,Temizle,Очистить,مسح
+Global / Common,yes,Yes,Evet,Да,نعم
+Global / Common,no,No,Hayır,Нет,لا
+Global / Common,all,All,Tümü,Все,الكل
+Global / Common,id,ID,ID,ID,المُعرّف
+Global / Common,name,Name,Adı,Имя / Название,الاسم
+Global / Common,code,Code,Kod,Код,الرمز
+Global / Common,phone,Phone,Telefon,Телефон,الهاتف
+Global / Common,email,Email,E-posta,Электронная почта,البريد الإلكتروني
+Global / Common,role,Role,Rol,Роль,الدور
+Login Page (LoginPage.java),welcome,Welcome back,Tekrar hoş geldiniz,С возвращением,أهلاً بك مجدداً
+Login Page (LoginPage.java),signInto,Sign into your account,Hesabınıza giriş yapın,Войдите в свой аккаунт,سجل الدخول إلى حسابك
+Login Page (LoginPage.java),enterUsername,Enter your username,Kullanıcı adınızı girin,Введите имя пользователя,أدخل اسم المستخدم
+Login Page (LoginPage.java),enterPassword,Enter your password,Şifrenizi girin,Введите пароль,أدخل كلمة المرور
+Login Page (LoginPage.java),forgotPassword,Forgot password?,Şifrenizi mi unuttunuz?,Забыли пароль?,هل نسيت كلمة المرور؟
+Login Page (LoginPage.java),invalidNamePassword,Invalid username or password.,Geçersiz kullanıcı adı veya şifre.,Неверное имя пользователя или пароль.,اسم المستخدم أو كلمة المرور غير صحيحة.
+"Sidebar (Sidebar.java, AdminSidebar.java, StudentSidebar.java)",dashboard,Dashboard,Kontrol Paneli,Парольная панель,لوحة التحكم
+"Sidebar (Sidebar.java, AdminSidebar.java, StudentSidebar.java)",management,MANAGEMENT,YÖNETİM,УПРАВЛЕНИЕ,الإدارة
+"Sidebar (Sidebar.java, AdminSidebar.java, StudentSidebar.java)",students,Students,Öğrenciler,Студенты,الطلاب
+"Sidebar (Sidebar.java, AdminSidebar.java, StudentSidebar.java)",teachers,Teachers,Öğretmenler,Преподаватели,المعلمون
+"Sidebar (Sidebar.java, AdminSidebar.java, StudentSidebar.java)",groups,Groups,Gruplar,Группы,المجموعات
+"Sidebar (Sidebar.java, AdminSidebar.java, StudentSidebar.java)",courses,Courses,Dersler,Курсы,المقررات
+"Sidebar (Sidebar.java, AdminSidebar.java, StudentSidebar.java)",profile,Own Profile,Kendi Profilim,Мой профиль,ملفي الشخصي
+"Sidebar (Sidebar.java, AdminSidebar.java, StudentSidebar.java)",reports,REPORTS,RAPORLAR,ОТЧЕТЫ,التقارير
+"Sidebar (Sidebar.java, AdminSidebar.java, StudentSidebar.java)",studentReport,Student's report,Öğrenci Raporu,Отчет студента,تقرير الطالب
+"Sidebar (Sidebar.java, AdminSidebar.java, StudentSidebar.java)",courseReport,Course's report,Ders Raporu,Отчет по курсу,تقرير المقرر
+Admin Dashboard (AdminDashboardPage.java),quickActions,Quick Actions,Hızlı İşlemler,Быстрые действия,الإجراءات السريعة
+Admin Dashboard (AdminDashboardPage.java),typeName,Type the name,İsmi yazın,Введите имя,اكتب الاسم
+Admin Dashboard (AdminDashboardPage.java),addStudent,Add student,Öğrenci ekle,Добавить студента,إضافة طالب
+Admin Dashboard (AdminDashboardPage.java),addTeacher,Add teacher,Öğretmen ekle,Добавить преподавателя,إضافة معلم
+Admin Dashboard (AdminDashboardPage.java),addCourse,Add course,Ders ekle,Добавить курс,إضافة مقرر
+Admin Dashboard (AdminDashboardPage.java),addGroup,Add group,Grup ekle,Добавить группу,إضافة مجموعة
+Admin Dashboard (AdminDashboardPage.java),viewStudents,View all students,Tüm öğrencileri görüntüle,Посмотреть всех студентов,عرض جميع الطلاب
+Admin Dashboard (AdminDashboardPage.java),viewTeachers,View all teachers,Tüm öğretmenleri görüntüle,Посмотреть всех преподавателей,عرض جميع المعلمين
+Admin Dashboard (AdminDashboardPage.java),viewCourses,View all courses,Tüm dersleri görüntüle,Посмотреть все курсы,عرض جميع المقررات
+Admin Dashboard (AdminDashboardPage.java),viewGroups,View all groups,Tüm grupları görüntüle,Посмотреть все группы,عرض جميع المجموعات
+"Stat Cards (DashboardStatCards.java, StatCard.java)",courses,Courses,Dersler,Курсы,المقررات
+"Stat Cards (DashboardStatCards.java, StatCard.java)",groups,Groups,Gruplar,Группы,المجموعات
+"Stat Cards (DashboardStatCards.java, StatCard.java)",students,Students,Öğrenciler,Студенты,الطلاب
+"Stat Cards (DashboardStatCards.java, StatCard.java)",teachers,Teachers,Öğretmenler,Преподаватели,المعلمون
+"Stat Cards (DashboardStatCards.java, StatCard.java)",assessments,Assessments,Değerlendirmeler,Оценивания / Задания,التقييمات
+"Stat Cards (DashboardStatCards.java, StatCard.java)",averageGrade,Average Grade,Ortalama Not,Средняя оценка,المعدل التراكمي
+"Stat Cards (DashboardStatCards.java, StatCard.java)",currentCourses,Current Courses,Mevcut Dersler,Текущие курсы,المقررات الحالية
+"Stat Cards (DashboardStatCards.java, StatCard.java)",completed,Completed,Tamamlanan,Завершенные,المكتملة
+Grade Distribution (GradeDistributionCard.java),overallDistribution,Overall Grade Distribution,Genel Not Dağılımı,Общее распределение оценок,توزيع الدرجات العام
+Grade Distribution (GradeDistributionCard.java),myCoursesDistribution,My Courses Grade Distribution,Derslerimin Not Dağılımı,Распределение оценок моих курсов,توزيع درجات مقرراتي
+Grade Distribution (GradeDistributionCard.java),personalDistribution,Personal Grade Distribution,Kişisel Not Dağılımı,Личное распределение оценок,توزيع الدرجات الشخصي
+Grade Distribution (GradeDistributionCard.java),excellent,Excellent,Mükemmel,Отлично,ممتاز
+Grade Distribution (GradeDistributionCard.java),veryGood,Very Good,Çok İyi,Очень хорошо,جيد جداً
+Grade Distribution (GradeDistributionCard.java),good,Good,İyi,Хорошо,جيد
+Grade Distribution (GradeDistributionCard.java),satisfactory,Satisfactory,Orta,Удовлетворительно,مرضٍ
+Grade Distribution (GradeDistributionCard.java),sufficient,Sufficient,Geçer,Достаточно,مقبول
+Grade Distribution (GradeDistributionCard.java),fail,Fail,Başarısız,Неудовлетворительно,راسب
+Student Report (StudentReportController.java),assessment,Assessment,Değerlendirme,Оценивание,التقييم
+Student Report (StudentReportController.java),finalGrade,Final Grade,Final Notu,Итоговая оценка,الدرجة النهائية
+Student Report (StudentReportController.java),score,Score,Puan,Балл / Оценка,الدرجة
+Student Report (StudentReportController.java),group,Group:,Grup:,Группа:,المجموعة:
+Student Report (StudentReportController.java),studentNumber,Student Number:,Öğrenci Numarası:,Номер студента:,رقم الطالب:
+Student Report (StudentReportController.java),averageGrade2,Average Grade:,Ortalama Not:,Средняя оценка:,المعدل:
+Course Report (CourseReportPage.java),exportCSV,Export CSV,CSV Olarak Dışarı Aktar,Экспорт в CSV,تصدير CSV
+Course Report (CourseReportPage.java),exportPDF,Export PDF,PDF Olarak Dışarı Aktar,Экспорт в PDF,تصدير PDF
+Assessments Tab (AssessmentsTab.java),addAssessment,Add assessment,Değerlendirme ekle,Добавить оценивание,إضافة تقييم
+AssessmentsTab / Dialogs,typeName,Type the name,İsmi yazın,Введите название,اكتب الاسم
+AssessmentsTab / Dialogs,chooseType,Choose the type of task,Görev türünü seçin,Выберите тип задания,اختر نوع المهمة
+AssessmentsTab / Dialogs,weight,Weight (e.g. 0.3),Ağırlık (örn. 0.3),"Вес (например, 0.3)",الوزن (مثال 0.3)
+AssessmentsTab / Dialogs,maxPoints,Max points (e.g. 100),Maksimum puan (örn. 100),"Макс. баллов (например, 100)",النقاط القصوى (مثال 100)
+AssessmentsTab / Dialogs,choosePosition,Choose the position,Konumu seçin,Выберите позицию,اختر الموقع
+AssessmentsTab / Dialogs,totalWeight,Total Weight,Toplam Ağırlık,Общий вес,الوزن الإجمالي
+Global / Common,academicGroups,Academic Groups,Akademik Gruplar,Академические группы,المجموعات الأكاديمية
+Global / Common,courseOverview,Course Overview,Ders Genel Bakışı,Обзор курсов,نظرة عامة على المقرر
+AssessmentsTab / Dialogs,typeCourseName,Type the name of course,Dersin adını girin,Введите название курса,اكتب اسم المقرر
+Entity / Role,roleAdministrator,Administrator,Yönetici,Администратор,مسؤول
+Entity / Role,roleTeacher,Teacher,Öğretmen,Преподаватель,معلم
+Entity / Role,roleStudent,Student,Öğrenci,Студент,طالب
+Assessments Tab (AssessmentsTab.java),type,Type,Tür,Тип,نوع
+Assessments Tab (AssessmentsTab.java),actions,Actions,İşlemler,Действия,الأفعال
+Assessments Tab (AssessmentsTab.java),weightCol,Weight,Ağırlık,Вес,الوزن
+Assessments Tab (AssessmentsTab.java),maxPtsCol,Max Pts,Maks. Puan,Макс. балл,أقصى النقاط
+Teacher Gradebook (TeacherGradebookPage.java),gradebook,Gradebook,Not Defteri,Журнал оценок,سجل النقط
+Teacher Gradebook (TeacherGradebookPage.java),grades,Grades,Notlar,Оценки,النقط
+Teacher Gradebook (TeacherGradebookPage.java),notes,Notes,Notlar,Заметки,ملاحظات
+Teacher Gradebook (TeacherGradebookPage.java),chooseCourse,Choose the course,Ders seçin,Выберите курс,ختار الكورس
+Profile (OwnProfilePage.java),personalInfo,Personal Information,Kişisel Bilgiler,Личные данные,معلومات شخصية
+Profile (OwnProfilePage.java),firstName,First Name,Ad,Имя,الاسم الأول
+Profile (OwnProfilePage.java),lastName,Last Name,Soyad,Фамилия,اللقب
+Profile (OwnProfilePage.java),dateOfBirth,Date of Birth,Doğum Tarihi,Дата рождения,تاريخ الازدياد
+Profile (OwnProfilePage.java),saveChanges,Save Changes,Değişiklikleri Kaydet,Сохранить изменения,سيفط التعديلات
+Global / Common,addGrade,Add grade,Not Ekle,Добавить оценку,زاد العلامة
+Global / Common,viewProfile,View own profile,Kendi Profilini Görüntüle,Мой профиль,عرض الملف الشخصي الخاص
+Global / Common,generateCourseReport,Generate Course's report,Ders Raporu Oluştur,Создать отчет по курсу,إنشاء تقرير الدورة
+Admin Tables,studentNumberCol,Student Number,Öğrenci Numarası,Номер студента,رقم الطالب:
+Admin Tables,teacher,Teacher,Öğretmen,Преподаватель,معلم
+Admin Tables,academicGroup,Academic Group,Akademik Grup,Академическая группа,المجموعة الأكاديمية
+Admin / Groups (AdminGroupController.java),remove,Remove,Kaldır,Удалить,إزالة
+Admin / Groups (AdminGroupController.java),showStudents,Show Students,Öğrencileri Göster,Показать студентов,عرض الطلاب
+Global / Common,noContent,No content in table,Tabloda içerik yok,Нет данных в таблице,لا يوجد محتوى في الجدول
+Student Report (StudentReportController.java),selectStudentForReport,Select a student from Student Management to generate a report.,Rapor oluşturmak için Öğrenci Yönetimi bölümünden bir öğrenci seçin.,Выберите студента в разделе УПРАВЛЕНИЕ — Студенты для создания отчёта.,اختر طالبًا من إدارة الطلاب لإنشاء تقرير.
+Course (CourseController.java),selectCourseFirst,Please select a course first.,Lütfen önce bir ders seçin,"Пожалуйста, сначала выберите курс.",يرجى اختيار دورة أولاً.
+Assessments Tab (AssessmentsTab.java),enterAssessmentName,Please enter the assessment name.,Lütfen değerlendirme adını girin,Введите название задания.,يرجى إدخال اسم التقييم.
+Assessments Tab (AssessmentsTab.java),chooseAssessmentType,Please choose the assessment type.,Lütfen değerlendirme türünü seçin,Выберите тип задания.,يرجى اختيار نوع التقييم.
+Assessments Tab (AssessmentsTab.java),weightExceedsLimit,Total type weights cannot exceed 1.0. Other types use:,Toplam tür ağırlıkları 1.0 değerini aşamaz. Diğer türler şu değeri kullanır:,Суммарный вес типов не может превышать 1.0. Другие типы используют:,لا يمكن أن تتجاوز الأوزان الإجمالية للنوع 1.0. الأنواع الأخرى تستخدم:
+Assessments Tab (AssessmentsTab.java),courseNotFound,Course not found.,Ders bulunamadı.,Курс не найден.,لم يتم العثور على الدورة.
+Assessments Tab (AssessmentsTab.java),enterMaxPoints,Please enter the max points.,Lütfen maksimum puanı girin,Введите максимальный балл.,يرجى إدخال الحد الأقصى للنقاط.
+Assessments Tab (AssessmentsTab.java),maxPointsPositive,Max points must be greater than 0.,Maksimum puan 0'dan büyük olmalıdır,Максимальный балл должен быть больше 0.,يجب أن تكون النقاط القصوى أكبر من 0.
+Assessments Tab (AssessmentsTab.java),maxPointsInvalid,Max points must be a valid number.,Maksimum puan geçerli bir sayı olmalıdır,Максимальный балл должен быть числом.,يجب أن تكون النقاط القصوى رقمًا صالحًا.
+AssessmentsTab / Dialogs,deleteAssessmentTitle,Delete Assessment,Değerlendirmeyi Sil,Удалить задание,حذف التقييم
+AssessmentsTab / Dialogs,deleteAssessmentQuestion,Delete this assessment?,Bu değerlendirme silinsin mi?,Удалить это задание?,هل تريد حذف هذا التقييم؟
+AssessmentsTab / Dialogs,assessmentHasGrades,This assessment has grades.,Bu değerlendirmeye ait notlar mevcut,У этого задания есть оценки.,هذا التقييم يحتوي على درجات.
+AssessmentsTab / Dialogs,deleteGradesConfirm,All associated grades will also be deleted. Delete anyway?,İlişkili tüm notlar da silinecektir. Yine de silmek istiyor musunuz?,Все связанные оценки также будут удалены. Удалить?,سيتم أيضًا حذف جميع الدرجات المرتبطة. هل تريد الحذف على أي حال؟
+AssessmentsTab / Dialogs,deleteAnyway,Delete anyway,Yine de Sil,Удалить всё равно,حذف على أي حال
+Grades Tab (GradesTab.java),noAssessmentsFound,No assessments found for this course.,Bu ders için değerlendirme bulunamadı,Нет заданий для данного курса.,لم يتم العثور على أي تقييمات لهذه الدورة.
+Grades Tab (GradesTab.java),scoreInvalid,"enter a valid score (max 2 decimal places, no negatives).","Geçerli bir puan girin (en fazla 2 ondalık basamak, negatif değer olamaz).","введите корректный балл (не более 2 знаков после запятой, не отрицательный).",أدخل درجة صالحة (بحد أقصى منزلتان عشريتان، دون أرقام سالبة).
+Grades Tab (GradesTab.java),scoreNegative,score cannot be negative.,Puan negatif olamaz.,балл не может быть отрицательным.,لا يمكن أن تكون النتيجة سالبة.
+Grades Tab (GradesTab.java),scoreExceedsMax,exceeds max score,Maksimum puanı aşıyor,превышает максимальный балл,يتجاوز الحد الأقصى للنقاط
+Grades Tab (GradesTab.java),noGradesRecorded,No grades recorded yet.,Henüz not girilmedi.,Оценки ещё не выставлены.,لم تُسجَّل أي درجات بعد.
+,notes.prompt,Type notes for {0} / {1}...,{0} / {1} için notları girin...,Введите заметки для {0} / {1}...,اكتب ملاحظات لـ {0} / {1}...
