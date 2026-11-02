@@ -11,7 +11,7 @@
 
 ## 1. Sprint 5 Goal
 
-The goal of Sprint 5 was to prepare the Edujournal application for full multilingual support by localizing the user interface (UI), externalizing all static text into `ResourceBundle` properties files, implementing dynamic language selection directly within the GUI via a `ComboBox`, and ensuring correct layout adjustments (including RTL support for Arabic) across 7 target languages (English, Finnish, Swedish, Japanese, Russian, Turkish, and Arabic).
+The goal of Sprint 5 was to prepare the Edujournal application for full multilingual support by localizing the user interface (UI), externalizing all static text into `ResourceBundle` properties files, implementing dynamic language selection directly within the GUI via a `ComboBox`, and ensuring correct layout adjustments (including RTL support for Arabic) across 4 target languages (English, Russian, Turkish, and Arabic).
 
 ---
 
