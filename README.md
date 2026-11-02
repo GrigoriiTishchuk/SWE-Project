@@ -53,7 +53,7 @@ EduJournal supports full multilingual user interface (UI) to accommodate diverse
 
 ### Use Cases
 
-<img src="Documents/Diagrams/Use-Case-Diagram.png" alt="Use Cases" width="100%">
+<img src="Documents/Diagrams/Use-Case-Diagram-Updated.png" alt="Use Cases" width="100%">
 
 ### Definition of Success
 
