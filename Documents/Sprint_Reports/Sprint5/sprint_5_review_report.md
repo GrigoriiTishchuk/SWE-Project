@@ -90,12 +90,12 @@ The team conducted regular stand-up syncs to track progress on bundle key mappin
 
 ## 8. Team Contributions
 
-| Team Member Name | Assigned Tasks                                                                                                                                                                                      | Time Spent (hrs) | In-class tasks |
-| :--- |:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:----------------:| :---: |
-| **Grigorii Tishchuk**<br>*(Scrum Master)* | Sprint planning, Scrum coordination, UI localization architecture, documentation management, documentation updates (README, UML diagrams)                                                           |    12 h 0 min    | Submitted |
-| **Maria Kuznetsova** | Dynamic UI re-rendering, created and implemented the in-GUI `ComboBox` language selector, Russian language localization (`ru`), Login localization, resource bundle setup, translation verification |    16 h 0 min    | Submitted |
-| **Bayram Erdogan** | Turkish language localization (`tr`), resource bundle setup, translation verification                                                                                                               |   10 h 30 min    | Submitted |
-| **Olena Petrova** | Arabic language localization (`ar_SA`), resource bundle setup, translation verification                                                                                                             |   11 h 30 min    | Submitted |
+| Team Member Name | Assigned Tasks                                                                                                                                                                         | Time Spent (hrs) | In-class tasks |
+| :--- |:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------| :---: | :---: |
+| **Grigorii Tishchuk**<br>*(Scrum Master)* | Sprint planning, Scrum coordination, UI localization architecture, documentation management, documentation updates (README, UML diagrams)                                              | 12 h 0 min | Submitted |
+| **Maria Kuznetsova** | Dynamic UI re-rendering, created and implemented the in-GUI `ComboBox` language selector, Russian language localization (`ru`), Login page localization, resource bundle setup, translation verification        | 16 h 0 min | Submitted |
+| **Bayram Erdogan** | Turkish language localization (`tr`), resource bundle setup, translation verification                                                                                                  | 10 h 30 min | Submitted |
+| **Olena Petrova** | Arabic language localization (`ar_SA`), resource bundle setup, translation verification                                                                                                | 11 h 30 min | Submitted |
 
 ---
 
