@@ -325,12 +325,14 @@ Focus: understanding the project and planning the work for upcoming sprints.
 
 🔗 [Sprint 5 Planning](Documents/Sprint_Reports/Sprint5/Sprint_5_Planning_Report.md)
 🔗 [Sprint 5 Review](Documents/Sprint_Reports/Sprint5/Sprint_5_Review_Report.md)
+🔗 [UI Localization Documentation](Documents/Localization/UI_Localization.md)
 
 ---
 
 ## Documentation
 
 - [Feature Documentation](Documents/Features.md) - full description of implemented features by role
+- [UI Localization](Documents/Localization/UI_Localization.md) - localization framework, supported languages, RTL support, and guide for adding new languages
 
 ---
 
