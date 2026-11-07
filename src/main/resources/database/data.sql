@@ -575,6 +575,49 @@ WHERE c.code = 'MA01'
 
 
 /*
+ International students — validates UTF-8 encoding for Cyrillic, Arabic, and Turkish scripts
+ */
+
+-- Russian student (Cyrillic)
+INSERT INTO users (username, password_hash, first_name, last_name, role, preferred_locale)
+SELECT 'student_ru',
+       '$2a$10$dT96PvmFO9u5rV.Qo9FMle5Fr5HnVDKpsUm3S4KMadh8ygRYL5/aO',
+       'Алексей', 'Иванов', 'STUDENT', 'ru_RU'
+WHERE NOT EXISTS (SELECT 1 FROM users WHERE username = 'student_ru');
+
+INSERT INTO students (student_number, date_of_birth, user_id, academic_group_id)
+SELECT 'S005', '2005-03-10', u.id, ag.id
+FROM users u JOIN academic_groups ag ON ag.name = 'TVT25K-0'
+WHERE u.username = 'student_ru'
+  AND NOT EXISTS (SELECT 1 FROM students WHERE student_number = 'S005');
+
+-- Turkish student (special Latin characters)
+INSERT INTO users (username, password_hash, first_name, last_name, role, preferred_locale)
+SELECT 'student_tr',
+       '$2a$10$dT96PvmFO9u5rV.Qo9FMle5Fr5HnVDKpsUm3S4KMadh8ygRYL5/aO',
+       'Çağrı', 'Öztürk', 'STUDENT', 'tr_TR'
+WHERE NOT EXISTS (SELECT 1 FROM users WHERE username = 'student_tr');
+
+INSERT INTO students (student_number, date_of_birth, user_id, academic_group_id)
+SELECT 'S006', '2006-07-22', u.id, ag.id
+FROM users u JOIN academic_groups ag ON ag.name = 'Group 2'
+WHERE u.username = 'student_tr'
+  AND NOT EXISTS (SELECT 1 FROM students WHERE student_number = 'S006');
+
+-- Arabic student (RTL script)
+INSERT INTO users (username, password_hash, first_name, last_name, role, preferred_locale)
+SELECT 'student_ar',
+       '$2a$10$dT96PvmFO9u5rV.Qo9FMle5Fr5HnVDKpsUm3S4KMadh8ygRYL5/aO',
+       'محمد', 'الأحمد', 'STUDENT', 'ar_SA'
+WHERE NOT EXISTS (SELECT 1 FROM users WHERE username = 'student_ar');
+
+INSERT INTO students (student_number, date_of_birth, user_id, academic_group_id)
+SELECT 'S007', '2005-11-05', u.id, ag.id
+FROM users u JOIN academic_groups ag ON ag.name = 'Group 3'
+WHERE u.username = 'student_ar'
+  AND NOT EXISTS (SELECT 1 FROM students WHERE student_number = 'S007');
+
+/*
  Grades
  */
 

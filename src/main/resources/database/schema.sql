@@ -7,13 +7,14 @@ CREATE TABLE IF NOT EXISTS users (
     role VARCHAR(20) NOT NULL,
     phone VARCHAR(30),
     email VARCHAR(255),
-    photo VARCHAR(255)
-);
+    photo VARCHAR(255),
+    preferred_locale VARCHAR(10) DEFAULT 'en_US'
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS academic_groups (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL
-);
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS students (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -23,7 +24,7 @@ CREATE TABLE IF NOT EXISTS students (
     academic_group_id INT,
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (academic_group_id) REFERENCES academic_groups(id)
-);
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS courses (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -33,10 +34,9 @@ CREATE TABLE IF NOT EXISTS courses (
     academic_group_id INT,
     start_date DATE,
     end_date DATE,
-
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (academic_group_id) REFERENCES academic_groups(id)
-);
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS enrollments (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS enrollments (
     FOREIGN KEY (student_id) REFERENCES students(id),
     FOREIGN KEY (course_id) REFERENCES courses(id),
     FOREIGN KEY (academic_group_id) REFERENCES academic_groups(id)
-);
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS assessments (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS assessments (
     weight DECIMAL(5,2) NOT NULL,
     due_date DATE,
     FOREIGN KEY (course_id) REFERENCES courses(id)
-);
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS grades (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -68,5 +68,9 @@ CREATE TABLE IF NOT EXISTS grades (
     comment TEXT,
     FOREIGN KEY (enrollment_id) REFERENCES enrollments(id),
     FOREIGN KEY (assessment_id) REFERENCES assessments(id)
-);
-CREATE TABLE IF NOT EXISTS seed_log (id INT PRIMARY KEY);
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS seed_log (id INT PRIMARY KEY) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- Idempotent migration: adds preferred_locale to databases created before this sprint
+ALTER TABLE users ADD COLUMN IF NOT EXISTS preferred_locale VARCHAR(10) DEFAULT 'en_US';

@@ -1,5 +1,6 @@
 package com.edujournal.backend.service;
 
+import com.edujournal.config.LocalizationManager;
 import com.edujournal.dao.UserDAO;
 import com.edujournal.model.UserDTO;
 import com.edujournal.entity.User;
@@ -7,6 +8,8 @@ import com.edujournal.backend.utils.UserMapper;
 import com.edujournal.backend.utils.UserSession;
 import com.edujournal.backend.utils.InputValidator;
 import org.mindrot.jbcrypt.BCrypt;
+
+import java.util.Locale;
 
 public class AuthService {
 
@@ -33,9 +36,9 @@ public class AuthService {
 
         if (user != null) {
             if (checkPassword(password, user.getPasswordHash())) {
-                // Convert Entity in DTO and send it to UserSession
                 UserDTO userDto = userMapper.toDTO(user);
                 UserSession.getInstance().setCurrentUser(userDto);
+                applyUserLocale(user.getPreferredLocale());
                 return true;
             }
         }
@@ -45,6 +48,15 @@ public class AuthService {
 
     private boolean checkPassword(String rawPassword, String storedHash) {
         return rawPassword != null && BCrypt.checkpw(rawPassword, storedHash);
+    }
+
+    private void applyUserLocale(String localeTag) {
+        if (localeTag == null || localeTag.isBlank()) return;
+        String[] parts = localeTag.split("_");
+        Locale locale = parts.length == 2
+                ? new Locale(parts[0], parts[1])
+                : new Locale(parts[0]);
+        LocalizationManager.setLocale(locale);
     }
 
     public boolean resetPassword(String username, String newPassword) {

@@ -29,6 +29,7 @@ public class DatabaseInitializer {
 
             statement.executeUpdate(
                     "CREATE DATABASE IF NOT EXISTS " + databaseName
+                    + " DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
             );
 
             System.out.println("Database is ready.");
@@ -41,7 +42,8 @@ public class DatabaseInitializer {
         }
 
         String databaseUrl =
-                "jdbc:mariadb://" + databaseHost + ":" + databasePort + "/" + databaseName;
+                "jdbc:mariadb://" + databaseHost + ":" + databasePort + "/" + databaseName
+                + "?useUnicode=true&characterEncoding=UTF-8";
 
         try (Connection connection =
                      DriverManager.getConnection(

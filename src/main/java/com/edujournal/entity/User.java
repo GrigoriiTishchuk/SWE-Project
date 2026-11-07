@@ -29,6 +29,9 @@ public class User {
     private String email;
     private String photo;
 
+    @Column(name = "preferred_locale")
+    private String preferredLocale = "en_US";
+
     public User() {
     }
 
@@ -100,5 +103,13 @@ public class User {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public String getPreferredLocale() {
+        return preferredLocale != null ? preferredLocale : "en_US";
+    }
+
+    public void setPreferredLocale(String preferredLocale) {
+        this.preferredLocale = preferredLocale;
     }
 }
