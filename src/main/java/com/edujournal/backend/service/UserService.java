@@ -58,7 +58,7 @@ public class UserService {
     }
 
     public UserDTO createTeacher(String firstName, String lastName, String phone) {
-        String username = generateUniqueUsername(firstName, lastName);
+        String username = generateUniqueUsername(firstName, lastName, "teacher");
 
         // Generate email
         String email = generateEmail(username);
@@ -86,7 +86,7 @@ public class UserService {
     }
 
     public User createStudentUser(String firstName, String lastName, String phone) {
-        String username = generateUniqueUsername(firstName, lastName);
+        String username = generateUniqueUsername(firstName, lastName, "student");
         String email = generateEmail(username);
         String tempPassword = UUID.randomUUID().toString().substring(0, 8);
         System.out.println("[TEMP] Student login — username: " + username + ", password: " + tempPassword);
@@ -123,7 +123,7 @@ public class UserService {
                 .toList();
     }
 
-    public String generateUniqueUsername(String firstName, String lastName) {
+    public String generateUniqueUsername(String firstName, String lastName, String fallbackPrefix) {
 
         List<String> candidates = GeneratorUtil.generateUsernameCandidates(firstName, lastName);
 
@@ -135,7 +135,7 @@ public class UserService {
 
         String combined = GeneratorUtil.normalize(firstName) + GeneratorUtil.normalize(lastName);
         String base = candidates.isEmpty()
-                ? (combined.isEmpty() ? "student" : combined)
+                ? (combined.isEmpty() ? fallbackPrefix : combined)
                 : candidates.get(0).substring(0, 7);
 
         int counter = 1;

@@ -165,7 +165,7 @@ public class AssessmentsTab {
             for (AssessmentsDTO dto : data) {
                 if (seen.add(dto.getType())) sum += dto.getWeight();
             }
-            totalType.setText(String.valueOf(sum));
+            totalType.setText(String.valueOf(Math.round(sum * 100.0) / 100.0));
         };
         updateTotal.run();
         data.addListener((javafx.collections.ListChangeListener<AssessmentsDTO>) c -> updateTotal.run());

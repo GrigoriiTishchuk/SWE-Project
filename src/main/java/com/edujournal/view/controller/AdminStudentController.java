@@ -12,6 +12,7 @@ import com.edujournal.entity.User;
 import com.edujournal.view.admin.AdminSidebar;
 import com.edujournal.view.common.StudentReportPage;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -215,19 +216,25 @@ public class AdminStudentController extends BaseController<StudentDTO> {
         ButtonType saveBtn = new ButtonType(LocalizationManager.get("save"), ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(saveBtn, ButtonType.CANCEL);
 
+        Button saveBtnNode = (Button) dialog.getDialogPane().lookupButton(saveBtn);
+        saveBtnNode.addEventFilter(ActionEvent.ACTION, event -> {
+            if (firstNameField.getText().isBlank() || lastNameField.getText().isBlank()) {
+                new Alert(Alert.AlertType.ERROR, "First name and last name cannot be empty.").showAndWait();
+                event.consume();
+            } else if (phoneField.getText().isBlank()) {
+                new Alert(Alert.AlertType.ERROR, "Phone cannot be empty.").showAndWait();
+                event.consume();
+            }
+        });
+
         dialog.setResultConverter(button -> {
             if (button == saveBtn) {
                 if (firstNameField.getText().isBlank() ||
                         lastNameField.getText().isBlank()) {
-                    new Alert(Alert.AlertType.ERROR,
-                            "First name and last name cannot be empty.").showAndWait();
                     return null;
                 }
 
                 if (phoneField.getText().isBlank()) {
-                    new Alert(Alert.AlertType.ERROR,
-                            "Phone cannot be empty.").showAndWait();
-                    showAddDialog();
                     return null;
                 }
 
