@@ -6,6 +6,7 @@ import com.edujournal.config.LocalizationManager;
 import com.edujournal.backend.service.StudentService;
 import com.edujournal.backend.service.UserService;
 import com.edujournal.backend.utils.UserSession;
+import com.edujournal.dao.LocalizationDAO;
 import com.edujournal.entity.AcademicGroup;
 import com.edujournal.model.UserDTO;
 import com.edujournal.entity.Role;
@@ -87,7 +88,8 @@ public class OwnProfilePage extends BorderPane {
     private VBox buildAvatarCard(Role role, Label nameLabel) {
         Circle avatar = new Circle(40, Color.web("#9CA3AF"));
 
-        Label badge = new Label(role.getDisplayName());
+        String badgeLang = LocalizationManager.getCurrentLocale().toString();
+        Label badge = new Label(new LocalizationDAO().getRoleLabel(role.name(), badgeLang));
         badge.setStyle("-fx-background-color: #DBEAFE; -fx-text-fill: #1a3a6b; "
                 + "-fx-font-size: 11px; -fx-padding: 4 12; -fx-background-radius: 12;");
 

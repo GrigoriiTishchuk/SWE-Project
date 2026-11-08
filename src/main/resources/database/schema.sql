@@ -74,3 +74,69 @@ CREATE TABLE IF NOT EXISTS seed_log (id INT PRIMARY KEY) DEFAULT CHARACTER SET u
 
 -- adds preferred_locale to databases created before this sprint
 ALTER TABLE users ADD COLUMN IF NOT EXISTS preferred_locale VARCHAR(10) DEFAULT 'en_US';
+
+CREATE TABLE IF NOT EXISTS assessment_type_translation (
+    type_key VARCHAR(30) NOT NULL,
+    lang     VARCHAR(10) NOT NULL,
+    name     VARCHAR(100) NOT NULL,
+    PRIMARY KEY (type_key, lang)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS role_translation (
+    role_key VARCHAR(30) NOT NULL,
+    lang     VARCHAR(10) NOT NULL,
+    label    VARCHAR(50) NOT NULL,
+    PRIMARY KEY (role_key, lang)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+INSERT IGNORE INTO assessment_type_translation (type_key, lang, name) VALUES
+('INCLASSTASK', 'en_US', 'In-Class Task'),
+('INCLASSTASK', 'ru_RU', 'Аудиторное задание'),
+('INCLASSTASK', 'tr_TR', 'Sınıf İçi Görev'),
+('INCLASSTASK', 'ar_SA', 'مهمة صفية'),
+('HOMETASK',   'en_US', 'Homework'),
+('HOMETASK',   'ru_RU', 'Домашнее задание'),
+('HOMETASK',   'tr_TR', 'Ev Ödevi'),
+('HOMETASK',   'ar_SA', 'واجب منزلي'),
+('PROJECT',    'en_US', 'Project'),
+('PROJECT',    'ru_RU', 'Проект'),
+('PROJECT',    'tr_TR', 'Proje'),
+('PROJECT',    'ar_SA', 'مشروع'),
+('LAB',        'en_US', 'Lab Work'),
+('LAB',        'ru_RU', 'Лабораторная работа'),
+('LAB',        'tr_TR', 'Laboratuvar Çalışması'),
+('LAB',        'ar_SA', 'عمل مختبري'),
+('EXAM1',      'en_US', 'Exam 1'),
+('EXAM1',      'ru_RU', 'Экзамен 1'),
+('EXAM1',      'tr_TR', 'Sınav 1'),
+('EXAM1',      'ar_SA', 'امتحان 1'),
+('EXAM2',      'en_US', 'Exam 2'),
+('EXAM2',      'ru_RU', 'Экзамен 2'),
+('EXAM2',      'tr_TR', 'Sınav 2'),
+('EXAM2',      'ar_SA', 'امتحان 2'),
+('EXAM3',      'en_US', 'Exam 3'),
+('EXAM3',      'ru_RU', 'Экзамен 3'),
+('EXAM3',      'tr_TR', 'Sınav 3'),
+('EXAM3',      'ar_SA', 'امتحان 3'),
+('EXAM4',      'en_US', 'Exam 4'),
+('EXAM4',      'ru_RU', 'Экзамен 4'),
+('EXAM4',      'tr_TR', 'Sınav 4'),
+('EXAM4',      'ar_SA', 'امتحان 4'),
+('FINALEXAM',  'en_US', 'Final Exam'),
+('FINALEXAM',  'ru_RU', 'Итоговый экзамен'),
+('FINALEXAM',  'tr_TR', 'Final Sınavı'),
+('FINALEXAM',  'ar_SA', 'الامتحان النهائي');
+
+INSERT IGNORE INTO role_translation (role_key, lang, label) VALUES
+('ADMINISTRATOR', 'en_US', 'Administrator'),
+('ADMINISTRATOR', 'ru_RU', 'Администратор'),
+('ADMINISTRATOR', 'tr_TR', 'Yönetici'),
+('ADMINISTRATOR', 'ar_SA', 'مسؤول'),
+('TEACHER',       'en_US', 'Teacher'),
+('TEACHER',       'ru_RU', 'Преподаватель'),
+('TEACHER',       'tr_TR', 'Öğretmen'),
+('TEACHER',       'ar_SA', 'معلم'),
+('STUDENT',       'en_US', 'Student'),
+('STUDENT',       'ru_RU', 'Студент'),
+('STUDENT',       'tr_TR', 'Öğrenci'),
+('STUDENT',       'ar_SA', 'طالب');

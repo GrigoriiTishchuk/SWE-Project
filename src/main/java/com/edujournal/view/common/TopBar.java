@@ -3,6 +3,7 @@ package com.edujournal.view.common;
 import com.edujournal.Main;
 import com.edujournal.backend.utils.UserSession;
 import com.edujournal.config.LocalizationManager;
+import com.edujournal.dao.LocalizationDAO;
 import com.edujournal.dao.UserDAO;
 import com.edujournal.entity.Role;
 import com.edujournal.model.UserDTO;
@@ -78,7 +79,8 @@ public class TopBar {
                 : "Unknown";
         Label name = new Label(fullName);
         name.setStyle("-fx-font-weight: bold; -fx-text-fill: #111827;");
-        Label roleLabel = new Label(role.getDisplayName());
+        String roleLang = LocalizationManager.getCurrentLocale().toString();
+        Label roleLabel = new Label(new LocalizationDAO().getRoleLabel(role.name(), roleLang));
         roleLabel.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 11px;");
 
         VBox userInfo = new VBox(2, name, roleLabel);

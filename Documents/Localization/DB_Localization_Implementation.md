@@ -203,17 +203,98 @@ Where `fallbackPrefix` is `"teacher"` for teachers and `"student"` for students.
 
 ---
 
+## 9. Assessment Type Translations — Translation Table Approach
+
+A `assessment_type_translation` table stores localized display names for all fixed assessment types.
+The GUI reads from it at runtime, with English as fallback via a `LEFT JOIN` and `COALESCE`.
+
+Schema added to `schema.sql`:
+
+```sql
+CREATE TABLE IF NOT EXISTS assessment_type_translation (
+    type_key VARCHAR(30) NOT NULL,
+    lang     VARCHAR(10) NOT NULL,
+    name     VARCHAR(100) NOT NULL,
+    PRIMARY KEY (type_key, lang)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+
+`LocalizationDAO.getAssessmentTypeNames(lang)` query:
+
+```java
+em.createNativeQuery(
+    "SELECT fb.type_key, COALESCE(t.name, fb.name) " +
+    "FROM assessment_type_translation fb " +
+    "LEFT JOIN assessment_type_translation t " +
+    "    ON t.type_key = fb.type_key AND t.lang = :lang " +
+    "WHERE fb.lang = 'en_US'"
+).setParameter("lang", lang).getResultList();
+```
+
+`AssessmentsTab.java` loads the map at build time and applies it to the table column and ComboBox:
+
+```java
+Map<String, String> typeNames = new LocalizationDAO().getAssessmentTypeNames(lang);
+typeCol.setCellValueFactory(d -> new SimpleStringProperty(
+    typeNames.getOrDefault(d.getValue().getType().name(), d.getValue().getType().name())
+));
+```
+
+---
+
+## 10. Role Labels — Row Approach
+
+A `role_translation` table stores localized role labels using the row approach: one row per role and language,
+identified by a `role_key` column. No schema change is needed to add a new language — only new rows.
+
+Schema added to `schema.sql`:
+
+```sql
+CREATE TABLE IF NOT EXISTS role_translation (
+    role_key VARCHAR(30) NOT NULL,
+    lang     VARCHAR(10) NOT NULL,
+    label    VARCHAR(50) NOT NULL,
+    PRIMARY KEY (role_key, lang)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+
+`LocalizationDAO.getRoleLabel(roleKey, lang)` query:
+
+```java
+em.createNativeQuery(
+    "SELECT COALESCE(t.label, fb.label) " +
+    "FROM role_translation fb " +
+    "LEFT JOIN role_translation t " +
+    "    ON t.role_key = fb.role_key AND t.lang = :lang " +
+    "WHERE fb.lang = 'en_US' AND fb.role_key = :key"
+).setParameter("lang", lang).setParameter("key", roleKey).getResultList();
+```
+
+`TopBar.java` and `OwnProfilePage.java` read the label from DB instead of `ResourceBundle`:
+
+```java
+String roleLang = LocalizationManager.getCurrentLocale().toString();
+Label roleLabel = new Label(new LocalizationDAO().getRoleLabel(role.name(), roleLang));
+```
+
+---
+
 ## Summary
 
 | Component | Change | Purpose |
 |---|---|---|
 | `schema.sql` | `utf8mb4` on all tables + `preferred_locale` column | Store any Unicode script; persist user language |
 | `schema.sql` | `ALTER TABLE ... ADD COLUMN IF NOT EXISTS` | Migrate existing databases safely |
+| `schema.sql` | `assessment_type_translation` table + seed data | Translation table approach for assessment type names |
+| `schema.sql` | `role_translation` table + seed data | Row approach for role labels |
 | `.env` | `useUnicode=true&characterEncoding=UTF-8` | Correct encoding over JDBC |
 | `DatabaseInitializer.java` | `utf8mb4` on `CREATE DATABASE` + encoding in URL | Full UTF-8 from DB creation to connection |
 | `User.java` | `preferredLocale` field | Map the locale column in JPA |
 | `UserDAO.java` | `updateLocale()` method | Save locale to DB on language switch |
 | `AuthService.java` | `applyUserLocale()` on login | Restore user's language automatically |
-| `TopBar.java` | `updateLocale()` call on dropdown change | Persist language choice immediately |
+| `TopBar.java` | `getRoleLabel()` from DB + `updateLocale()` on dropdown | Persist language choice; show localized role |
+| `OwnProfilePage.java` | `getRoleLabel()` from DB | Show localized role badge |
+| `AssessmentsTab.java` | `getAssessmentTypeNames()` from DB | Show localized assessment type in table and ComboBox |
+| `LocalizationDAO.java` | New DAO with two query methods | Fetch localized labels from DB with English fallback |
 | `GeneratorUtil.java` | Strip non-ASCII in `normalize()` | Keep usernames Latin-only |
 | `data.sql` | Cyrillic, Arabic, Turkish seed users | Validate UTF-8 end-to-end |

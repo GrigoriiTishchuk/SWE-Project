@@ -52,11 +52,12 @@ EduJournal supports full multilingual user interface (UI) to accommodate diverse
 
 ### Database Localization
 
-EduJournal stores all data using `utf8mb4` character encoding, supporting any Unicode script — Cyrillic, Arabic, Turkish, and Latin. Each user's preferred language is saved to the database so the application restores it automatically on the next login, without requiring manual re-selection.
+EduJournal stores all data using `utf8mb4` character encoding, supporting any Unicode script — Cyrillic, Arabic, Turkish, and Latin. System-defined labels (assessment types and role names) are translated using dedicated database tables and read at runtime for the active language.
 
 - **Encoding:** All tables use `utf8mb4` with `utf8mb4_unicode_ci` collation
-- **Locale persistence:** `preferred_locale` column in the `users` table stores the chosen language per user
-- **On login:** saved locale is read and applied automatically via `LocalizationManager`
+- **Locale persistence:** `preferred_locale` column in the `users` table — language restored automatically on login
+- **Assessment type names** *(translation table approach)*: `assessment_type_translation(type_key, lang, name)` — localized names for Exam, Homework, Project, etc., with English fallback
+- **Role labels** *(row approach)*: `role_translation(role_key, lang, label)` — localized Teacher, Student, Admin labels read from DB in the top bar and profile page
 
 ### Use Cases
 
