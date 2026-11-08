@@ -12,29 +12,50 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Controller responsible for managing teacher accounts.
+ * Provides functionality for viewing, searching, creating, editing and deleting teachers.
+ */
 public class AdminTeacherController extends BaseController<UserDTO> {
     private final UserService userService = new UserService();
     private final UserMapper userMapper = new UserMapper();
 
     private final Role role;
 
+    /**
+     * Creates the teacher administration controller.
+     *
+     * @param role current user role
+     */
     public AdminTeacherController(Role role) {
         this.role = role;
         configureColumns();
         loadAndShowItems();
     }
 
+    /**
+     * Loads all teachers.
+     *
+     * @return list of teacher DTOs
+     */
     @Override
     protected List<UserDTO> loadAllItems() {
         return userService.findAllTeachers();
     }
 
+    /**
+     * Checks whether a teacher matches the selected filter and search criteria.
+     *
+     * @param teacher teacher DTO
+     * @param filter selected filter
+     * @param searchText search text
+     * @return true if teacher matches
+     */
     @Override
     protected boolean matchesFilter(UserDTO teacher, String filter, String searchText) {
         searchText = searchText.toLowerCase();
@@ -55,7 +76,11 @@ public class AdminTeacherController extends BaseController<UserDTO> {
                 return teacher.getLastName() != null &&
                         teacher.getLastName().toLowerCase().contains(searchText);
 
-            case "Phone":
+            case "Email":
+                return teacher.getEmail() != null &&
+                        teacher.getEmail().toLowerCase().contains(searchText);
+
+            case "Phone Number":
                 return teacher.getPhone() != null &&
                         teacher.getPhone().toLowerCase().contains(searchText);
 
@@ -67,6 +92,7 @@ public class AdminTeacherController extends BaseController<UserDTO> {
                                 safe(teacher.getUsername()),
                                 safe(teacher.getFirstName()),
                                 safe(teacher.getLastName()),
+                                safe(teacher.getEmail()),
                                 safe(teacher.getPhone())
                         ),
                         searchText
@@ -74,10 +100,19 @@ public class AdminTeacherController extends BaseController<UserDTO> {
         }
     }
 
+    /**
+     * Returns an empty string for null values.
+     *
+     * @param value source value
+     * @return non-null string
+     */
     private String safe(String value) {
         return value == null ? "" : value;
     }
 
+    /**
+     * Configures table columns and filter options.
+     */
     @Override
     protected void configureColumns() {
         TableColumn<UserDTO, String> idCol = new TableColumn<>(LocalizationManager.get("id"));
@@ -107,27 +142,14 @@ public class AdminTeacherController extends BaseController<UserDTO> {
                 "All", "all", "ID", "id", "Username", "username",
                 "First Name", "firstName", "Last Name", "lastName", "Phone Number", "phone"
         );
-        filterCombo.setCellFactory(list -> new ListCell<>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) { setText(null); return; }
-                String key = filterKeyMap.get(item);
-                setText(key != null ? LocalizationManager.get(key) : item);
-            }
-        });
-        filterCombo.setButtonCell(new ListCell<>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) { setText(null); return; }
-                String key = filterKeyMap.get(item);
-                setText(key != null ? LocalizationManager.get(key) : item);
-            }
-        });
+        filterCombo.setCellFactory(list -> createLocalizedCell(filterKeyMap));
+        filterCombo.setButtonCell(createLocalizedCell(filterKeyMap));
     }
 
     // Dialogs
+    /**
+     * Opens a dialog for creating a new teacher.
+     */
     @Override
     public void showAddDialog() {
         Dialog<UserDTO> dialog = new Dialog<>();
@@ -152,21 +174,26 @@ public class AdminTeacherController extends BaseController<UserDTO> {
         Button saveBtnNode = (Button) dialog.getDialogPane().lookupButton(saveBtn);
         saveBtnNode.addEventFilter(ActionEvent.ACTION, event -> {
             if (firstNameField.getText().isBlank() || lastNameField.getText().isBlank()) {
-                new Alert(Alert.AlertType.ERROR, "First name and last name cannot be empty.").showAndWait();
+                showError(LocalizationManager.get("errorNameEmpty"));
+                event.consume();
+            } else if (phoneField.getText().isBlank()) {
+                showError(LocalizationManager.get("errorPhoneEmpty"));
                 event.consume();
             }
         });
 
         dialog.setResultConverter(button -> {
             if (button == saveBtn) {
-                if (firstNameField.getText().isBlank() || lastNameField.getText().isBlank()) {
+                if (firstNameField.getText().isBlank()
+                        || lastNameField.getText().isBlank()
+                        || phoneField.getText().isBlank()) {
                     return null;
                 }
 
                 UserDTO dto = new UserDTO();
-                dto.setFirstName(firstNameField.getText());
-                dto.setLastName(lastNameField.getText());
-                dto.setPhone(phoneField.getText());
+                dto.setFirstName(firstNameField.getText().trim());
+                dto.setLastName(lastNameField.getText().trim());
+                dto.setPhone(phoneField.getText().trim());
                 return dto;
             }
             return null;
@@ -180,6 +207,9 @@ public class AdminTeacherController extends BaseController<UserDTO> {
         }
     }
 
+    /**
+     * Opens a dialog for editing the selected teacher.
+     */
     @Override
     protected void showEditDialog() {
 
@@ -187,7 +217,7 @@ public class AdminTeacherController extends BaseController<UserDTO> {
         if (teacher == null) return;
 
         Dialog<UserDTO> dialog = new Dialog<>();
-        dialog.setTitle("Edit Teacher");
+        dialog.setTitle(LocalizationManager.get("editTeacher"));
 
         TextField firstNameField = new TextField(teacher.getFirstName() != null ? teacher.getFirstName() : "");
         TextField lastNameField = new TextField(teacher.getLastName() != null ? teacher.getLastName() : "");
@@ -196,15 +226,14 @@ public class AdminTeacherController extends BaseController<UserDTO> {
         box.setPadding(new Insets(10));
         dialog.getDialogPane().setContent(box);
 
-        ButtonType saveBtn = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        ButtonType saveBtn = new ButtonType(LocalizationManager.get("save"), ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(saveBtn, ButtonType.CANCEL);
 
         dialog.setResultConverter(btn -> {
             if (btn == saveBtn) {
 
                 if (firstNameField.getText().isBlank() || lastNameField.getText().isBlank()) {
-                    new Alert(Alert.AlertType.ERROR,
-                            "First name and last name cannot be empty.").showAndWait();
+                    showError(LocalizationManager.get("errorNameEmpty"));
                     return null;
                 }
 
@@ -224,18 +253,21 @@ public class AdminTeacherController extends BaseController<UserDTO> {
         }
     }
 
+    /**
+     * Opens a confirmation dialog and deletes the selected teacher if confirmed.
+     */
     @Override
     protected void showDeleteDialog() {
         UserDTO teacher = table.getSelectionModel().getSelectedItem();
         if (teacher == null) return;
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Delete Teacher");
-        alert.setHeaderText("Are you sure you want to delete \"" + teacher.getUsername() + "\"?");
-        alert.setContentText("This action cannot be undone.");
+        alert.setTitle(LocalizationManager.get("deleteTeacher"));
+        alert.setHeaderText(LocalizationManager.get("sureToDelete") + " \"" + teacher.getUsername() + "\"?");
+        alert.setContentText(LocalizationManager.get("undone"));
 
-        ButtonType yes = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
-        ButtonType no = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType yes = new ButtonType(LocalizationManager.get("yes"), ButtonBar.ButtonData.OK_DONE);
+        ButtonType no = new ButtonType(LocalizationManager.get("no"), ButtonBar.ButtonData.CANCEL_CLOSE);
 
         alert.getButtonTypes().setAll(yes, no);
 
@@ -245,6 +277,9 @@ public class AdminTeacherController extends BaseController<UserDTO> {
         }
     }
 
+    /**
+     * Displays detailed information about the selected teacher.
+     */
     @Override
     protected void onView() {
         UserDTO teacher = table.getSelectionModel().getSelectedItem();
@@ -256,7 +291,7 @@ public class AdminTeacherController extends BaseController<UserDTO> {
         StringBuilder courseList = new StringBuilder();
 
         if (courses.isEmpty()) {
-            courseList.append("No courses assigned.");
+            courseList.append(LocalizationManager.get("noCourseAssigned"));
         } else {
             for (CourseDTO c : courses) {
                 courseList.append("• ")
@@ -268,13 +303,13 @@ public class AdminTeacherController extends BaseController<UserDTO> {
         }
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Teacher Info");
+        alert.setTitle(LocalizationManager.get("teacherInfo"));
 
         alert.setHeaderText(teacher.getFirstName() + " " + teacher.getLastName());
 
         alert.setContentText(
-                "Username: " + teacher.getUsername() + "\n\n" +
-                        "Courses:\n" + courseList
+                LocalizationManager.get("username") + ": " + teacher.getUsername() + "\n\n" +
+                        LocalizationManager.get("courses") + ":\n" + courseList
         );
 
         alert.showAndWait();

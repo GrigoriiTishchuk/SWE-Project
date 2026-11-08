@@ -78,7 +78,9 @@ public class AdminStudentController extends BaseController<StudentDTO> {
                             dto.getStudentNumber(),
                             dto.getUsername(),
                             dto.getFirstName(),
-                            dto.getLastName()
+                            dto.getLastName(),
+                            dto.getEmail(),
+                            dto.getPhone()
                     ),
                     text
             );
@@ -99,6 +101,9 @@ public class AdminStudentController extends BaseController<StudentDTO> {
 
             case "Last Name" -> dto.getLastName() != null &&
                     dto.getLastName().toLowerCase().contains(text);
+
+            case "Phone Number" -> dto.getPhone() != null &&
+                    dto.getPhone().toLowerCase().contains(text);
 
             default -> true;
         };
@@ -182,24 +187,8 @@ public class AdminStudentController extends BaseController<StudentDTO> {
                 "Username", "username", "First Name", "firstName",
                 "Last Name", "lastName", "Email", "email", "Phone Number", "phone"
         );
-        filterCombo.setCellFactory(list -> new ListCell<>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) { setText(null); return; }
-                String key = filterKeyMap.get(item);
-                setText(key != null ? LocalizationManager.get(key) : item);
-            }
-        });
-        filterCombo.setButtonCell(new ListCell<>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) { setText(null); return; }
-                String key = filterKeyMap.get(item);
-                setText(key != null ? LocalizationManager.get(key) : item);
-            }
-        });
+        filterCombo.setCellFactory(list -> createLocalizedCell(filterKeyMap));
+        filterCombo.setButtonCell(createLocalizedCell(filterKeyMap));
     }
 
     /**
@@ -248,10 +237,10 @@ public class AdminStudentController extends BaseController<StudentDTO> {
         Button saveBtnNode = (Button) dialog.getDialogPane().lookupButton(saveBtn);
         saveBtnNode.addEventFilter(ActionEvent.ACTION, event -> {
             if (firstNameField.getText().isBlank() || lastNameField.getText().isBlank()) {
-                showError("First name and last name cannot be empty.");
+                showError(LocalizationManager.get("errorNameEmpty"));
                 event.consume();
             } else if (phoneField.getText().isBlank()) {
-                showError("Phone cannot be empty.");
+                showError(LocalizationManager.get("errorPhoneEmpty"));
                 event.consume();
             }
         });
@@ -296,7 +285,7 @@ public class AdminStudentController extends BaseController<StudentDTO> {
         if (dto == null) return;
 
         Dialog<Boolean> dialog = new Dialog<>();
-        dialog.setTitle("Edit Student");
+        dialog.setTitle(LocalizationManager.get("editStudent"));
 
         TextField firstNameField = new TextField(dto.getFirstName() != null ? dto.getFirstName() : "");
         TextField lastNameField = new TextField(dto.getLastName() != null ? dto.getLastName() : "");
@@ -306,18 +295,18 @@ public class AdminStudentController extends BaseController<StudentDTO> {
         box.setPadding(new Insets(10));
         dialog.getDialogPane().setContent(box);
 
-        ButtonType saveBtn = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        ButtonType saveBtn = new ButtonType(LocalizationManager.get("save"), ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(saveBtn, ButtonType.CANCEL);
 
         dialog.setResultConverter(btn -> {
             if (btn == saveBtn) {
                 if (firstNameField.getText().isBlank() ||
                         lastNameField.getText().isBlank()) {
-                    showError("First name and last name cannot be empty.");
+                    showError(LocalizationManager.get("errorNameEmpty"));
                     return null;
                 }
                 if (phoneField.getText().isBlank()) {
-                    showError("Phone cannot be empty.");
+                    showError(LocalizationManager.get("errorPhoneEmpty"));
                     return null;
                 }
                 return true;
@@ -344,13 +333,13 @@ public class AdminStudentController extends BaseController<StudentDTO> {
         if (dto == null) return;
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Delete Student");
-        alert.setHeaderText("Are you sure you want to delete \"" +
+        alert.setTitle(LocalizationManager.get("deleteStudent"));
+        alert.setHeaderText(LocalizationManager.get("sureToDelete") + " \"" +
                 dto.getFirstName() + " " + dto.getLastName() + "\"?");
-        alert.setContentText("This action cannot be undone.");
+        alert.setContentText(LocalizationManager.get("undone"));
 
-        ButtonType yes = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
-        ButtonType no = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType yes = new ButtonType(LocalizationManager.get("yes"), ButtonBar.ButtonData.OK_DONE);
+        ButtonType no = new ButtonType(LocalizationManager.get("no"), ButtonBar.ButtonData.CANCEL_CLOSE);
         alert.getButtonTypes().setAll(yes, no);
 
         if (alert.showAndWait().orElse(no) == yes) {
@@ -373,23 +362,14 @@ public class AdminStudentController extends BaseController<StudentDTO> {
         if (dto == null) return;
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Student Info");
+        alert.setTitle(LocalizationManager.get("studentInfo"));
         alert.setHeaderText(dto.getFirstName() + " " + dto.getLastName());
         alert.setContentText(
-                "Student Number: " + dto.getStudentNumber() + "\n" +
-                        "Username: " + dto.getUsername() + "\n" +
-                        "Email: " + dto.getEmail() + "\n" +
-                        "Phone: " + dto.getPhone()
+                LocalizationManager.get("studentNumber") + ": " + dto.getStudentNumber() + "\n" +
+                        LocalizationManager.get("username") + ": " + dto.getUsername() + "\n" +
+                        LocalizationManager.get("email") + ": " + dto.getEmail() + "\n" +
+                        LocalizationManager.get("phone") + ": " + dto.getPhone()
         );
         alert.showAndWait();
-    }
-
-    /**
-     * Displays an error dialog with the specified message.
-     *
-     * @param message error message to display
-     */
-    private void showError(String message) {
-        new Alert(Alert.AlertType.ERROR, message).showAndWait();
     }
 }

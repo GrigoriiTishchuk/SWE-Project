@@ -9,6 +9,7 @@ import javafx.scene.layout.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -49,7 +50,6 @@ public abstract class BaseController<T> extends BorderPane {
         setupDoubleClick();
     }
 
-    // Abstract methods for children
     /**
      * Configures table columns for the entity view.
      */
@@ -93,7 +93,9 @@ public abstract class BaseController<T> extends BorderPane {
      */
     protected abstract void onView(); // optional
 
-    // Layout
+    /**
+     * Layout setup
+     */
     private void setupLayout() {
 
         table.setPlaceholder(new Label(LocalizationManager.get("noContent")));
@@ -123,7 +125,9 @@ public abstract class BaseController<T> extends BorderPane {
         setCenter(table);
     }
 
-    // Buttons
+    /**
+     * Buttons setup
+     */
     private void setupButtons() {
 
         addBtn.setOnAction(e -> showAddDialog());
@@ -143,7 +147,9 @@ public abstract class BaseController<T> extends BorderPane {
         setBottom(bottom);
     }
 
-    // Double click
+    /**
+     * Double click
+     */
     private void setupDoubleClick() {
         table.setRowFactory(tv -> {
             TableRow<T> row = new TableRow<>();
@@ -156,7 +162,9 @@ public abstract class BaseController<T> extends BorderPane {
         });
     }
 
-    // Search + Filter
+    /**
+     * Search + Filter
+     */
     private void setupSearchHandlers() {
         searchField.textProperty().addListener((obs, oldVal, newVal) -> applyFilter());
         filterCombo.valueProperty().addListener((obs, oldVal, newVal) -> applyFilter());
@@ -311,6 +319,40 @@ public abstract class BaseController<T> extends BorderPane {
      */
     protected void enableCardsView(Function<T, Node> builder) {
         this.cardBuilder = builder;
+    }
+
+    /**
+     * Displays an error dialog with the specified message.
+     *
+     * @param message error message
+     */
+    protected void showError(String message) {
+        new Alert(Alert.AlertType.ERROR, message)
+                .showAndWait();
+    }
+
+    /**
+     * Creates a localized list cell for displaying translated filter values in ComboBox controls.
+     *
+     * @param keyMap mapping between display values
+     *               and localization keys
+     * @return localized list cell
+     */
+    protected ListCell<String> createLocalizedCell(Map<String, String> keyMap) {
+        return new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null) {
+                    setText(null);
+                    return;
+                }
+
+                String key = keyMap.get(item);
+                setText(key != null ? LocalizationManager.get(key) : item);
+            }
+        };
     }
 }
 
