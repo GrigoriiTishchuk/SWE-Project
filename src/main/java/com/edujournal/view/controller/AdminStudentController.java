@@ -3,12 +3,9 @@ package com.edujournal.view.controller;
 import com.edujournal.Main;
 import com.edujournal.backend.service.StudentService;
 import com.edujournal.backend.service.UserService;
-import com.edujournal.backend.utils.GeneratorUtil;
 import com.edujournal.config.LocalizationManager;
 import com.edujournal.entity.Role;
-import com.edujournal.entity.Student;
 import com.edujournal.model.StudentDTO;
-import com.edujournal.entity.User;
 import com.edujournal.view.admin.AdminSidebar;
 import com.edujournal.view.common.StudentReportPage;
 import javafx.beans.property.SimpleStringProperty;
@@ -21,11 +18,21 @@ import javafx.scene.layout.VBox;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Controller responsible for managing students.
+ * Provides functionality for viewing, searching, creating, editing and deleting student records.
+ */
 public class AdminStudentController extends BaseController<StudentDTO> {
 
     private final StudentService studentService = new StudentService();
     private final UserService userService = new UserService();
 
+    /**
+     * Creates the student administration controller and initializes table configuration,
+     * report actions and selection handling.
+     *
+     * @param role current user role
+     */
     public AdminStudentController(Role role) {
         configureColumns();
         loadAndShowItems();
@@ -41,11 +48,24 @@ public class AdminStudentController extends BaseController<StudentDTO> {
         reportBtn.setOnAction(e -> openStudentReport());
     }
 
+    /**
+     * Loads all students as DTO objects.
+     *
+     * @return list of students
+     */
     @Override
     protected List<StudentDTO> loadAllItems() {
         return studentService.findAllDTO();
     }
 
+    /**
+     * Checks whether a student matches the selected filter and search text.
+     *
+     * @param dto student record
+     * @param filter selected filter
+     * @param text search text
+     * @return true if the student matches
+     */
     @Override
     protected boolean matchesFilter(StudentDTO dto, String filter, String text) {
         if (text == null || text.isBlank()) return true;
@@ -71,7 +91,7 @@ public class AdminStudentController extends BaseController<StudentDTO> {
             case "Student Number" -> dto.getStudentNumber() != null &&
                     dto.getStudentNumber().toLowerCase().contains(text);
 
-            case "Username" -> dto.getLastName() != null &&
+            case "Username" -> dto.getUsername() != null &&
                     dto.getUsername().toLowerCase().contains(text);
 
             case "First Name" -> dto.getFirstName() != null &&
@@ -84,6 +104,9 @@ public class AdminStudentController extends BaseController<StudentDTO> {
         };
     }
 
+    /**
+     * Configures table columns and filter options.
+     */
     @Override
     protected void configureColumns() {
 
@@ -179,6 +202,9 @@ public class AdminStudentController extends BaseController<StudentDTO> {
         });
     }
 
+    /**
+     * Opens the report page for the selected student.
+     */
     private void openStudentReport() {
         StudentDTO selectedStudent =
                 table.getSelectionModel().getSelectedItem();
@@ -196,6 +222,9 @@ public class AdminStudentController extends BaseController<StudentDTO> {
         );
     }
 
+    /**
+     * Opens a dialog for creating a new student.
+     */
     @Override
     public void showAddDialog() {
         Dialog<StudentDTO> dialog = new Dialog<>();
@@ -219,10 +248,10 @@ public class AdminStudentController extends BaseController<StudentDTO> {
         Button saveBtnNode = (Button) dialog.getDialogPane().lookupButton(saveBtn);
         saveBtnNode.addEventFilter(ActionEvent.ACTION, event -> {
             if (firstNameField.getText().isBlank() || lastNameField.getText().isBlank()) {
-                new Alert(Alert.AlertType.ERROR, "First name and last name cannot be empty.").showAndWait();
+                showError("First name and last name cannot be empty.");
                 event.consume();
             } else if (phoneField.getText().isBlank()) {
-                new Alert(Alert.AlertType.ERROR, "Phone cannot be empty.").showAndWait();
+                showError("Phone cannot be empty.");
                 event.consume();
             }
         });
@@ -248,7 +277,7 @@ public class AdminStudentController extends BaseController<StudentDTO> {
         });
 
         dialog.showAndWait().ifPresent(dto -> {
-            StudentDTO created = studentService.createStudent(
+            studentService.createStudent(
                     dto.getFirstName(),
                     dto.getLastName(),
                     dto.getPhone()
@@ -258,6 +287,9 @@ public class AdminStudentController extends BaseController<StudentDTO> {
         });
     }
 
+    /**
+     * Opens a dialog for editing the selected student.
+     */
     @Override
     protected void showEditDialog() {
         StudentDTO dto = table.getSelectionModel().getSelectedItem();
@@ -281,13 +313,11 @@ public class AdminStudentController extends BaseController<StudentDTO> {
             if (btn == saveBtn) {
                 if (firstNameField.getText().isBlank() ||
                         lastNameField.getText().isBlank()) {
-                    new Alert(Alert.AlertType.ERROR,
-                            "First name and last name cannot be empty.").showAndWait();
+                    showError("First name and last name cannot be empty.");
                     return null;
                 }
                 if (phoneField.getText().isBlank()) {
-                    new Alert(Alert.AlertType.ERROR,
-                            "Phone cannot be empty.").showAndWait();
+                    showError("Phone cannot be empty.");
                     return null;
                 }
                 return true;
@@ -305,6 +335,9 @@ public class AdminStudentController extends BaseController<StudentDTO> {
         });
     }
 
+    /**
+     * Opens a confirmation dialog and deletes the selected student if confirmed.
+     */
     @Override
     protected void showDeleteDialog() {
         StudentDTO dto = table.getSelectionModel().getSelectedItem();
@@ -331,6 +364,9 @@ public class AdminStudentController extends BaseController<StudentDTO> {
         }
     }
 
+    /**
+     * Displays detailed information about the selected student.
+     */
     @Override
     protected void onView() {
         StudentDTO dto = table.getSelectionModel().getSelectedItem();
@@ -346,5 +382,14 @@ public class AdminStudentController extends BaseController<StudentDTO> {
                         "Phone: " + dto.getPhone()
         );
         alert.showAndWait();
+    }
+
+    /**
+     * Displays an error dialog with the specified message.
+     *
+     * @param message error message to display
+     */
+    private void showError(String message) {
+        new Alert(Alert.AlertType.ERROR, message).showAndWait();
     }
 }
