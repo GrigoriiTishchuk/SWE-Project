@@ -72,5 +72,5 @@ CREATE TABLE IF NOT EXISTS grades (
 
 CREATE TABLE IF NOT EXISTS seed_log (id INT PRIMARY KEY) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- Idempotent migration: adds preferred_locale to databases created before this sprint
+-- adds preferred_locale to databases created before this sprint
 ALTER TABLE users ADD COLUMN IF NOT EXISTS preferred_locale VARCHAR(10) DEFAULT 'en_US';
