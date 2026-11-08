@@ -227,6 +227,7 @@ public class AdminStudentController extends BaseController<StudentDTO> {
                 if (phoneField.getText().isBlank()) {
                     new Alert(Alert.AlertType.ERROR,
                             "Phone cannot be empty.").showAndWait();
+                    showAddDialog();
                     return null;
                 }
 

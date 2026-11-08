@@ -36,11 +36,12 @@ public class GeneratorUtil {
     }
 
     public static String normalize(String s) {
+        if (s == null) return "";
         return s.toLowerCase()
                 .replace("ä", "a")
                 .replace("ö", "o")
                 .replace("å", "a")
-                .replaceAll("\\s+", "");
+                .replaceAll("[^a-z0-9]", "");
     }
 
     // Email generation

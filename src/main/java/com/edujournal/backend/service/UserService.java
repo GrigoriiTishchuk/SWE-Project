@@ -133,8 +133,9 @@ public class UserService {
             }
         }
 
+        String combined = GeneratorUtil.normalize(firstName) + GeneratorUtil.normalize(lastName);
         String base = candidates.isEmpty()
-                ? (GeneratorUtil.normalize(firstName) + GeneratorUtil.normalize(lastName))
+                ? (combined.isEmpty() ? "student" : combined)
                 : candidates.get(0).substring(0, 7);
 
         int counter = 1;
