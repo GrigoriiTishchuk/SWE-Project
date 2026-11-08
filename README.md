@@ -333,6 +333,8 @@ Focus: understanding the project and planning the work for upcoming sprints.
 
 - [Feature Documentation](Documents/Features.md) - full description of implemented features by role
 - [UI Localization](Documents/Localization/UI_Localization.md) - localization framework, supported languages, RTL support, and guide for adding new languages
+- [DB Localization](Documents/Localization/DB_Localization.md) - database localization strategy, encoding, and user locale persistence
+- [DB Localization Implementation](Documents/Localization/DB_Localization_Implementation.md) - technical implementation details with code examples
 
 ---
 
