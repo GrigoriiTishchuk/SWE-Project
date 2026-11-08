@@ -5,6 +5,7 @@ import com.edujournal.config.EnvConfig;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -95,7 +96,7 @@ public class DatabaseInitializer {
         }
 
         String sql = new BufferedReader(
-                new InputStreamReader(inputStream)
+                new InputStreamReader(inputStream, StandardCharsets.UTF_8)
         )
                 .lines()
                 .collect(Collectors.joining("\n"));
