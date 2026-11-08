@@ -147,6 +147,31 @@ public class UserDAO {
         }
     }
 
+    public void updateLocale(Integer userId, String locale) {
+        EntityManager entityManager = JPAUtil
+                .getEntityManagerFactory()
+                .createEntityManager();
+
+        try {
+            entityManager.getTransaction().begin();
+            entityManager.createQuery(
+                    "UPDATE User u SET u.preferredLocale = :locale WHERE u.id = :id"
+            )
+            .setParameter("locale", locale)
+            .setParameter("id", userId)
+            .executeUpdate();
+            entityManager.getTransaction().commit();
+
+        } catch (Exception e) {
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
+            }
+            throw e;
+        } finally {
+            entityManager.close();
+        }
+    }
+
     public void delete(User user) {
         EntityManager entityManager = JPAUtil
                 .getEntityManagerFactory()

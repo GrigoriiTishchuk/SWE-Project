@@ -9,6 +9,7 @@ import com.edujournal.entity.User;
 import com.edujournal.model.CourseDTO;
 import com.edujournal.model.UserDTO;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -148,11 +149,17 @@ public class AdminTeacherController extends BaseController<UserDTO> {
         ButtonType saveBtn = new ButtonType(LocalizationManager.get("save"), ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(saveBtn, ButtonType.CANCEL);
 
+        Button saveBtnNode = (Button) dialog.getDialogPane().lookupButton(saveBtn);
+        saveBtnNode.addEventFilter(ActionEvent.ACTION, event -> {
+            if (firstNameField.getText().isBlank() || lastNameField.getText().isBlank()) {
+                new Alert(Alert.AlertType.ERROR, "First name and last name cannot be empty.").showAndWait();
+                event.consume();
+            }
+        });
+
         dialog.setResultConverter(button -> {
             if (button == saveBtn) {
                 if (firstNameField.getText().isBlank() || lastNameField.getText().isBlank()) {
-                    new Alert(Alert.AlertType.ERROR,
-                            "First name and last name cannot be empty.").showAndWait();
                     return null;
                 }
 

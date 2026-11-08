@@ -5,6 +5,7 @@ import com.edujournal.config.EnvConfig;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -29,6 +30,7 @@ public class DatabaseInitializer {
 
             statement.executeUpdate(
                     "CREATE DATABASE IF NOT EXISTS " + databaseName
+                    + " DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
             );
 
             System.out.println("Database is ready.");
@@ -41,7 +43,8 @@ public class DatabaseInitializer {
         }
 
         String databaseUrl =
-                "jdbc:mariadb://" + databaseHost + ":" + databasePort + "/" + databaseName;
+                "jdbc:mariadb://" + databaseHost + ":" + databasePort + "/" + databaseName
+                + "?useUnicode=true&characterEncoding=UTF-8";
 
         try (Connection connection =
                      DriverManager.getConnection(
@@ -93,7 +96,7 @@ public class DatabaseInitializer {
         }
 
         String sql = new BufferedReader(
-                new InputStreamReader(inputStream)
+                new InputStreamReader(inputStream, StandardCharsets.UTF_8)
         )
                 .lines()
                 .collect(Collectors.joining("\n"));

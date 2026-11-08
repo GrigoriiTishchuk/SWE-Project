@@ -50,6 +50,13 @@ EduJournal supports full multilingual user interface (UI) to accommodate diverse
     - 🇸🇦 Arabic (`ar_SA`) — Full Right-to-Left (RTL) layout orientation support via JavaFX `NodeOrientation`
 - **Dynamic Language Switcher:** Users can seamlessly switch languages on-the-fly directly from the GUI using the integrated header `ComboBox` selector without needing to restart the application.
 
+### Database Localization
+
+EduJournal stores all data using `utf8mb4` character encoding, supporting any Unicode script — Cyrillic, Arabic, Turkish, and Latin. Each user's preferred language is saved to the database so the application restores it automatically on the next login, without requiring manual re-selection.
+
+- **Encoding:** All tables use `utf8mb4` with `utf8mb4_unicode_ci` collation
+- **Locale persistence:** `preferred_locale` column in the `users` table stores the chosen language per user
+- **On login:** saved locale is read and applied automatically via `LocalizationManager`
 
 ### Use Cases
 
@@ -333,6 +340,8 @@ Focus: understanding the project and planning the work for upcoming sprints.
 
 - [Feature Documentation](Documents/Features.md) - full description of implemented features by role
 - [UI Localization](Documents/Localization/UI_Localization.md) - localization framework, supported languages, RTL support, and guide for adding new languages
+- [DB Localization](Documents/Localization/DB_Localization.md) - database localization strategy, encoding, and user locale persistence
+- [DB Localization Implementation](Documents/Localization/DB_Localization_Implementation.md) - technical implementation details with code examples
 
 ---
 

@@ -3,6 +3,7 @@ package com.edujournal.view.common;
 import com.edujournal.Main;
 import com.edujournal.backend.utils.UserSession;
 import com.edujournal.config.LocalizationManager;
+import com.edujournal.dao.UserDAO;
 import com.edujournal.entity.Role;
 import com.edujournal.model.UserDTO;
 import com.edujournal.view.LoginPage;
@@ -62,6 +63,10 @@ public class TopBar {
                 default        -> new Locale("en", "US");
             };
             LocalizationManager.setLocale(locale);
+            UserDTO currentUser = UserSession.getInstance().getCurrentUser();
+            if (currentUser != null) {
+                new UserDAO().updateLocale(currentUser.getId(), locale.toString());
+            }
             Main.reloadPage();
         });
 
