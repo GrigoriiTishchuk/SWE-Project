@@ -2,13 +2,16 @@ package com.edujournal.view.teacher;
 
 import com.edujournal.backend.service.AssessmentsService;
 import com.edujournal.config.LocalizationManager;
+import com.edujournal.dao.LocalizationDAO;
 import com.edujournal.entity.AssessmentType;
 import com.edujournal.entity.Assessments;
 import com.edujournal.entity.Course;
 import com.edujournal.model.AssessmentsDTO;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -37,6 +40,9 @@ public class AssessmentsTab {
 
         AssessmentsService assessmentsService =
                 new AssessmentsService();
+
+        String lang = LocalizationManager.getCurrentLocale().toString();
+        Map<String, String> typeNames = new LocalizationDAO().getAssessmentTypeNames(lang);
 
         ObservableList<AssessmentsDTO> data =
                 FXCollections.observableArrayList();
@@ -76,7 +82,7 @@ public class AssessmentsTab {
 
         typeCol.setCellValueFactory(
                 d -> new SimpleStringProperty(
-                        d.getValue().getType().name()
+                        typeNames.getOrDefault(d.getValue().getType().name(), d.getValue().getType().name())
                 )
         );
 
@@ -229,10 +235,16 @@ public class AssessmentsTab {
         );
 
         typeCombo.setPromptText(LocalizationManager.get("chooseType"));
+        typeCombo.setCellFactory(lv -> new javafx.scene.control.ListCell<>() {
+            @Override protected void updateItem(AssessmentType item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(item == null || empty ? null : typeNames.getOrDefault(item.name(), item.name()));
+            }
+        });
         typeCombo.setButtonCell(new javafx.scene.control.ListCell<>() {
             @Override protected void updateItem(AssessmentType item, boolean empty) {
                 super.updateItem(item, empty);
-                setText(item == null ? LocalizationManager.get("chooseType") : item.name());
+                setText(item == null ? LocalizationManager.get("chooseType") : typeNames.getOrDefault(item.name(), item.name()));
             }
         });
 
