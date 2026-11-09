@@ -30,6 +30,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Builds a student progress report that contains general
+ * student information and assessment results grouped by course.
+ */
 public class StudentReportController {
 
     private final Role role;
@@ -42,11 +46,22 @@ public class StudentReportController {
     private final AssessmentsService assessmentsService = new AssessmentsService();
     private final GradesDAO gradesDAO = new GradesDAO();
 
+    /**
+     * Creates a student report controller.
+     *
+     * @param role current user role
+     * @param studentId selected student identifier
+     */
     public StudentReportController(Role role, Integer studentId) {
         this.role = role;
         this.studentId = studentId;
     }
 
+    /**
+     * Builds the complete student report view.
+     *
+     * @return report content
+     */
     public VBox buildReport() {
         VBox root = new VBox(20);
         root.setPadding(new Insets(10));
@@ -59,7 +74,7 @@ public class StudentReportController {
         StudentDTO student = studentService.findDTOById(studentId);
 
         if (student == null) {
-            root.getChildren().add(new Label("Student not found."));
+            root.getChildren().add(new Label(LocalizationManager.get("studentNotFound")));
             return root;
         }
 
@@ -68,15 +83,21 @@ public class StudentReportController {
         List<StudentReportDTO> report = reportService.buildReport(studentId);
 
         if (report.isEmpty()) {
-            root.getChildren().add(new Label("No assessment records found."));
+            root.getChildren().add(new Label(LocalizationManager.get("assessmentNotFound")));
             return root;
         }
 
         addCourseSections(root, report);
-        //root.getChildren().add(buildOverallGradeSection());
         return root;
     }
 
+    /**
+     * Creates a summary card containing student information and average grade.
+     *
+     * @param student student information
+     * @param avgGrade calculated average grade
+     * @return student summary card
+     */
     private VBox buildStudentCard(StudentDTO student, String avgGrade) {
         String groupName = findGroupName(student.getAcademicGroupId());
 
@@ -90,7 +111,12 @@ public class StudentReportController {
         return card;
     }
 
-
+    /**
+     * Finds the academic group name by group identifier.
+     *
+     * @param groupId academic group identifier
+     * @return group name or placeholder value
+     */
     private String findGroupName(Integer groupId) {
         if (groupId == null) {
             return "-";
@@ -99,6 +125,12 @@ public class StudentReportController {
         return group != null ? group.getName() : "-";
     }
 
+    /**
+     * Adds course sections and assessment tables to the report view.
+     *
+     * @param root report container
+     * @param report report records
+     */
     private void addCourseSections(VBox root, List<StudentReportDTO> report) {
         Map<Integer, List<StudentReportDTO>> courses = report.stream().collect(
                 Collectors.groupingBy(
@@ -119,6 +151,13 @@ public class StudentReportController {
         }
     }
 
+    /**
+     * Creates a table displaying assessment scores and final grade for a course.
+     *
+     * @param records course assessment records
+     * @param courseId course identifier
+     * @return configured table container
+     */
     private ScrollPane createCourseTable(List<StudentReportDTO> records, Integer courseId) {
         TableView<List<String>> table = new TableView<>();
         table.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
@@ -176,16 +215,5 @@ public class StudentReportController {
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 
         return scrollPane;
-    }
-
-    private VBox buildOverallGradeSection() {
-        VBox box = new VBox(5);
-        box.getChildren().addAll(
-                new Label("Overall Grade"),
-                new Label("TODO")
-// TODO calculate overall grade/GPA
-        );
-
-        return box;
     }
 }
