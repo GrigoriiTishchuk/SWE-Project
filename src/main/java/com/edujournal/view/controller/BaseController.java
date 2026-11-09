@@ -9,20 +9,27 @@ import javafx.scene.layout.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * Base controller for entity management screens.
+ * Provides common functionality for displaying, filtering and managing data in table or card views.
+ *
+ * @param <T> entity type displayed by the controller
+ */
 public abstract class BaseController<T> extends BorderPane {
 
-    protected TableView<T> table = new TableView<>();
-    protected TextField searchField = new TextField();
-    protected ComboBox<String> filterCombo = new ComboBox<>();
+    protected final TableView<T> table = new TableView<>();
+    protected final TextField searchField = new TextField();
+    protected final ComboBox<String> filterCombo = new ComboBox<>();
 
-    protected Button addBtn    = new Button(LocalizationManager.get("add"));
-    protected Button editBtn   = new Button(LocalizationManager.get("edit"));
-    protected Button deleteBtn = new Button(LocalizationManager.get("delete"));
-    protected Button viewBtn   = new Button(LocalizationManager.get("view"));
-    protected Button reportBtn = new Button(LocalizationManager.get("studentReport"));
+    protected final Button addBtn    = new Button(LocalizationManager.get("add"));
+    protected final Button editBtn   = new Button(LocalizationManager.get("edit"));
+    protected final Button deleteBtn = new Button(LocalizationManager.get("delete"));
+    protected final Button viewBtn   = new Button(LocalizationManager.get("view"));
+    protected final Button reportBtn = new Button(LocalizationManager.get("studentReport"));
 
     {
         addBtn.getStyleClass().add("btn-primary");
@@ -32,7 +39,6 @@ public abstract class BaseController<T> extends BorderPane {
         reportBtn.getStyleClass().add("btn-secondary");
     }
 
-    protected boolean useCards = false;
     protected Function<T, Node> cardBuilder = null;
 
     public BaseController() {
@@ -44,17 +50,52 @@ public abstract class BaseController<T> extends BorderPane {
         setupDoubleClick();
     }
 
-    // Abstract methods for children
+    /**
+     * Configures table columns for the entity view.
+     */
     protected abstract void configureColumns();
+
+    /**
+     * Loads all available entities.
+     *
+     * @return list of entities
+     */
     protected abstract List<T> loadAllItems();
+
+    /**
+     * Checks whether an entity matches
+     * current search and filter criteria.
+     *
+     * @param item entity to evaluate
+     * @param filter selected filter value
+     * @param text search text
+     * @return true if entity should be displayed
+     */
     protected abstract boolean matchesFilter(T item, String filter, String text);
 
+    /**
+     * Opens a dialog for creating a new entity.
+     */
     protected abstract void showAddDialog();
+
+    /**
+     * Opens a dialog for editing the selected entity.
+     */
     protected abstract void showEditDialog();
+
+    /**
+     * Opens a dialog for deleting the selected entity.
+     */
     protected abstract void showDeleteDialog();
+
+    /**
+     * Displays detailed information about the selected entity.
+     */
     protected abstract void onView(); // optional
 
-    // Layout
+    /**
+     * Layout setup
+     */
     private void setupLayout() {
 
         table.setPlaceholder(new Label(LocalizationManager.get("noContent")));
@@ -84,7 +125,9 @@ public abstract class BaseController<T> extends BorderPane {
         setCenter(table);
     }
 
-    // Buttons
+    /**
+     * Buttons setup
+     */
     private void setupButtons() {
 
         addBtn.setOnAction(e -> showAddDialog());
@@ -104,7 +147,9 @@ public abstract class BaseController<T> extends BorderPane {
         setBottom(bottom);
     }
 
-    // Double click
+    /**
+     * Double click
+     */
     private void setupDoubleClick() {
         table.setRowFactory(tv -> {
             TableRow<T> row = new TableRow<>();
@@ -117,37 +162,60 @@ public abstract class BaseController<T> extends BorderPane {
         });
     }
 
-    // Search + Filter
+    /**
+     * Search + Filter
+     */
     private void setupSearchHandlers() {
         searchField.textProperty().addListener((obs, oldVal, newVal) -> applyFilter());
         filterCombo.valueProperty().addListener((obs, oldVal, newVal) -> applyFilter());
     }
 
+    /**
+     * Creates a configured scroll pane for displaying content.
+     *
+     * @param content content to display
+     * @return configured scroll pane
+     */
+    private ScrollPane createScrollPane(Node content) {
+        ScrollPane scroll = new ScrollPane(content);
+        scroll.setFitToWidth(true);
+        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        return scroll;
+    }
+
+    /**
+     * Builds a vertical card list from entities.
+     *
+     * @param items entities to display
+     * @return VBox containing generated cards
+     */
+    private VBox createCardList(List<T> items) {
+        VBox list = new VBox(10);
+        for (T item : items) {
+            list.getChildren().add(cardBuilder.apply(item));
+        }
+        return list;
+    }
+
+    /**
+     * Loads data from the source and displays it either in a table or card layout.
+     */
     protected void loadAndShowItems() {
         List<T> items = loadAllItems();
 
         if (cardBuilder != null) {
-            VBox list = new VBox(10);
-            for (T item : items) {
-                list.getChildren().add(cardBuilder.apply(item));
-            }
-            ScrollPane scroll = new ScrollPane(list);
-            scroll.setFitToWidth(true);
-            scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-            scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-
-            setCenter(scroll);
+            VBox list = createCardList(items);
+            setCenter(createScrollPane(list));
         } else {
             table.setItems(FXCollections.observableArrayList(items));
-            ScrollPane scroll = new ScrollPane(table);
-            scroll.setFitToWidth(true);
-            scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-            scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-
-            setCenter(scroll);
+            setCenter(createScrollPane(table));
         }
     }
 
+    /**
+     * Applies search text and selected filter to currently loaded items.
+     */
     protected void applyFilter() {
         String filter = filterCombo.getValue();
         String text = searchField.getText().toLowerCase();
@@ -160,28 +228,22 @@ public abstract class BaseController<T> extends BorderPane {
 
         if (cardBuilder != null) {
             table.getItems().clear();
-            VBox list = new VBox(10);
-            for (T item : filtered) {
-                list.getChildren().add(cardBuilder.apply(item));
-            }
+            VBox list = createCardList(filtered);
 
-            ScrollPane scroll = new ScrollPane(list);
-            scroll.setFitToWidth(true);
-            scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-            scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-
-            setCenter(scroll);
+            setCenter(createScrollPane(list));
         } else {
             table.setItems(FXCollections.observableArrayList(filtered));
-            ScrollPane scroll = new ScrollPane(table);
-            scroll.setFitToWidth(true);
-            scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-            scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-
-            setCenter(scroll);
+            setCenter(createScrollPane(table));
         }
     }
 
+    /**
+     * Checks whether any field contains the specified search text.
+     *
+     * @param fields values to search in
+     * @param text search text
+     * @return true if at least one field matches
+     */
     protected boolean matchesAllFields(List<String> fields, String text) {
         for (String f : fields) {
             if (f != null && f.toLowerCase().contains(text)) {
@@ -191,6 +253,17 @@ public abstract class BaseController<T> extends BorderPane {
         return false;
     }
 
+    /**
+     * Creates a ComboBox with custom display values
+     * and optional empty selection.
+     *
+     * @param items available options
+     * @param selectedItem initially selected item
+     * @param promptText placeholder text
+     * @param nullText text displayed for null value
+     * @param displayFunction item display formatter
+     * @return configured ComboBox
+     */
     protected <T> ComboBox<T> createComboBox(
             List<T> items,
             T selectedItem,
@@ -239,8 +312,57 @@ public abstract class BaseController<T> extends BorderPane {
         return combo;
     }
 
+    /**
+     * Enables card-based presentation of entities.
+     *
+     * @param builder function that converts an entity into a JavaFX node
+     */
     protected void enableCardsView(Function<T, Node> builder) {
         this.cardBuilder = builder;
     }
 
+    /**
+     * Displays an error dialog with the specified message.
+     *
+     * @param message error message
+     */
+    protected void showError(String message) {
+        new Alert(Alert.AlertType.ERROR, message)
+                .showAndWait();
+    }
+
+    /**
+     * Creates a localized list cell for displaying translated filter values in ComboBox controls.
+     *
+     * @param keyMap mapping between display values
+     *               and localization keys
+     * @return localized list cell
+     */
+    protected ListCell<String> createLocalizedCell(Map<String, String> keyMap) {
+        return new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null) {
+                    setText(null);
+                    return;
+                }
+
+                String key = keyMap.get(item);
+                setText(key != null ? LocalizationManager.get(key) : item);
+            }
+        };
+    }
+
+    /**
+     * Returns an empty string for null values.
+     *
+     * @param value source value
+     * @return non-null string
+     */
+    protected String safe(String value) {
+        return value == null ? "" : value;
+    }
 }
+
