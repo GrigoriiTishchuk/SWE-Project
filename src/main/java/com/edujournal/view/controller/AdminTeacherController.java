@@ -101,16 +101,6 @@ public class AdminTeacherController extends BaseController<UserDTO> {
     }
 
     /**
-     * Returns an empty string for null values.
-     *
-     * @param value source value
-     * @return non-null string
-     */
-    private String safe(String value) {
-        return value == null ? "" : value;
-    }
-
-    /**
      * Configures table columns and filter options.
      */
     @Override

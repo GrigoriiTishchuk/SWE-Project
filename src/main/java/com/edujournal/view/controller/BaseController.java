@@ -354,5 +354,15 @@ public abstract class BaseController<T> extends BorderPane {
             }
         };
     }
+
+    /**
+     * Returns an empty string for null values.
+     *
+     * @param value source value
+     * @return non-null string
+     */
+    protected String safe(String value) {
+        return value == null ? "" : value;
+    }
 }
 

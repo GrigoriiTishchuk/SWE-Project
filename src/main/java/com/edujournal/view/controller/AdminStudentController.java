@@ -75,12 +75,12 @@ public class AdminStudentController extends BaseController<StudentDTO> {
             return matchesAllFields(
                     List.of(
                             dto.getStudentId() != null ? dto.getStudentId().toString() : null,
-                            dto.getStudentNumber(),
-                            dto.getUsername(),
-                            dto.getFirstName(),
-                            dto.getLastName(),
-                            dto.getEmail(),
-                            dto.getPhone()
+                            safe(dto.getStudentNumber()),
+                            safe(dto.getUsername()),
+                            safe(dto.getFirstName()),
+                            safe(dto.getLastName()),
+                            safe(dto.getEmail()),
+                            safe(dto.getPhone())
                     ),
                     text
             );
