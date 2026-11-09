@@ -3,22 +3,17 @@ package com.edujournal.view.controller;
 import com.edujournal.backend.service.AcademicGroupService;
 import com.edujournal.backend.service.CourseService;
 import com.edujournal.backend.service.StudentService;
-import com.edujournal.backend.service.UserService;
 import com.edujournal.backend.utils.AcademicGroupMapper;
 import com.edujournal.config.LocalizationManager;
 import com.edujournal.entity.AcademicGroup;
-import com.edujournal.entity.Course;
 import com.edujournal.entity.Role;
 import com.edujournal.model.AcademicGroupDTO;
 import com.edujournal.model.CourseDTO;
 import com.edujournal.model.StudentDTO;
-import com.edujournal.model.UserDTO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.transformation.FilteredList;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -29,6 +24,10 @@ import javafx.stage.Stage;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Controller responsible for managing academic groups.
+ * Provides functionality for creating, editing, deleting groups and managing group membership.
+ */
 public class AdminGroupController extends BaseController<AcademicGroupDTO> {
 
     private final AcademicGroupService groupService = new AcademicGroupService();
@@ -37,6 +36,11 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
 
     private AcademicGroupDTO selectedGroup;
 
+    /**
+     * Creates the academic group administration controller.
+     *
+     * @param role current user role
+     */
     public AdminGroupController(Role role) {
         enableCardsView(this::buildGroupCard);
         viewBtn.setVisible(false);
@@ -44,6 +48,9 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
         loadAndShowItems();
     }
 
+    /**
+     * Configures group columns and filter options.
+     */
     @Override
     protected void configureColumns() {
         TableColumn<AcademicGroupDTO, String> nameCol =
@@ -57,26 +64,17 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
         filterCombo.setValue("All");
 
         Map<String, String> filterKeyMap = Map.of("All", "all", "Name", "name");
-        filterCombo.setCellFactory(list -> new ListCell<>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) { setText(null); return; }
-                String key = filterKeyMap.get(item);
-                setText(key != null ? LocalizationManager.get(key) : item);
-            }
-        });
-        filterCombo.setButtonCell(new ListCell<>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) { setText(null); return; }
-                String key = filterKeyMap.get(item);
-                setText(key != null ? LocalizationManager.get(key) : item);
-            }
-        });
+        filterCombo.setCellFactory(list -> createLocalizedCell(filterKeyMap));
+        filterCombo.setButtonCell(createLocalizedCell(filterKeyMap));
     }
 
+    /**
+     * Creates a card representation of an academic group
+     * including assigned courses and management actions.
+     *
+     * @param group academic group to display
+     * @return configured group card
+     */
     private VBox buildGroupCard(AcademicGroupDTO group) {
         VBox card = new VBox();
         card.setStyle("-fx-border-color: #ccc; -fx-padding: 10; -fx-background-color: #f9f9f9;");
@@ -130,7 +128,7 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
         for (CourseDTO c : courses) {
             String teacherName = (c.getTeacherName() != null && !c.getTeacherName().isBlank())
                     ? c.getTeacherName()
-                    : "No teacher";
+                    : LocalizationManager.get("noTeacher");
 
             Label courseLabel = new Label("• " + c.getName() + " (" + c.getCode() + ") - " + teacherName);
             coursesBox.getChildren().add(courseLabel);
@@ -170,11 +168,24 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
         return card;
     }
 
+    /**
+     * Loads all academic groups.
+     *
+     * @return list of academic groups
+     */
     @Override
     protected List<AcademicGroupDTO> loadAllItems() {
         return groupService.findAllDTO();
     }
 
+    /**
+     * Checks whether a group matches the current filter and search text.
+     *
+     * @param item group to evaluate
+     * @param filter selected filter
+     * @param text search text
+     * @return true if the group matches
+     */
     @Override
     protected boolean matchesFilter(AcademicGroupDTO item, String filter, String text) {
 
@@ -189,6 +200,9 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
         return true;
     }
 
+    /**
+     * Opens a dialog for creating a new academic group.
+     */
     @Override
     public void showAddDialog() {
         Dialog<AcademicGroupDTO> dialog = new Dialog<>();
@@ -207,14 +221,11 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
         dialog.setResultConverter(button -> {
             if (button == saveBtn) {
                 if (groupService.existsByName(nameField.getText())) {
-                    new Alert(Alert.AlertType.ERROR,
-                            "Academic group already exists.").showAndWait();
+                    showError(LocalizationManager.get("groupExists"));
                     return null;
                 }
-
                 if (nameField.getText().isBlank()) {
-                    new Alert(Alert.AlertType.ERROR,
-                            "Group name cannot be empty.").showAndWait();
+                    showError(LocalizationManager.get("groupNameNotEmpty"));
                     return null;
                 }
 
@@ -234,6 +245,9 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
         }
     }
 
+    /**
+     * Opens a dialog for editing the selected academic group.
+     */
     @Override
     protected void showEditDialog() {
         AcademicGroupDTO group = selectedGroup;
@@ -242,7 +256,7 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
         }
 
         Dialog<AcademicGroupDTO> dialog = new Dialog<>();
-        dialog.setTitle("Edit Academic Group");
+        dialog.setTitle(LocalizationManager.get("editGroup"));
 
         TextField nameField = new TextField(group.getName() != null ? group.getName() : "");
 
@@ -250,7 +264,7 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
         box.setPadding(new Insets(10));
         dialog.getDialogPane().setContent(box);
 
-        ButtonType saveBtn = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        ButtonType saveBtn = new ButtonType(LocalizationManager.get("save"), ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(saveBtn, ButtonType.CANCEL);
 
         dialog.setResultConverter(btn -> {
@@ -260,15 +274,13 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
                 if (newName.equalsIgnoreCase(group.getName())) {
                 } else {
                     if (groupService.existsByName(newName)) {
-                        new Alert(Alert.AlertType.ERROR,
-                                "Academic group already exists.").showAndWait();
+                        showError(LocalizationManager.get("groupExists"));
                         return null;
                     }
                 }
 
                 if (nameField.getText().isBlank()) {
-                    new Alert(Alert.AlertType.ERROR,
-                            "Group name cannot be empty.").showAndWait();
+                    showError(LocalizationManager.get("groupNameNotEmpty"));
                     return null;
                 }
 
@@ -288,6 +300,9 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
         }
     }
 
+    /**
+     * Opens a confirmation dialog and deletes the selected academic group if confirmed.
+     */
     @Override
     protected void showDeleteDialog() {
         AcademicGroupDTO group = selectedGroup;
@@ -296,12 +311,12 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
         }
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Delete Group");
-        alert.setHeaderText("Are you sure you want to delete \"" + group.getName() + "\"?");
-        alert.setContentText("This action cannot be undone.");
+        alert.setTitle(LocalizationManager.get("deleteGroup"));
+        alert.setHeaderText(LocalizationManager.get("sureToDelete") + " \"" + group.getName() + "\"?");
+        alert.setContentText(LocalizationManager.get("undone"));
 
-        ButtonType yes = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
-        ButtonType no = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType yes = new ButtonType(LocalizationManager.get("yes"), ButtonBar.ButtonData.OK_DONE);
+        ButtonType no = new ButtonType(LocalizationManager.get("no"), ButtonBar.ButtonData.CANCEL_CLOSE);
 
         alert.getButtonTypes().setAll(yes, no);
 
@@ -313,10 +328,14 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
         }
     }
 
+    /**
+     * Displays a dialog for assigning a student to the specified group.
+     *
+     * @param group target academic group
+     */
     private void showAddStudentDialog(AcademicGroupDTO group) {
-
         Dialog<Integer> dialog = new Dialog<>();
-        dialog.setTitle("Add student to group: " + group.getName());
+        dialog.setTitle(LocalizationManager.get("addStudentGroup") + ": " + group.getName());
 
         List<StudentDTO> availableStudents = new StudentService().findAllDTO()
                 .stream()
@@ -324,8 +343,7 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
                 .toList();
 
         if (availableStudents.isEmpty()) {
-            new Alert(Alert.AlertType.INFORMATION,
-                    "No available students to add.").showAndWait();
+            showInfo(LocalizationManager.get("noAvailableStudent"));
             return;
         }
 
@@ -362,14 +380,14 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
         box.setPadding(new Insets(10));
         dialog.getDialogPane().setContent(box);
 
-        ButtonType addBtn = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
+        ButtonType addBtn = new ButtonType(LocalizationManager.get("add"), ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(addBtn, ButtonType.CANCEL);
 
         dialog.setResultConverter(btn -> {
             if (btn == addBtn) {
                 StudentDTO selected = studentCombo.getSelectionModel().getSelectedItem();
                 if (selected == null) {
-                    new Alert(Alert.AlertType.ERROR, "Select a student").showAndWait();
+                    showError(LocalizationManager.get("selectStudent"));
                     return null;
                 }
 
@@ -386,10 +404,14 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
         }
     }
 
+    /**
+     * Displays a window containing all students assigned to the group.
+     *
+     * @param group academic group to display
+     */
     private void showGroupStudentsWindow(AcademicGroupDTO group) {
-
         Stage stage = new Stage();
-        stage.setTitle("Students in group: " + group.getName());
+        stage.setTitle(LocalizationManager.get("studentsGroup") + ": " + group.getName());
 
         List<StudentDTO> students = new StudentService().findAllDTO()
                 .stream()
@@ -429,10 +451,14 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
         stage.show();
     }
 
+    /**
+     * Displays a dialog for removing a student from the specified group.
+     *
+     * @param group target academic group
+     */
     private void showRemoveStudentDialog(AcademicGroupDTO group) {
-
         Dialog<Integer> dialog = new Dialog<>();
-        dialog.setTitle("Remove student from group: " + group.getName());
+        dialog.setTitle(LocalizationManager.get("removeStudentFromGroup") + ": " + group.getName());
 
         List<StudentDTO> groupStudents = new StudentService().findAllDTO()
                 .stream()
@@ -440,8 +466,7 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
                 .toList();
 
         if (groupStudents.isEmpty()) {
-            new Alert(Alert.AlertType.INFORMATION,
-                    "This group has no students.").showAndWait();
+            showInfo(LocalizationManager.get("noStudents"));
             return;
         }
 
@@ -475,18 +500,18 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
             }
         });
 
-        VBox box = new VBox(10, new Label("Select student to remove:"), studentCombo);
+        VBox box = new VBox(10, new Label(LocalizationManager.get("selectStudentToRemove")), studentCombo);
         box.setPadding(new Insets(10));
         dialog.getDialogPane().setContent(box);
 
-        ButtonType removeBtn = new ButtonType("Remove", ButtonBar.ButtonData.OK_DONE);
+        ButtonType removeBtn = new ButtonType(LocalizationManager.get("remove"), ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(removeBtn, ButtonType.CANCEL);
 
         dialog.setResultConverter(btn -> {
             if (btn == removeBtn) {
                 StudentDTO selected = studentCombo.getSelectionModel().getSelectedItem();
                 if (selected == null) {
-                    new Alert(Alert.AlertType.ERROR, "Select a student").showAndWait();
+                    showError(LocalizationManager.get("selectStudent"));
                     return null;
                 }
                 return selected.getStudentId();
@@ -499,9 +524,9 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
         if (studentId != null) {
 
             Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-            confirm.setTitle("Confirm removal");
-            confirm.setHeaderText("Remove student from group?");
-            confirm.setContentText("This action cannot be undone.");
+            confirm.setTitle(LocalizationManager.get("confirmRemoval"));
+            confirm.setHeaderText(LocalizationManager.get("removeStudentFromGroup") + "?");
+            confirm.setContentText(LocalizationManager.get("undone"));
 
             if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
                 groupService.removeStudentFromGroup(studentId, group.getId());
@@ -510,9 +535,15 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
         }
     }
 
+    /**
+     * Not used in card view mode.
+     */
     @Override
     protected void onView() {}
 
+    /**
+     * Clears the currently selected group.
+     */
     private void clearSelection() {
         selectedGroup = null;
     }

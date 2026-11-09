@@ -110,10 +110,6 @@ public class CourseController extends BaseController<CourseDTO> {
         }
     }
 
-    private String safe(String value) {
-        return value == null ? "" : value;
-    }
-
     @Override
     protected void configureColumns() {
         TableColumn<CourseDTO, String> idCol = new TableColumn<>(LocalizationManager.get("id"));
