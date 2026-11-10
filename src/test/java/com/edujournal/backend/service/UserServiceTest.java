@@ -28,6 +28,7 @@ class UserServiceTest {
                     userDAO.delete(user);
                 }
             } catch (Exception ignored) {
+                System.out.println("Something went wrong");
             }
         }
 
@@ -100,9 +101,15 @@ class UserServiceTest {
                 .findFirst()
                 .orElseThrow(() -> new AssertionError("No administrator found in the database"));
 
-        assertThrows(
+        int adminId = admin.getId();
+        IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> userService.deleteUser(admin.getId())
+                () -> userService.deleteUser(adminId)
+        );
+
+        assertEquals(
+                "Administrator's deleting is not available",
+                exception.getMessage()
         );
     }
 
