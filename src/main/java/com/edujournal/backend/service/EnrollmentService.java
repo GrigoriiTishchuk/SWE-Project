@@ -1,48 +1,102 @@
 package com.edujournal.backend.service;
 
 import com.edujournal.dao.EnrollmentDAO;
-import com.edujournal.entity.AcademicGroup;
-import com.edujournal.entity.Course;
 import com.edujournal.entity.Enrollment;
 
 import java.util.List;
 
-public class EnrollmentService {
+/**
+ * Provides business logic for managing student course enrollments.
+ *
+ * @author EduJournal
+ */
+public final class EnrollmentService {
 
+    /** Data access object for enrollment operations. */
     private final EnrollmentDAO enrollmentDAO;
 
+    /**
+     * Creates an enrollment service with a new DAO instance.
+     */
     public EnrollmentService() {
         this.enrollmentDAO = new EnrollmentDAO();
     }
 
-    public Enrollment findById(Integer id) {
+    /**
+     * Finds an enrollment by its unique identifier.
+     *
+     * @param id the enrollment identifier
+     * @return the matching enrollment, or null if not found
+     */
+    public Enrollment findById(final Integer id) {
         return enrollmentDAO.findById(id);
     }
 
+    /**
+     * Retrieves all enrollments.
+     *
+     * @return a list of all enrollments
+     */
     public List<Enrollment> findAll() {
         return enrollmentDAO.findAll();
     }
 
-    public List<Enrollment> findByStudentId(Integer studentId) {
+    /**
+     * Finds all enrollments belonging to a student.
+     *
+     * @param studentId the student identifier
+     * @return the student's enrollments
+     */
+    public List<Enrollment> findByStudentId(final Integer studentId) {
         return enrollmentDAO.findByStudentId(studentId);
     }
 
-    public List<Enrollment> findByCourseId(Integer courseId) {
+    /**
+     * Finds all enrollments associated with a course.
+     *
+     * @param courseId the course identifier
+     * @return the course's enrollments
+     */
+    public List<Enrollment> findByCourseId(final Integer courseId) {
         return enrollmentDAO.findByCourseId(courseId);
     }
 
-    public List<Enrollment> findByAcademicGroupId(Integer academicGroupId) {
+    /**
+     * Finds all enrollments belonging to an academic group.
+     *
+     * @param academicGroupId the academic group identifier
+     * @return the academic group's enrollments
+     */
+    public List<Enrollment> findByAcademicGroupId(
+            final Integer academicGroupId) {
         return enrollmentDAO.findByAcademicGroupId(academicGroupId);
     }
 
-    public Enrollment findByStudentAndCourse(Integer studentId, Integer courseId) {
+    /**
+     * Finds an enrollment by student and course identifiers.
+     *
+     * @param studentId the student identifier
+     * @param courseId the course identifier
+     * @return the matching enrollment, or null if not found
+     */
+    public Enrollment findByStudentAndCourse(
+            final Integer studentId,
+            final Integer courseId) {
         return enrollmentDAO.findByStudentAndCourse(studentId, courseId);
     }
 
+    /**
+     * Creates an enrollment if one does not already exist
+     * for the specified student and course.
+     *
+     * @param studentId the student identifier
+     * @param courseId the course identifier
+     * @param academicGroupId the academic group identifier
+     */
     public void createIfNotExists(
-            Integer studentId,
-            Integer courseId,
-            Integer academicGroupId) {
+            final Integer studentId,
+            final Integer courseId,
+            final Integer academicGroupId) {
 
         Enrollment existing =
                 findByStudentAndCourse(studentId, courseId);
@@ -59,21 +113,42 @@ public class EnrollmentService {
         }
     }
 
-    public void save(Enrollment enrollment) {
+    /**
+     * Saves a new enrollment.
+     *
+     * @param enrollment the enrollment to save
+     */
+    public void save(final Enrollment enrollment) {
         enrollmentDAO.save(enrollment);
     }
 
-    public void update(Enrollment enrollment) {
+    /**
+     * Updates an existing enrollment.
+     *
+     * @param enrollment the enrollment to update
+     */
+    public void update(final Enrollment enrollment) {
         enrollmentDAO.update(enrollment);
     }
 
-    public void delete(Integer id) {
+    /**
+     * Deletes an enrollment by its unique identifier.
+     *
+     * @param id the enrollment identifier
+     */
+    public void delete(final Integer id) {
         enrollmentDAO.delete(id);
     }
 
+    /**
+     * Deletes enrollments for a student within an academic group.
+     *
+     * @param studentId the student identifier
+     * @param academicGroupId the academic group identifier
+     */
     public void deleteByStudentAndAcademicGroup(
-            Integer studentId,
-            Integer academicGroupId) {
+            final Integer studentId,
+            final Integer academicGroupId) {
 
         enrollmentDAO.deleteByStudentAndAcademicGroup(
                 studentId,
@@ -81,7 +156,12 @@ public class EnrollmentService {
         );
     }
 
-    public void deleteByCourseId(Integer courseId) {
+    /**
+     * Deletes all enrollments associated with a course.
+     *
+     * @param courseId the course identifier
+     */
+    public void deleteByCourseId(final Integer courseId) {
         enrollmentDAO.deleteByCourseId(courseId);
     }
 }

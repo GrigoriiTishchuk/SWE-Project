@@ -1,3 +1,4 @@
+
 package com.edujournal.backend.service;
 
 import com.edujournal.backend.utils.GeneratorUtil;
@@ -11,28 +12,72 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import static com.edujournal.backend.utils.GeneratorUtil.generateEmail;
+/**
+ * Provides business logic for managing users, including
+ * creating teachers and students and retrieving user records.
+ *
+ * @author EduJournal
+ */
+public final class UserService {
 
-public class UserService {
-    UserDAO userDAO = new UserDAO();
-    UserMapper userMapper = new UserMapper();
+    /** Logger used for recording user service events. */
+    private static final Logger LOGGER =
+            Logger.getLogger(UserService.class.getName());
 
-    public User findById(int id) {
+    /** Length of generated temporary passwords. */
+    private static final int TEMP_PASSWORD_LENGTH = 8;
+
+    /** Length of the username candidate prefix. */
+    private static final int USERNAME_PREFIX_LENGTH = 7;
+
+    /** Data access object for user operations. */
+    private final UserDAO userDAO = new UserDAO();
+
+    /** Mapper used to convert users into DTOs. */
+    private final UserMapper userMapper = new UserMapper();
+
+    /**
+     * Finds a user by their ID.
+     *
+     * @param id the user ID
+     * @return the user, or null if no user is found
+     */
+    public User findById(final int id) {
         return userDAO.findById(id);
     }
 
+    /**
+     * Retrieves all users.
+     *
+     * @return a list of all users
+     */
     public List<User> findAll() {
         return userDAO.findAll();
     }
 
-    public void save(User user) {
+    /**
+     * Saves a new user.
+     *
+     * @param user the user to save
+     */
+    public void save(final User user) {
         userDAO.save(user);
     }
 
-    public void update(User user) {
+    /**
+     * Updates the editable details of an existing user.
+     *
+     * @param user the user containing the updated information
+     */
+    public void update(final User user) {
         User existing = userDAO.findById(user.getId());
-        if (existing == null) return;
+
+        if (existing == null) {
+            return;
+        }
 
         existing.setFirstName(user.getFirstName());
         existing.setLastName(user.getLastName());
@@ -43,7 +88,14 @@ public class UserService {
         userDAO.update(existing);
     }
 
-    public void deleteUser(Integer userId) {
+    /**
+     * Deletes a user unless the user has the administrator role.
+     *
+     * @param userId the ID of the user to delete
+     * @throws IllegalArgumentException if the user does not exist
+     *         or is an administrator
+     */
+    public void deleteUser(final Integer userId) {
         User user = userDAO.findById(userId);
 
         if (user == null) {
@@ -51,26 +103,43 @@ public class UserService {
         }
 
         if (user.getRole() == Role.ADMINISTRATOR) {
-            throw new IllegalArgumentException("Administrator's deleting is not available");
+            throw new IllegalArgumentException(
+                    "Administrator's deleting is not available");
         }
 
         userDAO.delete(user);
     }
 
-    public UserDTO createTeacher(String firstName, String lastName, String phone) {
-        String username = generateUniqueUsername(firstName, lastName, "teacher");
+    /**
+     * Creates a teacher account with generated credentials.
+     *
+     * @param firstName the teacher's first name
+     * @param lastName the teacher's last name
+     * @param phone the teacher's phone number
+     * @return the created teacher as a DTO
+     */
+    public UserDTO createTeacher(
+            final String firstName,
+            final String lastName,
+            final String phone) {
 
-        // Generate email
-        String email = generateEmail(username);
+        String username = generateUniqueUsername(
+                firstName, lastName, "teacher");
 
-        // Generate temporary password
-        String tempPassword = UUID.randomUUID().toString().substring(0, 8);
-        System.out.println("[TEMP] Teacher login — username: " + username + ", password: " + tempPassword);
+        String email = GeneratorUtil.generateEmail(username);
 
-        // Password hashing
-        String hashedPassword = BCrypt.hashpw(tempPassword, BCrypt.gensalt());
+        String tempPassword = UUID.randomUUID()
+                .toString()
+                .substring(0, TEMP_PASSWORD_LENGTH);
 
-        // Create entity
+        LOGGER.log(
+                Level.INFO,
+                "Temporary credentials generated for teacher: {0}",
+                username);
+
+        String hashedPassword = BCrypt.hashpw(
+                tempPassword, BCrypt.gensalt());
+
         User user = new User();
         user.setUsername(username);
         user.setFirstName(firstName);
@@ -85,12 +154,35 @@ public class UserService {
         return userMapper.toDTO(user);
     }
 
-    public User createStudentUser(String firstName, String lastName, String phone) {
-        String username = generateUniqueUsername(firstName, lastName, "student");
-        String email = generateEmail(username);
-        String tempPassword = UUID.randomUUID().toString().substring(0, 8);
-        System.out.println("[TEMP] Student login — username: " + username + ", password: " + tempPassword);
-        String hashedPassword = BCrypt.hashpw(tempPassword, BCrypt.gensalt());
+    /**
+     * Creates a student account with generated credentials.
+     *
+     * @param firstName the student's first name
+     * @param lastName the student's last name
+     * @param phone the student's phone number
+     * @return the created student
+     */
+    public User createStudentUser(
+            final String firstName,
+            final String lastName,
+            final String phone) {
+
+        String username = generateUniqueUsername(
+                firstName, lastName, "student");
+
+        String email = GeneratorUtil.generateEmail(username);
+
+        String tempPassword = UUID.randomUUID()
+                .toString()
+                .substring(0, TEMP_PASSWORD_LENGTH);
+
+        LOGGER.log(
+                Level.INFO,
+                "Temporary credentials generated for student: {0}",
+                username);
+
+        String hashedPassword = BCrypt.hashpw(
+                tempPassword, BCrypt.gensalt());
 
         User user = new User();
         user.setUsername(username);
@@ -105,8 +197,12 @@ public class UserService {
         return user;
     }
 
+    /**
+     * Retrieves all users with the teacher role as DTOs.
+     *
+     * @return a list of teacher DTOs
+     */
     public List<UserDTO> findAllTeachers() {
-
         List<User> teachers = userDAO.findByRole(Role.TEACHER);
 
         return teachers.stream()
@@ -114,8 +210,12 @@ public class UserService {
                 .toList();
     }
 
+    /**
+     * Retrieves all users with the student role as DTOs.
+     *
+     * @return a list of student DTOs
+     */
     public List<UserDTO> findAllStudents() {
-
         List<User> students = userDAO.findByRole(Role.STUDENT);
 
         return students.stream()
@@ -123,9 +223,22 @@ public class UserService {
                 .toList();
     }
 
-    public String generateUniqueUsername(String firstName, String lastName, String fallbackPrefix) {
+    /**
+     * Generates a unique username based on the user's name.
+     *
+     * @param firstName the user's first name
+     * @param lastName the user's last name
+     * @param fallbackPrefix the prefix used when no name is available
+     * @return a username that is not currently in use
+     */
+    public String generateUniqueUsername(
+            final String firstName,
+            final String lastName,
+            final String fallbackPrefix) {
 
-        List<String> candidates = GeneratorUtil.generateUsernameCandidates(firstName, lastName);
+        List<String> candidates =
+                GeneratorUtil.generateUsernameCandidates(
+                        firstName, lastName);
 
         for (String candidate : candidates) {
             if (userDAO.findByUsername(candidate) == null) {
@@ -133,10 +246,21 @@ public class UserService {
             }
         }
 
-        String combined = GeneratorUtil.normalize(firstName) + GeneratorUtil.normalize(lastName);
-        String base = candidates.isEmpty()
-                ? (combined.isEmpty() ? fallbackPrefix : combined)
-                : candidates.get(0).substring(0, 7);
+        String combined = GeneratorUtil.normalize(firstName)
+                + GeneratorUtil.normalize(lastName);
+
+        String base;
+
+        if (candidates.isEmpty()) {
+            if (combined.isEmpty()) {
+                base = fallbackPrefix;
+            } else {
+                base = combined;
+            }
+        } else {
+            base = candidates.get(0)
+                    .substring(0, USERNAME_PREFIX_LENGTH);
+        }
 
         int counter = 1;
         String username;

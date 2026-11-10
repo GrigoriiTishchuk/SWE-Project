@@ -1,3 +1,4 @@
+
 package com.edujournal.backend.service;
 
 import com.edujournal.dao.AssessmentsDAO;
@@ -8,26 +9,56 @@ import com.edujournal.entity.Course;
 
 import java.util.List;
 
-public class AssessmentsService {
+/**
+ * Provides business logic for managing assessments and retrieving
+ * assessment information related to courses and grades.
+ *
+ * @author EduJournal
+ */
+public final class AssessmentsService {
 
+    /** Data access object for assessment operations. */
     private final AssessmentsDAO assessmentsDAO =
             new AssessmentsDAO();
 
+    /** Data access object for grade operations. */
     private final GradesDAO gradesDAO =
             new GradesDAO();
 
+    /** Data access object for course operations. */
     private final CourseDAO courseDAO =
             new CourseDAO();
 
-    public List<Assessments> getByCourseId(Integer courseId) {
+    /**
+     * Retrieves all assessments associated with a course.
+     *
+     * @param courseId the ID of the course
+     * @return a list of assessments belonging to the course
+     */
+    public List<Assessments> getByCourseId(
+            final Integer courseId) {
         return assessmentsDAO.findByCourseId(courseId);
     }
 
-    public Assessments findById(Integer id) {
+    /**
+     * Finds an assessment by its ID.
+     *
+     * @param id the ID of the assessment
+     * @return the assessment with the specified ID, or null if not found
+     */
+    public Assessments findById(final Integer id) {
         return assessmentsDAO.findById(id);
     }
 
-    public List<Assessments> getByCourseName(String courseName) {
+    /**
+     * Retrieves assessments associated with a course name.
+     *
+     * @param courseName the name of the course
+     * @return a list of assessments, or an empty list if the course
+     *         does not exist
+     */
+    public List<Assessments> getByCourseName(
+            final String courseName) {
 
         Course course =
                 courseDAO.findByName(courseName);
@@ -41,26 +72,53 @@ public class AssessmentsService {
         );
     }
 
-    public void save(Assessments assessment) {
+    /**
+     * Saves a new assessment.
+     *
+     * @param assessment the assessment to save
+     */
+    public void save(final Assessments assessment) {
         assessmentsDAO.save(assessment);
     }
 
-    public Course getCourseByName(String courseName) {
+    /**
+     * Retrieves a course by its name.
+     *
+     * @param courseName the name of the course
+     * @return the matching course, or null if not found
+     */
+    public Course getCourseByName(final String courseName) {
         return courseDAO.findByName(courseName);
     }
 
-    public void update(Assessments assessment) {
+    /**
+     * Updates an existing assessment.
+     *
+     * @param assessment the assessment containing updated information
+     */
+    public void update(final Assessments assessment) {
         assessmentsDAO.update(assessment);
     }
 
-    public boolean hasGrades(Integer assessmentId) {
+    /**
+     * Checks whether an assessment has any associated grades.
+     *
+     * @param assessmentId the ID of the assessment
+     * @return true if the assessment has grades, false otherwise
+     */
+    public boolean hasGrades(final Integer assessmentId) {
 
         return !gradesDAO
                 .findByAssessment(assessmentId)
                 .isEmpty();
     }
 
-    public void delete(Assessments assessment) {
+    /**
+     * Deletes an assessment.
+     *
+     * @param assessment the assessment to delete
+     */
+    public void delete(final Assessments assessment) {
         assessmentsDAO.delete(assessment);
     }
 }
