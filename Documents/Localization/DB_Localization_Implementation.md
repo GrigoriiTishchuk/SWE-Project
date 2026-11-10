@@ -205,17 +205,27 @@ Where `fallbackPrefix` is `"teacher"` for teachers and `"student"` for students.
 
 ## 9. Assessment Type Translations — Translation Table Approach
 
-A `assessment_type_translation` table stores localized display names for all fixed assessment types.
+A language-neutral base table `assessment_types` stores all fixed type keys. A linked translation table
+`assessment_type_translation` stores localized names per language, with a foreign key back to the base table.
 The GUI reads from it at runtime, with English as fallback via a `LEFT JOIN` and `COALESCE`.
 
 Schema added to `schema.sql`:
 
 ```sql
+CREATE TABLE IF NOT EXISTS assessment_types (
+    type_key VARCHAR(30) PRIMARY KEY
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+INSERT IGNORE INTO assessment_types (type_key) VALUES
+('INCLASSTASK'), ('HOMETASK'), ('PROJECT'), ('LAB'),
+('EXAM1'), ('EXAM2'), ('EXAM3'), ('EXAM4'), ('FINALEXAM');
+
 CREATE TABLE IF NOT EXISTS assessment_type_translation (
     type_key VARCHAR(30) NOT NULL,
     lang     VARCHAR(10) NOT NULL,
     name     VARCHAR(100) NOT NULL,
-    PRIMARY KEY (type_key, lang)
+    PRIMARY KEY (type_key, lang),
+    FOREIGN KEY (type_key) REFERENCES assessment_types(type_key)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
@@ -244,17 +254,26 @@ typeCol.setCellValueFactory(d -> new SimpleStringProperty(
 
 ## 10. Role Labels — Row Approach
 
-A `role_translation` table stores localized role labels using the row approach: one row per role and language,
-identified by a `role_key` column. No schema change is needed to add a new language — only new rows.
+A language-neutral base table `roles` stores the fixed role keys. A linked `role_translation` table stores
+localized labels per language using the row approach — one row per role and language — with a foreign key back
+to the base table. No schema change is needed to add a new language, only new rows.
 
 Schema added to `schema.sql`:
 
 ```sql
+CREATE TABLE IF NOT EXISTS roles (
+    role_key VARCHAR(30) PRIMARY KEY
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+INSERT IGNORE INTO roles (role_key) VALUES
+('ADMINISTRATOR'), ('TEACHER'), ('STUDENT');
+
 CREATE TABLE IF NOT EXISTS role_translation (
     role_key VARCHAR(30) NOT NULL,
     lang     VARCHAR(10) NOT NULL,
     label    VARCHAR(50) NOT NULL,
-    PRIMARY KEY (role_key, lang)
+    PRIMARY KEY (role_key, lang),
+    FOREIGN KEY (role_key) REFERENCES roles(role_key)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
@@ -285,8 +304,8 @@ Label roleLabel = new Label(new LocalizationDAO().getRoleLabel(role.name(), role
 |---|---|---|
 | `schema.sql` | `utf8mb4` on all tables + `preferred_locale` column | Store any Unicode script; persist user language |
 | `schema.sql` | `ALTER TABLE ... ADD COLUMN IF NOT EXISTS` | Migrate existing databases safely |
-| `schema.sql` | `assessment_type_translation` table + seed data | Translation table approach for assessment type names |
-| `schema.sql` | `role_translation` table + seed data | Row approach for role labels |
+| `schema.sql` | `assessment_types` base table + `assessment_type_translation` with FK | Translation table approach for assessment type names |
+| `schema.sql` | `roles` base table + `role_translation` with FK | Row approach for role labels |
 | `.env` | `useUnicode=true&characterEncoding=UTF-8` | Correct encoding over JDBC |
 | `DatabaseInitializer.java` | `utf8mb4` on `CREATE DATABASE` + encoding in URL | Full UTF-8 from DB creation to connection |
 | `User.java` | `preferredLocale` field | Map the locale column in JPA |
