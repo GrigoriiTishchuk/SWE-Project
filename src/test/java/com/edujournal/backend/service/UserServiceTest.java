@@ -28,6 +28,7 @@ class UserServiceTest {
                     userDAO.delete(user);
                 }
             } catch (Exception ignored) {
+                System.out.println("Something went wrong");
             }
         }
 
@@ -100,9 +101,15 @@ class UserServiceTest {
                 .findFirst()
                 .orElseThrow(() -> new AssertionError("No administrator found in the database"));
 
-        assertThrows(
+        int adminId = admin.getId();
+        IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> userService.deleteUser(admin.getId())
+                () -> userService.deleteUser(adminId)
+        );
+
+        assertEquals(
+                "Administrator's deleting is not available",
+                exception.getMessage()
         );
     }
 
@@ -148,7 +155,7 @@ class UserServiceTest {
 
     @Test
     void generateUniqueUsernameIsUnique() {
-        String username = userService.generateUniqueUsername("Unique", "User");
+        String username = userService.generateUniqueUsername("Unique", "User", "teacher");
 
         assertNotNull(username);
         assertFalse(username.isBlank());
@@ -158,7 +165,7 @@ class UserServiceTest {
     @Test
     void generateUniqueUsernameWithShortNamesUsesFallback() {
         // Short names produce no 8-char candidates → triggers candidates.isEmpty() branch
-        String username = userService.generateUniqueUsername("Al", "Jo");
+        String username = userService.generateUniqueUsername("Al", "Jo", "teacher");
 
         assertNotNull(username);
         assertFalse(username.isBlank());
