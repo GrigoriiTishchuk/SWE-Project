@@ -28,6 +28,9 @@ public class Course {
     @Column(name = "end_date")
     private LocalDate endDate;
 
+    @Column(columnDefinition = "TEXT")
+    private String notes;
+
     public Course() {
     }
 
@@ -84,6 +87,9 @@ public class Course {
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
+
+    public String getNotes() { return notes; }
+    public void setNotes(String notes) { this.notes = notes; }
 
     public String getAcademicYear() {
         if (startDate == null) return "2026/2027";

@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS courses (
     academic_group_id INT,
     start_date DATE,
     end_date DATE,
+    notes TEXT,
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (academic_group_id) REFERENCES academic_groups(id)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -74,6 +75,9 @@ CREATE TABLE IF NOT EXISTS seed_log (id INT PRIMARY KEY) DEFAULT CHARACTER SET u
 
 -- adds preferred_locale to databases created before this sprint
 ALTER TABLE users ADD COLUMN IF NOT EXISTS preferred_locale VARCHAR(10) DEFAULT 'en_US';
+
+-- adds notes column to courses for existing databases
+ALTER TABLE courses ADD COLUMN IF NOT EXISTS notes TEXT;
 
 CREATE TABLE IF NOT EXISTS assessment_types (
     type_key VARCHAR(30) PRIMARY KEY

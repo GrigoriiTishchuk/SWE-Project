@@ -39,6 +39,23 @@ public class CourseDAO {
         }
     }
 
+    public Course findByNameAndGroupId(String name, Integer groupId) {
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
+        try {
+            return entityManager.createQuery(
+                            "SELECT c FROM Course c WHERE c.name = :name AND c.academicGroupId = :groupId",
+                            Course.class
+                    )
+                    .setParameter("name", name)
+                    .setParameter("groupId", groupId)
+                    .getResultStream()
+                    .findFirst()
+                    .orElse(null);
+        } finally {
+            entityManager.close();
+        }
+    }
+
     public Course findByName(String name) {
 
         EntityManager entityManager =
