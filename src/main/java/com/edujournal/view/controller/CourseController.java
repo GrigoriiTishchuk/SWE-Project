@@ -12,17 +12,17 @@ import com.edujournal.model.AcademicGroupDTO;
 import com.edujournal.model.CourseDTO;
 import com.edujournal.model.UserDTO;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
+/**
+ * Controller responsible for managing courses.
+ * Supports course creation, editing, deletion, filtering and role-based actions.
+ */
 public class CourseController extends BaseController<CourseDTO> {
 
     private final CourseService courseService = new CourseService();
@@ -34,6 +34,11 @@ public class CourseController extends BaseController<CourseDTO> {
     private final Role role;
     private String selectedYear = DEFAULT_YEAR;
 
+    /**
+     * Creates the course controller.
+     *
+     * @param role current user role
+     */
     public CourseController(Role role) {
         this.role = role;
         configureColumns();
@@ -41,11 +46,19 @@ public class CourseController extends BaseController<CourseDTO> {
         loadAndShowItems();
     }
 
+    /**
+     * Updates the selected academic year and refreshes displayed courses.
+     *
+     * @param year selected academic year
+     */
     public void setYear(String year) {
         this.selectedYear = year;
         applyFilter();
     }
 
+    /**
+     * Configures button visibility and actions according to the current user role.
+     */
     private void setupRoleButtons() {
         if (role == Role.ADMINISTRATOR) {
             addBtn.setVisible(true);
@@ -61,6 +74,11 @@ public class CourseController extends BaseController<CourseDTO> {
         }
     }
 
+    /**
+     * Loads all courses available to the current user.
+     *
+     * @return list of courses
+     */
     @Override
     protected List<CourseDTO> loadAllItems() {
         List<CourseDTO> all = (role == Role.TEACHER)
@@ -71,6 +89,14 @@ public class CourseController extends BaseController<CourseDTO> {
                 .toList();
     }
 
+    /**
+     * Checks whether a course matches the selected filter and search text.
+     *
+     * @param course course to evaluate
+     * @param filter selected filter
+     * @param searchText search text
+     * @return true if the course matches
+     */
     @Override
     protected boolean matchesFilter(CourseDTO course, String filter, String searchText) {
         searchText = searchText.toLowerCase();
@@ -110,10 +136,9 @@ public class CourseController extends BaseController<CourseDTO> {
         }
     }
 
-    private String safe(String value) {
-        return value == null ? "" : value;
-    }
-
+    /**
+     * Configures course table columns and filter options.
+     */
     @Override
     protected void configureColumns() {
         TableColumn<CourseDTO, String> idCol = new TableColumn<>(LocalizationManager.get("id"));
@@ -127,20 +152,12 @@ public class CourseController extends BaseController<CourseDTO> {
 
         TableColumn<CourseDTO, String> teacherCol = new TableColumn<>(LocalizationManager.get("teacher"));
         teacherCol.setCellValueFactory(c ->
-                new SimpleStringProperty(
-                        c.getValue().getTeacherName() == null
-                                ? ""
-                                : c.getValue().getTeacherName()
-                )
+                new SimpleStringProperty(safe(c.getValue().getTeacherName()))
         );
 
         TableColumn<CourseDTO, String> groupCol = new TableColumn<>(LocalizationManager.get("academicGroup"));
         groupCol.setCellValueFactory(c ->
-                new SimpleStringProperty(
-                        c.getValue().getGroupName() == null
-                                ? ""
-                                : c.getValue().getGroupName()
-                )
+                new SimpleStringProperty(safe(c.getValue().getGroupName()))
         );
 
         table.getColumns().addAll(idCol, codeCol, nameCol, teacherCol, groupCol);
@@ -152,26 +169,13 @@ public class CourseController extends BaseController<CourseDTO> {
                 "All", "all", "ID", "id", "Name", "name", "Code", "code",
                 "Teacher", "teacher", "Academic Group", "academicGroup"
         );
-        filterCombo.setCellFactory(list -> new ListCell<>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) { setText(null); return; }
-                String key = filterKeyMap.get(item);
-                setText(key != null ? LocalizationManager.get(key) : item);
-            }
-        });
-        filterCombo.setButtonCell(new ListCell<>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) { setText(null); return; }
-                String key = filterKeyMap.get(item);
-                setText(key != null ? LocalizationManager.get(key) : item);
-            }
-        });
+        filterCombo.setCellFactory(list -> createLocalizedCell(filterKeyMap));
+        filterCombo.setButtonCell(createLocalizedCell(filterKeyMap));
     }
 
+    /**
+     * Opens a dialog for creating a new course.
+     */
     @Override
     public void showAddDialog() {
         Dialog<CourseDTO> dialog = new Dialog<>();
@@ -188,8 +192,8 @@ public class CourseController extends BaseController<CourseDTO> {
         ComboBox<UserDTO> teacherCombo = createComboBox(
                 teachers,
                 null,
-                "Select teacher",
-                "— No teacher —",
+                LocalizationManager.get("selectTeacher"),
+                LocalizationManager.get("noTeacher2"),
                 u -> u.getFirstName() + " " + u.getLastName()
         );
 
@@ -198,15 +202,15 @@ public class CourseController extends BaseController<CourseDTO> {
         ComboBox<AcademicGroupDTO> groupCombo = createComboBox(
                 groups,
                 null,
-                "Select group",
-                "— No group —",
+                LocalizationManager.get("selectGroup"),
+                LocalizationManager.get("noGroup2"),
                 AcademicGroupDTO::getName
         );
 
         DatePicker startDatePicker = new DatePicker();
-        startDatePicker.setPromptText("Start date");
+        startDatePicker.setPromptText(LocalizationManager.get("startDate"));
         DatePicker endDatePicker = new DatePicker();
-        endDatePicker.setPromptText("End date");
+        endDatePicker.setPromptText(LocalizationManager.get("endDate"));
 
         VBox box = new VBox(10, nameField, codeField, teacherCombo, groupCombo, startDatePicker, endDatePicker);
         box.setPadding(new Insets(10));
@@ -218,9 +222,18 @@ public class CourseController extends BaseController<CourseDTO> {
         dialog.setResultConverter(button -> {
             if (button == saveBtn) {
 
+                if (nameField.getText().isBlank()) {
+                    showError(LocalizationManager.get("courseNameEmpty"));
+                    return null;
+                }
+
+                if (codeField.getText().isBlank()) {
+                    showError(LocalizationManager.get("courseCodeEmpty"));
+                    return null;
+                }
+
                 if (courseService.existsByCode(codeField.getText())) {
-                    new Alert(Alert.AlertType.ERROR,
-                            "Course code already exists.").showAndWait();
+                    showError(LocalizationManager.get("courseExists"));
                     return null;
                 }
 
@@ -251,6 +264,9 @@ public class CourseController extends BaseController<CourseDTO> {
         }
     }
 
+    /**
+     * Opens a dialog for editing the selected course.
+     */
     @Override
     protected void showEditDialog() {
         CourseDTO course = table.getSelectionModel().getSelectedItem();
@@ -259,7 +275,7 @@ public class CourseController extends BaseController<CourseDTO> {
         }
 
         Dialog<CourseDTO> dialog = new Dialog<>();
-        dialog.setTitle("Edit Course");
+        dialog.setTitle(LocalizationManager.get("editCourse"));
 
         TextField nameField = new TextField(course.getName());
         TextField codeField = new TextField(course.getCode());
@@ -274,8 +290,8 @@ public class CourseController extends BaseController<CourseDTO> {
         ComboBox<UserDTO> teacherCombo = createComboBox(
                 teachers,
                 selectedTeacher,
-                "Select teacher",
-                "- No teacher -",
+                LocalizationManager.get("selectTeacher"),
+                LocalizationManager.get("noTeacher2"),
                 u -> u.getFirstName() + " " + u.getLastName()
         );
 
@@ -289,8 +305,8 @@ public class CourseController extends BaseController<CourseDTO> {
         ComboBox<AcademicGroupDTO> groupCombo = createComboBox(
                 groups,
                 selectedGroup,
-                "Select group",
-                "- No group -",
+                LocalizationManager.get("selectGroup"),
+                LocalizationManager.get("noGroup2"),
                 AcademicGroupDTO::getName
         );
 
@@ -310,21 +326,18 @@ public class CourseController extends BaseController<CourseDTO> {
                 String newCode = codeField.getText().trim();
 
                 if (newName.isBlank()) {
-                    new Alert(Alert.AlertType.ERROR,
-                            "Course name cannot be empty.").showAndWait();
+                    showError(LocalizationManager.get("courseNameEmpty"));
                     return null;
                 }
 
                 if (newCode.isBlank()) {
-                    new Alert(Alert.AlertType.ERROR,
-                            "Course code cannot be empty.").showAndWait();
+                    showError(LocalizationManager.get("courseCodeEmpty"));
                     return null;
                 }
 
                 if (!newCode.equalsIgnoreCase(course.getCode()) &&
                         courseService.existsByCode(newCode)) {
-                    new Alert(Alert.AlertType.ERROR,
-                            "Course code already exists.").showAndWait();
+                    showError(LocalizationManager.get("courseExists"));
                     return null;
                 }
 
@@ -354,6 +367,9 @@ public class CourseController extends BaseController<CourseDTO> {
         }
     }
 
+    /**
+     * Opens a confirmation dialog and deletes the selected course if confirmed.
+     */
     @Override
     protected void showDeleteDialog() {
         CourseDTO course = table.getSelectionModel().getSelectedItem();
@@ -362,12 +378,12 @@ public class CourseController extends BaseController<CourseDTO> {
         }
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Delete Course");
-        alert.setHeaderText("Are you sure you want to delete \"" + course.getName() + "\"?");
-        alert.setContentText("This action cannot be undone.");
+        alert.setTitle(LocalizationManager.get("deleteCourse"));
+        alert.setHeaderText(LocalizationManager.get("sureToDelete") + " \"" + course.getName() + "\"?");
+        alert.setContentText(LocalizationManager.get("undone"));
 
-        ButtonType yes = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
-        ButtonType no = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType yes = new ButtonType(LocalizationManager.get("yes"), ButtonBar.ButtonData.OK_DONE);
+        ButtonType no = new ButtonType(LocalizationManager.get("no"), ButtonBar.ButtonData.CANCEL_CLOSE);
 
         alert.getButtonTypes().setAll(yes, no);
 
@@ -377,6 +393,9 @@ public class CourseController extends BaseController<CourseDTO> {
         }
     }
 
+    /**
+     * Opens the assessment page for the selected course.
+     */
     private void openAddAssessmentPage() {
         CourseDTO course = table.getSelectionModel().getSelectedItem();
         if (course == null) {
@@ -386,7 +405,9 @@ public class CourseController extends BaseController<CourseDTO> {
         com.edujournal.Main.showPage(new com.edujournal.view.teacher.TeacherGradebookPage(1, course.getName()));
     }
 
-
+    /**
+     * Opens role-specific course actions for the selected course.
+     */
     @Override
     protected void onView() {
         CourseDTO selected = table.getSelectionModel().getSelectedItem();
@@ -401,15 +422,27 @@ public class CourseController extends BaseController<CourseDTO> {
         }
     }
 
-    // Dialogs
+    /**
+     * Displays detailed information about the selected course.
+     *
+     * @param course selected course
+     */
     private void showCourseInfoDialog(CourseDTO course) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Course Info");
+        alert.setTitle(LocalizationManager.get("courseInfo"));
         alert.setHeaderText(course.getName());
-        alert.setContentText("Code: " + course.getCode() + "\nTeacher: " + course.getTeacherName() + "\nAcademic Group: " + course.getGroupName());
+        alert.setContentText(
+                LocalizationManager.get("code") + ": " + course.getCode() + "\n" +
+                LocalizationManager.get("teacher") + ": " + course.getTeacherName() + "\n" +
+                LocalizationManager.get("academicGroup") + ": " + course.getGroupName());
         alert.showAndWait();
     }
 
+    /**
+     * Opens the teacher assessment view for the selected course.
+     *
+     * @param course selected course
+     */
     private void showAssessmentDialog(CourseDTO course) {
         com.edujournal.Main.showPage(new com.edujournal.view.teacher.TeacherGradebookPage(1, course.getName()));
     }
