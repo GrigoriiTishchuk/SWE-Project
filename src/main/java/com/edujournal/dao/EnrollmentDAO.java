@@ -8,6 +8,9 @@ import java.util.List;
 
 public class EnrollmentDAO {
 
+    private static final String PARAM_STUDENT_ID = "studentId";
+    private static final String PARAM_COURSE_ID = "courseId";
+
     public Enrollment findById(Integer id) {
         EntityManager entityManager =
                 JPAUtil.getEntityManagerFactory()
@@ -45,7 +48,7 @@ public class EnrollmentDAO {
                             "SELECT e FROM Enrollment e WHERE e.studentId = :studentId",
                             Enrollment.class
                     )
-                    .setParameter("studentId", studentId)
+                    .setParameter(PARAM_STUDENT_ID, studentId)
                     .getResultList();
         } finally {
             entityManager.close();
@@ -62,7 +65,7 @@ public class EnrollmentDAO {
                             "SELECT e FROM Enrollment e WHERE e.courseId = :courseId",
                             Enrollment.class
                     )
-                    .setParameter("courseId", courseId)
+                    .setParameter(PARAM_COURSE_ID, courseId)
                     .getResultList();
         } finally {
             entityManager.close();
@@ -92,7 +95,7 @@ public class EnrollmentDAO {
             return em.createQuery(
                             "SELECT e FROM Enrollment e WHERE e.courseId = :courseId AND e.academicGroupId = :groupId",
                             Enrollment.class)
-                    .setParameter("courseId", courseId)
+                    .setParameter(PARAM_COURSE_ID, courseId)
                     .setParameter("groupId", groupId)
                     .getResultList();
         } finally {
@@ -110,8 +113,8 @@ public class EnrollmentDAO {
                             "SELECT e FROM Enrollment e WHERE e.studentId = :studentId AND e.courseId = :courseId",
                             Enrollment.class
                     )
-                    .setParameter("studentId", studentId)
-                    .setParameter("courseId", courseId)
+                    .setParameter(PARAM_STUDENT_ID, studentId)
+                    .setParameter(PARAM_COURSE_ID, courseId)
                     .getResultStream()
                     .findFirst()
                     .orElse(null);
@@ -148,7 +151,7 @@ public class EnrollmentDAO {
 
         try {
             entityManager.getTransaction().begin();
-            entityManager.merge(enrollment);
+            enrollment = entityManager.merge(enrollment);
             entityManager.getTransaction().commit();
 
         } catch (Exception e) {
@@ -204,7 +207,7 @@ public class EnrollmentDAO {
                                     "WHERE e.studentId = :studentId " +
                                     "AND e.academicGroupId = :academicGroupId"
                     )
-                    .setParameter("studentId", studentId)
+                    .setParameter(PARAM_STUDENT_ID, studentId)
                     .setParameter("academicGroupId", academicGroupId)
                     .executeUpdate();
 
@@ -234,7 +237,7 @@ public class EnrollmentDAO {
                             "DELETE FROM Enrollment e " +
                                     "WHERE e.courseId = :courseId"
                     )
-                    .setParameter("courseId", courseId)
+                    .setParameter(PARAM_COURSE_ID, courseId)
                     .executeUpdate();
 
             entityManager.getTransaction().commit();

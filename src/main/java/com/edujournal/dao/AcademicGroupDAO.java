@@ -3,7 +3,6 @@ package com.edujournal.dao;
 import com.edujournal.config.JPAUtil;
 import com.edujournal.entity.AcademicGroup;
 import com.edujournal.entity.Student;
-import com.edujournal.entity.User;
 import jakarta.persistence.EntityManager;
 
 import java.util.List;
@@ -86,7 +85,7 @@ public class AcademicGroupDAO {
 
             if (student != null) {
                 student.setAcademicGroupId(groupId);
-                entityManager.merge(student);
+                student = entityManager.merge(student);
             }
 
             entityManager.getTransaction().commit();
@@ -108,7 +107,7 @@ public class AcademicGroupDAO {
 
             if (student != null && groupId.equals(student.getAcademicGroupId())) {
                 student.setAcademicGroupId(null);
-                entityManager.merge(student);
+                student = entityManager.merge(student);
             }
 
             entityManager.getTransaction().commit();
@@ -145,7 +144,7 @@ public class AcademicGroupDAO {
 
         try {
             entityManager.getTransaction().begin();
-            entityManager.merge(academicGroup);
+            academicGroup = entityManager.merge(academicGroup);
             entityManager.getTransaction().commit();
 
         } catch (Exception e) {

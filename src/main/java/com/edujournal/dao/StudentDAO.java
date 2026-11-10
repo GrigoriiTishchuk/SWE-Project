@@ -96,7 +96,7 @@ public class StudentDAO {
 
         try {
             entityManager.getTransaction().begin();
-            entityManager.merge(student);
+            student = entityManager.merge(student);
             entityManager.getTransaction().commit();
 
         } catch (Exception e) {

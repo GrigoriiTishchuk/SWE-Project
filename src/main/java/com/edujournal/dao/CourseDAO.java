@@ -169,7 +169,7 @@ public class CourseDAO {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
             entityManager.getTransaction().begin();
-            entityManager.merge(course);
+            course = entityManager.merge(course);
             entityManager.getTransaction().commit();
 
         } catch (Exception e) {
