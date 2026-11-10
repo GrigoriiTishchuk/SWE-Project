@@ -130,6 +130,7 @@ public class StudentService {
             user.setUsername(dto.getUsername());
             user.setFirstName(dto.getFirstName());
             user.setLastName(dto.getLastName());
+            user.setPhone(dto.getPhone());
             userDAO.update(user);
         }
     }

@@ -364,5 +364,15 @@ public abstract class BaseController<T> extends BorderPane {
     protected String safe(String value) {
         return value == null ? "" : value;
     }
+
+    /**
+     * Displays an information dialog with the specified message.
+     *
+     * @param message information message
+     */
+    protected void showInfo(String message) {
+        new Alert(Alert.AlertType.INFORMATION, message)
+                .showAndWait();
+    }
 }
 

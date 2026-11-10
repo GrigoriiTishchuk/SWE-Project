@@ -294,9 +294,7 @@ public class AdminTeacherController extends BaseController<UserDTO> {
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(LocalizationManager.get("teacherInfo"));
-
         alert.setHeaderText(teacher.getFirstName() + " " + teacher.getLastName());
-
         alert.setContentText(
                 LocalizationManager.get("username") + ": " + teacher.getUsername() + "\n\n" +
                         LocalizationManager.get("courses") + ":\n" + courseList
