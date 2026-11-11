@@ -61,7 +61,8 @@ EduJournal stores all data using `utf8mb4` character encoding, supporting any Un
 
 ### Use Cases
 
-<img src="Documents/Diagrams/Use-Case-Diagram-Updated.png" alt="Use Cases" width="100%">
+- [Use Case Diagram](Documents/Diagrams/Use-Case-Diagram-Updated.png)
+- [ER Diagram](Documents/Diagrams/ER-diagram-Updated.png)
 
 ### Definition of Success
 

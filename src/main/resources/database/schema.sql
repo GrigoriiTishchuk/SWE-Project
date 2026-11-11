@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS courses (
     academic_group_id INT,
     start_date DATE,
     end_date DATE,
+    notes TEXT,
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (academic_group_id) REFERENCES academic_groups(id)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -75,18 +76,38 @@ CREATE TABLE IF NOT EXISTS seed_log (id INT PRIMARY KEY) DEFAULT CHARACTER SET u
 -- adds preferred_locale to databases created before this sprint
 ALTER TABLE users ADD COLUMN IF NOT EXISTS preferred_locale VARCHAR(10) DEFAULT 'en_US';
 
+-- adds notes column to courses for existing databases
+ALTER TABLE courses ADD COLUMN IF NOT EXISTS notes TEXT;
+
+CREATE TABLE IF NOT EXISTS assessment_types (
+    type_key VARCHAR(30) PRIMARY KEY
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+INSERT IGNORE INTO assessment_types (type_key) VALUES
+('INCLASSTASK'), ('HOMETASK'), ('PROJECT'), ('LAB'),
+('EXAM1'), ('EXAM2'), ('EXAM3'), ('EXAM4'), ('FINALEXAM');
+
 CREATE TABLE IF NOT EXISTS assessment_type_translation (
     type_key VARCHAR(30) NOT NULL,
     lang     VARCHAR(10) NOT NULL,
     name     VARCHAR(100) NOT NULL,
-    PRIMARY KEY (type_key, lang)
+    PRIMARY KEY (type_key, lang),
+    FOREIGN KEY (type_key) REFERENCES assessment_types(type_key)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS roles (
+    role_key VARCHAR(30) PRIMARY KEY
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+INSERT IGNORE INTO roles (role_key) VALUES
+('ADMINISTRATOR'), ('TEACHER'), ('STUDENT');
 
 CREATE TABLE IF NOT EXISTS role_translation (
     role_key VARCHAR(30) NOT NULL,
     lang     VARCHAR(10) NOT NULL,
     label    VARCHAR(50) NOT NULL,
-    PRIMARY KEY (role_key, lang)
+    PRIMARY KEY (role_key, lang),
+    FOREIGN KEY (role_key) REFERENCES roles(role_key)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 INSERT IGNORE INTO assessment_type_translation (type_key, lang, name) VALUES

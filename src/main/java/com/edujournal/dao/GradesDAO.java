@@ -87,7 +87,7 @@ public class GradesDAO {
 
         try {
             entityManager.getTransaction().begin();
-            entityManager.merge(grade);
+            grade = entityManager.merge(grade);
             entityManager.getTransaction().commit();
 
         } catch (Exception e) {

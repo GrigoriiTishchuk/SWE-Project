@@ -71,7 +71,7 @@ public class AssessmentsDAO {
                 .createEntityManager();
         try {
             entityManager.getTransaction().begin();
-            entityManager.merge(assessment);
+            assessment = entityManager.merge(assessment);
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             rollback(entityManager);

@@ -130,7 +130,7 @@ public class UserDAO {
         try {
             entityManager.getTransaction().begin();
 
-            entityManager.merge(user);
+            user = entityManager.merge(user);
 
             entityManager.getTransaction().commit();
 
