@@ -271,12 +271,10 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
             if (btn == saveBtn) {
                 String newName = nameField.getText().trim();
 
-                if (newName.equalsIgnoreCase(group.getName())) {
-                } else {
-                    if (groupService.existsByName(newName)) {
-                        showError(LocalizationManager.get("groupExists"));
-                        return null;
-                    }
+                if (!newName.equalsIgnoreCase(group.getName())
+                        && groupService.existsByName(newName)) {
+                    showError(LocalizationManager.get("groupExists"));
+                    return null;
                 }
 
                 if (nameField.getText().isBlank()) {
@@ -347,34 +345,7 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
             return;
         }
 
-        ComboBox<StudentDTO> studentCombo = new ComboBox<>();
-        studentCombo.setItems(FXCollections.observableArrayList(availableStudents));
-        studentCombo.setEditable(false);
-        studentCombo.setCellFactory(cb -> new ListCell<>() {
-            @Override
-            protected void updateItem(StudentDTO item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item.getFirstName() + " " + item.getLastName()
-                            + " (" + item.getStudentNumber() + ")");
-                }
-            }
-        });
-
-        studentCombo.setButtonCell(new ListCell<>() {
-            @Override
-            protected void updateItem(StudentDTO item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item.getFirstName() + " " + item.getLastName()
-                            + " (" + item.getStudentNumber() + ")");
-                }
-            }
-        });
+        ComboBox<StudentDTO> studentCombo = createStudentComboBox(availableStudents);
 
         VBox box = new VBox(10, studentCombo);
         box.setPadding(new Insets(10));
@@ -402,6 +373,50 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
             groupService.addStudentToGroup(studentId, group.getId());
             loadAndShowItems();
         }
+    }
+
+    /**
+     * Creates and configures a student selection ComboBox.
+     *
+     * @param students available students
+     * @return configured student ComboBox
+     */
+    private ComboBox<StudentDTO> createStudentComboBox(
+            List<StudentDTO> students
+    ) {
+        ComboBox<StudentDTO> studentCombo = new ComboBox<>();
+        studentCombo.setItems(FXCollections.observableArrayList(students));
+        studentCombo.setEditable(false);
+
+        studentCombo.setCellFactory(cb -> new ListCell<>() {
+            @Override
+            protected void updateItem(StudentDTO item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item.getFirstName() + " " + item.getLastName()
+                                    + " (" + item.getStudentNumber() + ")");
+                }
+            }
+        });
+
+        studentCombo.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(StudentDTO item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item.getFirstName() + " " + item.getLastName()
+                                    + " (" + item.getStudentNumber() + ")");
+                }
+            }
+        });
+
+        return studentCombo;
     }
 
     /**
@@ -470,35 +485,7 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
             return;
         }
 
-        ComboBox<StudentDTO> studentCombo = new ComboBox<>();
-        studentCombo.setItems(FXCollections.observableArrayList(groupStudents));
-        studentCombo.setEditable(false);
-
-        studentCombo.setCellFactory(cb -> new ListCell<>() {
-            @Override
-            protected void updateItem(StudentDTO item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item.getFirstName() + " " + item.getLastName()
-                            + " (" + item.getStudentNumber() + ")");
-                }
-            }
-        });
-
-        studentCombo.setButtonCell(new ListCell<>() {
-            @Override
-            protected void updateItem(StudentDTO item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item.getFirstName() + " " + item.getLastName()
-                            + " (" + item.getStudentNumber() + ")");
-                }
-            }
-        });
+        ComboBox<StudentDTO> studentCombo = createStudentComboBox(groupStudents);
 
         VBox box = new VBox(10, new Label(LocalizationManager.get("selectStudentToRemove")), studentCombo);
         box.setPadding(new Insets(10));
@@ -539,7 +526,9 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
      * Not used in card view mode.
      */
     @Override
-    protected void onView() {}
+    protected void onView() {
+        // Not used
+    }
 
     /**
      * Clears the currently selected group.

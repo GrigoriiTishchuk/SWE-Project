@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * Base controller for entity management screens.
@@ -25,29 +24,37 @@ public abstract class BaseController<T> extends BorderPane {
     protected final TextField searchField = new TextField();
     protected final ComboBox<String> filterCombo = new ComboBox<>();
 
+    private static final String BTN_PRIMARY = "btn-primary";
+    private static final String BTN_SECONDARY = "btn-secondary";
+    private static final String BTN_DELETE = "btn-delete";
+
     protected final Button addBtn    = new Button(LocalizationManager.get("add"));
     protected final Button editBtn   = new Button(LocalizationManager.get("edit"));
     protected final Button deleteBtn = new Button(LocalizationManager.get("delete"));
     protected final Button viewBtn   = new Button(LocalizationManager.get("view"));
     protected final Button reportBtn = new Button(LocalizationManager.get("studentReport"));
 
-    {
-        addBtn.getStyleClass().add("btn-primary");
-        editBtn.getStyleClass().add("btn-secondary");
-        deleteBtn.getStyleClass().add("btn-delete");
-        viewBtn.getStyleClass().add("btn-secondary");
-        reportBtn.getStyleClass().add("btn-secondary");
-    }
-
     protected Function<T, Node> cardBuilder = null;
 
-    public BaseController() {
+    protected BaseController() {
         getStylesheets().add(BaseController.class.getResource("/css/table.css").toExternalForm());
         getStylesheets().add(BaseController.class.getResource("/css/button.css").toExternalForm());
+        setupButtonStyles();
         setupSearchHandlers();
         setupLayout();
         setupButtons();
         setupDoubleClick();
+    }
+
+    /**
+     * Setup button styles
+     */
+    private void setupButtonStyles() {
+        addBtn.getStyleClass().add(BTN_PRIMARY);
+        editBtn.getStyleClass().add(BTN_SECONDARY);
+        deleteBtn.getStyleClass().add(BTN_DELETE);
+        viewBtn.getStyleClass().add(BTN_SECONDARY);
+        reportBtn.getStyleClass().add(BTN_SECONDARY);
     }
 
     /**
@@ -224,7 +231,7 @@ public abstract class BaseController<T> extends BorderPane {
 
         List<T> filtered = all.stream()
                 .filter(item -> matchesFilter(item, filter, text))
-                .collect(Collectors.toList());
+                .toList();
 
         if (cardBuilder != null) {
             table.getItems().clear();
@@ -264,24 +271,24 @@ public abstract class BaseController<T> extends BorderPane {
      * @param displayFunction item display formatter
      * @return configured ComboBox
      */
-    protected <T> ComboBox<T> createComboBox(
-            List<T> items,
-            T selectedItem,
+    protected <V> ComboBox<V> createComboBox(
+            List<V> items,
+            V selectedItem,
             String promptText,
             String nullText,
-            Function<T, String> displayFunction
+            Function<V, String> displayFunction
     ) {
-        List<T> options = new ArrayList<>();
+        List<V> options = new ArrayList<>();
         options.add(null);
         options.addAll(items);
 
-        ComboBox<T> combo = new ComboBox<>();
+        ComboBox<V> combo = new ComboBox<>();
         combo.setItems(FXCollections.observableArrayList(options));
         combo.setPromptText(promptText);
 
         combo.setCellFactory(list -> new ListCell<>() {
             @Override
-            protected void updateItem(T item, boolean empty) {
+            protected void updateItem(V item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty) {
                     setText(null);
@@ -295,8 +302,9 @@ public abstract class BaseController<T> extends BorderPane {
 
         combo.setButtonCell(new ListCell<>() {
             @Override
-            protected void updateItem(T item, boolean empty) {
+            protected void updateItem(V item, boolean empty) {
                 super.updateItem(item, empty);
+
                 if (empty) {
                     setText(null);
                 } else if (item == null) {

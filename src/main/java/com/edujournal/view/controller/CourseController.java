@@ -222,18 +222,10 @@ public class CourseController extends BaseController<CourseDTO> {
         dialog.setResultConverter(button -> {
             if (button == saveBtn) {
 
-                if (nameField.getText().isBlank()) {
-                    showError(LocalizationManager.get("courseNameEmpty"));
-                    return null;
-                }
+                String newName = nameField.getText().trim();
+                String newCode = codeField.getText().trim();
 
-                if (codeField.getText().isBlank()) {
-                    showError(LocalizationManager.get("courseCodeEmpty"));
-                    return null;
-                }
-
-                if (courseService.existsByCode(codeField.getText())) {
-                    showError(LocalizationManager.get("courseExists"));
+                if (!validateCourseData(newName, newCode, newCode)) {
                     return null;
                 }
 
@@ -325,19 +317,7 @@ public class CourseController extends BaseController<CourseDTO> {
                 String newName = nameField.getText().trim();
                 String newCode = codeField.getText().trim();
 
-                if (newName.isBlank()) {
-                    showError(LocalizationManager.get("courseNameEmpty"));
-                    return null;
-                }
-
-                if (newCode.isBlank()) {
-                    showError(LocalizationManager.get("courseCodeEmpty"));
-                    return null;
-                }
-
-                if (!newCode.equalsIgnoreCase(course.getCode()) &&
-                        courseService.existsByCode(newCode)) {
-                    showError(LocalizationManager.get("courseExists"));
+                if (!validateCourseData(newName, newCode, course.getCode())) {
                     return null;
                 }
 
@@ -365,6 +345,38 @@ public class CourseController extends BaseController<CourseDTO> {
             courseService.update(entity);
             loadAndShowItems();
         }
+    }
+
+    /**
+     * Validates course name and code before saving.
+     *
+     * @param newName new course name
+     * @param newCode new course code
+     * @param currentCode current course code
+     * @return true if validation succeeds, false otherwise
+     */
+    private boolean validateCourseData(
+            String newName,
+            String newCode,
+            String currentCode
+    ) {
+        if (newName.isBlank()) {
+            showError(LocalizationManager.get("courseNameEmpty"));
+            return false;
+        }
+
+        if (newCode.isBlank()) {
+            showError(LocalizationManager.get("courseCodeEmpty"));
+            return false;
+        }
+
+        if (!newCode.equalsIgnoreCase(currentCode)
+                && courseService.existsByCode(newCode)) {
+            showError(LocalizationManager.get("courseExists"));
+            return false;
+        }
+
+        return true;
     }
 
     /**
