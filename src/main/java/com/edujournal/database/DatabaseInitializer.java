@@ -9,11 +9,20 @@ import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class DatabaseInitializer {
 
+    private static final Logger LOGGER = Logger.getLogger(DatabaseInitializer.class.getName());
+
+    private DatabaseInitializer() {
+        // utility class, not meant to be instantiated
+    }
+
+    @SuppressWarnings("java:S2077") // database name cannot be parameterized in JDBC
     public static void initialize() {
 
         String databaseName = EnvConfig.get("DB_NAME");
@@ -33,13 +42,10 @@ public class DatabaseInitializer {
                     + " DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
             );
 
-            System.out.println("Database is ready.");
+            LOGGER.info("Database is ready.");
 
-        } catch (Exception e) {
-            throw new RuntimeException(
-                    "Could not create database.",
-                    e
-            );
+        } catch (SQLException e) {
+            throw new RuntimeException("Could not create database.", e);
         }
 
         String databaseUrl =
@@ -47,52 +53,47 @@ public class DatabaseInitializer {
                 + "?useUnicode=true&characterEncoding=UTF-8";
 
         try (Connection connection =
-                     DriverManager.getConnection(
-                             databaseUrl,
-                             username,
-                             password
-                     )) {
+                     DriverManager.getConnection(databaseUrl, username, password)) {
 
             executeSqlFile(connection, "/database/schema.sql");
-            System.out.println("Database tables are ready.");
+            LOGGER.info("Database tables are ready.");
 
-            boolean alreadySeeded = false;
-            try (Statement st = connection.createStatement();
-                 ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM seed_log")) {
-                if (rs.next() && rs.getInt(1) > 0) alreadySeeded = true;
-            } catch (Exception ignored) {}
-
-            if (!alreadySeeded) {
+            if (!isAlreadySeeded(connection)) {
                 executeSqlFile(connection, "/database/data.sql");
                 try (Statement st = connection.createStatement()) {
                     st.executeUpdate("INSERT INTO seed_log (id) VALUES (1)");
                 }
-                System.out.println("Database data is ready.");
+                LOGGER.info("Database data is ready.");
             } else {
-                System.out.println("Database already seeded, skipping data.sql.");
+                LOGGER.info("Database already seeded, skipping data.sql.");
             }
 
-        } catch (Exception e) {
-            throw new RuntimeException(
-                    "Could not initialize database.",
-                    e
-            );
+        } catch (SQLException e) {
+            throw new RuntimeException("Could not initialize database.", e);
+        }
+    }
+
+    private static boolean isAlreadySeeded(Connection connection) {
+        try (Statement st = connection.createStatement();
+             ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM seed_log")) {
+            return rs.next() && rs.getInt(1) > 0;
+        } catch (SQLException ignored) {
+            // seed_log may not exist on first run
+            return false;
         }
     }
 
     private static void executeSqlFile(
             Connection connection,
             String resourcePath
-    ) throws Exception {
+    ) throws SQLException {
 
         InputStream inputStream =
                 DatabaseInitializer.class
                         .getResourceAsStream(resourcePath);
 
         if (inputStream == null) {
-            throw new RuntimeException(
-                    resourcePath + " not found!"
-            );
+            throw new IllegalStateException(resourcePath + " not found!");
         }
 
         String sql = new BufferedReader(
@@ -104,11 +105,8 @@ public class DatabaseInitializer {
         String[] commands = sql.split(";");
 
         try (Statement statement = connection.createStatement()) {
-
             for (String command : commands) {
-
                 String trimmedCommand = command.trim();
-
                 if (!trimmedCommand.isEmpty()) {
                     statement.execute(trimmedCommand);
                 }

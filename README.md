@@ -59,7 +59,7 @@ EduJournal stores all data using `utf8mb4` character encoding, supporting any Un
 - **Assessment type names** *(translation table approach)*: `assessment_type_translation(type_key, lang, name)` — localized names for Exam, Homework, Project, etc., with English fallback
 - **Role labels** *(row approach)*: `role_translation(role_key, lang, label)` — localized Teacher, Student, Admin labels read from DB in the top bar and profile page
 
-### Use Cases
+### Diagrams
 
 - [Use Case Diagram](Documents/Diagrams/Use-Case-Diagram-Updated.png)
 - [ER Diagram](Documents/Diagrams/ER-diagram-Updated.png)
