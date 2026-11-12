@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Controller responsible for managing students.
- * Provides functionality for viewing, searching, creating, editing and deleting student records.
+ * Controller responsible for managing students. Provides functionality for viewing, searching,
+ * creating, editing and deleting student records.
  */
 public class AdminStudentController extends BaseController<StudentDTO> {
 
@@ -28,8 +28,8 @@ public class AdminStudentController extends BaseController<StudentDTO> {
     private final UserService userService = new UserService();
 
     /**
-     * Creates the student administration controller and initializes table configuration,
-     * report actions and selection handling.
+     * Creates the student administration controller and initializes table configuration, report
+     * actions and selection handling.
      *
      * @param role current user role
      */
@@ -80,123 +80,119 @@ public class AdminStudentController extends BaseController<StudentDTO> {
                             safe(dto.getFirstName()),
                             safe(dto.getLastName()),
                             safe(dto.getEmail()),
-                            safe(dto.getPhone())
-                    ),
-                    text
-            );
+                            safe(dto.getPhone())),
+                    text);
         }
 
         return switch (filter) {
-            case "ID" -> dto.getStudentId() != null &&
-                    dto.getStudentId().toString().contains(text);
+            case "ID" -> dto.getStudentId() != null && dto.getStudentId().toString().contains(text);
 
-            case "Student Number" -> dto.getStudentNumber() != null &&
-                    dto.getStudentNumber().toLowerCase().contains(text);
+            case "Student Number" ->
+                    dto.getStudentNumber() != null
+                            && dto.getStudentNumber().toLowerCase().contains(text);
 
-            case "Username" -> dto.getUsername() != null &&
-                    dto.getUsername().toLowerCase().contains(text);
+            case "Username" ->
+                    dto.getUsername() != null && dto.getUsername().toLowerCase().contains(text);
 
-            case "First Name" -> dto.getFirstName() != null &&
-                    dto.getFirstName().toLowerCase().contains(text);
+            case "First Name" ->
+                    dto.getFirstName() != null && dto.getFirstName().toLowerCase().contains(text);
 
-            case "Last Name" -> dto.getLastName() != null &&
-                    dto.getLastName().toLowerCase().contains(text);
+            case "Last Name" ->
+                    dto.getLastName() != null && dto.getLastName().toLowerCase().contains(text);
 
-            case "Phone Number" -> dto.getPhone() != null &&
-                    dto.getPhone().toLowerCase().contains(text);
+            case "Phone Number" ->
+                    dto.getPhone() != null && dto.getPhone().toLowerCase().contains(text);
 
             default -> true;
         };
     }
 
-    /**
-     * Configures table columns and filter options.
-     */
+    /** Configures table columns and filter options. */
     @Override
     protected void configureColumns() {
 
         TableColumn<StudentDTO, String> idCol = new TableColumn<>(LocalizationManager.get("id"));
-        idCol.setCellValueFactory(
-                cell -> new SimpleStringProperty(
+        idCol.setCellValueFactory(cell ->
+                new SimpleStringProperty(
                         cell.getValue().getStudentId() != null
                                 ? cell.getValue().getStudentId().toString()
-                                : ""
-                )
-        );
+                                : ""));
 
         TableColumn<StudentDTO, String> studentNumberCol =
                 new TableColumn<>(LocalizationManager.get("studentNumberCol"));
-        studentNumberCol.setCellValueFactory(
-                new PropertyValueFactory<>("studentNumber")
-        );
+        studentNumberCol.setCellValueFactory(new PropertyValueFactory<>("studentNumber"));
 
         TableColumn<StudentDTO, String> usernameCol =
                 new TableColumn<>(LocalizationManager.get("username"));
         usernameCol.setCellValueFactory(
-                cell -> new SimpleStringProperty(cell.getValue().getUsername())
-        );
+                cell -> new SimpleStringProperty(cell.getValue().getUsername()));
 
         TableColumn<StudentDTO, String> firstNameCol =
                 new TableColumn<>(LocalizationManager.get("firstName"));
         firstNameCol.setCellValueFactory(
-                cell -> new SimpleStringProperty(cell.getValue().getFirstName())
-        );
+                cell -> new SimpleStringProperty(cell.getValue().getFirstName()));
 
         TableColumn<StudentDTO, String> lastNameCol =
                 new TableColumn<>(LocalizationManager.get("lastName"));
         lastNameCol.setCellValueFactory(
-                cell -> new SimpleStringProperty(cell.getValue().getLastName())
-        );
+                cell -> new SimpleStringProperty(cell.getValue().getLastName()));
 
         TableColumn<StudentDTO, String> emailCol =
                 new TableColumn<>(LocalizationManager.get("email"));
-        emailCol.setCellValueFactory(
-                cell -> new SimpleStringProperty(cell.getValue().getEmail())
-        );
+        emailCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getEmail()));
 
         TableColumn<StudentDTO, String> phoneCol =
                 new TableColumn<>(LocalizationManager.get("phone"));
-        phoneCol.setCellValueFactory(
-                cell -> new SimpleStringProperty(cell.getValue().getPhone())
-        );
+        phoneCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getPhone()));
 
-        table.getColumns().addAll(
-                idCol,
-                studentNumberCol,
-                usernameCol,
-                firstNameCol,
-                lastNameCol,
-                emailCol,
-                phoneCol
-        );
+        table.getColumns()
+                .addAll(
+                        idCol,
+                        studentNumberCol,
+                        usernameCol,
+                        firstNameCol,
+                        lastNameCol,
+                        emailCol,
+                        phoneCol);
 
-        filterCombo.getItems().addAll(
-                "All",
-                "ID",
-                "Student Number",
-                "Username",
-                "First Name",
-                "Last Name",
-                "Email",
-                "Phone Number"
-        );
+        filterCombo
+                .getItems()
+                .addAll(
+                        "All",
+                        "ID",
+                        "Student Number",
+                        "Username",
+                        "First Name",
+                        "Last Name",
+                        "Email",
+                        "Phone Number");
         filterCombo.setValue("All");
 
-        Map<String, String> filterKeyMap = Map.of(
-                "All", "all", "ID", "id", "Student Number", "studentNumberCol",
-                "Username", "username", "First Name", "firstName",
-                "Last Name", "lastName", "Email", "email", "Phone Number", "phone"
-        );
+        Map<String, String> filterKeyMap =
+                Map.of(
+                        "All",
+                        "all",
+                        "ID",
+                        "id",
+                        "Student Number",
+                        "studentNumberCol",
+                        "Username",
+                        "username",
+                        "First Name",
+                        "firstName",
+                        "Last Name",
+                        "lastName",
+                        "Email",
+                        "email",
+                        "Phone Number",
+                        "phone");
         filterCombo.setCellFactory(list -> createLocalizedCell(filterKeyMap));
         filterCombo.setButtonCell(createLocalizedCell(filterKeyMap));
     }
 
-    /**
-     * Opens the report page for the selected student.
-     */
+    /** Opens the report page for the selected student. */
     private void openStudentReport() {
-        StudentDTO selectedStudent =
-                table.getSelectionModel().getSelectedItem();
+        StudentDTO selectedStudent = table.getSelectionModel().getSelectedItem();
 
         if (selectedStudent == null) {
             return;
@@ -206,14 +202,10 @@ public class AdminStudentController extends BaseController<StudentDTO> {
                 new StudentReportPage(
                         AdminSidebar.build("Student's report"),
                         Role.ADMINISTRATOR,
-                        selectedStudent.getStudentId()
-                )
-        );
+                        selectedStudent.getStudentId()));
     }
 
-    /**
-     * Opens a dialog for creating a new student.
-     */
+    /** Opens a dialog for creating a new student. */
     @Override
     public void showAddDialog() {
         Dialog<StudentDTO> dialog = new Dialog<>();
@@ -231,24 +223,26 @@ public class AdminStudentController extends BaseController<StudentDTO> {
         box.setPadding(new Insets(10));
         dialog.getDialogPane().setContent(box);
 
-        ButtonType saveBtn = new ButtonType(LocalizationManager.get("save"), ButtonBar.ButtonData.OK_DONE);
+        ButtonType saveBtn =
+                new ButtonType(LocalizationManager.get("save"), ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(saveBtn, ButtonType.CANCEL);
 
         Button saveBtnNode = (Button) dialog.getDialogPane().lookupButton(saveBtn);
-        saveBtnNode.addEventFilter(ActionEvent.ACTION, event -> {
-            if (firstNameField.getText().isBlank() || lastNameField.getText().isBlank()) {
-                showError(LocalizationManager.get("errorNameEmpty"));
-                event.consume();
-            } else if (phoneField.getText().isBlank()) {
-                showError(LocalizationManager.get("errorPhoneEmpty"));
-                event.consume();
-            }
-        });
+        saveBtnNode.addEventFilter(
+                ActionEvent.ACTION,
+                event -> {
+                    if (firstNameField.getText().isBlank() || lastNameField.getText().isBlank()) {
+                        showError(LocalizationManager.get("errorNameEmpty"));
+                        event.consume();
+                    } else if (phoneField.getText().isBlank()) {
+                        showError(LocalizationManager.get("errorPhoneEmpty"));
+                        event.consume();
+                    }
+                });
 
         dialog.setResultConverter(button -> {
             if (button == saveBtn) {
-                if (firstNameField.getText().isBlank() ||
-                        lastNameField.getText().isBlank()) {
+                if (firstNameField.getText().isBlank() || lastNameField.getText().isBlank()) {
                     return null;
                 }
 
@@ -265,20 +259,16 @@ public class AdminStudentController extends BaseController<StudentDTO> {
             return null;
         });
 
-        dialog.showAndWait().ifPresent(dto -> {
-            studentService.createStudent(
-                    dto.getFirstName(),
-                    dto.getLastName(),
-                    dto.getPhone()
-            );
+        dialog.showAndWait()
+                .ifPresent(dto -> {
+                    studentService.createStudent(
+                            dto.getFirstName(), dto.getLastName(), dto.getPhone());
 
-            loadAndShowItems();
-        });
+                    loadAndShowItems();
+                });
     }
 
-    /**
-     * Opens a dialog for editing the selected student.
-     */
+    /** Opens a dialog for editing the selected student. */
     @Override
     protected void showEditDialog() {
         StudentDTO dto = table.getSelectionModel().getSelectedItem();
@@ -287,7 +277,8 @@ public class AdminStudentController extends BaseController<StudentDTO> {
         Dialog<Boolean> dialog = new Dialog<>();
         dialog.setTitle(LocalizationManager.get("editStudent"));
 
-        TextField firstNameField = new TextField(dto.getFirstName() != null ? dto.getFirstName() : "");
+        TextField firstNameField =
+                new TextField(dto.getFirstName() != null ? dto.getFirstName() : "");
         TextField lastNameField = new TextField(dto.getLastName() != null ? dto.getLastName() : "");
         TextField phoneField = new TextField(dto.getPhone() != null ? dto.getPhone() : "");
 
@@ -295,13 +286,13 @@ public class AdminStudentController extends BaseController<StudentDTO> {
         box.setPadding(new Insets(10));
         dialog.getDialogPane().setContent(box);
 
-        ButtonType saveBtn = new ButtonType(LocalizationManager.get("save"), ButtonBar.ButtonData.OK_DONE);
+        ButtonType saveBtn =
+                new ButtonType(LocalizationManager.get("save"), ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(saveBtn, ButtonType.CANCEL);
 
         dialog.setResultConverter(btn -> {
             if (btn == saveBtn) {
-                if (firstNameField.getText().isBlank() ||
-                        lastNameField.getText().isBlank()) {
+                if (firstNameField.getText().isBlank() || lastNameField.getText().isBlank()) {
                     showError(LocalizationManager.get("errorNameEmpty"));
                     return null;
                 }
@@ -314,19 +305,18 @@ public class AdminStudentController extends BaseController<StudentDTO> {
             return null;
         });
 
-        dialog.showAndWait().ifPresent(ok -> {
-            dto.setFirstName(firstNameField.getText().trim());
-            dto.setLastName(lastNameField.getText().trim());
-            dto.setPhone(phoneField.getText().trim());
+        dialog.showAndWait()
+                .ifPresent(ok -> {
+                    dto.setFirstName(firstNameField.getText().trim());
+                    dto.setLastName(lastNameField.getText().trim());
+                    dto.setPhone(phoneField.getText().trim());
 
-            studentService.updateFromDTO(dto);
-            loadAndShowItems();
-        });
+                    studentService.updateFromDTO(dto);
+                    loadAndShowItems();
+                });
     }
 
-    /**
-     * Opens a confirmation dialog and deletes the selected student if confirmed.
-     */
+    /** Opens a confirmation dialog and deletes the selected student if confirmed. */
     @Override
     protected void showDeleteDialog() {
         StudentDTO dto = table.getSelectionModel().getSelectedItem();
@@ -334,12 +324,19 @@ public class AdminStudentController extends BaseController<StudentDTO> {
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(LocalizationManager.get("deleteStudent"));
-        alert.setHeaderText(LocalizationManager.get("sureToDelete") + " \"" +
-                dto.getFirstName() + " " + dto.getLastName() + "\"?");
+        alert.setHeaderText(
+                LocalizationManager.get("sureToDelete")
+                        + " \""
+                        + dto.getFirstName()
+                        + " "
+                        + dto.getLastName()
+                        + "\"?");
         alert.setContentText(LocalizationManager.get("undone"));
 
-        ButtonType yes = new ButtonType(LocalizationManager.get("yes"), ButtonBar.ButtonData.OK_DONE);
-        ButtonType no = new ButtonType(LocalizationManager.get("no"), ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType yes =
+                new ButtonType(LocalizationManager.get("yes"), ButtonBar.ButtonData.OK_DONE);
+        ButtonType no =
+                new ButtonType(LocalizationManager.get("no"), ButtonBar.ButtonData.CANCEL_CLOSE);
         alert.getButtonTypes().setAll(yes, no);
 
         if (alert.showAndWait().orElse(no) == yes) {
@@ -353,9 +350,7 @@ public class AdminStudentController extends BaseController<StudentDTO> {
         }
     }
 
-    /**
-     * Displays detailed information about the selected student.
-     */
+    /** Displays detailed information about the selected student. */
     @Override
     protected void onView() {
         StudentDTO dto = table.getSelectionModel().getSelectedItem();
@@ -365,11 +360,21 @@ public class AdminStudentController extends BaseController<StudentDTO> {
         alert.setTitle(LocalizationManager.get("studentInfo"));
         alert.setHeaderText(dto.getFirstName() + " " + dto.getLastName());
         alert.setContentText(
-                LocalizationManager.get("studentNumber") + ": " + dto.getStudentNumber() + "\n" +
-                        LocalizationManager.get("username") + ": " + dto.getUsername() + "\n" +
-                        LocalizationManager.get("email") + ": " + dto.getEmail() + "\n" +
-                        LocalizationManager.get("phone") + ": " + dto.getPhone()
-        );
+                LocalizationManager.get("studentNumber")
+                        + ": "
+                        + dto.getStudentNumber()
+                        + "\n"
+                        + LocalizationManager.get("username")
+                        + ": "
+                        + dto.getUsername()
+                        + "\n"
+                        + LocalizationManager.get("email")
+                        + ": "
+                        + dto.getEmail()
+                        + "\n"
+                        + LocalizationManager.get("phone")
+                        + ": "
+                        + dto.getPhone());
         alert.showAndWait();
     }
 }
