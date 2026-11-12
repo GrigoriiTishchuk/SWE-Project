@@ -1,4 +1,3 @@
-
 package com.edujournal.backend.service;
 
 import com.edujournal.config.LocalizationManager;
@@ -13,8 +12,8 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.util.Locale;
 
 /**
- * Provides authentication services, including login, password reset,
- * logout, and user locale configuration.
+ * Provides authentication services, including login, password reset, logout, and user locale
+ * configuration.
  *
  * @author EduJournal
  */
@@ -26,9 +25,7 @@ public final class AuthService {
     /** Maps user entities to data transfer objects. */
     private final UserMapper userMapper;
 
-    /**
-     * Creates an authentication service with default dependencies.
-     */
+    /** Creates an authentication service with default dependencies. */
     public AuthService() {
         this.userDao = new UserDAO();
         this.userMapper = new UserMapper();
@@ -40,36 +37,28 @@ public final class AuthService {
      * @param dao the user data access object
      * @param mapper the user entity mapper
      */
-    public AuthService(
-            final UserDAO dao,
-            final UserMapper mapper) {
+    public AuthService(final UserDAO dao, final UserMapper mapper) {
         this.userDao = dao;
         this.userMapper = mapper;
     }
 
     /**
-     * Authenticates a user using their username and password.
-     * Configures the user session and locale after successful login.
+     * Authenticates a user using their username and password. Configures the user session and
+     * locale after successful login.
      *
      * @param username the username entered by the user
      * @param password the password entered by the user
      * @return true if authentication succeeds, false otherwise
      */
-    public boolean login(
-            final String username,
-            final String password) {
+    public boolean login(final String username, final String password) {
 
-        if (!InputValidator.isValidName(username)
-                || password == null
-                || password.isBlank()) {
+        if (!InputValidator.isValidName(username) || password == null || password.isBlank()) {
             return false;
         }
 
         User user = userDao.findByUsername(username);
 
-        if (user != null
-                && checkPassword(
-                password, user.getPasswordHash())) {
+        if (user != null && checkPassword(password, user.getPasswordHash())) {
             UserDTO userDto = userMapper.toDTO(user);
             UserSession.getInstance().setCurrentUser(userDto);
             applyUserLocale(user.getPreferredLocale());
@@ -86,11 +75,8 @@ public final class AuthService {
      * @param storedHash the stored password hash
      * @return true if the password matches, false otherwise
      */
-    private boolean checkPassword(
-            final String rawPassword,
-            final String storedHash) {
-        return rawPassword != null
-                && BCrypt.checkpw(rawPassword, storedHash);
+    private boolean checkPassword(final String rawPassword, final String storedHash) {
+        return rawPassword != null && BCrypt.checkpw(rawPassword, storedHash);
     }
 
     /**
@@ -105,36 +91,28 @@ public final class AuthService {
 
         String[] parts = localeTag.split("_");
 
-        Locale locale = parts.length == 2
-                ? new Locale(parts[0], parts[1])
-                : new Locale(parts[0]);
+        Locale locale = parts.length == 2 ? new Locale(parts[0], parts[1]) : new Locale(parts[0]);
 
         LocalizationManager.setLocale(locale);
     }
 
     /**
-     * Resets the password of an existing user.
-     * The new password is stored as a BCrypt hash.
+     * Resets the password of an existing user. The new password is stored as a BCrypt hash.
      *
      * @param username the username of the account
      * @param newPassword the new password to set
-     * @return true if the password is successfully updated,
-     *         false otherwise
+     * @return true if the password is successfully updated, false otherwise
      */
-    public boolean resetPassword(
-            final String username,
-            final String newPassword) {
+    public boolean resetPassword(final String username, final String newPassword) {
 
-        if (!InputValidator.isValidName(username)
-                || !InputValidator.isValidPassword(newPassword)) {
+        if (!InputValidator.isValidName(username) || !InputValidator.isValidPassword(newPassword)) {
             return false;
         }
 
         User user = userDao.findByUsername(username);
 
         if (user != null) {
-            user.setPasswordHash(
-                    BCrypt.hashpw(newPassword, BCrypt.gensalt()));
+            user.setPasswordHash(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
             userDao.update(user);
             return true;
         }
@@ -142,9 +120,7 @@ public final class AuthService {
         return false;
     }
 
-    /**
-     * Logs out the current user by clearing the active session.
-     */
+    /** Logs out the current user by clearing the active session. */
     public void logout() {
         UserSession.getInstance().cleanUserSession();
     }

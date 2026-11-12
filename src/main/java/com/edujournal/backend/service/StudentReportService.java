@@ -27,12 +27,10 @@ public final class StudentReportService {
     private final StudentService studentService = new StudentService();
 
     /** Service for managing student enrollments. */
-    private final EnrollmentService enrollmentService =
-            new EnrollmentService();
+    private final EnrollmentService enrollmentService = new EnrollmentService();
 
     /** Service for retrieving course assessments. */
-    private final AssessmentsService assessmentsService =
-            new AssessmentsService();
+    private final AssessmentsService assessmentsService = new AssessmentsService();
 
     /** Data access object for course operations. */
     private final CourseDAO courseDAO = new CourseDAO();
@@ -41,16 +39,13 @@ public final class StudentReportService {
     private final GradesDAO gradesDAO = new GradesDAO();
 
     /** Service for retrieving academic group information. */
-    private final AcademicGroupService academicGroupService =
-            new AcademicGroupService();
+    private final AcademicGroupService academicGroupService = new AcademicGroupService();
 
     /**
-     * Builds a detailed report containing the student's courses,
-     * assessments, and grades.
+     * Builds a detailed report containing the student's courses, assessments, and grades.
      *
      * @param studentId the identifier of the student
-     * @return a list of student report entries, or an empty list
-     *         if the student does not exist
+     * @return a list of student report entries, or an empty list if the student does not exist
      */
     public List<StudentReportDTO> buildReport(final Integer studentId) {
         List<StudentReportDTO> report = new ArrayList<>();
@@ -60,15 +55,12 @@ public final class StudentReportService {
             return report;
         }
 
-        List<Enrollment> enrollments =
-                enrollmentService.findByStudentId(studentId);
+        List<Enrollment> enrollments = enrollmentService.findByStudentId(studentId);
 
         String groupName = "-";
 
         if (student.getAcademicGroupId() != null) {
-            AcademicGroup group =
-                    academicGroupService.findById(
-                            student.getAcademicGroupId());
+            AcademicGroup group = academicGroupService.findById(student.getAcademicGroupId());
 
             if (group != null) {
                 groupName = group.getName();
@@ -82,29 +74,27 @@ public final class StudentReportService {
                 continue;
             }
 
-            List<Assessments> assessments =
-                    assessmentsService.getByCourseId(course.getId());
+            List<Assessments> assessments = assessmentsService.getByCourseId(course.getId());
 
             for (Assessments assessment : assessments) {
-                Grades grade = gradesDAO.findByEnrollmentAssessment(
-                        enrollment.getId(),
-                        assessment.getId());
+                Grades grade =
+                        gradesDAO.findByEnrollmentAssessment(
+                                enrollment.getId(), assessment.getId());
 
-                report.add(new StudentReportDTO(
-                        student.getStudentId(),
-                        student.getFirstName() + " "
-                                + student.getLastName(),
-                        student.getStudentNumber(),
-                        student.getAcademicGroupId(),
-                        groupName,
-                        course.getId(),
-                        course.getCode(),
-                        course.getName(),
-                        assessment.getId(),
-                        assessment.getTitle(),
-                        assessment.getType(),
-                        grade != null ? grade.getScore() : null
-                ));
+                report.add(
+                        new StudentReportDTO(
+                                student.getStudentId(),
+                                student.getFirstName() + " " + student.getLastName(),
+                                student.getStudentNumber(),
+                                student.getAcademicGroupId(),
+                                groupName,
+                                course.getId(),
+                                course.getCode(),
+                                course.getName(),
+                                assessment.getId(),
+                                assessment.getTitle(),
+                                assessment.getType(),
+                                grade != null ? grade.getScore() : null));
             }
         }
 
@@ -112,36 +102,28 @@ public final class StudentReportService {
     }
 
     /**
-     * Calculates the average final grade across all courses
-     * in which the student is enrolled.
+     * Calculates the average final grade across all courses in which the student is enrolled.
      *
      * @param studentId the identifier of the student
-     * @return the average grade formatted to one decimal place,
-     *         or an em dash if no final grades are available
+     * @return the average grade formatted to one decimal place, or an em dash if no final grades
+     *     are available
      */
     public String computeAverageGrade(final Integer studentId) {
         double gradeSum = 0;
         int gradeCount = 0;
 
-        for (Enrollment enrollment
-                : enrollmentService.findByStudentId(studentId)) {
+        for (Enrollment enrollment : enrollmentService.findByStudentId(studentId)) {
 
             List<Assessments> courseAssessments =
-                    assessmentsService.getByCourseId(
-                            enrollment.getCourseId());
+                    assessmentsService.getByCourseId(enrollment.getCourseId());
 
             Map<Integer, Grades> gradeMap =
-                    gradesDAO.findByEnrollment(enrollment.getId())
-                            .stream()
-                            .collect(Collectors.toMap(
-                                    Grades::getAssessmentId,
-                                    grade -> grade
-                            ));
+                    gradesDAO.findByEnrollment(enrollment.getId()).stream()
+                            .collect(Collectors.toMap(Grades::getAssessmentId, grade -> grade));
 
-            String result = GradesTab.computeFinalGrade(
-                    courseAssessments,
-                    gradeMap,
-                    courseAssessments.size());
+            String result =
+                    GradesTab.computeFinalGrade(
+                            courseAssessments, gradeMap, courseAssessments.size());
 
             if (!result.equals("—")) {
                 gradeSum += Integer.parseInt(result.substring(0, 1));
@@ -149,8 +131,6 @@ public final class StudentReportService {
             }
         }
 
-        return gradeCount == 0
-                ? "—"
-                : String.format("%.1f", gradeSum / gradeCount);
+        return gradeCount == 0 ? "—" : String.format("%.1f", gradeSum / gradeCount);
     }
 }

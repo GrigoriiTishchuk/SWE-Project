@@ -27,6 +27,17 @@ public class AdminStudentController extends BaseController<StudentDTO> {
     private final StudentService studentService = new StudentService();
     private final UserService userService = new UserService();
 
+    private static final String FILTER_STUDENT_NUMBER = "Student Number";
+    private static final String FILTER_USERNAME = "Username";
+    private static final String FILTER_FIRST_NAME = "First Name";
+    private static final String FILTER_LAST_NAME = "Last Name";
+    private static final String FILTER_PHONE_NUMBER = "Phone Number";
+    private static final String KEY_PHONE = "phone";
+    private static final String KEY_EMAIL = "email";
+    private static final String KEY_USERNAME = "username";
+    private static final String KEY_LAST_NAME = "lastName";
+    private static final String KEY_FIRST_NAME = "firstName";
+
     /**
      * Creates the student administration controller and initializes table configuration, report
      * actions and selection handling.
@@ -87,20 +98,20 @@ public class AdminStudentController extends BaseController<StudentDTO> {
         return switch (filter) {
             case "ID" -> dto.getStudentId() != null && dto.getStudentId().toString().contains(text);
 
-            case "Student Number" ->
+            case FILTER_STUDENT_NUMBER ->
                     dto.getStudentNumber() != null
                             && dto.getStudentNumber().toLowerCase().contains(text);
 
-            case "Username" ->
+            case FILTER_USERNAME ->
                     dto.getUsername() != null && dto.getUsername().toLowerCase().contains(text);
 
-            case "First Name" ->
+            case FILTER_FIRST_NAME ->
                     dto.getFirstName() != null && dto.getFirstName().toLowerCase().contains(text);
 
-            case "Last Name" ->
+            case FILTER_LAST_NAME ->
                     dto.getLastName() != null && dto.getLastName().toLowerCase().contains(text);
 
-            case "Phone Number" ->
+            case FILTER_PHONE_NUMBER ->
                     dto.getPhone() != null && dto.getPhone().toLowerCase().contains(text);
 
             default -> true;
@@ -123,26 +134,26 @@ public class AdminStudentController extends BaseController<StudentDTO> {
         studentNumberCol.setCellValueFactory(new PropertyValueFactory<>("studentNumber"));
 
         TableColumn<StudentDTO, String> usernameCol =
-                new TableColumn<>(LocalizationManager.get("username"));
+                new TableColumn<>(LocalizationManager.get(KEY_USERNAME));
         usernameCol.setCellValueFactory(
                 cell -> new SimpleStringProperty(cell.getValue().getUsername()));
 
         TableColumn<StudentDTO, String> firstNameCol =
-                new TableColumn<>(LocalizationManager.get("firstName"));
+                new TableColumn<>(LocalizationManager.get(KEY_FIRST_NAME));
         firstNameCol.setCellValueFactory(
                 cell -> new SimpleStringProperty(cell.getValue().getFirstName()));
 
         TableColumn<StudentDTO, String> lastNameCol =
-                new TableColumn<>(LocalizationManager.get("lastName"));
+                new TableColumn<>(LocalizationManager.get(KEY_LAST_NAME));
         lastNameCol.setCellValueFactory(
                 cell -> new SimpleStringProperty(cell.getValue().getLastName()));
 
         TableColumn<StudentDTO, String> emailCol =
-                new TableColumn<>(LocalizationManager.get("email"));
+                new TableColumn<>(LocalizationManager.get(KEY_EMAIL));
         emailCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getEmail()));
 
         TableColumn<StudentDTO, String> phoneCol =
-                new TableColumn<>(LocalizationManager.get("phone"));
+                new TableColumn<>(LocalizationManager.get(KEY_PHONE));
         phoneCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getPhone()));
 
         table.getColumns()
@@ -160,12 +171,12 @@ public class AdminStudentController extends BaseController<StudentDTO> {
                 .addAll(
                         "All",
                         "ID",
-                        "Student Number",
-                        "Username",
-                        "First Name",
-                        "Last Name",
+                        FILTER_STUDENT_NUMBER,
+                        FILTER_USERNAME,
+                        FILTER_FIRST_NAME,
+                        FILTER_LAST_NAME,
                         "Email",
-                        "Phone Number");
+                        FILTER_PHONE_NUMBER);
         filterCombo.setValue("All");
 
         Map<String, String> filterKeyMap =
@@ -174,18 +185,18 @@ public class AdminStudentController extends BaseController<StudentDTO> {
                         "all",
                         "ID",
                         "id",
-                        "Student Number",
+                        FILTER_STUDENT_NUMBER,
                         "studentNumberCol",
-                        "Username",
-                        "username",
-                        "First Name",
-                        "firstName",
-                        "Last Name",
-                        "lastName",
+                        FILTER_USERNAME,
+                        KEY_USERNAME,
+                        FILTER_FIRST_NAME,
+                        KEY_FIRST_NAME,
+                        FILTER_LAST_NAME,
+                        KEY_LAST_NAME,
                         "Email",
-                        "email",
-                        "Phone Number",
-                        "phone");
+                        KEY_EMAIL,
+                        FILTER_PHONE_NUMBER,
+                        KEY_PHONE);
         filterCombo.setCellFactory(list -> createLocalizedCell(filterKeyMap));
         filterCombo.setButtonCell(createLocalizedCell(filterKeyMap));
     }
@@ -215,9 +226,9 @@ public class AdminStudentController extends BaseController<StudentDTO> {
         TextField lastNameField = new TextField();
         TextField phoneField = new TextField();
 
-        firstNameField.setPromptText(LocalizationManager.get("firstName"));
-        lastNameField.setPromptText(LocalizationManager.get("lastName"));
-        phoneField.setPromptText(LocalizationManager.get("phone"));
+        firstNameField.setPromptText(LocalizationManager.get(KEY_FIRST_NAME));
+        lastNameField.setPromptText(LocalizationManager.get(KEY_LAST_NAME));
+        phoneField.setPromptText(LocalizationManager.get(KEY_PHONE));
 
         VBox box = new VBox(10, firstNameField, lastNameField, phoneField);
         box.setPadding(new Insets(10));
@@ -364,15 +375,15 @@ public class AdminStudentController extends BaseController<StudentDTO> {
                         + ": "
                         + dto.getStudentNumber()
                         + "\n"
-                        + LocalizationManager.get("username")
+                        + LocalizationManager.get(KEY_USERNAME)
                         + ": "
                         + dto.getUsername()
                         + "\n"
-                        + LocalizationManager.get("email")
+                        + LocalizationManager.get(KEY_EMAIL)
                         + ": "
                         + dto.getEmail()
                         + "\n"
-                        + LocalizationManager.get("phone")
+                        + LocalizationManager.get(KEY_PHONE)
                         + ": "
                         + dto.getPhone());
         alert.showAndWait();
