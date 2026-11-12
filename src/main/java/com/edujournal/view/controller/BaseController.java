@@ -11,11 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
- * Base controller for entity management screens.
- * Provides common functionality for displaying, filtering and managing data in table or card views.
+ * Base controller for entity management screens. Provides common functionality for displaying,
+ * filtering and managing data in table or card views.
  *
  * @param <T> entity type displayed by the controller
  */
@@ -25,34 +24,38 @@ public abstract class BaseController<T> extends BorderPane {
     protected final TextField searchField = new TextField();
     protected final ComboBox<String> filterCombo = new ComboBox<>();
 
-    protected final Button addBtn    = new Button(LocalizationManager.get("add"));
-    protected final Button editBtn   = new Button(LocalizationManager.get("edit"));
-    protected final Button deleteBtn = new Button(LocalizationManager.get("delete"));
-    protected final Button viewBtn   = new Button(LocalizationManager.get("view"));
-    protected final Button reportBtn = new Button(LocalizationManager.get("studentReport"));
+    private static final String BTN_PRIMARY = "btn-primary";
+    private static final String BTN_SECONDARY = "btn-secondary";
+    private static final String BTN_DELETE = "btn-delete";
 
-    {
-        addBtn.getStyleClass().add("btn-primary");
-        editBtn.getStyleClass().add("btn-secondary");
-        deleteBtn.getStyleClass().add("btn-delete");
-        viewBtn.getStyleClass().add("btn-secondary");
-        reportBtn.getStyleClass().add("btn-secondary");
-    }
+    protected final Button addBtn = new Button(LocalizationManager.get("add"));
+    protected final Button editBtn = new Button(LocalizationManager.get("edit"));
+    protected final Button deleteBtn = new Button(LocalizationManager.get("delete"));
+    protected final Button viewBtn = new Button(LocalizationManager.get("view"));
+    protected final Button reportBtn = new Button(LocalizationManager.get("studentReport"));
 
     protected Function<T, Node> cardBuilder = null;
 
-    public BaseController() {
+    protected BaseController() {
         getStylesheets().add(BaseController.class.getResource("/css/table.css").toExternalForm());
         getStylesheets().add(BaseController.class.getResource("/css/button.css").toExternalForm());
+        setupButtonStyles();
         setupSearchHandlers();
         setupLayout();
         setupButtons();
         setupDoubleClick();
     }
 
-    /**
-     * Configures table columns for the entity view.
-     */
+    /** Setup button styles */
+    private void setupButtonStyles() {
+        addBtn.getStyleClass().add(BTN_PRIMARY);
+        editBtn.getStyleClass().add(BTN_SECONDARY);
+        deleteBtn.getStyleClass().add(BTN_DELETE);
+        viewBtn.getStyleClass().add(BTN_SECONDARY);
+        reportBtn.getStyleClass().add(BTN_SECONDARY);
+    }
+
+    /** Configures table columns for the entity view. */
     protected abstract void configureColumns();
 
     /**
@@ -63,8 +66,7 @@ public abstract class BaseController<T> extends BorderPane {
     protected abstract List<T> loadAllItems();
 
     /**
-     * Checks whether an entity matches
-     * current search and filter criteria.
+     * Checks whether an entity matches current search and filter criteria.
      *
      * @param item entity to evaluate
      * @param filter selected filter value
@@ -73,29 +75,19 @@ public abstract class BaseController<T> extends BorderPane {
      */
     protected abstract boolean matchesFilter(T item, String filter, String text);
 
-    /**
-     * Opens a dialog for creating a new entity.
-     */
+    /** Opens a dialog for creating a new entity. */
     protected abstract void showAddDialog();
 
-    /**
-     * Opens a dialog for editing the selected entity.
-     */
+    /** Opens a dialog for editing the selected entity. */
     protected abstract void showEditDialog();
 
-    /**
-     * Opens a dialog for deleting the selected entity.
-     */
+    /** Opens a dialog for deleting the selected entity. */
     protected abstract void showDeleteDialog();
 
-    /**
-     * Displays detailed information about the selected entity.
-     */
+    /** Displays detailed information about the selected entity. */
     protected abstract void onView(); // optional
 
-    /**
-     * Layout setup
-     */
+    /** Layout setup */
     private void setupLayout() {
 
         table.setPlaceholder(new Label(LocalizationManager.get("noContent")));
@@ -106,12 +98,13 @@ public abstract class BaseController<T> extends BorderPane {
 
         HBox filterBar = new HBox(10);
         filterBar.setPadding(new Insets(10, 0, 10, 0));
-        filterBar.getChildren().addAll(
-                searchField,
-                new Label(LocalizationManager.get("filterBy")),
-                filterCombo,
-                clearButton
-        );
+        filterBar
+                .getChildren()
+                .addAll(
+                        searchField,
+                        new Label(LocalizationManager.get("filterBy")),
+                        filterCombo,
+                        clearButton);
 
         clearButton.setOnAction(event -> {
             searchField.clear();
@@ -125,9 +118,7 @@ public abstract class BaseController<T> extends BorderPane {
         setCenter(table);
     }
 
-    /**
-     * Buttons setup
-     */
+    /** Buttons setup */
     private void setupButtons() {
 
         addBtn.setOnAction(e -> showAddDialog());
@@ -147,9 +138,7 @@ public abstract class BaseController<T> extends BorderPane {
         setBottom(bottom);
     }
 
-    /**
-     * Double click
-     */
+    /** Double click */
     private void setupDoubleClick() {
         table.setRowFactory(tv -> {
             TableRow<T> row = new TableRow<>();
@@ -162,9 +151,7 @@ public abstract class BaseController<T> extends BorderPane {
         });
     }
 
-    /**
-     * Search + Filter
-     */
+    /** Search + Filter */
     private void setupSearchHandlers() {
         searchField.textProperty().addListener((obs, oldVal, newVal) -> applyFilter());
         filterCombo.valueProperty().addListener((obs, oldVal, newVal) -> applyFilter());
@@ -198,9 +185,7 @@ public abstract class BaseController<T> extends BorderPane {
         return list;
     }
 
-    /**
-     * Loads data from the source and displays it either in a table or card layout.
-     */
+    /** Loads data from the source and displays it either in a table or card layout. */
     protected void loadAndShowItems() {
         List<T> items = loadAllItems();
 
@@ -213,18 +198,14 @@ public abstract class BaseController<T> extends BorderPane {
         }
     }
 
-    /**
-     * Applies search text and selected filter to currently loaded items.
-     */
+    /** Applies search text and selected filter to currently loaded items. */
     protected void applyFilter() {
         String filter = filterCombo.getValue();
         String text = searchField.getText().toLowerCase();
 
         List<T> all = loadAllItems();
 
-        List<T> filtered = all.stream()
-                .filter(item -> matchesFilter(item, filter, text))
-                .collect(Collectors.toList());
+        List<T> filtered = all.stream().filter(item -> matchesFilter(item, filter, text)).toList();
 
         if (cardBuilder != null) {
             table.getItems().clear();
@@ -254,8 +235,7 @@ public abstract class BaseController<T> extends BorderPane {
     }
 
     /**
-     * Creates a ComboBox with custom display values
-     * and optional empty selection.
+     * Creates a ComboBox with custom display values and optional empty selection.
      *
      * @param items available options
      * @param selectedItem initially selected item
@@ -264,48 +244,50 @@ public abstract class BaseController<T> extends BorderPane {
      * @param displayFunction item display formatter
      * @return configured ComboBox
      */
-    protected <T> ComboBox<T> createComboBox(
-            List<T> items,
-            T selectedItem,
+    protected <V> ComboBox<V> createComboBox(
+            List<V> items,
+            V selectedItem,
             String promptText,
             String nullText,
-            Function<T, String> displayFunction
-    ) {
-        List<T> options = new ArrayList<>();
+            Function<V, String> displayFunction) {
+        List<V> options = new ArrayList<>();
         options.add(null);
         options.addAll(items);
 
-        ComboBox<T> combo = new ComboBox<>();
+        ComboBox<V> combo = new ComboBox<>();
         combo.setItems(FXCollections.observableArrayList(options));
         combo.setPromptText(promptText);
 
-        combo.setCellFactory(list -> new ListCell<>() {
-            @Override
-            protected void updateItem(T item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setText(null);
-                } else if (item == null) {
-                    setText(nullText);
-                } else {
-                    setText(displayFunction.apply(item));
-                }
-            }
-        });
+        combo.setCellFactory(list ->
+                new ListCell<>() {
+                    @Override
+                    protected void updateItem(V item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setText(null);
+                        } else if (item == null) {
+                            setText(nullText);
+                        } else {
+                            setText(displayFunction.apply(item));
+                        }
+                    }
+                });
 
-        combo.setButtonCell(new ListCell<>() {
-            @Override
-            protected void updateItem(T item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setText(null);
-                } else if (item == null) {
-                    setText(nullText);
-                } else {
-                    setText(displayFunction.apply(item));
-                }
-            }
-        });
+        combo.setButtonCell(
+                new ListCell<>() {
+                    @Override
+                    protected void updateItem(V item, boolean empty) {
+                        super.updateItem(item, empty);
+
+                        if (empty) {
+                            setText(null);
+                        } else if (item == null) {
+                            setText(nullText);
+                        } else {
+                            setText(displayFunction.apply(item));
+                        }
+                    }
+                });
 
         combo.setValue(selectedItem);
 
@@ -327,15 +309,13 @@ public abstract class BaseController<T> extends BorderPane {
      * @param message error message
      */
     protected void showError(String message) {
-        new Alert(Alert.AlertType.ERROR, message)
-                .showAndWait();
+        new Alert(Alert.AlertType.ERROR, message).showAndWait();
     }
 
     /**
      * Creates a localized list cell for displaying translated filter values in ComboBox controls.
      *
-     * @param keyMap mapping between display values
-     *               and localization keys
+     * @param keyMap mapping between display values and localization keys
      * @return localized list cell
      */
     protected ListCell<String> createLocalizedCell(Map<String, String> keyMap) {
@@ -371,8 +351,6 @@ public abstract class BaseController<T> extends BorderPane {
      * @param message information message
      */
     protected void showInfo(String message) {
-        new Alert(Alert.AlertType.INFORMATION, message)
-                .showAndWait();
+        new Alert(Alert.AlertType.INFORMATION, message).showAndWait();
     }
 }
-

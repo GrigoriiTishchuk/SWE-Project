@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Controller responsible for managing teacher accounts.
- * Provides functionality for viewing, searching, creating, editing and deleting teachers.
+ * Controller responsible for managing teacher accounts. Provides functionality for viewing,
+ * searching, creating, editing and deleting teachers.
  */
 public class AdminTeacherController extends BaseController<UserDTO> {
     private final UserService userService = new UserService();
@@ -65,24 +65,24 @@ public class AdminTeacherController extends BaseController<UserDTO> {
                 return String.valueOf(teacher.getId()).contains(searchText);
 
             case "Username":
-                return teacher.getUsername() != null &&
-                        teacher.getUsername().toLowerCase().contains(searchText);
+                return teacher.getUsername() != null
+                        && teacher.getUsername().toLowerCase().contains(searchText);
 
             case "First Name":
-                return teacher.getFirstName() != null &&
-                        teacher.getFirstName().toLowerCase().contains(searchText);
+                return teacher.getFirstName() != null
+                        && teacher.getFirstName().toLowerCase().contains(searchText);
 
             case "Last Name":
-                return teacher.getLastName() != null &&
-                        teacher.getLastName().toLowerCase().contains(searchText);
+                return teacher.getLastName() != null
+                        && teacher.getLastName().toLowerCase().contains(searchText);
 
             case "Email":
-                return teacher.getEmail() != null &&
-                        teacher.getEmail().toLowerCase().contains(searchText);
+                return teacher.getEmail() != null
+                        && teacher.getEmail().toLowerCase().contains(searchText);
 
             case "Phone Number":
-                return teacher.getPhone() != null &&
-                        teacher.getPhone().toLowerCase().contains(searchText);
+                return teacher.getPhone() != null
+                        && teacher.getPhone().toLowerCase().contains(searchText);
 
             case "All":
             default:
@@ -93,28 +93,29 @@ public class AdminTeacherController extends BaseController<UserDTO> {
                                 safe(teacher.getFirstName()),
                                 safe(teacher.getLastName()),
                                 safe(teacher.getEmail()),
-                                safe(teacher.getPhone())
-                        ),
-                        searchText
-                );
+                                safe(teacher.getPhone())),
+                        searchText);
         }
     }
 
-    /**
-     * Configures table columns and filter options.
-     */
+    /** Configures table columns and filter options. */
     @Override
     protected void configureColumns() {
         TableColumn<UserDTO, String> idCol = new TableColumn<>(LocalizationManager.get("id"));
-        idCol.setCellValueFactory(c -> new SimpleStringProperty(String.valueOf(c.getValue().getId())));
+        idCol.setCellValueFactory(
+                c -> new SimpleStringProperty(String.valueOf(c.getValue().getId())));
 
-        TableColumn<UserDTO, String> usernameCol = new TableColumn<>(LocalizationManager.get("username"));
+        TableColumn<UserDTO, String> usernameCol =
+                new TableColumn<>(LocalizationManager.get("username"));
         usernameCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getUsername()));
 
-        TableColumn<UserDTO, String> firstNameCol = new TableColumn<>(LocalizationManager.get("firstName"));
-        firstNameCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getFirstName()));
+        TableColumn<UserDTO, String> firstNameCol =
+                new TableColumn<>(LocalizationManager.get("firstName"));
+        firstNameCol.setCellValueFactory(
+                c -> new SimpleStringProperty(c.getValue().getFirstName()));
 
-        TableColumn<UserDTO, String> lastNameCol = new TableColumn<>(LocalizationManager.get("lastName"));
+        TableColumn<UserDTO, String> lastNameCol =
+                new TableColumn<>(LocalizationManager.get("lastName"));
         lastNameCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getLastName()));
 
         TableColumn<UserDTO, String> emailCol = new TableColumn<>(LocalizationManager.get("email"));
@@ -123,23 +124,34 @@ public class AdminTeacherController extends BaseController<UserDTO> {
         TableColumn<UserDTO, String> phoneCol = new TableColumn<>(LocalizationManager.get("phone"));
         phoneCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPhone()));
 
-        table.getColumns().addAll(idCol, usernameCol, firstNameCol, lastNameCol, emailCol, phoneCol);
+        table.getColumns()
+                .addAll(idCol, usernameCol, firstNameCol, lastNameCol, emailCol, phoneCol);
 
-        filterCombo.getItems().addAll("All", "ID", "Username", "First Name", "Last Name", "Phone Number");
+        filterCombo
+                .getItems()
+                .addAll("All", "ID", "Username", "First Name", "Last Name", "Phone Number");
         filterCombo.setValue("All");
 
-        Map<String, String> filterKeyMap = Map.of(
-                "All", "all", "ID", "id", "Username", "username",
-                "First Name", "firstName", "Last Name", "lastName", "Phone Number", "phone"
-        );
+        Map<String, String> filterKeyMap =
+                Map.of(
+                        "All",
+                        "all",
+                        "ID",
+                        "id",
+                        "Username",
+                        "username",
+                        "First Name",
+                        "firstName",
+                        "Last Name",
+                        "lastName",
+                        "Phone Number",
+                        "phone");
         filterCombo.setCellFactory(list -> createLocalizedCell(filterKeyMap));
         filterCombo.setButtonCell(createLocalizedCell(filterKeyMap));
     }
 
     // Dialogs
-    /**
-     * Opens a dialog for creating a new teacher.
-     */
+    /** Opens a dialog for creating a new teacher. */
     @Override
     public void showAddDialog() {
         Dialog<UserDTO> dialog = new Dialog<>();
@@ -158,19 +170,22 @@ public class AdminTeacherController extends BaseController<UserDTO> {
         box.setPadding(new Insets(10));
         dialog.getDialogPane().setContent(box);
 
-        ButtonType saveBtn = new ButtonType(LocalizationManager.get("save"), ButtonBar.ButtonData.OK_DONE);
+        ButtonType saveBtn =
+                new ButtonType(LocalizationManager.get("save"), ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(saveBtn, ButtonType.CANCEL);
 
         Button saveBtnNode = (Button) dialog.getDialogPane().lookupButton(saveBtn);
-        saveBtnNode.addEventFilter(ActionEvent.ACTION, event -> {
-            if (firstNameField.getText().isBlank() || lastNameField.getText().isBlank()) {
-                showError(LocalizationManager.get("errorNameEmpty"));
-                event.consume();
-            } else if (phoneField.getText().isBlank()) {
-                showError(LocalizationManager.get("errorPhoneEmpty"));
-                event.consume();
-            }
-        });
+        saveBtnNode.addEventFilter(
+                ActionEvent.ACTION,
+                event -> {
+                    if (firstNameField.getText().isBlank() || lastNameField.getText().isBlank()) {
+                        showError(LocalizationManager.get("errorNameEmpty"));
+                        event.consume();
+                    } else if (phoneField.getText().isBlank()) {
+                        showError(LocalizationManager.get("errorPhoneEmpty"));
+                        event.consume();
+                    }
+                });
 
         dialog.setResultConverter(button -> {
             if (button == saveBtn) {
@@ -192,14 +207,13 @@ public class AdminTeacherController extends BaseController<UserDTO> {
         UserDTO result = dialog.showAndWait().orElse(null);
 
         if (result != null) {
-            userService.createTeacher(result.getFirstName(), result.getLastName(), result.getPhone());
+            userService.createTeacher(
+                    result.getFirstName(), result.getLastName(), result.getPhone());
             loadAndShowItems();
         }
     }
 
-    /**
-     * Opens a dialog for editing the selected teacher.
-     */
+    /** Opens a dialog for editing the selected teacher. */
     @Override
     protected void showEditDialog() {
 
@@ -209,14 +223,17 @@ public class AdminTeacherController extends BaseController<UserDTO> {
         Dialog<UserDTO> dialog = new Dialog<>();
         dialog.setTitle(LocalizationManager.get("editTeacher"));
 
-        TextField firstNameField = new TextField(teacher.getFirstName() != null ? teacher.getFirstName() : "");
-        TextField lastNameField = new TextField(teacher.getLastName() != null ? teacher.getLastName() : "");
+        TextField firstNameField =
+                new TextField(teacher.getFirstName() != null ? teacher.getFirstName() : "");
+        TextField lastNameField =
+                new TextField(teacher.getLastName() != null ? teacher.getLastName() : "");
 
         VBox box = new VBox(10, firstNameField, lastNameField);
         box.setPadding(new Insets(10));
         dialog.getDialogPane().setContent(box);
 
-        ButtonType saveBtn = new ButtonType(LocalizationManager.get("save"), ButtonBar.ButtonData.OK_DONE);
+        ButtonType saveBtn =
+                new ButtonType(LocalizationManager.get("save"), ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(saveBtn, ButtonType.CANCEL);
 
         dialog.setResultConverter(btn -> {
@@ -243,9 +260,7 @@ public class AdminTeacherController extends BaseController<UserDTO> {
         }
     }
 
-    /**
-     * Opens a confirmation dialog and deletes the selected teacher if confirmed.
-     */
+    /** Opens a confirmation dialog and deletes the selected teacher if confirmed. */
     @Override
     protected void showDeleteDialog() {
         UserDTO teacher = table.getSelectionModel().getSelectedItem();
@@ -253,11 +268,14 @@ public class AdminTeacherController extends BaseController<UserDTO> {
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(LocalizationManager.get("deleteTeacher"));
-        alert.setHeaderText(LocalizationManager.get("sureToDelete") + " \"" + teacher.getUsername() + "\"?");
+        alert.setHeaderText(
+                LocalizationManager.get("sureToDelete") + " \"" + teacher.getUsername() + "\"?");
         alert.setContentText(LocalizationManager.get("undone"));
 
-        ButtonType yes = new ButtonType(LocalizationManager.get("yes"), ButtonBar.ButtonData.OK_DONE);
-        ButtonType no = new ButtonType(LocalizationManager.get("no"), ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType yes =
+                new ButtonType(LocalizationManager.get("yes"), ButtonBar.ButtonData.OK_DONE);
+        ButtonType no =
+                new ButtonType(LocalizationManager.get("no"), ButtonBar.ButtonData.CANCEL_CLOSE);
 
         alert.getButtonTypes().setAll(yes, no);
 
@@ -267,9 +285,7 @@ public class AdminTeacherController extends BaseController<UserDTO> {
         }
     }
 
-    /**
-     * Displays detailed information about the selected teacher.
-     */
+    /** Displays detailed information about the selected teacher. */
     @Override
     protected void onView() {
         UserDTO teacher = table.getSelectionModel().getSelectedItem();
@@ -284,7 +300,8 @@ public class AdminTeacherController extends BaseController<UserDTO> {
             courseList.append(LocalizationManager.get("noCourseAssigned"));
         } else {
             for (CourseDTO c : courses) {
-                courseList.append("• ")
+                courseList
+                        .append("• ")
                         .append(c.getName())
                         .append(" (")
                         .append(c.getCode())
@@ -296,11 +313,14 @@ public class AdminTeacherController extends BaseController<UserDTO> {
         alert.setTitle(LocalizationManager.get("teacherInfo"));
         alert.setHeaderText(teacher.getFirstName() + " " + teacher.getLastName());
         alert.setContentText(
-                LocalizationManager.get("username") + ": " + teacher.getUsername() + "\n\n" +
-                        LocalizationManager.get("courses") + ":\n" + courseList
-        );
+                LocalizationManager.get("username")
+                        + ": "
+                        + teacher.getUsername()
+                        + "\n\n"
+                        + LocalizationManager.get("courses")
+                        + ":\n"
+                        + courseList);
 
         alert.showAndWait();
     }
-
 }

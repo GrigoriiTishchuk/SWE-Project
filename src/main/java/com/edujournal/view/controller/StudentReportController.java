@@ -31,8 +31,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Builds a student progress report that contains general
- * student information and assessment results grouped by course.
+ * Builds a student progress report that contains general student information and assessment results
+ * grouped by course.
  */
 public class StudentReportController {
 
@@ -78,7 +78,8 @@ public class StudentReportController {
             return root;
         }
 
-        root.getChildren().add(buildStudentCard(student, reportService.computeAverageGrade(studentId)));
+        root.getChildren()
+                .add(buildStudentCard(student, reportService.computeAverageGrade(studentId)));
 
         List<StudentReportDTO> report = reportService.buildReport(studentId);
 
@@ -102,12 +103,15 @@ public class StudentReportController {
         String groupName = findGroupName(student.getAcademicGroupId());
 
         VBox card = new VBox(5);
-        card.getChildren().addAll(
-                new Label(student.getFirstName() + " " + student.getLastName()),
-                new Label(LocalizationManager.get("group") + " " + groupName),
-                new Label(LocalizationManager.get("studentNumber") + " " + student.getStudentNumber()),
-                new Label(LocalizationManager.get("averageGrade2") + " " + avgGrade)
-        );
+        card.getChildren()
+                .addAll(
+                        new Label(student.getFirstName() + " " + student.getLastName()),
+                        new Label(LocalizationManager.get("group") + " " + groupName),
+                        new Label(
+                                LocalizationManager.get("studentNumber")
+                                        + " "
+                                        + student.getStudentNumber()),
+                        new Label(LocalizationManager.get("averageGrade2") + " " + avgGrade));
         return card;
     }
 
@@ -132,13 +136,13 @@ public class StudentReportController {
      * @param report report records
      */
     private void addCourseSections(VBox root, List<StudentReportDTO> report) {
-        Map<Integer, List<StudentReportDTO>> courses = report.stream().collect(
-                Collectors.groupingBy(
-                        StudentReportDTO::getCourseId,
-                        LinkedHashMap::new,
-                        Collectors.toList()
-                )
-        );
+        Map<Integer, List<StudentReportDTO>> courses =
+                report.stream()
+                        .collect(
+                                Collectors.groupingBy(
+                                        StudentReportDTO::getCourseId,
+                                        LinkedHashMap::new,
+                                        Collectors.toList()));
         for (List<StudentReportDTO> records : courses.values()) {
             if (records.isEmpty()) {
                 continue;
@@ -162,22 +166,19 @@ public class StudentReportController {
         TableView<List<String>> table = new TableView<>();
         table.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
-        TableColumn<List<String>, String> labelColumn = new TableColumn<>(LocalizationManager.get("assessment"));
+        TableColumn<List<String>, String> labelColumn =
+                new TableColumn<>(LocalizationManager.get("assessment"));
         labelColumn.setPrefWidth(140);
-        labelColumn.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().get(0))
-        );
+        labelColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().get(0)));
         table.getColumns().add(labelColumn);
-
 
         for (int i = 0; i < records.size(); i++) {
             StudentReportDTO dto = records.get(i);
             final int columnIndex = i + 1;
             TableColumn<List<String>, String> column = new TableColumn<>(dto.getAssessmentTitle());
             column.setPrefWidth(180);
-            column.setCellValueFactory(data ->
-                    new SimpleStringProperty(data.getValue().get(columnIndex))
-            );
+            column.setCellValueFactory(
+                    data -> new SimpleStringProperty(data.getValue().get(columnIndex)));
             table.getColumns().add(column);
         }
 
@@ -187,15 +188,21 @@ public class StudentReportController {
             scoreRow.add(dto.getScore() != null ? dto.getScore().toString() : "-");
         }
 
-        Enrollment enrollment = enrollmentService.findByStudentId(studentId).stream()
-                .filter(e -> e.getCourseId().equals(courseId)).findFirst().orElse(null);
+        Enrollment enrollment =
+                enrollmentService.findByStudentId(studentId).stream()
+                        .filter(e -> e.getCourseId().equals(courseId))
+                        .findFirst()
+                        .orElse(null);
         List<Assessments> assessments = assessmentsService.getByCourseId(courseId);
-        Map<Integer, Grades> gradeMap = enrollment == null ? Map.of() :
-                gradesDAO.findByEnrollment(enrollment.getId()).stream()
-                        .collect(Collectors.toMap(Grades::getAssessmentId, g -> g));
+        Map<Integer, Grades> gradeMap =
+                enrollment == null
+                        ? Map.of()
+                        : gradesDAO.findByEnrollment(enrollment.getId()).stream()
+                                .collect(Collectors.toMap(Grades::getAssessmentId, g -> g));
         String finalGrade = GradesTab.computeFinalGrade(assessments, gradeMap, assessments.size());
 
-        TableColumn<List<String>, String> finalGradeCol = new TableColumn<>(LocalizationManager.get("finalGrade"));
+        TableColumn<List<String>, String> finalGradeCol =
+                new TableColumn<>(LocalizationManager.get("finalGrade"));
         finalGradeCol.setPrefWidth(120);
         finalGradeCol.setCellValueFactory(data -> new SimpleStringProperty(finalGrade));
         table.getColumns().add(finalGradeCol);
