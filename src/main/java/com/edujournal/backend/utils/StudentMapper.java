@@ -1,12 +1,30 @@
+
 package com.edujournal.backend.utils;
 
-import com.edujournal.entity.User;
 import com.edujournal.entity.Student;
+import com.edujournal.entity.User;
 import com.edujournal.model.StudentDTO;
 
-public class StudentMapper {
+/**
+ * Maps User and Student entities to StudentDTO objects
+ * and converts StudentDTO objects into Student entities.
+ *
+ * @author EduJournal
+ */
+public final class StudentMapper {
 
-    public StudentDTO toDTO(User user, Student student) {
+    /**
+     * Converts a User and Student entity into a StudentDTO.
+     *
+     * @param user the user entity
+     * @param student the student entity
+     * @return the corresponding StudentDTO, or null if either
+     * entity is null
+     */
+    public StudentDTO toDTO(
+            final User user,
+            final Student student) {
+
         if (user == null || student == null) {
             return null;
         }
@@ -28,7 +46,14 @@ public class StudentMapper {
         return dto;
     }
 
-    public Student toEntity(StudentDTO dto) {
+    /**
+     * Converts a StudentDTO into a Student entity.
+     *
+     * @param dto the student data transfer object
+     * @return the corresponding Student entity, or null if
+     * the DTO is null
+     */
+    public Student toEntity(final StudentDTO dto) {
         if (dto == null) {
             return null;
         }

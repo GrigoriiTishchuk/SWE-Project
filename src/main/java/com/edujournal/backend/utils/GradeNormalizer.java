@@ -1,10 +1,41 @@
+
 package com.edujournal.backend.utils;
 
-public class GradeNormalizer {
-    public double normalizer(double score, double maxScore) {
+/**
+ * Provides functionality for normalizing grades
+ * based on their maximum possible score.
+ *
+ * @author EduJournal
+ */
+public final class GradeNormalizer {
+
+    /** Maximum normalized grade value. */
+    private static final double NORMALIZED_MAX_SCORE = 100.0;
+
+    /**
+     * Prevents instantiation of this class.
+     */
+    public GradeNormalizer() {
+        // Default constructor
+    }
+
+    /**
+     * Normalizes a score to a percentage based on the maximum score.
+     *
+     * @param score the score to normalize
+     * @param maxScore the maximum possible score
+     * @return the normalized score as a percentage
+     * @throws IllegalArgumentException if the maximum score is zero or less
+     */
+    public double normalizer(
+            final double score,
+            final double maxScore) {
+
         if (maxScore <= 0) {
-            throw new IllegalArgumentException("Max score cannot be zero or less.");
+            throw new IllegalArgumentException(
+                    "Max score cannot be zero or less.");
         }
-        return (score / maxScore) * 100;
+
+        return (score / maxScore) * NORMALIZED_MAX_SCORE;
     }
 }
