@@ -1,9 +1,7 @@
-
 package com.edujournal.backend.utils;
 
 /**
- * Provides utility methods for validating names, email addresses,
- * and passwords.
+ * Provides utility methods for validating names, email addresses, and passwords.
  *
  * @author EduJournal
  */
@@ -12,11 +10,9 @@ public final class InputValidator {
     /** Minimum required password length. */
     private static final int MIN_PASSWORD_LENGTH = 9;
 
-    /**
-     * Creates an InputValidator instance.
-     */
-    public InputValidator() {
-        // Public constructor for compatibility with existing code.
+    /** Prevents instantiation of this utility class. */
+    private InputValidator() {
+        throw new IllegalStateException("Utility class cannot be instantiated.");
     }
 
     /**
@@ -42,15 +38,13 @@ public final class InputValidator {
 
         String trimmedEmail = email.trim();
 
-        if (trimmedEmail.isEmpty()
-                || trimmedEmail.contains(" ")) {
+        if (trimmedEmail.isEmpty() || trimmedEmail.contains(" ")) {
             return false;
         }
 
         int atIndex = trimmedEmail.indexOf('@');
 
-        if (atIndex <= 0
-                || atIndex != trimmedEmail.lastIndexOf('@')) {
+        if (atIndex <= 0 || atIndex != trimmedEmail.lastIndexOf('@')) {
             return false;
         }
 
@@ -61,19 +55,17 @@ public final class InputValidator {
             return false;
         }
 
-        return trimmedEmail.matches(
-                "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
+        return trimmedEmail.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
     }
 
     /**
      * Checks whether a password meets the minimum length requirement.
      *
      * @param password the password to validate
-     * @return true if the password contains at least the required
-     * number of characters, otherwise false
+     * @return true if the password contains at least the required number of characters, otherwise
+     *     false
      */
     public static boolean isValidPassword(final String password) {
-        return password != null
-                && password.length() >= MIN_PASSWORD_LENGTH;
+        return password != null && password.length() >= MIN_PASSWORD_LENGTH;
     }
 }

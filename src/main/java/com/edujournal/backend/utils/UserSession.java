@@ -1,12 +1,10 @@
-
 package com.edujournal.backend.utils;
 
 import com.edujournal.entity.Role;
 import com.edujournal.model.UserDTO;
 
 /**
- * Manages the currently logged-in user's session
- * using the Singleton design pattern.
+ * Manages the currently logged-in user's session using the Singleton design pattern.
  *
  * @author EduJournal
  */
@@ -18,11 +16,8 @@ public final class UserSession {
     /** The currently logged-in user. */
     private UserDTO currentUser;
 
-    /**
-     * Creates a private UserSession constructor.
-     */
-    private UserSession() {
-    }
+    /** Creates a private UserSession constructor. */
+    private UserSession() {}
 
     /**
      * Returns the singleton instance of UserSession.
@@ -68,16 +63,13 @@ public final class UserSession {
      * Checks whether the current user has the specified role.
      *
      * @param role the role to check
-     * @return true if the current user has the specified role,
-     * otherwise false
+     * @return true if the current user has the specified role, otherwise false
      */
     public boolean hasRole(final Role role) {
         return isLoggedIn() && currentUser.getRole() == role;
     }
 
-    /**
-     * Clears the current user session.
-     */
+    /** Clears the current user session. */
     public void cleanUserSession() {
         this.currentUser = null;
     }

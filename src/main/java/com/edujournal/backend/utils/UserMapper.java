@@ -1,12 +1,10 @@
-
 package com.edujournal.backend.utils;
 
 import com.edujournal.entity.User;
 import com.edujournal.model.UserDTO;
 
 /**
- * Maps User entities to UserDTO objects
- * and converts UserDTO objects into User entities.
+ * Maps User entities to UserDTO objects and converts UserDTO objects into User entities.
  *
  * @author EduJournal
  */
@@ -30,8 +28,7 @@ public final class UserMapper {
                 user.getLastName(),
                 user.getEmail(),
                 user.getPhone(),
-                user.getRole()
-        );
+                user.getRole());
     }
 
     /**

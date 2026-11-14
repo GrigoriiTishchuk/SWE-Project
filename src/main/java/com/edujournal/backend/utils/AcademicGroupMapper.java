@@ -1,4 +1,3 @@
-
 package com.edujournal.backend.utils;
 
 import com.edujournal.entity.AcademicGroup;
@@ -22,10 +21,7 @@ public final class AcademicGroupMapper {
             return null;
         }
 
-        return new AcademicGroupDTO(
-                group.getId(),
-                group.getName()
-        );
+        return new AcademicGroupDTO(group.getId(), group.getName());
     }
 
     /**

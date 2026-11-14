@@ -21,10 +21,6 @@ import java.util.stream.Collectors;
  */
 public final class CourseGradeService {
 
-    /** Normalizes raw grades to a common scale. */
-    private final GradeNormalizer normalizer =
-            new GradeNormalizer();
-
     /** Finds the highest score among multiple assessment attempts. */
     private final BestScore bestScore = new BestScore();
 
@@ -118,7 +114,7 @@ public final class CourseGradeService {
                                     + assessment.getMaxScore());
                 }
 
-                double normalizedScore = normalizer.normalizer(
+                double normalizedScore = GradeNormalizer.normalizer(
                         grade.getScore(), assessment.getMaxScore());
 
                 normalizedScores.add(normalizedScore);
@@ -168,7 +164,7 @@ public final class CourseGradeService {
 
                 double bestRaw = bestScore.getBestScore(rawScores);
 
-                double normalized = normalizer.normalizer(
+                double normalized = GradeNormalizer.normalizer(
                         bestRaw, exam.getMaxScore());
 
                 bestExamScores.add(normalized);

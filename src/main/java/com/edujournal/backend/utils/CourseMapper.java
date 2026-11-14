@@ -1,4 +1,3 @@
-
 package com.edujournal.backend.utils;
 
 import com.edujournal.dao.AcademicGroupDAO;
@@ -9,9 +8,8 @@ import com.edujournal.entity.User;
 import com.edujournal.model.CourseDTO;
 
 /**
- * Maps Course entities to DTOs and DTOs to entities.
- * Retrieves additional teacher and academic group information
- * when converting a course to a DTO.
+ * Maps Course entities to DTOs and DTOs to entities. Retrieves additional teacher and academic
+ * group information when converting a course to a DTO.
  *
  * @author EduJournal
  */
@@ -23,9 +21,7 @@ public final class CourseMapper {
     /** Data access object for retrieving academic groups. */
     private final AcademicGroupDAO academicGroupDAO;
 
-    /**
-     * Creates a CourseMapper with default DAO instances.
-     */
+    /** Creates a CourseMapper with default DAO instances. */
     public CourseMapper() {
         this.userDAO = new UserDAO();
         this.academicGroupDAO = new AcademicGroupDAO();
@@ -37,9 +33,7 @@ public final class CourseMapper {
      * @param userDao the user data access object
      * @param groupDao the academic group data access object
      */
-    public CourseMapper(
-            final UserDAO userDao,
-            final AcademicGroupDAO groupDao) {
+    public CourseMapper(final UserDAO userDao, final AcademicGroupDAO groupDao) {
         this.userDAO = userDao;
         this.academicGroupDAO = groupDao;
     }
@@ -59,30 +53,27 @@ public final class CourseMapper {
             User teacher = userDAO.findById(entity.getUserId());
 
             if (teacher != null) {
-                teacherName = teacher.getFirstName()
-                        + " " + teacher.getLastName();
+                teacherName = teacher.getFirstName() + " " + teacher.getLastName();
             }
         }
 
         if (entity.getAcademicGroupId() != null) {
-            AcademicGroup group =
-                    academicGroupDAO.findById(
-                            entity.getAcademicGroupId());
+            AcademicGroup group = academicGroupDAO.findById(entity.getAcademicGroupId());
 
             if (group != null) {
                 groupName = group.getName();
             }
         }
 
-        CourseDTO dto = new CourseDTO(
-                entity.getId(),
-                entity.getCode(),
-                entity.getName(),
-                entity.getUserId(),
-                teacherName,
-                entity.getAcademicGroupId(),
-                groupName
-        );
+        CourseDTO dto =
+                new CourseDTO(
+                        entity.getId(),
+                        entity.getCode(),
+                        entity.getName(),
+                        entity.getUserId(),
+                        teacherName,
+                        entity.getAcademicGroupId(),
+                        groupName);
 
         dto.setAcademicYear(entity.getAcademicYear());
         dto.setStartDate(entity.getStartDate());
