@@ -3,37 +3,36 @@ package com.edujournal.backend.utils;
 import static org.junit.jupiter.api.Assertions.*;
 
 class InputValidatorTest {
-    InputValidator inputValidator = new InputValidator();
 
     @org.junit.jupiter.api.Test
     void isValidName() {
-        assertTrue(inputValidator.isValidName("Olenape"));
-        assertFalse(inputValidator.isValidName(null));
-        assertFalse(inputValidator.isValidName(""));
-        assertFalse(inputValidator.isValidName("  "));
-        assertTrue(inputValidator.isValidName("John Johnson"));
+        assertTrue(InputValidator.isValidName("Olenape"));
+        assertFalse(InputValidator.isValidName(null));
+        assertFalse(InputValidator.isValidName(""));
+        assertFalse(InputValidator.isValidName("  "));
+        assertTrue(InputValidator.isValidName("John Johnson"));
     }
 
     @org.junit.jupiter.api.Test
     void isValidEmail() {
-        assertTrue(inputValidator.isValidEmail("olenape@gmail.com"));
-        assertFalse(inputValidator.isValidEmail("newmail.com"));
-        assertFalse(inputValidator.isValidEmail("newmail.com@"));
-        assertFalse(inputValidator.isValidEmail("@newmail.com"));
-        assertFalse(inputValidator.isValidEmail(null));
-        assertFalse(inputValidator.isValidEmail(""));
-        assertFalse(inputValidator.isValidEmail("   "));
-        assertFalse(inputValidator.isValidEmail("user@@mail.com"));
-        assertFalse(inputValidator.isValidEmail("user@mail"));
-        assertFalse(inputValidator.isValidEmail(".user@mail.com"));
-        assertFalse(inputValidator.isValidEmail("user @mail.com"));
-        assertFalse(inputValidator.isValidEmail("user!mail.com"));
+        assertTrue(InputValidator.isValidEmail("olenape@gmail.com"));
+        assertFalse(InputValidator.isValidEmail("newmail.com"));
+        assertFalse(InputValidator.isValidEmail("newmail.com@"));
+        assertFalse(InputValidator.isValidEmail("@newmail.com"));
+        assertFalse(InputValidator.isValidEmail(null));
+        assertFalse(InputValidator.isValidEmail(""));
+        assertFalse(InputValidator.isValidEmail("   "));
+        assertFalse(InputValidator.isValidEmail("user@@mail.com"));
+        assertFalse(InputValidator.isValidEmail("user@mail"));
+        assertFalse(InputValidator.isValidEmail(".user@mail.com"));
+        assertFalse(InputValidator.isValidEmail("user @mail.com"));
+        assertFalse(InputValidator.isValidEmail("user!mail.com"));
     }
 
     @org.junit.jupiter.api.Test
     void isValidPassword() {
-        assertTrue(inputValidator.isValidPassword("123456789"));
-        assertFalse(inputValidator.isValidPassword("12345678"));
-        assertFalse(inputValidator.isValidPassword(null));
+        assertTrue(InputValidator.isValidPassword("123456789"));
+        assertFalse(InputValidator.isValidPassword("12345678"));
+        assertFalse(InputValidator.isValidPassword(null));
     }
 }

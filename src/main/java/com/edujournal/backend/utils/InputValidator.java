@@ -1,29 +1,71 @@
 package com.edujournal.backend.utils;
 
-public class InputValidator {
-    public static boolean isValidName(String name) {
+/**
+ * Provides utility methods for validating names, email addresses, and passwords.
+ *
+ * @author EduJournal
+ */
+public final class InputValidator {
+
+    /** Minimum required password length. */
+    private static final int MIN_PASSWORD_LENGTH = 9;
+
+    /** Prevents instantiation of this utility class. */
+    private InputValidator() {
+        throw new IllegalStateException("Utility class cannot be instantiated.");
+    }
+
+    /**
+     * Checks whether a name is non-null and not empty.
+     *
+     * @param name the name to validate
+     * @return true if the name is valid, otherwise false
+     */
+    public static boolean isValidName(final String name) {
         return name != null && !name.trim().isEmpty();
     }
 
-    public static boolean isValidEmail(String email) {
-        if (email == null) return false;
+    /**
+     * Checks whether an email address has a valid basic format.
+     *
+     * @param email the email address to validate
+     * @return true if the email address is valid, otherwise false
+     */
+    public static boolean isValidEmail(final String email) {
+        if (email == null) {
+            return false;
+        }
 
-        email = email.trim();
-        if (email.isEmpty() || email.contains(" ")) return false;
+        String trimmedEmail = email.trim();
 
-        // just one @
-        int atIndex = email.indexOf('@');
-        if (atIndex <= 0 || atIndex != email.lastIndexOf('@')) return false;
+        if (trimmedEmail.isEmpty() || trimmedEmail.contains(" ")) {
+            return false;
+        }
 
-        String local = email.substring(0, atIndex);
-        String domain = email.substring(atIndex + 1);
+        int atIndex = trimmedEmail.indexOf('@');
 
-        if (local.startsWith(".") || !domain.contains(".")) return false;
+        if (atIndex <= 0 || atIndex != trimmedEmail.lastIndexOf('@')) {
+            return false;
+        }
 
-        return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
+        String local = trimmedEmail.substring(0, atIndex);
+        String domain = trimmedEmail.substring(atIndex + 1);
+
+        if (local.startsWith(".") || !domain.contains(".")) {
+            return false;
+        }
+
+        return trimmedEmail.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
     }
 
-    public static boolean isValidPassword(String password) {
-        return password != null && password.length() >= 9;
+    /**
+     * Checks whether a password meets the minimum length requirement.
+     *
+     * @param password the password to validate
+     * @return true if the password contains at least the required number of characters, otherwise
+     *     false
+     */
+    public static boolean isValidPassword(final String password) {
+        return password != null && password.length() >= MIN_PASSWORD_LENGTH;
     }
 }
