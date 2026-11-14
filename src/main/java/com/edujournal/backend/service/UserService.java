@@ -134,8 +134,8 @@ public final class UserService {
 
         LOGGER.log(
                 Level.INFO,
-                "Temporary credentials generated for teacher: {0}",
-                username);
+                "Temporary credentials generated for teacher: {0} / {1}",
+                new Object[]{username, tempPassword});
 
         String hashedPassword = BCrypt.hashpw(
                 tempPassword, BCrypt.gensalt());
@@ -178,8 +178,8 @@ public final class UserService {
 
         LOGGER.log(
                 Level.INFO,
-                "Temporary credentials generated for student: {0}",
-                username);
+                "Temporary credentials generated for student: {0} / {1}",
+                new Object[]{username, tempPassword});
 
         String hashedPassword = BCrypt.hashpw(
                 tempPassword, BCrypt.gensalt());

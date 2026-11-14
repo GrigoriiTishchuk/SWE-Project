@@ -3,8 +3,20 @@ package com.edujournal.backend.utils;
 import com.edujournal.entity.User;
 import com.edujournal.model.UserDTO;
 
-public class UserMapper {
-    public UserDTO toDTO(User user) {
+/**
+ * Maps User entities to UserDTO objects and converts UserDTO objects into User entities.
+ *
+ * @author EduJournal
+ */
+public final class UserMapper {
+
+    /**
+     * Converts a User entity into a UserDTO.
+     *
+     * @param user the user entity to convert
+     * @return the corresponding UserDTO, or null if the entity is null
+     */
+    public UserDTO toDTO(final User user) {
         if (user == null) {
             return null;
         }
@@ -16,11 +28,16 @@ public class UserMapper {
                 user.getLastName(),
                 user.getEmail(),
                 user.getPhone(),
-                user.getRole()
-        );
+                user.getRole());
     }
 
-    public User toEntity(UserDTO dto) {
+    /**
+     * Converts a UserDTO into a User entity.
+     *
+     * @param dto the user data transfer object
+     * @return the corresponding User entity, or null if the DTO is null
+     */
+    public User toEntity(final UserDTO dto) {
         if (dto == null) {
             return null;
         }
