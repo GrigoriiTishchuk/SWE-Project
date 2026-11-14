@@ -36,7 +36,6 @@ import java.util.stream.Collectors;
  */
 public class StudentReportController {
 
-    private final Role role;
     private final Integer studentId;
 
     private final StudentService studentService = new StudentService();
@@ -53,7 +52,6 @@ public class StudentReportController {
      * @param studentId selected student identifier
      */
     public StudentReportController(Role role, Integer studentId) {
-        this.role = role;
         this.studentId = studentId;
     }
 

@@ -1,4 +1,3 @@
-
 package com.edujournal.backend.service;
 
 import com.edujournal.backend.utils.CourseMapper;
@@ -15,8 +14,8 @@ import com.edujournal.model.CourseDTO;
 import java.util.List;
 
 /**
- * Provides business logic for course management,
- * including course assignments and student enrollments.
+ * Provides business logic for course management, including course assignments and student
+ * enrollments.
  *
  * @author EduJournal
  */
@@ -32,12 +31,10 @@ public final class CourseService {
     private final UserDAO userDAO = new UserDAO();
 
     /** Data access object for academic group operations. */
-    private final AcademicGroupDAO academicGroupDAO =
-            new AcademicGroupDAO();
+    private final AcademicGroupDAO academicGroupDAO = new AcademicGroupDAO();
 
     /** Service responsible for enrollment operations. */
-    private final EnrollmentService enrollmentService =
-            new EnrollmentService();
+    private final EnrollmentService enrollmentService = new EnrollmentService();
 
     /**
      * Retrieves a course by its identifier.
@@ -56,10 +53,7 @@ public final class CourseService {
      * @return a list of course DTOs
      */
     public List<CourseDTO> findAll() {
-        return courseDAO.findAll()
-                .stream()
-                .map(courseMapper::toDTO)
-                .toList();
+        return courseDAO.findAll().stream().map(courseMapper::toDTO).toList();
     }
 
     /**
@@ -92,9 +86,7 @@ public final class CourseService {
      */
     public List<CourseDTO> findByUserId(final Integer userId) {
         List<Course> courses = courseDAO.findByUserId(userId);
-        return courses.stream()
-                .map(courseMapper::toDTO)
-                .toList();
+        return courses.stream().map(courseMapper::toDTO).toList();
     }
 
     /**
@@ -105,9 +97,7 @@ public final class CourseService {
      */
     public List<CourseDTO> findByGroupId(final Integer groupId) {
         List<Course> courses = courseDAO.findByGroupId(groupId);
-        return courses.stream()
-                .map(courseMapper::toDTO)
-                .toList();
+        return courses.stream().map(courseMapper::toDTO).toList();
     }
 
     /**
@@ -115,12 +105,10 @@ public final class CourseService {
      *
      * @param courseId the course identifier
      * @param teacherId the teacher's user identifier
-     * @throws IllegalArgumentException if the course or user is not found,
-     *         or if the user is not a teacher
+     * @throws IllegalArgumentException if the course or user is not found, or if the user is not a
+     *     teacher
      */
-    public void assignTeacherToCourse(
-            final Integer courseId,
-            final Integer teacherId) {
+    public void assignTeacherToCourse(final Integer courseId, final Integer teacherId) {
 
         Course course = courseDAO.findById(courseId);
         if (course == null) {
@@ -133,8 +121,7 @@ public final class CourseService {
         }
 
         if (teacher.getRole() != Role.TEACHER) {
-            throw new IllegalArgumentException(
-                    "User is not a teacher");
+            throw new IllegalArgumentException("User is not a teacher");
         }
 
         course.setUserId(teacherId);
@@ -142,16 +129,14 @@ public final class CourseService {
     }
 
     /**
-     * Creates enrollments for students in the specified academic group
-     * if they are not already enrolled in the course.
+     * Creates enrollments for students in the specified academic group if they are not already
+     * enrolled in the course.
      *
      * @param courseId the course identifier
      * @param groupId the academic group identifier
      * @throws IllegalArgumentException if the course or group is not found
      */
-    public void assignStudentsToEnrollments(
-            final Integer courseId,
-            final Integer groupId) {
+    public void assignStudentsToEnrollments(final Integer courseId, final Integer groupId) {
 
         Course course = courseDAO.findById(courseId);
         if (course == null) {
@@ -163,15 +148,10 @@ public final class CourseService {
             throw new IllegalArgumentException("Group not found");
         }
 
-        List<Integer> studentIds =
-                academicGroupDAO.findStudentIdsByGroupId(groupId);
+        List<Integer> studentIds = academicGroupDAO.findStudentIdsByGroupId(groupId);
 
         for (Integer studentId : studentIds) {
-            Enrollment existing =
-                    enrollmentService.findByStudentAndCourse(
-                            studentId,
-                            courseId
-                    );
+            Enrollment existing = enrollmentService.findByStudentAndCourse(studentId, courseId);
 
             if (existing == null) {
                 Enrollment enrollment = new Enrollment();
@@ -187,25 +167,20 @@ public final class CourseService {
     }
 
     /**
-     * Saves a new course and creates enrollments for its academic group
-     * when a group is assigned.
+     * Saves a new course and creates enrollments for its academic group when a group is assigned.
      *
      * @param course the course to save
      * @throws IllegalArgumentException if the course code already exists
      */
     public void save(final Course course) {
         if (existsByCode(course.getCode())) {
-            throw new IllegalArgumentException(
-                    "Course code already exists");
+            throw new IllegalArgumentException("Course code already exists");
         }
 
         courseDAO.save(course);
 
         if (course.getAcademicGroupId() != null) {
-            assignStudentsToEnrollments(
-                    course.getId(),
-                    course.getAcademicGroupId()
-            );
+            assignStudentsToEnrollments(course.getId(), course.getAcademicGroupId());
         }
     }
 

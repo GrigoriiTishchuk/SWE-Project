@@ -10,9 +10,7 @@ public class CourseDAO {
 
     public Course findById(Integer id) {
 
-        EntityManager entityManager =
-                JPAUtil.getEntityManagerFactory()
-                        .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
         try {
             return entityManager.find(Course.class, id);
@@ -24,15 +22,12 @@ public class CourseDAO {
 
     public List<Course> findAll() {
 
-        EntityManager entityManager =
-                JPAUtil.getEntityManagerFactory()
-                        .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
         try {
-            return entityManager.createQuery(
-                    "SELECT c FROM Course c",
-                    Course.class
-            ).getResultList();
+            return entityManager
+                    .createQuery("SELECT c FROM Course c", Course.class)
+                    .getResultList();
 
         } finally {
             entityManager.close();
@@ -42,10 +37,10 @@ public class CourseDAO {
     public Course findByNameAndGroupId(String name, Integer groupId) {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
-            return entityManager.createQuery(
+            return entityManager
+                    .createQuery(
                             "SELECT c FROM Course c WHERE c.name = :name AND c.academicGroupId = :groupId",
-                            Course.class
-                    )
+                            Course.class)
                     .setParameter("name", name)
                     .setParameter("groupId", groupId)
                     .getResultStream()
@@ -58,15 +53,11 @@ public class CourseDAO {
 
     public Course findByName(String name) {
 
-        EntityManager entityManager =
-                JPAUtil.getEntityManagerFactory()
-                        .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
         try {
-            return entityManager.createQuery(
-                            "SELECT c FROM Course c WHERE c.name = :name",
-                            Course.class
-                    )
+            return entityManager
+                    .createQuery("SELECT c FROM Course c WHERE c.name = :name", Course.class)
                     .setParameter("name", name)
                     .getResultStream()
                     .findFirst()
@@ -79,15 +70,11 @@ public class CourseDAO {
 
     public Course findByCode(String code) {
 
-        EntityManager entityManager =
-                JPAUtil.getEntityManagerFactory()
-                        .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
         try {
-            return entityManager.createQuery(
-                            "SELECT c FROM Course c WHERE c.code = :code",
-                            Course.class
-                    )
+            return entityManager
+                    .createQuery("SELECT c FROM Course c WHERE c.code = :code", Course.class)
                     .setParameter("code", code)
                     .getResultStream()
                     .findFirst()
@@ -99,14 +86,15 @@ public class CourseDAO {
     }
 
     public boolean existsByCode(String code) {
-        EntityManager entityManager =
-                JPAUtil.getEntityManagerFactory()
-                        .createEntityManager();
-        try{
-            return entityManager.createQuery(
-                            "SELECT COUNT(c) FROM Course c WHERE c.code = :code", Long.class)
-                    .setParameter("code", code)
-                    .getSingleResult() > 0;
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
+        try {
+            return entityManager
+                            .createQuery(
+                                    "SELECT COUNT(c) FROM Course c WHERE c.code = :code",
+                                    Long.class)
+                            .setParameter("code", code)
+                            .getSingleResult()
+                    > 0;
         } finally {
             entityManager.close();
         }
@@ -117,10 +105,8 @@ public class CourseDAO {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
         try {
-            return entityManager.createQuery(
-                            "SELECT c FROM Course c WHERE c.userId = :userId",
-                            Course.class
-                    )
+            return entityManager
+                    .createQuery("SELECT c FROM Course c WHERE c.userId = :userId", Course.class)
                     .setParameter("userId", userId)
                     .getResultList();
 
@@ -134,10 +120,10 @@ public class CourseDAO {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
         try {
-            return entityManager.createQuery(
+            return entityManager
+                    .createQuery(
                             "SELECT c FROM Course c WHERE c.academicGroupId = :groupId",
-                            Course.class
-                    )
+                            Course.class)
                     .setParameter("groupId", groupId)
                     .getResultList();
 
