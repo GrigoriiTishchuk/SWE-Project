@@ -10,9 +10,7 @@ import java.util.List;
 public class UserDAO {
 
     public User findById(Integer userId) {
-        EntityManager entityManager = JPAUtil
-                .getEntityManagerFactory()
-                .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
         try {
             return entityManager.find(User.class, userId);
@@ -24,15 +22,11 @@ public class UserDAO {
 
     public User findByUsername(String username) {
 
-        EntityManager entityManager = JPAUtil
-                .getEntityManagerFactory()
-                .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
         try {
-            return entityManager.createQuery(
-                            "SELECT u FROM User u WHERE u.username = :username",
-                            User.class
-                    )
+            return entityManager
+                    .createQuery("SELECT u FROM User u WHERE u.username = :username", User.class)
                     .setParameter("username", username)
                     .getResultStream()
                     .findFirst()
@@ -45,15 +39,11 @@ public class UserDAO {
 
     public List<User> findByRole(Role role) {
 
-        EntityManager entityManager = JPAUtil
-                .getEntityManagerFactory()
-                .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
         try {
-            return entityManager.createQuery(
-                            "SELECT u FROM User u WHERE u.role = :role",
-                            User.class
-                    )
+            return entityManager
+                    .createQuery("SELECT u FROM User u WHERE u.role = :role", User.class)
                     .setParameter("role", role)
                     .getResultList();
 
@@ -64,16 +54,10 @@ public class UserDAO {
 
     public List<User> findAll() {
 
-        EntityManager entityManager = JPAUtil
-                .getEntityManagerFactory()
-                .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
         try {
-            return entityManager.createQuery(
-                            "SELECT u FROM User u",
-                            User.class
-                    )
-                    .getResultList();
+            return entityManager.createQuery("SELECT u FROM User u", User.class).getResultList();
 
         } finally {
             entityManager.close();
@@ -82,15 +66,13 @@ public class UserDAO {
 
     public List<User> findAllTeachers() {
 
-        EntityManager entityManager = JPAUtil
-                .getEntityManagerFactory()
-                .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
         try {
-            return entityManager.createQuery(
+            return entityManager
+                    .createQuery(
                             "SELECT u FROM User u WHERE u.role = com.edujournal.entity.Role.TEACHER",
-                            User.class
-                    )
+                            User.class)
                     .getResultList();
 
         } finally {
@@ -100,9 +82,7 @@ public class UserDAO {
 
     public void save(User user) {
 
-        EntityManager entityManager = JPAUtil
-                .getEntityManagerFactory()
-                .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
         try {
             entityManager.getTransaction().begin();
@@ -123,9 +103,7 @@ public class UserDAO {
     }
 
     public void update(User user) {
-        EntityManager entityManager = JPAUtil
-                .getEntityManagerFactory()
-                .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
         try {
             entityManager.getTransaction().begin();
@@ -148,18 +126,15 @@ public class UserDAO {
     }
 
     public void updateLocale(Integer userId, String locale) {
-        EntityManager entityManager = JPAUtil
-                .getEntityManagerFactory()
-                .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
         try {
             entityManager.getTransaction().begin();
-            entityManager.createQuery(
-                    "UPDATE User u SET u.preferredLocale = :locale WHERE u.id = :id"
-            )
-            .setParameter("locale", locale)
-            .setParameter("id", userId)
-            .executeUpdate();
+            entityManager
+                    .createQuery("UPDATE User u SET u.preferredLocale = :locale WHERE u.id = :id")
+                    .setParameter("locale", locale)
+                    .setParameter("id", userId)
+                    .executeUpdate();
             entityManager.getTransaction().commit();
 
         } catch (Exception e) {
@@ -173,18 +148,12 @@ public class UserDAO {
     }
 
     public void delete(User user) {
-        EntityManager entityManager = JPAUtil
-                .getEntityManagerFactory()
-                .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
         try {
             entityManager.getTransaction().begin();
 
-            entityManager.remove(
-                    entityManager.contains(user)
-                            ? user
-                            : entityManager.merge(user)
-            );
+            entityManager.remove(entityManager.contains(user) ? user : entityManager.merge(user));
 
             entityManager.getTransaction().commit();
 

@@ -9,9 +9,7 @@ import java.util.List;
 public class AssessmentsDAO {
 
     public Assessments findById(Integer id) {
-        EntityManager entityManager = JPAUtil
-                .getEntityManagerFactory()
-                .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
             return entityManager.find(Assessments.class, id);
         } finally {
@@ -20,28 +18,23 @@ public class AssessmentsDAO {
     }
 
     public List<Assessments> findAll() {
-        EntityManager entityManager = JPAUtil
-                .getEntityManagerFactory()
-                .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
-            return entityManager.createQuery(
-                    "SELECT a FROM Assessments a",
-                    Assessments.class
-            ).getResultList();
+            return entityManager
+                    .createQuery("SELECT a FROM Assessments a", Assessments.class)
+                    .getResultList();
         } finally {
             entityManager.close();
         }
     }
 
     public List<Assessments> findByCourseId(Integer courseId) {
-        EntityManager entityManager = JPAUtil
-                .getEntityManagerFactory()
-                .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
-            return entityManager.createQuery(
+            return entityManager
+                    .createQuery(
                             "SELECT a FROM Assessments a WHERE a.courseId = :courseId",
-                            Assessments.class
-                    )
+                            Assessments.class)
                     .setParameter("courseId", courseId)
                     .getResultList();
         } finally {
@@ -50,9 +43,7 @@ public class AssessmentsDAO {
     }
 
     public void save(Assessments assessment) {
-        EntityManager entityManager = JPAUtil
-                .getEntityManagerFactory()
-                .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
             entityManager.getTransaction().begin();
             entityManager.persist(assessment);
@@ -66,9 +57,7 @@ public class AssessmentsDAO {
     }
 
     public void update(Assessments assessment) {
-        EntityManager entityManager = JPAUtil
-                .getEntityManagerFactory()
-                .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
             entityManager.getTransaction().begin();
             assessment = entityManager.merge(assessment);
@@ -82,17 +71,12 @@ public class AssessmentsDAO {
     }
 
     public void delete(Assessments assessment) {
-        EntityManager entityManager = JPAUtil
-                .getEntityManagerFactory()
-                .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
             entityManager.getTransaction().begin();
 
             Assessments managedAssessment =
-                    entityManager.find(
-                            Assessments.class,
-                            assessment.getId()
-                    );
+                    entityManager.find(Assessments.class, assessment.getId());
 
             if (managedAssessment != null) {
                 entityManager.remove(managedAssessment);

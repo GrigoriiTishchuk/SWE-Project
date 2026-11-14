@@ -10,9 +10,7 @@ import java.util.List;
 public class AcademicGroupDAO {
 
     public AcademicGroup findById(Integer id) {
-        EntityManager entityManager =
-                JPAUtil.getEntityManagerFactory()
-                        .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
         try {
             return entityManager.find(AcademicGroup.class, id);
@@ -22,30 +20,25 @@ public class AcademicGroupDAO {
     }
 
     public List<AcademicGroup> findAll() {
-        EntityManager entityManager =
-                JPAUtil.getEntityManagerFactory()
-                        .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
         try {
-            return entityManager.createQuery(
-                    "SELECT a FROM AcademicGroup a",
-                    AcademicGroup.class
-            ).getResultList();
+            return entityManager
+                    .createQuery("SELECT a FROM AcademicGroup a", AcademicGroup.class)
+                    .getResultList();
         } finally {
             entityManager.close();
         }
     }
 
     public List<Integer> findStudentIdsByGroupId(Integer groupId) {
-        EntityManager entityManager =
-                JPAUtil.getEntityManagerFactory()
-                        .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
         try {
-            return entityManager.createQuery(
+            return entityManager
+                    .createQuery(
                             "SELECT s.id FROM Student s WHERE s.academicGroupId = :groupId",
-                            Integer.class
-                    )
+                            Integer.class)
                     .setParameter("groupId", groupId)
                     .getResultList();
 
@@ -55,15 +48,13 @@ public class AcademicGroupDAO {
     }
 
     public AcademicGroup findByName(String name) {
-        EntityManager entityManager =
-                JPAUtil.getEntityManagerFactory()
-                        .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
         try {
-            return entityManager.createQuery(
+            return entityManager
+                    .createQuery(
                             "SELECT a FROM AcademicGroup a WHERE a.name = :name",
-                            AcademicGroup.class
-                    )
+                            AcademicGroup.class)
                     .setParameter("name", name)
                     .getResultStream()
                     .findFirst()
@@ -74,9 +65,7 @@ public class AcademicGroupDAO {
     }
 
     public void addStudentToGroup(Integer studentId, Integer groupId) {
-        EntityManager entityManager =
-                JPAUtil.getEntityManagerFactory()
-                        .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
         try {
             entityManager.getTransaction().begin();
@@ -96,9 +85,7 @@ public class AcademicGroupDAO {
     }
 
     public void removeStudentFromGroup(Integer studentId, Integer groupId) {
-        EntityManager entityManager =
-                JPAUtil.getEntityManagerFactory()
-                        .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
         try {
             entityManager.getTransaction().begin();
@@ -118,9 +105,7 @@ public class AcademicGroupDAO {
     }
 
     public void save(AcademicGroup academicGroup) {
-        EntityManager entityManager =
-                JPAUtil.getEntityManagerFactory()
-                        .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
         try {
             entityManager.getTransaction().begin();
@@ -138,9 +123,7 @@ public class AcademicGroupDAO {
     }
 
     public void update(AcademicGroup academicGroup) {
-        EntityManager entityManager =
-                JPAUtil.getEntityManagerFactory()
-                        .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
         try {
             entityManager.getTransaction().begin();
@@ -158,15 +141,12 @@ public class AcademicGroupDAO {
     }
 
     public void delete(Integer id) {
-        EntityManager entityManager =
-                JPAUtil.getEntityManagerFactory()
-                        .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
         try {
             entityManager.getTransaction().begin();
 
-            AcademicGroup academicGroup =
-                    entityManager.find(AcademicGroup.class, id);
+            AcademicGroup academicGroup = entityManager.find(AcademicGroup.class, id);
 
             if (academicGroup != null) {
                 entityManager.remove(academicGroup);

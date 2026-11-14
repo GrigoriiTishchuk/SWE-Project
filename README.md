@@ -63,6 +63,7 @@ EduJournal stores all data using `utf8mb4` character encoding, supporting any Un
 
 - [Use Case Diagram](Documents/Diagrams/Use-Case-Diagram-Updated.png)
 - [ER Diagram](Documents/Diagrams/ER-diagram-Updated.png)
+- [Relational Model](Documents/Diagrams/db_relational_model_Updated.png)
 
 ### Definition of Success
 
@@ -138,8 +139,8 @@ The application follows a **Layered MVC Architecture**:
 
 The relational schema covers users (teachers, students, admins), courses, assessments, and grades:
 
-- [ER Diagram](Documents/Diagrams/ER-diagram.png)
-- [Relational Model](Documents/Diagrams/db_relational_model.png)
+- [ER Diagram](Documents/Diagrams/ER-diagram-Updated.png)
+- [Relational Model](Documents/Diagrams/db_relational_model_Updated.png)
 - [Database Tables](Documents/Diagrams/DB_TABLES.png)
 - [CRUD Operations](Documents/Diagrams/DB_CRUD_operations.png)
 

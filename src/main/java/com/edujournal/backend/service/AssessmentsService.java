@@ -1,4 +1,3 @@
-
 package com.edujournal.backend.service;
 
 import com.edujournal.dao.AssessmentsDAO;
@@ -10,24 +9,21 @@ import com.edujournal.entity.Course;
 import java.util.List;
 
 /**
- * Provides business logic for managing assessments and retrieving
- * assessment information related to courses and grades.
+ * Provides business logic for managing assessments and retrieving assessment information related to
+ * courses and grades.
  *
  * @author EduJournal
  */
 public final class AssessmentsService {
 
     /** Data access object for assessment operations. */
-    private final AssessmentsDAO assessmentsDAO =
-            new AssessmentsDAO();
+    private final AssessmentsDAO assessmentsDAO = new AssessmentsDAO();
 
     /** Data access object for grade operations. */
-    private final GradesDAO gradesDAO =
-            new GradesDAO();
+    private final GradesDAO gradesDAO = new GradesDAO();
 
     /** Data access object for course operations. */
-    private final CourseDAO courseDAO =
-            new CourseDAO();
+    private final CourseDAO courseDAO = new CourseDAO();
 
     /**
      * Retrieves all assessments associated with a course.
@@ -35,8 +31,7 @@ public final class AssessmentsService {
      * @param courseId the ID of the course
      * @return a list of assessments belonging to the course
      */
-    public List<Assessments> getByCourseId(
-            final Integer courseId) {
+    public List<Assessments> getByCourseId(final Integer courseId) {
         return assessmentsDAO.findByCourseId(courseId);
     }
 
@@ -54,22 +49,17 @@ public final class AssessmentsService {
      * Retrieves assessments associated with a course name.
      *
      * @param courseName the name of the course
-     * @return a list of assessments, or an empty list if the course
-     *         does not exist
+     * @return a list of assessments, or an empty list if the course does not exist
      */
-    public List<Assessments> getByCourseName(
-            final String courseName) {
+    public List<Assessments> getByCourseName(final String courseName) {
 
-        Course course =
-                courseDAO.findByName(courseName);
+        Course course = courseDAO.findByName(courseName);
 
         if (course == null) {
             return List.of();
         }
 
-        return assessmentsDAO.findByCourseId(
-                course.getId()
-        );
+        return assessmentsDAO.findByCourseId(course.getId());
     }
 
     /**
@@ -108,9 +98,7 @@ public final class AssessmentsService {
      */
     public boolean hasGrades(final Integer assessmentId) {
 
-        return !gradesDAO
-                .findByAssessment(assessmentId)
-                .isEmpty();
+        return !gradesDAO.findByAssessment(assessmentId).isEmpty();
     }
 
     /**

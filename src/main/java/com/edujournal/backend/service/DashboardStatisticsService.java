@@ -1,4 +1,3 @@
-
 package com.edujournal.backend.service;
 
 import com.edujournal.dao.CourseDAO;
@@ -67,20 +66,16 @@ public final class DashboardStatisticsService {
     private final EnrollmentDAO enrollmentDAO = new EnrollmentDAO();
 
     /** Service responsible for assessment operations. */
-    private final AssessmentsService assessmentsService =
-            new AssessmentsService();
+    private final AssessmentsService assessmentsService = new AssessmentsService();
 
     /** Service responsible for final course grade calculations. */
-    private final CourseGradeService courseGradeService =
-            new CourseGradeService();
+    private final CourseGradeService courseGradeService = new CourseGradeService();
 
     /** Service responsible for enrollment operations. */
-    private final EnrollmentService enrollmentService =
-            new EnrollmentService();
+    private final EnrollmentService enrollmentService = new EnrollmentService();
 
     /** Service responsible for student operations. */
-    private final StudentService studentService =
-            new StudentService();
+    private final StudentService studentService = new StudentService();
 
     /**
      * Retrieves grade distribution according to the user's role.
@@ -89,23 +84,18 @@ public final class DashboardStatisticsService {
      * @param userId the user's identifier
      * @return the grade distribution for the specified role
      */
-    public GradeDistributionDTO getGradeDistribution(
-            final Role role,
-            final Integer userId) {
+    public GradeDistributionDTO getGradeDistribution(final Role role, final Integer userId) {
 
         switch (role) {
             case ADMINISTRATOR:
-                return calculateDistribution(
-                        getAdministratorGrades());
+                return calculateDistribution(getAdministratorGrades());
 
             case TEACHER:
-                return calculateDistribution(
-                        getTeacherGrades(userId));
+                return calculateDistribution(getTeacherGrades(userId));
 
             case STUDENT:
                 Student student = studentService.findByUserId(userId);
-                return calculateDistribution(
-                        getStudentGrades(student.getId()));
+                return calculateDistribution(getStudentGrades(student.getId()));
 
             default:
                 return new GradeDistributionDTO();
@@ -121,22 +111,19 @@ public final class DashboardStatisticsService {
         LocalDate today = LocalDate.now(SYSTEM_ZONE);
         List<Integer> finalGrades = new ArrayList<>();
 
-        List<Course> completedCourses = courseDAO.findAll()
-                .stream()
-                .filter(course -> course.getEndDate() != null)
-                .filter(course -> course.getEndDate().isBefore(today))
-                .toList();
+        List<Course> completedCourses =
+                courseDAO.findAll().stream()
+                        .filter(course -> course.getEndDate() != null)
+                        .filter(course -> course.getEndDate().isBefore(today))
+                        .toList();
 
         for (Course course : completedCourses) {
-            List<Enrollment> enrollments =
-                    enrollmentDAO.findByCourseId(course.getId());
+            List<Enrollment> enrollments = enrollmentDAO.findByCourseId(course.getId());
 
-            List<Assessments> assessments =
-                    assessmentsService.getByCourseId(course.getId());
+            List<Assessments> assessments = assessmentsService.getByCourseId(course.getId());
 
             for (Enrollment enrollment : enrollments) {
-                Integer finalGrade = calculateAdministratorGrade(
-                        enrollment, assessments);
+                Integer finalGrade = calculateAdministratorGrade(enrollment, assessments);
 
                 if (finalGrade != null) {
                     finalGrades.add(finalGrade);
@@ -155,27 +142,24 @@ public final class DashboardStatisticsService {
      * @return the calculated grade, or null if grades are incomplete
      */
     private Integer calculateAdministratorGrade(
-            final Enrollment enrollment,
-            final List<Assessments> assessments) {
+            final Enrollment enrollment, final List<Assessments> assessments) {
 
-        Map<Integer, Grades> gradeMap =
-                getGradeMap(enrollment.getId());
+        Map<Integer, Grades> gradeMap = getGradeMap(enrollment.getId());
 
         if (!hasCompleteGrades(assessments, gradeMap)) {
             return null;
         }
 
         try {
-            double percent = courseGradeService.calculateFinalGrade(
-                    assessments,
-                    new ArrayList<>(gradeMap.values()));
+            double percent =
+                    courseGradeService.calculateFinalGrade(
+                            assessments, new ArrayList<>(gradeMap.values()));
 
             return GradesTab.toGrade(percent);
         } catch (Exception exception) {
             LOGGER.log(
                     Level.WARNING,
-                    () -> "Failed to calculate grade for enrollment "
-                            + enrollment.getId());
+                    () -> "Failed to calculate grade for enrollment " + enrollment.getId());
             LOGGER.log(Level.WARNING, "Grade calculation exception", exception);
             return null;
         }
@@ -192,25 +176,21 @@ public final class DashboardStatisticsService {
 
         List<Integer> finalGrades = new ArrayList<>();
 
-        List<Enrollment> enrollments =
-                enrollmentService.findByStudentId(studentId);
+        List<Enrollment> enrollments = enrollmentService.findByStudentId(studentId);
 
         for (Enrollment enrollment : enrollments) {
             Integer courseId = enrollment.getCourseId();
 
-            List<Assessments> assessments =
-                    assessmentsService.getByCourseId(courseId);
+            List<Assessments> assessments = assessmentsService.getByCourseId(courseId);
 
-            Map<Integer, Grades> gradeMap =
-                    getGradeMap(enrollment.getId());
+            Map<Integer, Grades> gradeMap = getGradeMap(enrollment.getId());
 
-            if (assessments.isEmpty()
-                    || !hasCompleteGrades(assessments, gradeMap)) {
+            if (assessments.isEmpty() || !hasCompleteGrades(assessments, gradeMap)) {
                 continue;
             }
 
-            Integer finalGrade = calculateStudentGrade(
-                    assessments, gradeMap, studentId, enrollment);
+            Integer finalGrade =
+                    calculateStudentGrade(assessments, gradeMap, studentId, enrollment);
 
             if (finalGrade != null) {
                 finalGrades.add(finalGrade);
@@ -236,10 +216,7 @@ public final class DashboardStatisticsService {
             final Enrollment enrollment) {
 
         try {
-            String result = GradesTab.computeFinalGrade(
-                    assessments,
-                    gradeMap,
-                    assessments.size());
+            String result = GradesTab.computeFinalGrade(assessments, gradeMap, assessments.size());
 
             if (result != null && !result.equals("—")) {
                 return Integer.parseInt(result.substring(0, 1));
@@ -247,10 +224,11 @@ public final class DashboardStatisticsService {
         } catch (Exception exception) {
             LOGGER.log(
                     Level.WARNING,
-                    () -> "Failed to calculate grade for student "
-                            + studentId
-                            + ", enrollment "
-                            + enrollment.getId());
+                    () ->
+                            "Failed to calculate grade for student "
+                                    + studentId
+                                    + ", enrollment "
+                                    + enrollment.getId());
             LOGGER.log(Level.WARNING, "Grade calculation exception", exception);
         }
 
@@ -268,10 +246,7 @@ public final class DashboardStatisticsService {
 
         List<Course> courses = courseDAO.findByUserId(teacherUserId);
 
-        LOGGER.log(
-                Level.INFO,
-                "Teacher courses: {0}",
-                courses.size());
+        LOGGER.log(Level.INFO, "Teacher courses: {0}", courses.size());
 
         for (Course course : courses) {
             finalGrades.addAll(calculateTeacherCourseGrades(course));
@@ -286,16 +261,13 @@ public final class DashboardStatisticsService {
      * @param course the course to process
      * @return a list of calculated final grades
      */
-    private List<Integer> calculateTeacherCourseGrades(
-            final Course course) {
+    private List<Integer> calculateTeacherCourseGrades(final Course course) {
 
         List<Integer> courseGrades = new ArrayList<>();
 
-        List<Enrollment> enrollments =
-                enrollmentDAO.findByCourseId(course.getId());
+        List<Enrollment> enrollments = enrollmentDAO.findByCourseId(course.getId());
 
-        List<Assessments> assessments =
-                assessmentsService.getByCourseId(course.getId());
+        List<Assessments> assessments = assessmentsService.getByCourseId(course.getId());
 
         LOGGER.log(
                 Level.INFO,
@@ -311,8 +283,7 @@ public final class DashboardStatisticsService {
         }
 
         for (Enrollment enrollment : enrollments) {
-            Integer finalGrade = calculateTeacherEnrollmentGrade(
-                    enrollment, assessments);
+            Integer finalGrade = calculateTeacherEnrollmentGrade(enrollment, assessments);
 
             if (finalGrade != null) {
                 courseGrades.add(finalGrade);
@@ -330,30 +301,22 @@ public final class DashboardStatisticsService {
      * @return the calculated grade, or null if grades are incomplete
      */
     private Integer calculateTeacherEnrollmentGrade(
-            final Enrollment enrollment,
-            final List<Assessments> assessments) {
+            final Enrollment enrollment, final List<Assessments> assessments) {
 
-        Map<Integer, Grades> gradeMap =
-                getGradeMap(enrollment.getId());
+        Map<Integer, Grades> gradeMap = getGradeMap(enrollment.getId());
 
         if (!hasCompleteGrades(assessments, gradeMap)) {
             return null;
         }
 
         try {
-            String result = GradesTab.computeFinalGrade(
-                    assessments,
-                    gradeMap,
-                    assessments.size());
+            String result = GradesTab.computeFinalGrade(assessments, gradeMap, assessments.size());
 
             if (result != null && !result.equals("—")) {
                 return Integer.parseInt(result.substring(0, 1));
             }
         } catch (Exception exception) {
-            LOGGER.log(
-                    Level.WARNING,
-                    "Failed to calculate teacher statistics",
-                    exception);
+            LOGGER.log(Level.WARNING, "Failed to calculate teacher statistics", exception);
         }
 
         return null;
@@ -365,14 +328,10 @@ public final class DashboardStatisticsService {
      * @param enrollmentId the enrollment identifier
      * @return a map of assessment identifiers and their grades
      */
-    private Map<Integer, Grades> getGradeMap(
-            final Integer enrollmentId) {
+    private Map<Integer, Grades> getGradeMap(final Integer enrollmentId) {
 
-        return gradesDAO.findByEnrollment(enrollmentId)
-                .stream()
-                .collect(Collectors.toMap(
-                        Grades::getAssessmentId,
-                        grade -> grade));
+        return gradesDAO.findByEnrollment(enrollmentId).stream()
+                .collect(Collectors.toMap(Grades::getAssessmentId, grade -> grade));
     }
 
     /**
@@ -383,15 +342,12 @@ public final class DashboardStatisticsService {
      * @return true if all assessments have grades, otherwise false
      */
     private boolean hasCompleteGrades(
-            final List<Assessments> assessments,
-            final Map<Integer, Grades> gradeMap) {
+            final List<Assessments> assessments, final Map<Integer, Grades> gradeMap) {
 
         return !assessments.isEmpty()
                 && !gradeMap.isEmpty()
                 && gradeMap.size() >= assessments.size()
-                && gradeMap.values()
-                .stream()
-                .noneMatch(grade -> grade.getScore() == null);
+                && gradeMap.values().stream().noneMatch(grade -> grade.getScore() == null);
     }
 
     /**
@@ -400,8 +356,7 @@ public final class DashboardStatisticsService {
      * @param grades the final grades to analyze
      * @return the calculated grade distribution
      */
-    private GradeDistributionDTO calculateDistribution(
-            final List<Integer> grades) {
+    private GradeDistributionDTO calculateDistribution(final List<Integer> grades) {
 
         if (grades.isEmpty()) {
             return new GradeDistributionDTO();
@@ -432,13 +387,9 @@ public final class DashboardStatisticsService {
      * @param targetGrade the grade value to count
      * @return the number of occurrences
      */
-    private long countGrade(
-            final List<Integer> grades,
-            final int targetGrade) {
+    private long countGrade(final List<Integer> grades, final int targetGrade) {
 
-        return grades.stream()
-                .filter(grade -> grade == targetGrade)
-                .count();
+        return grades.stream().filter(grade -> grade == targetGrade).count();
     }
 
     /**

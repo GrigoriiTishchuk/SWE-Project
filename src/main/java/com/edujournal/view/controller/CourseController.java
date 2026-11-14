@@ -31,6 +31,10 @@ public class CourseController extends BaseController<CourseDTO> {
     private final AcademicGroupService academicGroupService = new AcademicGroupService();
 
     private static final String DEFAULT_YEAR = "2026/2027";
+    private static final String FILTER_TEACHER = "Teacher";
+    private static final String FILTER_ACADEMIC_GROUP = "Academic Group";
+    private static final String KEY_TEACHER = "teacher";
+    private static final String KEY_ACADEMIC_GROUP = "academicGroup";
     private final Role role;
     private String selectedYear = DEFAULT_YEAR;
 
@@ -111,11 +115,11 @@ public class CourseController extends BaseController<CourseDTO> {
                 return course.getCode() != null
                         && course.getCode().toLowerCase().contains(searchText);
 
-            case "Teacher":
+            case FILTER_TEACHER:
                 return course.getTeacherName() != null
                         && course.getTeacherName().toLowerCase().contains(searchText);
 
-            case "Academic Group":
+            case FILTER_ACADEMIC_GROUP:
                 return course.getGroupName() != null
                         && course.getGroupName().toLowerCase().contains(searchText);
 
@@ -146,18 +150,20 @@ public class CourseController extends BaseController<CourseDTO> {
         nameCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getName()));
 
         TableColumn<CourseDTO, String> teacherCol =
-                new TableColumn<>(LocalizationManager.get("teacher"));
+                new TableColumn<>(LocalizationManager.get(KEY_TEACHER));
         teacherCol.setCellValueFactory(
                 c -> new SimpleStringProperty(safe(c.getValue().getTeacherName())));
 
         TableColumn<CourseDTO, String> groupCol =
-                new TableColumn<>(LocalizationManager.get("academicGroup"));
+                new TableColumn<>(LocalizationManager.get(KEY_ACADEMIC_GROUP));
         groupCol.setCellValueFactory(
                 c -> new SimpleStringProperty(safe(c.getValue().getGroupName())));
 
         table.getColumns().addAll(idCol, codeCol, nameCol, teacherCol, groupCol);
 
-        filterCombo.getItems().addAll("All", "ID", "Name", "Code", "Teacher", "Academic Group");
+        filterCombo
+                .getItems()
+                .addAll("All", "ID", "Name", "Code", FILTER_TEACHER, FILTER_ACADEMIC_GROUP);
         filterCombo.setValue("All");
 
         Map<String, String> filterKeyMap =
@@ -170,10 +176,10 @@ public class CourseController extends BaseController<CourseDTO> {
                         "name",
                         "Code",
                         "code",
-                        "Teacher",
-                        "teacher",
-                        "Academic Group",
-                        "academicGroup");
+                        FILTER_TEACHER,
+                        KEY_TEACHER,
+                        FILTER_ACADEMIC_GROUP,
+                        KEY_ACADEMIC_GROUP);
         filterCombo.setCellFactory(list -> createLocalizedCell(filterKeyMap));
         filterCombo.setButtonCell(createLocalizedCell(filterKeyMap));
     }
@@ -465,11 +471,11 @@ public class CourseController extends BaseController<CourseDTO> {
                         + ": "
                         + course.getCode()
                         + "\n"
-                        + LocalizationManager.get("teacher")
+                        + LocalizationManager.get(KEY_TEACHER)
                         + ": "
                         + course.getTeacherName()
                         + "\n"
-                        + LocalizationManager.get("academicGroup")
+                        + LocalizationManager.get(KEY_ACADEMIC_GROUP)
                         + ": "
                         + course.getGroupName());
         alert.showAndWait();

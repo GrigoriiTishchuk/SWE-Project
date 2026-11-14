@@ -19,10 +19,10 @@ public class GradesDAO {
     public List<Grades> findByEnrollment(int enrollmentId) {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
-            return entityManager.createQuery(
+            return entityManager
+                    .createQuery(
                             "SELECT g FROM Grades g WHERE g.enrollmentId = :enrollmentId",
-                            Grades.class
-                    )
+                            Grades.class)
                     .setParameter("enrollmentId", enrollmentId)
                     .getResultList();
         } finally {
@@ -33,10 +33,10 @@ public class GradesDAO {
     public List<Grades> findByAssessment(int assessmentId) {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
-            return entityManager.createQuery(
+            return entityManager
+                    .createQuery(
                             "SELECT g FROM Grades g WHERE g.assessmentId = :assessmentId",
-                            Grades.class
-                    )
+                            Grades.class)
                     .setParameter("assessmentId", assessmentId)
                     .getResultList();
         } finally {
@@ -47,10 +47,10 @@ public class GradesDAO {
     public Grades findByEnrollmentAssessment(int enrollmentId, int assessmentId) {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
-            return entityManager.createQuery(
-                    "SELECT g FROM Grades g WHERE g.enrollmentId = :enrollmentId AND g.assessmentId = :assessmentId",
-                    Grades.class
-            )
+            return entityManager
+                    .createQuery(
+                            "SELECT g FROM Grades g WHERE g.enrollmentId = :enrollmentId AND g.assessmentId = :assessmentId",
+                            Grades.class)
                     .setParameter("enrollmentId", enrollmentId)
                     .setParameter("assessmentId", assessmentId)
                     .getResultStream()

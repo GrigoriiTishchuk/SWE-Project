@@ -12,9 +12,7 @@ public class EnrollmentDAO {
     private static final String PARAM_COURSE_ID = "courseId";
 
     public Enrollment findById(Integer id) {
-        EntityManager entityManager =
-                JPAUtil.getEntityManagerFactory()
-                        .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
         try {
             return entityManager.find(Enrollment.class, id);
@@ -24,30 +22,25 @@ public class EnrollmentDAO {
     }
 
     public List<Enrollment> findAll() {
-        EntityManager entityManager =
-                JPAUtil.getEntityManagerFactory()
-                        .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
         try {
-            return entityManager.createQuery(
-                    "SELECT e FROM Enrollment e",
-                    Enrollment.class
-            ).getResultList();
+            return entityManager
+                    .createQuery("SELECT e FROM Enrollment e", Enrollment.class)
+                    .getResultList();
         } finally {
             entityManager.close();
         }
     }
 
     public List<Enrollment> findByStudentId(Integer studentId) {
-        EntityManager entityManager =
-                JPAUtil.getEntityManagerFactory()
-                        .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
         try {
-            return entityManager.createQuery(
+            return entityManager
+                    .createQuery(
                             "SELECT e FROM Enrollment e WHERE e.studentId = :studentId",
-                            Enrollment.class
-                    )
+                            Enrollment.class)
                     .setParameter(PARAM_STUDENT_ID, studentId)
                     .getResultList();
         } finally {
@@ -56,15 +49,13 @@ public class EnrollmentDAO {
     }
 
     public List<Enrollment> findByCourseId(Integer courseId) {
-        EntityManager entityManager =
-                JPAUtil.getEntityManagerFactory()
-                        .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
         try {
-            return entityManager.createQuery(
+            return entityManager
+                    .createQuery(
                             "SELECT e FROM Enrollment e WHERE e.courseId = :courseId",
-                            Enrollment.class
-                    )
+                            Enrollment.class)
                     .setParameter(PARAM_COURSE_ID, courseId)
                     .getResultList();
         } finally {
@@ -73,15 +64,13 @@ public class EnrollmentDAO {
     }
 
     public List<Enrollment> findByAcademicGroupId(Integer academicGroupId) {
-        EntityManager entityManager =
-                JPAUtil.getEntityManagerFactory()
-                        .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
         try {
-            return entityManager.createQuery(
+            return entityManager
+                    .createQuery(
                             "SELECT e FROM Enrollment e WHERE e.academicGroupId = :academicGroupId",
-                            Enrollment.class
-                    )
+                            Enrollment.class)
                     .setParameter("academicGroupId", academicGroupId)
                     .getResultList();
         } finally {
@@ -104,15 +93,12 @@ public class EnrollmentDAO {
     }
 
     public Enrollment findByStudentAndCourse(Integer studentId, Integer courseId) {
-                EntityManager em =
-                JPAUtil.getEntityManagerFactory()
-                        .createEntityManager();
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
 
         try {
             return em.createQuery(
                             "SELECT e FROM Enrollment e WHERE e.studentId = :studentId AND e.courseId = :courseId",
-                            Enrollment.class
-                    )
+                            Enrollment.class)
                     .setParameter(PARAM_STUDENT_ID, studentId)
                     .setParameter(PARAM_COURSE_ID, courseId)
                     .getResultStream()
@@ -125,9 +111,7 @@ public class EnrollmentDAO {
     }
 
     public void save(Enrollment enrollment) {
-        EntityManager entityManager =
-                JPAUtil.getEntityManagerFactory()
-                        .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
         try {
             entityManager.getTransaction().begin();
@@ -145,9 +129,7 @@ public class EnrollmentDAO {
     }
 
     public void update(Enrollment enrollment) {
-        EntityManager entityManager =
-                JPAUtil.getEntityManagerFactory()
-                        .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
         try {
             entityManager.getTransaction().begin();
@@ -165,15 +147,12 @@ public class EnrollmentDAO {
     }
 
     public void delete(Integer id) {
-        EntityManager entityManager =
-                JPAUtil.getEntityManagerFactory()
-                        .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
         try {
             entityManager.getTransaction().begin();
 
-            Enrollment enrollment =
-                    entityManager.find(Enrollment.class, id);
+            Enrollment enrollment = entityManager.find(Enrollment.class, id);
 
             if (enrollment != null) {
                 entityManager.remove(enrollment);
@@ -191,22 +170,18 @@ public class EnrollmentDAO {
         }
     }
 
-    public void deleteByStudentAndAcademicGroup(
-            Integer studentId,
-            Integer academicGroupId) {
+    public void deleteByStudentAndAcademicGroup(Integer studentId, Integer academicGroupId) {
 
-        EntityManager entityManager =
-                JPAUtil.getEntityManagerFactory()
-                        .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
         try {
             entityManager.getTransaction().begin();
 
-            entityManager.createQuery(
-                            "DELETE FROM Enrollment e " +
-                                    "WHERE e.studentId = :studentId " +
-                                    "AND e.academicGroupId = :academicGroupId"
-                    )
+            entityManager
+                    .createQuery(
+                            "DELETE FROM Enrollment e "
+                                    + "WHERE e.studentId = :studentId "
+                                    + "AND e.academicGroupId = :academicGroupId")
                     .setParameter(PARAM_STUDENT_ID, studentId)
                     .setParameter("academicGroupId", academicGroupId)
                     .executeUpdate();
@@ -226,17 +201,13 @@ public class EnrollmentDAO {
 
     public void deleteByCourseId(Integer courseId) {
 
-        EntityManager entityManager =
-                JPAUtil.getEntityManagerFactory()
-                        .createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
         try {
             entityManager.getTransaction().begin();
 
-            entityManager.createQuery(
-                            "DELETE FROM Enrollment e " +
-                                    "WHERE e.courseId = :courseId"
-                    )
+            entityManager
+                    .createQuery("DELETE FROM Enrollment e " + "WHERE e.courseId = :courseId")
                     .setParameter(PARAM_COURSE_ID, courseId)
                     .executeUpdate();
 

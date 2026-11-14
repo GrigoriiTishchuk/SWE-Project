@@ -14,8 +14,8 @@ import com.edujournal.model.StudentDTO;
 import java.util.List;
 
 /**
- * Provides business logic for managing student records
- * and coordinating student-related data operations.
+ * Provides business logic for managing student records and coordinating student-related data
+ * operations.
  *
  * @author EduJournal
  */
@@ -39,9 +39,7 @@ public final class StudentService {
     /** Service for managing user-related operations. */
     private final UserService userService;
 
-    /**
-     * Creates a student service and initializes its dependencies.
-     */
+    /** Creates a student service and initializes its dependencies. */
     public StudentService() {
         this.studentDAO = new StudentDAO();
         this.userDAO = new UserDAO();
@@ -109,32 +107,24 @@ public final class StudentService {
     }
 
     /**
-     * Deletes a student if no grades or course enrollments
-     * prevent the deletion.
+     * Deletes a student if no grades or course enrollments prevent the deletion.
      *
      * @param studentId the identifier of the student to delete
-     * @throws IllegalStateException if the student has grades
-     *         or is enrolled in courses
+     * @throws IllegalStateException if the student has grades or is enrolled in courses
      */
     public void delete(final Integer studentId) {
-        List<Enrollment> enrollments =
-                enrollmentDAO.findByStudentId(studentId);
+        List<Enrollment> enrollments = enrollmentDAO.findByStudentId(studentId);
 
         if (!enrollments.isEmpty()) {
             for (Enrollment enrollment : enrollments) {
-                if (!gradesDAO.findByEnrollment(
-                        enrollment.getId()).isEmpty()) {
-                    throw new IllegalStateException(
-                            "Cannot delete student: grades exist."
-                    );
+                if (!gradesDAO.findByEnrollment(enrollment.getId()).isEmpty()) {
+                    throw new IllegalStateException("Cannot delete student: grades exist.");
                 }
             }
 
             for (Enrollment enrollment : enrollments) {
                 if (enrollment.getCourseId() != null) {
-                    throw new IllegalStateException(
-                            "Cannot delete student: enrolled in courses."
-                    );
+                    throw new IllegalStateException("Cannot delete student: enrolled in courses.");
                 }
             }
         }
@@ -165,8 +155,7 @@ public final class StudentService {
      * @return an unmodifiable list of student DTOs
      */
     public List<StudentDTO> findAllDTO() {
-        return studentDAO.findAll()
-                .stream()
+        return studentDAO.findAll().stream()
                 .map(student -> {
                     User user = userDAO.findById(student.getUserId());
                     return studentMapper.toDTO(user, student);
@@ -183,14 +172,9 @@ public final class StudentService {
      * @return the created student as a DTO
      */
     public StudentDTO createStudent(
-            final String firstName,
-            final String lastName,
-            final String phone) {
+            final String firstName, final String lastName, final String phone) {
 
-        User user = userService.createStudentUser(
-                firstName,
-                lastName,
-                phone);
+        User user = userService.createStudentUser(firstName, lastName, phone);
 
         String studentNumber;
 
@@ -208,8 +192,7 @@ public final class StudentService {
     }
 
     /**
-     * Updates a student and the associated user information
-     * using the supplied DTO.
+     * Updates a student and the associated user information using the supplied DTO.
      *
      * @param dto the student data transfer object
      */

@@ -15,9 +15,7 @@ public final class EnrollmentService {
     /** Data access object for enrollment operations. */
     private final EnrollmentDAO enrollmentDAO;
 
-    /**
-     * Creates an enrollment service with a new DAO instance.
-     */
+    /** Creates an enrollment service with a new DAO instance. */
     public EnrollmentService() {
         this.enrollmentDAO = new EnrollmentDAO();
     }
@@ -67,8 +65,7 @@ public final class EnrollmentService {
      * @param academicGroupId the academic group identifier
      * @return the academic group's enrollments
      */
-    public List<Enrollment> findByAcademicGroupId(
-            final Integer academicGroupId) {
+    public List<Enrollment> findByAcademicGroupId(final Integer academicGroupId) {
         return enrollmentDAO.findByAcademicGroupId(academicGroupId);
     }
 
@@ -79,27 +76,21 @@ public final class EnrollmentService {
      * @param courseId the course identifier
      * @return the matching enrollment, or null if not found
      */
-    public Enrollment findByStudentAndCourse(
-            final Integer studentId,
-            final Integer courseId) {
+    public Enrollment findByStudentAndCourse(final Integer studentId, final Integer courseId) {
         return enrollmentDAO.findByStudentAndCourse(studentId, courseId);
     }
 
     /**
-     * Creates an enrollment if one does not already exist
-     * for the specified student and course.
+     * Creates an enrollment if one does not already exist for the specified student and course.
      *
      * @param studentId the student identifier
      * @param courseId the course identifier
      * @param academicGroupId the academic group identifier
      */
     public void createIfNotExists(
-            final Integer studentId,
-            final Integer courseId,
-            final Integer academicGroupId) {
+            final Integer studentId, final Integer courseId, final Integer academicGroupId) {
 
-        Enrollment existing =
-                findByStudentAndCourse(studentId, courseId);
+        Enrollment existing = findByStudentAndCourse(studentId, courseId);
 
         if (existing == null) {
             Enrollment enrollment = new Enrollment();
@@ -147,13 +138,9 @@ public final class EnrollmentService {
      * @param academicGroupId the academic group identifier
      */
     public void deleteByStudentAndAcademicGroup(
-            final Integer studentId,
-            final Integer academicGroupId) {
+            final Integer studentId, final Integer academicGroupId) {
 
-        enrollmentDAO.deleteByStudentAndAcademicGroup(
-                studentId,
-                academicGroupId
-        );
+        enrollmentDAO.deleteByStudentAndAcademicGroup(studentId, academicGroupId);
     }
 
     /**
