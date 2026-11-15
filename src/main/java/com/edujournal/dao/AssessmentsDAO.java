@@ -6,8 +6,18 @@ import jakarta.persistence.EntityManager;
 
 import java.util.List;
 
+/**
+ * Data access object for {@link Assessments} entities.
+ * Provides CRUD operations and assessment queries.
+ */
 public class AssessmentsDAO {
 
+    /**
+     * Finds an assessment by its identifier.
+     *
+     * @param id assessment identifier
+     * @return the found assessment or null if not found
+     */
     public Assessments findById(Integer id) {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
@@ -17,6 +27,11 @@ public class AssessmentsDAO {
         }
     }
 
+    /**
+     * Retrieves all assessments.
+     *
+     * @return list of assessments
+     */
     public List<Assessments> findAll() {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
@@ -28,6 +43,12 @@ public class AssessmentsDAO {
         }
     }
 
+    /**
+     * Retrieves all assessments associated with a course.
+     *
+     * @param courseId course identifier
+     * @return list of course assessments
+     */
     public List<Assessments> findByCourseId(Integer courseId) {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
@@ -42,6 +63,11 @@ public class AssessmentsDAO {
         }
     }
 
+    /**
+     * Persists a new assessment.
+     *
+     * @param assessment assessment to save
+     */
     public void save(Assessments assessment) {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
@@ -56,6 +82,11 @@ public class AssessmentsDAO {
         }
     }
 
+    /**
+     * Updates an existing assessment.
+     *
+     * @param assessment assessment to update
+     */
     public void update(Assessments assessment) {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
@@ -70,6 +101,11 @@ public class AssessmentsDAO {
         }
     }
 
+    /**
+     **Deletes the specified assessment.
+     **
+     * @param assessment assessment to delete
+     */
     public void delete(Assessments assessment) {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
@@ -91,6 +127,11 @@ public class AssessmentsDAO {
         }
     }
 
+    /**
+     * Rolls back the active transaction if one exists.
+     *
+     * @param entityManager entity manager containing the transaction
+     */
     private void rollback(EntityManager entityManager) {
         if (entityManager.getTransaction().isActive()) {
             entityManager.getTransaction().rollback();

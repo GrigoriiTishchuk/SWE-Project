@@ -6,8 +6,18 @@ import jakarta.persistence.EntityManager;
 
 import java.util.List;
 
+/**
+ * Data access object for {@link Student} entities.
+ * Provides CRUD operations and student search functionality.
+ */
 public class StudentDAO {
 
+    /**
+     * Finds a student by identifier.
+     *
+     * @param id student identifier
+     * @return the found student or null if not found
+     */
     public Student findById(Integer id) {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
@@ -18,6 +28,11 @@ public class StudentDAO {
         }
     }
 
+    /**
+     * Retrieves all students.
+     *
+     * @return list of students
+     */
     public List<Student> findAll() {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
@@ -30,6 +45,12 @@ public class StudentDAO {
         }
     }
 
+    /**
+     * Finds a student associated with the specified user.
+     *
+     * @param userId user identifier
+     * @return matching student or null if not found
+     */
     public Student findByUserId(Integer userId) {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
@@ -44,6 +65,12 @@ public class StudentDAO {
         }
     }
 
+    /**
+     * Finds a student by student number.
+     *
+     * @param studentNumber student number
+     * @return matching student or null if not found
+     */
     public Student findByStudentNumber(String studentNumber) {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
@@ -61,6 +88,11 @@ public class StudentDAO {
         }
     }
 
+    /**
+     * Saves a new student.
+     *
+     * @param student student to save
+     */
     public void save(Student student) {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
@@ -70,15 +102,18 @@ public class StudentDAO {
             entityManager.getTransaction().commit();
 
         } catch (Exception e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
-            }
+            rollback(entityManager);
             throw e;
         } finally {
             entityManager.close();
         }
     }
 
+    /**
+     * Updates an existing student.
+     *
+     * @param student student to update
+     */
     public void update(Student student) {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
@@ -88,15 +123,18 @@ public class StudentDAO {
             entityManager.getTransaction().commit();
 
         } catch (Exception e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
-            }
+            rollback(entityManager);
             throw e;
         } finally {
             entityManager.close();
         }
     }
 
+    /**
+     * Deletes a student by identifier.
+     *
+     * @param id student identifier
+     */
     public void delete(Integer id) {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
@@ -112,12 +150,21 @@ public class StudentDAO {
             entityManager.getTransaction().commit();
 
         } catch (Exception e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
-            }
+            rollback(entityManager);
             throw e;
         } finally {
             entityManager.close();
+        }
+    }
+
+    /**
+     * Rolls back the active transaction if one exists.
+     *
+     * @param entityManager entity manager containing the transaction
+     */
+    private void rollback(EntityManager entityManager) {
+        if (entityManager.getTransaction().isActive()) {
+            entityManager.getTransaction().rollback();
         }
     }
 }
