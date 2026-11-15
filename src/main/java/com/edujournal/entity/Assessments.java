@@ -3,6 +3,11 @@ package com.edujournal.entity;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
+/**
+ * Represents an assessment within a course.
+ * Stores assessment details such as title, type,
+ * maximum score, weight, and due date.
+ */
 @Entity
 @Table(name = "assessments")
 public class Assessments {
@@ -26,8 +31,11 @@ public class Assessments {
     @Column(name = "due_date")
     private LocalDate dueDate;
 
+    /**
+     * Default constructor required by JPA.
+     */
     public Assessments() {
-
+        // Required by JPA
     }
 
     public Integer getId() {

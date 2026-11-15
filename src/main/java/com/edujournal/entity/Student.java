@@ -3,6 +3,11 @@ package com.edujournal.entity;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
+/**
+ * Represents a student in the system.
+ * Stores student identification data and
+ * links to the associated user account and academic group.
+ */
 @Entity
 @Table(name = "students")
 public class Student {
@@ -23,14 +28,20 @@ public class Student {
     @Column(name = "academic_group_id")
     private Integer academicGroupId;
 
+    /**
+     * Default constructor required by JPA.
+     */
     public Student() {
+        // Required by JPA
     }
 
     public Integer getId() {
         return id;
     }
 
-    public void setId(Integer id) { this.id = id; }
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getStudentNumber() {
         return studentNumber;

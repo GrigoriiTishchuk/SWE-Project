@@ -2,9 +2,9 @@ package com.edujournal.entity;
 
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
+/**
+ * Represents an academic group in the system.
+ */
 @Entity
 @Table(name = "academic_groups")
 public class AcademicGroup {
@@ -15,7 +15,11 @@ public class AcademicGroup {
 
     private String name;
 
+    /**
+     * Default constructor required by JPA.
+     */
     public AcademicGroup() {
+        // Required by JPA
     }
 
     public Integer getId() {

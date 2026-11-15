@@ -4,6 +4,11 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
+/**
+ * Represents a course in the system.
+ * Stores course information, assigned teacher,
+ * academic group, schedule, and notes.
+ */
 @Entity
 @Table(name = "courses")
 public class Course {
@@ -31,7 +36,11 @@ public class Course {
     @Column(columnDefinition = "TEXT")
     private String notes;
 
+    /**
+     * Default constructor required by JPA.
+     */
     public Course() {
+        // Required by JPA
     }
 
     public Integer getId() {
@@ -89,8 +98,17 @@ public class Course {
     }
 
     public String getNotes() { return notes; }
+
     public void setNotes(String notes) { this.notes = notes; }
 
+    /**
+     * Calculates the academic year based on the course start date.
+     * The academic year starts in August and ends in July
+     * of the following calendar year.
+     *
+     * @return academic year in format YYYY/YYYY,
+     *         or "2026/2027" if the start date is not set
+     */
     public String getAcademicYear() {
         if (startDate == null) return "2026/2027";
         int y = startDate.getMonthValue() >= 8 ? startDate.getYear() : startDate.getYear() - 1;
