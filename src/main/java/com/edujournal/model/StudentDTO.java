@@ -1,5 +1,10 @@
 package com.edujournal.model;
 
+/**
+ * Data transfer object for students.
+ * Contains student information combined with
+ * related user account data.
+ */
 public class StudentDTO {
     private Integer id;
     private Integer userId;
@@ -13,8 +18,20 @@ public class StudentDTO {
     private String studentNumber;
     private Integer academicGroupId;
 
-    public StudentDTO() {}
-
+    /**
+     * Creates a student DTO.
+     *
+     * @param id student identifier
+     * @param userId associated user identifier
+     * @param username username
+     * @param firstName first name
+     * @param lastName last name
+     * @param phone phone number
+     * @param email email address
+     * @param studentNumber student number
+     * @param academicGroupId academic group identifier
+     */
+    @SuppressWarnings("java:S107") // DTO intentionally contains many report fields
     public StudentDTO(Integer id, Integer userId, String username, String firstName, String lastName, String phone, String email, String studentNumber, Integer academicGroupId) {
         this.id = id;
         this.userId = userId;
@@ -27,30 +44,80 @@ public class StudentDTO {
         this.academicGroupId = academicGroupId;
     }
 
-    public Integer getStudentId() { return id; }
-    public void setStudentId(Integer id) { this.id = id; }
+    /**
+     * Creates an empty student DTO.
+     */
+    public StudentDTO() {}
 
-    public Integer getUserId() { return userId; }
-    public void setUserId(Integer userId) { this.userId = userId; }
+    public Integer getStudentId() {
+        return id;
+    }
 
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
+    public void setStudentId(Integer id) {
+        this.id = id;
+    }
 
-    public String getFirstName() { return firstName; }
-    public void setFirstName(String firstName) { this.firstName = firstName; }
+    public Integer getUserId() {
+        return userId;
+    }
 
-    public String getLastName() { return lastName; }
-    public void setLastName(String lastName) { this.lastName = lastName; }
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 
-    public String getPhone() { return phone; }
-    public void setPhone(String phone) { this.phone = phone; }
+    public String getUsername() {
+        return username;
+    }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-    public String getStudentNumber() { return studentNumber; }
-    public void setStudentNumber(String studentNumber) { this.studentNumber = studentNumber; }
+    public String getFirstName() {
+        return firstName;
+    }
 
-    public Integer getAcademicGroupId() { return academicGroupId; }
-    public void setAcademicGroupId(Integer academicGroupId) { this.academicGroupId = academicGroupId; }
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getStudentNumber() {
+        return studentNumber;
+    }
+
+    public void setStudentNumber(String studentNumber) {
+        this.studentNumber = studentNumber;
+    }
+
+    public Integer getAcademicGroupId() {
+        return academicGroupId;
+    }
+
+    public void setAcademicGroupId(Integer academicGroupId) {
+        this.academicGroupId = academicGroupId;
+    }
 }

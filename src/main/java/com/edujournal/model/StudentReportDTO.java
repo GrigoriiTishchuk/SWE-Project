@@ -2,28 +2,50 @@ package com.edujournal.model;
 
 import com.edujournal.entity.AssessmentType;
 
+/**
+ * Data transfer object for student performance reports.
+ * Combines student, academic group, course,
+ * assessment, and grade information.
+ */
 public class StudentReportDTO {
 
     // Student
-    private Integer studentId;
-    private String studentName;
-    private String studentNumber;
-    private Integer academicGroupId;
-    private String academicGroupName;
+    private final Integer studentId;
+    private final String studentName;
+    private final String studentNumber;
+    private final Integer academicGroupId;
+    private final String academicGroupName;
 
     // Course
-    private Integer courseId;
-    private String courseCode;
-    private String courseName;
+    private final Integer courseId;
+    private final String courseCode;
+    private final String courseName;
 
     // Assessment
-    private Integer assessmentId;
-    private String assessmentTitle;
-    private AssessmentType assessmentType;
+    private final Integer assessmentId;
+    private final String assessmentTitle;
+    private final AssessmentType assessmentType;
 
     // Grade
-    private Double score;
+    private final Double score;
 
+    /**
+     * Creates a student report DTO.
+     *
+     * @param studentId student identifier
+     * @param studentName student name
+     * @param studentNumber student number
+     * @param academicGroupId academic group identifier
+     * @param academicGroupName academic group name
+     * @param courseId course identifier
+     * @param courseCode course code
+     * @param courseName course name
+     * @param assessmentId assessment identifier
+     * @param assessmentTitle assessment title
+     * @param assessmentType assessment type
+     * @param score student score
+     */
+    @SuppressWarnings("java:S107") // DTO intentionally contains many report fields
     public StudentReportDTO(
             Integer studentId,
             String studentName,

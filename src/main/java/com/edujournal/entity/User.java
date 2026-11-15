@@ -2,6 +2,11 @@ package com.edujournal.entity;
 
 import jakarta.persistence.*;
 
+/**
+ * Represents an application user.
+ * Stores authentication data, personal information,
+ * role, profile settings, and localization preferences.
+ */
 @Entity
 @Table(name = "users")
 public class User {
@@ -32,7 +37,11 @@ public class User {
     @Column(name = "preferred_locale")
     private String preferredLocale = "en_US";
 
+    /**
+     * Default constructor required by JPA.
+     */
     public User() {
+        // Required by JPA
     }
 
     public Integer getId() {
@@ -105,6 +114,12 @@ public class User {
         this.photo = photo;
     }
 
+    /**
+     * Returns the user's preferred locale.
+     * Falls back to the default locale when no preference is stored.
+     *
+     * @return preferred locale or "en_US" if not set
+     */
     public String getPreferredLocale() {
         return preferredLocale != null ? preferredLocale : "en_US";
     }

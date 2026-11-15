@@ -7,8 +7,18 @@ import jakarta.persistence.EntityManager;
 
 import java.util.List;
 
+/**
+ * Data access object for {@link AcademicGroup} entities.
+ * Provides CRUD operations and group membership management.
+ */
 public class AcademicGroupDAO {
 
+    /**
+     * Finds an academic group by its identifier.
+     *
+     * @param id group identifier
+     * @return the found academic group or null if it does not exist
+     */
     public AcademicGroup findById(Integer id) {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
@@ -19,6 +29,11 @@ public class AcademicGroupDAO {
         }
     }
 
+    /**
+     * Returns all academic groups.
+     *
+     * @return list of academic groups
+     */
     public List<AcademicGroup> findAll() {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
@@ -31,6 +46,12 @@ public class AcademicGroupDAO {
         }
     }
 
+    /**
+     * Finds identifiers of all students belonging to the specified group.
+     *
+     * @param groupId group identifier
+     * @return list of student identifiers
+     */
     public List<Integer> findStudentIdsByGroupId(Integer groupId) {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
@@ -47,6 +68,12 @@ public class AcademicGroupDAO {
         }
     }
 
+    /**
+     * Finds an academic group by its name.
+     *
+     * @param name group name
+     * @return the found academic group or null if not found
+     */
     public AcademicGroup findByName(String name) {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
@@ -64,6 +91,12 @@ public class AcademicGroupDAO {
         }
     }
 
+    /**
+     * Assigns a student to the specified academic group.
+     *
+     * @param studentId student identifier
+     * @param groupId group identifier
+     */
     public void addStudentToGroup(Integer studentId, Integer groupId) {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
@@ -84,6 +117,12 @@ public class AcademicGroupDAO {
         }
     }
 
+    /**
+     * Removes a student from the specified academic group.
+     *
+     * @param studentId student identifier
+     * @param groupId group identifier
+     */
     public void removeStudentFromGroup(Integer studentId, Integer groupId) {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
@@ -104,6 +143,11 @@ public class AcademicGroupDAO {
         }
     }
 
+    /**
+     * Persists a new academic group.
+     *
+     * @param academicGroup academic group to save
+     */
     public void save(AcademicGroup academicGroup) {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
@@ -122,6 +166,11 @@ public class AcademicGroupDAO {
         }
     }
 
+    /**
+     * Updates an existing academic group.
+     *
+     * @param academicGroup academic group to update
+     */
     public void update(AcademicGroup academicGroup) {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
@@ -140,6 +189,11 @@ public class AcademicGroupDAO {
         }
     }
 
+    /**
+     * Deletes an academic group by its identifier.
+     *
+     * @param id group identifier
+     */
     public void delete(Integer id) {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 

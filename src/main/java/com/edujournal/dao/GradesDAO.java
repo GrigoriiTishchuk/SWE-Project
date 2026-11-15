@@ -6,7 +6,18 @@ import jakarta.persistence.EntityManager;
 
 import java.util.List;
 
+/**
+ * Data access object for {@link Grades} entities.
+ * Provides CRUD operations and grade search methods.
+ */
 public class GradesDAO {
+
+    /**
+     * Finds a grade by its identifier.
+     *
+     * @param id grade identifier
+     * @return the found grade or null if not found
+     */
     public Grades findById(int id) {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
@@ -16,6 +27,12 @@ public class GradesDAO {
         }
     }
 
+    /**
+     * Retrieves all grades associated with the specified enrollment.
+     *
+     * @param enrollmentId enrollment identifier
+     * @return list of grades
+     */
     public List<Grades> findByEnrollment(int enrollmentId) {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
@@ -30,6 +47,12 @@ public class GradesDAO {
         }
     }
 
+    /**
+     * Retrieves all grades associated with the specified assessment.
+     *
+     * @param assessmentId assessment identifier
+     * @return list of grades
+     */
     public List<Grades> findByAssessment(int assessmentId) {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
@@ -44,6 +67,13 @@ public class GradesDAO {
         }
     }
 
+    /**
+     * Finds a grade by enrollment and assessment identifiers.
+     *
+     * @param enrollmentId enrollment identifier
+     * @param assessmentId assessment identifier
+     * @return matching grade or null if not found
+     */
     public Grades findByEnrollmentAssessment(int enrollmentId, int assessmentId) {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
@@ -61,6 +91,11 @@ public class GradesDAO {
         }
     }
 
+    /**
+     * Saves a new grade.
+     *
+     * @param grade grade to save
+     */
     public void save(Grades grade) {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
@@ -70,18 +105,18 @@ public class GradesDAO {
             entityManager.getTransaction().commit();
 
         } catch (Exception e) {
-
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
-            }
-
+            rollback(entityManager);
             throw e;
-
         } finally {
             entityManager.close();
         }
     }
 
+    /**
+     * Updates an existing grade.
+     *
+     * @param grade grade to update
+     */
     public void update(Grades grade) {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
@@ -91,18 +126,18 @@ public class GradesDAO {
             entityManager.getTransaction().commit();
 
         } catch (Exception e) {
-
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
-            }
-
+            rollback(entityManager);
             throw e;
-
         } finally {
             entityManager.close();
         }
     }
 
+    /**
+     * Deletes a grade by its identifier.
+     *
+     * @param id grade identifier
+     */
     public void deleteById(int id) {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
 
@@ -115,15 +150,21 @@ public class GradesDAO {
             }
 
         } catch (Exception e) {
-
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
-            }
-
+            rollback(entityManager);
             throw e;
-
         } finally {
             entityManager.close();
+        }
+    }
+
+    /**
+     * Rolls back the active transaction if one exists.
+     *
+     * @param entityManager entity manager containing the transaction
+     */
+    private void rollback(EntityManager entityManager) {
+        if (entityManager.getTransaction().isActive()) {
+            entityManager.getTransaction().rollback();
         }
     }
 }

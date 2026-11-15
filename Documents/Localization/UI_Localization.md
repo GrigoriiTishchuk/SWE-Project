@@ -50,8 +50,6 @@ LocalizationManager.getCurrentLocale()
 // RTL helpers (used for Arabic layout)
 LocalizationManager.isRTL()
 LocalizationManager.getOrientation()   // NodeOrientation.RIGHT_TO_LEFT / LEFT_TO_RIGHT
-LocalizationManager.getStartAlignment() // Pos.CENTER_RIGHT (RTL) or Pos.CENTER_LEFT (LTR)
-LocalizationManager.getEndAlignment()   // Pos.CENTER_LEFT (RTL) or Pos.CENTER_RIGHT (LTR)
 ```
 
 **English fallback:** if a key is missing in the active bundle, `LocalizationManager.get()` automatically returns the English value.

@@ -7,14 +7,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Data access object for localization data stored in the database.
+ * Provides localized labels for assessment types and user roles.
+ */
 public class LocalizationDAO {
 
+    /**
+     * Retrieves localized assessment type names for the specified language.
+     * Falls back to English values when a translation is not available.
+     *
+     * @param lang language code
+     * @return map where the key is the assessment type identifier
+     *         and the value is the localized assessment type name
+     */
     public Map<String, String> getAssessmentTypeNames(String lang) {
-        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
             @SuppressWarnings("unchecked")
             List<Object[]> rows =
-                    em.createNativeQuery(
+                    entityManager.createNativeQuery(
                                     "SELECT fb.type_key, COALESCE(t.name, fb.name) "
                                             + "FROM assessment_type_translation fb "
                                             + "LEFT JOIN assessment_type_translation t "
@@ -29,10 +41,18 @@ public class LocalizationDAO {
             }
             return map;
         } finally {
-            em.close();
+            entityManager.close();
         }
     }
 
+    /**
+     * Retrieves a localized role label for the specified role key.
+     * Falls back to the English label when a translation is not available.
+     *
+     * @param roleKey role identifier
+     * @param lang language code
+     * @return localized role label, or the role key if no translation exists
+     */
     public String getRoleLabel(String roleKey, String lang) {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {

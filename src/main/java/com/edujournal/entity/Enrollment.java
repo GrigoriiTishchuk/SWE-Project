@@ -2,12 +2,17 @@ package com.edujournal.entity;
 
 import jakarta.persistence.*;
 
+/**
+ * Represents a student's enrollment in a course.
+ * Stores references to the student, course,
+ * academic group, and enrollment status.
+ */
 @Entity
 @Table(name = "enrollments")
 public class Enrollment {
 
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "student_id")
@@ -22,7 +27,12 @@ public class Enrollment {
     @Column(name = "status")
     private String status;
 
-    public Enrollment() {}
+    /**
+     * Default constructor required by JPA.
+     */
+    public Enrollment() {
+        // Required by JPA
+    }
 
     public Integer getId() {
         return id;
@@ -36,16 +46,28 @@ public class Enrollment {
         this.studentId = studentId;
     }
 
-    public Integer getCourseId() { return courseId; };
+    public Integer getCourseId() {
+        return courseId;
+    }
 
-    public void setCourseId(Integer courseId){ this.courseId = courseId; }
+    public void setCourseId(Integer courseId) {
+        this.courseId = courseId;
+    }
 
-    public Integer getAcademicGroupId() { return academicGroupId; }
+    public Integer getAcademicGroupId() {
+        return academicGroupId;
+    }
 
-    public void setAcademicGroupId(Integer academicGroupId) { this.academicGroupId = academicGroupId; }
+    public void setAcademicGroupId(Integer academicGroupId) {
+        this.academicGroupId = academicGroupId;
+    }
 
-    public String getStatus () { return status; }
+    public String getStatus () {
+        return status;
+    }
 
-    public void setStatus(String status) { this.status = status;}
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
 }

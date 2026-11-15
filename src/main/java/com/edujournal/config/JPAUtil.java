@@ -6,7 +6,11 @@ import jakarta.persistence.Persistence;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JPAUtil {
+/**
+ * Utility class for creating and providing access
+ * to the application's EntityManagerFactory.
+ */
+public final class JPAUtil {
 
     private static final EntityManagerFactory ENTITY_MANAGER_FACTORY;
 
@@ -40,6 +44,18 @@ public class JPAUtil {
                 );
     }
 
+    /**
+     * Prevents instantiation of this utility class.
+     */
+    private JPAUtil() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
+     * Returns the application's EntityManagerFactory instance.
+     *
+     * @return configured EntityManagerFactory
+     */
     public static EntityManagerFactory getEntityManagerFactory() {
         return ENTITY_MANAGER_FACTORY;
     }

@@ -1,5 +1,9 @@
 package com.edujournal.model;
 
+/**
+ * Data transfer object representing grade distribution statistics.
+ * Stores percentage or count values for each grade category.
+ */
 public class GradeDistributionDTO {
 
     private double excellent;
@@ -9,9 +13,16 @@ public class GradeDistributionDTO {
     private double sufficient;
     private double fail;
 
-    public GradeDistributionDTO() {
-    }
-
+    /**
+     * Creates a grade distribution DTO.
+     *
+     * @param excellent excellent grade value
+     * @param veryGood very good grade value
+     * @param good good grade value
+     * @param satisfactory satisfactory grade value
+     * @param sufficient sufficient grade value
+     * @param fail fail grade value
+     */
     public GradeDistributionDTO(
             double excellent,
             double veryGood,
@@ -26,6 +37,12 @@ public class GradeDistributionDTO {
         this.satisfactory = satisfactory;
         this.sufficient = sufficient;
         this.fail = fail;
+    }
+
+    /**
+     * Creates an empty grade distribution DTO.
+     */
+    public GradeDistributionDTO() {
     }
 
     public double getExcellent() {
