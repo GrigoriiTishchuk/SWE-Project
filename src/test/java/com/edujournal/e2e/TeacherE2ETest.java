@@ -1,9 +1,12 @@
 package com.edujournal.e2e;
 
 import com.edujournal.Main;
+import com.edujournal.config.LocalizationManager;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
+
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -11,6 +14,8 @@ public class TeacherE2ETest extends ApplicationTest {
 
     @Override
     public void start(Stage stage) {
+        LocalizationManager.setLocale(Locale.US);
+
         new Main().start(stage);
         stage.show();
     }

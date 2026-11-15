@@ -196,6 +196,9 @@ public class CourseController extends BaseController<CourseDTO> {
         TextField codeField = new TextField();
         codeField.setPromptText(LocalizationManager.get("code"));
 
+        nameField.setId("courseNameField");
+        codeField.setId("courseCodeField");
+
         // Teacher ComboBox
         List<UserDTO> teachers = userService.findAllTeachers();
         ComboBox<UserDTO> teacherCombo =
