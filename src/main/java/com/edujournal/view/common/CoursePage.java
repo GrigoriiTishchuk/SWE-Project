@@ -10,9 +10,18 @@ import javafx.geometry.Insets;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
+/**
+ * Displays courses and the controls available for the current role.
+ */
 public class CoursePage extends BorderPane {
     private final Role role;
 
+    /**
+     * Creates the course page for the specified user role.
+     *
+     * @param sidebar sidebar to display beside the course content
+     * @param role role that determines available course operations
+     */
     public CoursePage(VBox sidebar, Role role) {
         Main.setCurrentPageSupplier(() -> new CoursePage(buildSidebar(role), role));
         this.role = role;

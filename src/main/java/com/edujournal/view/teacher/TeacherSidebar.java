@@ -9,10 +9,17 @@ import com.edujournal.view.common.CourseReportPage;
 import com.edujournal.view.common.OwnProfilePage;
 import javafx.scene.layout.VBox;
 
-// every teacher page just calls TeacherSidebar.build("<its own label>")
-
+/**
+ * Builds the teacher navigation menu.
+ */
 public class TeacherSidebar {
 
+    /**
+     * Creates the teacher sidebar and marks the active destination.
+     *
+     * @param active label identifying the selected navigation destination
+     * @return configured teacher sidebar
+     */
     public static VBox build(String active) {
         return Sidebar.build(
                 new Sidebar.NavItem(LocalizationManager.get("dashboard"), active.equals("Dashboard"),

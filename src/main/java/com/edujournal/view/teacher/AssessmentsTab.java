@@ -8,7 +8,6 @@ import com.edujournal.entity.Assessments;
 import com.edujournal.entity.Course;
 import com.edujournal.model.AssessmentsDTO;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +23,9 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
+/**
+ * Builds the teacher gradebook tab for managing course assessments.
+ */
 public class AssessmentsTab {
 
     private static final String PANEL_STYLE =
@@ -35,6 +37,13 @@ public class AssessmentsTab {
             "-fx-background-color: #DBEAFE; -fx-background-radius: 6; " +
                     "-fx-border-color: transparent;";
 
+    /**
+     * Creates the assessment list and controls for a selected course and optional group.
+     *
+     * @param course selected course name
+     * @param group selected group name, or {@code null} or blank when no group is selected
+     * @return assessment management view
+     */
     public static Node build(String course, String group) {
 
 
@@ -367,12 +376,6 @@ public class AssessmentsTab {
                             saveBtn.setVisible(false);
                             updateBtn.setVisible(true);
 
-                            System.out.println(
-                                    "Editing ID: "
-                                            + selected.getId()
-                                            + " - "
-                                            + selected.getTitle()
-                            );
                         });
 
                         deleteBtn.setOnAction(e -> {
@@ -401,13 +404,6 @@ public class AssessmentsTab {
                                     || result.get() != ButtonType.OK) {
                                 return;
                             }
-
-                            System.out.println(
-                                    "Delete ID: "
-                                            + selected.getId()
-                                            + " - "
-                                            + selected.getTitle()
-                            );
 
                             Assessments assessment =
                                     assessmentsService.findById(
@@ -701,10 +697,6 @@ public class AssessmentsTab {
             updateBtn.setVisible(false);
             saveBtn.setVisible(true);
 
-            System.out.println(
-                    "Updated ID: "
-                            + assessment.getId()
-            );
         });
 
         VBox rightPanel =
