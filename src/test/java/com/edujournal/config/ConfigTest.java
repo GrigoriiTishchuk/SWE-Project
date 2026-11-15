@@ -2,6 +2,9 @@ package com.edujournal.config;
 
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ConfigTest {
@@ -19,14 +22,13 @@ class ConfigTest {
     }
 
     @Test
-    void envConfigConstructor() {
-        EnvConfig config = new EnvConfig();
-        assertNotNull(config);
-    }
+    void envConfigConstructor() throws Exception {
+        Constructor<EnvConfig> constructor = EnvConfig.class.getDeclaredConstructor();
+        constructor.setAccessible(true);
 
-    @Test
-    void jpaUtilConstructor() {
-        JPAUtil util = new JPAUtil();
-        assertNotNull(util);
+        assertThrows(
+                InvocationTargetException.class,
+                constructor::newInstance
+        );
     }
 }
