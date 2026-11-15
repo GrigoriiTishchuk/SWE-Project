@@ -8,10 +8,19 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
-// white boxes in dashboard
-
+/**
+ * Dashboard statistics card displaying a metric,
+ * icon and corresponding value.
+ */
 public class StatCard extends VBox {
 
+    /**
+     * Creates a dashboard statistic card.
+     *
+     * @param label metric name
+     * @param value metric value
+     * @param iconResource path to the icon resource
+     */
     public StatCard(String label, String value, String iconResource) {
         setSpacing(8);
         setPadding(new Insets(16));

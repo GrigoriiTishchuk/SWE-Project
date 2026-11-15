@@ -11,13 +11,6 @@ import com.edujournal.view.student.StudentDashboardPage;
 import com.edujournal.view.teacher.TeacherDashboardPage;
 import javafx.geometry.Insets;
 import java.util.Locale;
-/*
-import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-*/
 
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.GaussianBlur;
@@ -30,6 +23,15 @@ import javafx.scene.layout.VBox;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
+/**
+ * Login page that handles:
+ * <ul>
+ *     <li>User authentication</li>
+ *     <li>Language selection</li>
+ *     <li>Password reset</li>
+ *     <li>Navigation to role-specific dashboards</li>
+ * </ul>
+ */
 public class LoginPage extends StackPane {
 
     private final TextField usernameField = new TextField();
@@ -37,19 +39,30 @@ public class LoginPage extends StackPane {
     private final Label errorLabel = new Label();
     private final AuthService authService = new AuthService();
 
+    private static final String ENGLISH = "English";
+    private static final String RUSSIAN = "Русский";
+    private static final String TURKISH = "Türkçe";
+    private static final String ARABIC = "العربية";
+    private static final String KEY_USERNAME = "username";
+    private static final String KEY_PASSWORD = "password";
+
+    /**
+     * Creates the login page with a banner,
+     * authentication form and language selector.
+     */
     public LoginPage() {
         Main.setCurrentPageSupplier(LoginPage::new);
 
         HBox main = new HBox(buildBanner(), buildForm());
 
         ComboBox<String> languageSelector = new ComboBox<>();
-        languageSelector.getItems().addAll("English", "Türkçe", "Русский", "العربية");
+        languageSelector.getItems().addAll(ENGLISH, TURKISH, RUSSIAN, ARABIC);
         languageSelector.setValue(localeToLanguage(LocalizationManager.getCurrentLocale()));
         languageSelector.valueProperty().addListener((obs, old, val) -> {
             Locale locale = switch (val) {
-                case "Русский" -> new Locale("ru", "RU");
-                case "Türkçe"  -> new Locale("tr", "TR");
-                case "العربية"  -> new Locale("ar", "SA");
+                case RUSSIAN -> new Locale("ru", "RU");
+                case TURKISH  -> new Locale("tr", "TR");
+                case ARABIC  -> new Locale("ar", "SA");
                 default        -> new Locale("en", "US");
             };
             LocalizationManager.setLocale(locale);
@@ -62,6 +75,12 @@ public class LoginPage extends StackPane {
         getChildren().addAll(main, languageSelector);
     }
 
+    /**
+     * Builds the promotional banner displayed
+     * on the left side of the login page.
+     *
+     * @return configured banner pane
+     */
     private StackPane buildBanner() {
         ImageView bg = new ImageView(new Image(
                 getClass().getResourceAsStream("/images/background.jpg")));
@@ -94,6 +113,11 @@ public class LoginPage extends StackPane {
         return banner;
     }
 
+    /**
+     * Builds the authentication form.
+     *
+     * @return configured login form
+     */
     private VBox buildForm() {
         usernameField.setPromptText(LocalizationManager.get("enterUsername"));
         passwordField.setPromptText(LocalizationManager.get("enterPassword"));
@@ -114,8 +138,8 @@ public class LoginPage extends StackPane {
         VBox form = new VBox(12,
                 welcome,
                 new Label(LocalizationManager.get("signInto")),
-                new Label(LocalizationManager.get("username")), usernameField,
-                new Label(LocalizationManager.get("password")), passwordField,
+                new Label(LocalizationManager.get(KEY_USERNAME)), usernameField,
+                new Label(LocalizationManager.get(KEY_PASSWORD)), passwordField,
                 errorLabel,
                 forgotPassword, signIn
         );
@@ -125,15 +149,26 @@ public class LoginPage extends StackPane {
         return form;
     }
 
+    /**
+     * Converts a locale into a language name
+     * displayed in the language selector.
+     *
+     * @param locale current locale
+     * @return display name of the language
+     */
     private static String localeToLanguage(Locale locale) {
         return switch (locale.getLanguage()) {
-            case "ru" -> "Русский";
-            case "tr" -> "Türkçe";
-            case "ar" -> "العربية";
-            default   -> "English";
+            case "ru" -> RUSSIAN;
+            case "tr" -> TURKISH;
+            case "ar" -> ARABIC;
+            default   -> ENGLISH;
         };
     }
 
+    /**
+     * Attempts to authenticate the user and
+     * redirects to the corresponding dashboard.
+     */
     private void onSignIn() {
         String username = usernameField.getText();
         String password = passwordField.getText();
@@ -147,6 +182,12 @@ public class LoginPage extends StackPane {
         }
     }
 
+    /**
+     * Opens the dashboard that matches
+     * the authenticated user's role.
+     *
+     * @param role authenticated user role
+     */
     private void navigateToDashboard(Role role) {
         if (role == null) return;
 
@@ -166,6 +207,10 @@ public class LoginPage extends StackPane {
         }
     }
 
+    /**
+     * Opens the password reset dialog and
+     * processes the entered credentials.
+     */
     private void onForgotPassword() {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle(LocalizationManager.get("resetPassword"));
@@ -180,12 +225,12 @@ public class LoginPage extends StackPane {
         grid.setPadding(new Insets(20, 20, 10, 10));
 
         TextField usernameInput = new TextField();
-        usernameInput.setPromptText(LocalizationManager.get("username"));
+        usernameInput.setPromptText(LocalizationManager.get(KEY_USERNAME));
 
         PasswordField newPasswordInput = new PasswordField();
         newPasswordInput.setPromptText(LocalizationManager.get("newPasswordPrompt"));
 
-        grid.add(new Label(LocalizationManager.get("username") + ":"), 0, 0);
+        grid.add(new Label(LocalizationManager.get(KEY_USERNAME) + ":"), 0, 0);
         grid.add(usernameInput, 1, 0);
         grid.add(new Label(LocalizationManager.get("newPasswordLabel")), 0, 1);
         grid.add(newPasswordInput, 1, 1);
@@ -208,13 +253,25 @@ public class LoginPage extends StackPane {
                 }
 
                 boolean success = authService.resetPassword(username, newPassword);
-                showResultAlert(success, success
-                        ? LocalizationManager.get("passwordResetSuccess")
-                        : LocalizationManager.get("userNotFound"));
+                String messageKey = success
+                        ? "passwordResetSuccess"
+                        : "userNotFound";
+
+                showResultAlert(
+                        success,
+                        LocalizationManager.get(messageKey)
+                );
             }
         });
     }
 
+    /**
+     * Displays the result of a password
+     * reset operation.
+     *
+     * @param isSuccess true if operation succeeded
+     * @param message result message to display
+     */
     private void showResultAlert(boolean isSuccess, String message) {
         Alert alert = new Alert(isSuccess ? Alert.AlertType.INFORMATION : Alert.AlertType.ERROR);
         alert.setTitle(LocalizationManager.get("passwordResetResult"));
