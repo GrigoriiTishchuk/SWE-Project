@@ -14,14 +14,30 @@ import java.sql.Statement;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-public class DatabaseInitializer {
+/**
+ * Utility class responsible for database initialization.
+ * <p>
+ * Creates the database if it does not exist, executes schema scripts,
+ * and loads initial seed data when the database is initialized for
+ * the first time.
+ * </p>
+ */
+public final class DatabaseInitializer {
 
     private static final Logger LOGGER = Logger.getLogger(DatabaseInitializer.class.getName());
 
+    /**
+     * Prevents instantiation of this utility class.
+     */
     private DatabaseInitializer() {
-        // utility class, not meant to be instantiated
+        throw new IllegalStateException("Utility class");
     }
 
+    /**
+     * Creates the database if necessary, executes the schema script,
+     * and populates the database with initial data when it has not
+     * been seeded before.
+     */
     @SuppressWarnings("java:S2077") // database name cannot be parameterized in JDBC
     public static void initialize() {
 
@@ -76,6 +92,13 @@ public class DatabaseInitializer {
         }
     }
 
+    /**
+     * Checks whether the database has already been seeded.
+     *
+     * @param connection active database connection
+     * @return {@code true} if seed data has already been inserted,
+     *         {@code false} otherwise
+     */
     private static boolean isAlreadySeeded(Connection connection) {
         try (Statement st = connection.createStatement();
                 ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM seed_log")) {
@@ -86,6 +109,17 @@ public class DatabaseInitializer {
         }
     }
 
+    /**
+     * Executes all SQL statements contained in the specified SQL file.
+     * Statements are separated using semicolons.
+     *
+     * @param connection active database connection
+     * @param resourcePath path to the SQL resource file
+     * @throws SQLException if a database error occurs while executing
+     *                      the SQL commands
+     * @throws IllegalStateException if the specified resource file
+     *                               cannot be found
+     */
     private static void executeSqlFile(Connection connection, String resourcePath)
             throws SQLException {
 
