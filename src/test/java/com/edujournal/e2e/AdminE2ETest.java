@@ -1,6 +1,7 @@
 package com.edujournal.e2e;
 
 import com.edujournal.Main;
+import com.edujournal.config.LocalizationManager;
 import com.edujournal.entity.Role;
 import com.edujournal.entity.User;
 import com.edujournal.backend.service.AcademicGroupService;
