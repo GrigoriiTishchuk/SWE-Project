@@ -18,9 +18,15 @@ import javafx.scene.layout.VBox;
 import java.util.List;
 import com.edujournal.config.LocalizationManager;
 
+/**
+ * Presents administrative dashboard statistics and shortcuts to management pages.
+ */
 public class AdminDashboardPage extends BorderPane {
     GradeDistributionCard distributionCard = new GradeDistributionCard(Role.ADMINISTRATOR, null);
 
+    /**
+     * Creates the administrator dashboard and initializes its navigation and content.
+     */
     public AdminDashboardPage() {
         Main.setCurrentPageSupplier(AdminDashboardPage::new);
         setLeft(AdminSidebar.build("Dashboard"));

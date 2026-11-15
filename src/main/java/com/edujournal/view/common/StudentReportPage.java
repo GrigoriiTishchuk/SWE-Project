@@ -14,9 +14,19 @@ import javafx.geometry.Insets;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
+/**
+ * Displays an individual student's report.
+ */
 public class StudentReportPage extends BorderPane {
     private final Role role;
 
+    /**
+     * Creates a report page for a student or an administrator-selected student.
+     *
+     * @param sidebar sidebar to display beside the report
+     * @param role role that determines report access
+     * @param studentId student identifier, ignored for the currently logged-in student
+     */
     public StudentReportPage(VBox sidebar, Role role, Integer studentId) {
         Main.setCurrentPageSupplier(() -> new StudentReportPage(buildSidebar(role), role, null));
         this.role = role;

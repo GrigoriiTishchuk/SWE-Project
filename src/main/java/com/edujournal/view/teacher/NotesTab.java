@@ -16,8 +16,19 @@ import javafx.scene.layout.VBox;
 
 import java.text.MessageFormat;
 
+/**
+ * Builds the teacher gradebook notes tab for a selected course and group.
+ */
 public class NotesTab {
 
+    /**
+     * Creates the course notes editor, or an explanatory placeholder when the course
+     * and group cannot be resolved.
+     *
+     * @param course selected course name
+     * @param group selected group name, or {@code null} or blank when no group is selected
+     * @return notes editor or placeholder node
+     */
     public static Node build(String course, String group) {
         CourseDAO courseDAO = new CourseDAO();
         AcademicGroupDAO groupDAO = new AcademicGroupDAO();

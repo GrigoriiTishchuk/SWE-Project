@@ -21,6 +21,9 @@ import javafx.scene.layout.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Displays and exports a year-filtered report of courses.
+ */
 public class CourseReportPage extends BorderPane {
 
     private static final String[] HEADERS = {"Code", "Name", "Group", "Students", "Assessments"};
@@ -36,6 +39,12 @@ public class CourseReportPage extends BorderPane {
     private final Role role;
     private String selectedYear = DEFAULT_YEAR;
 
+    /**
+     * Creates a course report page scoped to the supplied role.
+     *
+     * @param sidebar sidebar to display beside the report
+     * @param role role that determines which courses are included
+     */
     public CourseReportPage(VBox sidebar, Role role) {
         Main.setCurrentPageSupplier(() -> new CourseReportPage(buildSidebar(role), role));
         this.role = role;

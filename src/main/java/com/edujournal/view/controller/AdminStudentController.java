@@ -355,7 +355,7 @@ public class AdminStudentController extends BaseController<StudentDTO> {
                 studentService.delete(dto.getStudentId());
                 userService.deleteUser(dto.getUserId());
                 loadAndShowItems();
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
             }
         }

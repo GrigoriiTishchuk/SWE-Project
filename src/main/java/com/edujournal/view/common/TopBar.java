@@ -22,9 +22,13 @@ import javafx.scene.shape.Circle;
 import java.util.Locale;
 import java.util.function.Consumer;
 
-// name, role, year
-
+/**
+ * Builds the shared page header with year, language, account, and logout controls.
+ */
 public class TopBar {
+
+    private TopBar() {
+    }
 
     private static String localeToLanguage(Locale locale) {
         return switch (locale.getLanguage()) {
@@ -35,10 +39,27 @@ public class TopBar {
         };
     }
 
+    /**
+     * Creates a header without a callback for year changes.
+     *
+     * @param title page title
+     * @param role current user's role
+     * @param showYear whether the academic-year selector is visible
+     * @return the configured header
+     */
     public static HBox build(String title, Role role, boolean showYear) {
         return build(title, role, showYear, null);
     }
 
+    /**
+     * Creates a header and optionally notifies a caller when the academic year changes.
+     *
+     * @param title page title
+     * @param role current user's role
+     * @param showYear whether the academic-year selector is visible
+     * @param onYearChange callback receiving the newly selected year, or {@code null}
+     * @return the configured header
+     */
     public static HBox build(String title, Role role, boolean showYear, Consumer<String> onYearChange) {
         Label titleLabel = new Label(title);
         titleLabel.setStyle("-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #111827;");
@@ -50,13 +71,21 @@ public class TopBar {
         studyingYear.getItems().addAll("2026/2027", "2025/2026", "2024/2025");
         studyingYear.setValue("2026/2027");
         studyingYear.setVisible(showYear);
-        if (onYearChange != null)
-            studyingYear.valueProperty().addListener((obs, old, val) -> onYearChange.accept(val));
+        if (onYearChange != null) {
+            studyingYear.valueProperty().addListener((obs, old, val) -> {
+                if (val != null) {
+                    onYearChange.accept(val);
+                }
+            });
+        }
 
         ComboBox<String> languageSelector = new ComboBox<>();
         languageSelector.getItems().addAll("English", "Türkçe", "Русский", "العربية");
         languageSelector.setValue(localeToLanguage(LocalizationManager.getCurrentLocale()));
         languageSelector.valueProperty().addListener((obs, old, val) -> {
+            if (val == null) {
+                return;
+            }
             Locale locale = switch (val) {
                 case "Русский" -> new Locale("ru", "RU");
                 case "Türkçe" -> new Locale("tr", "TR");
@@ -94,6 +123,7 @@ public class TopBar {
         exitBtn.setOnMouseExited(e -> exitBtn.setStyle("-fx-background-color: transparent; -fx-font-size: 30px; -fx-text-fill: #6B7280; -fx-cursor: hand;"));
         exitBtn.setOnAction(e -> {
             LocalizationManager.setLocale(new Locale("en", "US"));
+            UserSession.getInstance().cleanUserSession();
             Main.showPage(new LoginPage());
         });
 

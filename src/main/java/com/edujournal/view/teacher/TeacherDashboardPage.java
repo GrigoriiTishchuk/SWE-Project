@@ -13,10 +13,16 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+/**
+ * Presents teacher dashboard statistics and shortcuts to teaching tools.
+ */
 public class TeacherDashboardPage extends BorderPane {
     Integer userId = UserSession.getInstance().getCurrentUser().getId();
     GradeDistributionCard distributionCard = new GradeDistributionCard(Role.TEACHER, userId);
 
+    /**
+     * Creates the dashboard for the currently logged-in teacher.
+     */
     public TeacherDashboardPage() {
         Main.setCurrentPageSupplier(TeacherDashboardPage::new);
         setLeft(TeacherSidebar.build("Dashboard"));

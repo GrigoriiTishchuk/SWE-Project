@@ -4,16 +4,24 @@ import com.edujournal.Main;
 import com.edujournal.entity.Role;
 import com.edujournal.view.common.TopBar;
 import com.edujournal.view.controller.AdminStudentController;
-import com.edujournal.view.controller.AdminTeacherController;
 import javafx.geometry.Insets;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import com.edujournal.config.LocalizationManager;
 
+/**
+ * Displays the administrator's student-management screen.
+ */
 public class AdminStudentPage extends BorderPane {
 
     private final Role role;
 
+    /**
+     * Creates the student-management page.
+     *
+     * @param sidebar sidebar displayed beside the page content
+     * @param role role used to configure student management
+     */
     public AdminStudentPage(VBox sidebar, Role role) {
         Main.setCurrentPageSupplier(() -> new AdminStudentPage(AdminSidebar.build("Students"), Role.ADMINISTRATOR));
         this.role = role;

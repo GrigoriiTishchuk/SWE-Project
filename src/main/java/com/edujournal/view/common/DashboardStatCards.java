@@ -22,8 +22,20 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * Creates role-specific summary cards for dashboard pages.
+ */
 public class DashboardStatCards {
 
+    private DashboardStatCards() {
+    }
+
+    /**
+     * Builds dashboard statistics for the currently logged-in user.
+     *
+     * @param role role used to select the applicable statistics
+     * @return a row of dashboard statistic cards
+     */
     public static HBox build(Role role) {
         HBox box = new HBox(16);
         box.setAlignment(Pos.CENTER);

@@ -24,9 +24,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Displays and edits the current user's profile details.
+ */
 public class OwnProfilePage extends BorderPane {
 
     private static final String PANEL =
@@ -165,6 +169,20 @@ public class OwnProfilePage extends BorderPane {
                 }
                 editSaveBtn.setText(LocalizationManager.get("saveChanges"));
             } else {
+                LocalDate dateOfBirth = null;
+                if (role == Role.STUDENT && finalStudent != null && finalDob != null) {
+                    String dob = finalDob.getText().trim();
+                    if (!dob.isEmpty()) {
+                        try {
+                            dateOfBirth = LocalDate.parse(dob);
+                        } catch (DateTimeParseException ex) {
+                            new Alert(Alert.AlertType.WARNING,
+                                    "Invalid date of birth. Use yyyy-MM-dd.").showAndWait();
+                            return;
+                        }
+                    }
+                }
+
                 user.setFirstName(firstName.getText().trim());
                 user.setLastName(lastName.getText().trim());
                 user.setUsername(username.getText().trim());
@@ -178,11 +196,9 @@ public class OwnProfilePage extends BorderPane {
                 session.setUsername(user.getUsername());
                 session.setEmail(user.getEmail());
                 session.setPhone(user.getPhone());
-
                 if (role == Role.STUDENT && finalStudent != null && finalDob != null) {
-                    String dob = finalDob.getText().trim();
-                    if (!dob.isEmpty()) {
-                        try { finalStudent.setDateOfBirth(LocalDate.parse(dob)); } catch (Exception ignored) {}
+                    if (dateOfBirth != null) {
+                        finalStudent.setDateOfBirth(dateOfBirth);
                     }
                     new StudentService().update(finalStudent);
                 }

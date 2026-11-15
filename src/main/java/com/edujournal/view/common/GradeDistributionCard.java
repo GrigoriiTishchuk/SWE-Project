@@ -16,9 +16,18 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
+/**
+ * Displays grade distribution values as a chart with a matching legend.
+ */
 public class GradeDistributionCard extends VBox {
     private final BarChart<String, Number> chart;
 
+    /**
+     * Creates a grade distribution chart for the supplied user's role.
+     *
+     * @param role role that determines the distribution scope
+     * @param userId user identifier used for role-scoped statistics
+     */
     public GradeDistributionCard(Role role, Integer userId) {
         DashboardStatisticsService statisticsService = new DashboardStatisticsService();
 

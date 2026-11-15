@@ -18,10 +18,23 @@ import com.edujournal.config.LocalizationManager;
 import com.edujournal.view.common.ExportUtil;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+/**
+ * Builds the teacher gradebook tab for viewing, editing, and exporting grades.
+ */
 public class GradesTab {
+    private static final Logger LOGGER = Logger.getLogger(GradesTab.class.getName());
 
 
+    /**
+     * Creates a grade table for the selected course and optional group.
+     *
+     * @param course selected course name
+     * @param group selected group name, or {@code null} or blank for all groups
+     * @return grade table and its controls, or a placeholder when no assessments exist
+     */
     public static Node build(String course, String group) {
         AssessmentsService assessmentsService = new AssessmentsService();
         GradesDAO gradesDAO = new GradesDAO();
@@ -202,36 +215,34 @@ public class GradesTab {
                                     "\"" + assessments.get(c).getTitle() + "\": " + LocalizationManager.get("scoreInvalid")).showAndWait();
                             continue;
                         }
-                        try {
-                            double score = Double.parseDouble(text);
-                            if (score < 0) {
-                                new Alert(Alert.AlertType.WARNING,
-                                        "\"" + assessments.get(c).getTitle() + "\": " + LocalizationManager.get("scoreNegative")).showAndWait();
-                                continue;
-                            }
-                            double maxScore = assessments.get(c).getMaxScore();
-                            if (score > maxScore) {
-                                new Alert(Alert.AlertType.WARNING,
-                                        "\"" + assessments.get(c).getTitle() + "\": " + score +
-                                        " " + LocalizationManager.get("scoreExceedsMax") + " " + maxScore + ".").showAndWait();
-                                continue;
-                            }
-                            Grades grade = studentGrades != null
-                                    ? studentGrades.get(assessments.get(c).getId()) : null;
-                            if (grade != null) {
-                                grade.setScore(score);
-                                gradesDAO.update(grade);
-                            } else {
-                                Grades newGrade = new Grades();
-                                newGrade.setEnrollmentId(enrollmentId);
-                                newGrade.setAssessmentId(assessments.get(c).getId());
-                                newGrade.setScore(score);
-                                gradesDAO.save(newGrade);
-                                gradeMap.computeIfAbsent(enrollmentId, k -> new LinkedHashMap<>())
-                                        .put(assessments.get(c).getId(), newGrade);
-                            }
-                            data[r][c + 1] = text;
-                        } catch (NumberFormatException ignored) {}
+                        double score = Double.parseDouble(text);
+                        if (score < 0) {
+                            new Alert(Alert.AlertType.WARNING,
+                                    "\"" + assessments.get(c).getTitle() + "\": " + LocalizationManager.get("scoreNegative")).showAndWait();
+                            continue;
+                        }
+                        double maxScore = assessments.get(c).getMaxScore();
+                        if (score > maxScore) {
+                            new Alert(Alert.AlertType.WARNING,
+                                    "\"" + assessments.get(c).getTitle() + "\": " + score +
+                                    " " + LocalizationManager.get("scoreExceedsMax") + " " + maxScore + ".").showAndWait();
+                            continue;
+                        }
+                        Grades grade = studentGrades != null
+                                ? studentGrades.get(assessments.get(c).getId()) : null;
+                        if (grade != null) {
+                            grade.setScore(score);
+                            gradesDAO.update(grade);
+                        } else {
+                            Grades newGrade = new Grades();
+                            newGrade.setEnrollmentId(enrollmentId);
+                            newGrade.setAssessmentId(assessments.get(c).getId());
+                            newGrade.setScore(score);
+                            gradesDAO.save(newGrade);
+                            gradeMap.computeIfAbsent(enrollmentId, k -> new LinkedHashMap<>())
+                                    .put(assessments.get(c).getId(), newGrade);
+                        }
+                        data[r][c + 1] = text;
                     }
                     data[r][colCount + 1] = computeFinalGrade(assessments, gradeMap.get(enrollmentId), colCount);
                 }
@@ -251,6 +262,14 @@ public class GradesTab {
         return vbox;
     }
 
+    /**
+     * Calculates a student's final grade when all required assessment grades are available.
+     *
+     * @param assessments assessments included in the course grade
+     * @param studentGrades grades indexed by assessment identifier, or {@code null} when absent
+     * @param colCount number of assessment columns that must have grades
+     * @return formatted grade and percentage, or an em dash if a complete grade cannot be calculated
+     */
     public static String computeFinalGrade(List<Assessments> assessments, Map<Integer, Grades> studentGrades, int colCount) {
         if (studentGrades == null || studentGrades.size() < colCount
                 || studentGrades.values().stream().anyMatch(g -> g.getScore() == null)) {
@@ -260,12 +279,18 @@ public class GradesTab {
             double percent = new CourseGradeService().calculateFinalGrade(
                     assessments, new ArrayList<>(studentGrades.values()));
             return String.format("%d (%.1f%%)", toGrade(percent), percent);
-        } catch (Exception e) {
-            System.err.println("[FinalGrade] " + e.getMessage());
+        } catch (IllegalArgumentException ex) {
+            LOGGER.log(Level.WARNING, "Unable to calculate the final grade.", ex);
             return "—";
         }
     }
 
+    /**
+     * Converts a course percentage to the application's integer grade scale.
+     *
+     * @param percent percentage score
+     * @return grade from 0 to 5
+     */
     public static int toGrade(double percent) {
         if (percent >= 83) return 5;
         if (percent >= 72) return 4;
