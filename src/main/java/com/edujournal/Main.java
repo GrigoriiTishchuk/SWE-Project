@@ -10,13 +10,23 @@ import javafx.stage.Stage;
 
 import java.util.function.Supplier;
 
-// Run via Launcher to avoid missing error
-
+/**
+ * Main JavaFX application entry point.
+ * Responsible for application startup,
+ * database initialization, and page navigation.
+ */
 public class Main extends Application {
 
     private static Stage stage;
     private static Supplier<Parent> currentPageSupplier;
 
+    /**
+     * Initializes the application, prepares the database,
+     * and displays the login page.
+     *
+     * @param primaryStage main application stage
+     */
+    @SuppressWarnings("java:S2696")
     @Override
     public void start(Stage primaryStage) {
         DatabaseInitializer.initialize();
@@ -26,7 +36,11 @@ public class Main extends Application {
         stage.show();
     }
 
-    /** Switches the whole window to a different page. */
+    /**
+     * Switches the application to the specified page.
+     *
+     * @param page page to display
+     */
     public static void showPage(Parent page) {
         page.setNodeOrientation(
                 LocalizationManager.getOrientation()
@@ -37,14 +51,29 @@ public class Main extends Application {
         stage.setScene(scene);
     }
 
+    /**
+     * Sets the supplier used to recreate the current page.
+     * This is mainly used when reloading the UI after
+     * localization changes.
+     *
+     * @param supplier page supplier
+     */
     public static void setCurrentPageSupplier(Supplier<Parent> supplier) {
         currentPageSupplier = supplier;
     }
 
+    /**
+     * Reloads the currently displayed page.
+     */
     public static void reloadPage() {
         if (currentPageSupplier != null) showPage(currentPageSupplier.get());
     }
 
+    /**
+     * Launches the JavaFX application.
+     *
+     * @param args command-line arguments
+     */
     public static void main(String[] args) {
         launch(args);
     }
