@@ -2,6 +2,10 @@ package com.edujournal.model;
 
 import com.edujournal.entity.Role;
 
+/**
+ * Data transfer object for users.
+ * Contains user profile and role information.
+ */
 public class UserDTO {
     private Integer id;
     private String username;
@@ -11,6 +15,17 @@ public class UserDTO {
     private String phone;
     private Role role;
 
+    /**
+     * Creates a user DTO.
+     *
+     * @param id user identifier
+     * @param username username
+     * @param firstName first name
+     * @param lastName last name
+     * @param email email address
+     * @param phone phone number
+     * @param role user role
+     */
     public UserDTO(Integer id, String username, String firstName, String lastName, String email, String phone, Role role) {
         this.id = id;
         this.username = username;
@@ -21,6 +36,9 @@ public class UserDTO {
         this.role = role;
     }
 
+    /**
+     * Creates an empty user DTO.
+     */
     public UserDTO() {
     }
 
@@ -77,6 +95,11 @@ public class UserDTO {
         this.role = role;
     }
 
+    /**
+     * Returns the user's full name.
+     *
+     * @return first name and last name separated by a space
+     */
     @Override
     public String toString() {
         return firstName + " " + lastName;

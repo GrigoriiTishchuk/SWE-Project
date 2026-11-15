@@ -4,16 +4,30 @@ import com.edujournal.entity.AssessmentType;
 
 import java.time.LocalDate;
 
+/**
+ * Data transfer object for assessments.
+ */
 public class AssessmentsDTO {
 
-    private Integer id;
-    private Integer courseId;
-    private String title;
-    private AssessmentType type;
-    private Double maxScore;
-    private Double weight;
-    private LocalDate dueDate;
+    private final Integer id;
+    private final Integer courseId;
+    private final String title;
+    private final AssessmentType type;
+    private final Double maxScore;
+    private final Double weight;
+    private final LocalDate dueDate;
 
+    /**
+     * Creates an assessment DTO.
+     *
+     * @param id assessment identifier
+     * @param courseId course identifier
+     * @param title assessment title
+     * @param type assessment type
+     * @param maxScore maximum score
+     * @param weight assessment weight
+     * @param dueDate assessment due date
+     */
     public AssessmentsDTO(
             Integer id,
             Integer courseId,

@@ -1,23 +1,28 @@
 package com.edujournal.model;
 
-import com.edujournal.entity.Course;
-import jakarta.persistence.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
+/**
+ * Data transfer object for academic groups.
+ */
 public class AcademicGroupDTO {
     private Integer id;
     private String name;
-    private Integer courseId;
-    private String courseName;
 
+    /**
+     * Creates an academic group DTO.
+     *
+     * @param id group identifier
+     * @param name group name
+     */
     public AcademicGroupDTO(Integer id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public AcademicGroupDTO() {}
+    /**
+     * Creates an empty academic group DTO.
+     */
+    public AcademicGroupDTO() {
+    }
 
     public Integer getId() {
         return id;
