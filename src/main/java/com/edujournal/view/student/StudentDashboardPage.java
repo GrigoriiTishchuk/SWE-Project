@@ -7,7 +7,6 @@ import com.edujournal.backend.utils.UserSession;
 import com.edujournal.entity.Role;
 import com.edujournal.entity.Student;
 import com.edujournal.model.CourseDTO;
-import com.edujournal.view.common.ChartPlaceholder;
 import com.edujournal.view.common.DashboardStatCards;
 import com.edujournal.view.common.GradeDistributionCard;
 import com.edujournal.view.common.TopBar;
@@ -22,10 +21,16 @@ import java.util.List;
 import com.edujournal.Main;
 import com.edujournal.config.LocalizationManager;
 
+/**
+ * Presents the current student's dashboard, course overview, and grade distribution.
+ */
 public class StudentDashboardPage extends BorderPane {
     Integer userId = UserSession.getInstance().getCurrentUser().getId();
     GradeDistributionCard distributionCard = new GradeDistributionCard(Role.STUDENT, userId);
 
+    /**
+     * Creates the student dashboard for the currently logged-in student.
+     */
     public StudentDashboardPage() {
         Main.setCurrentPageSupplier(StudentDashboardPage::new);
         setLeft(StudentSidebar.build(LocalizationManager.get("dashboard")));

@@ -15,6 +15,9 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
+/**
+ * Displays the teacher gradebook with course selection and grade, assessment, and notes tabs.
+ */
 public class TeacherGradebookPage extends BorderPane {
 
     private static final String ACTIVE_TAB_STYLE =
@@ -39,16 +42,30 @@ public class TeacherGradebookPage extends BorderPane {
 
     private ComboBox<String> courseCombo;
     private ComboBox<String> groupCombo;
-    private String preSelectedCourse;
+    private final String preSelectedCourse;
 
+    /**
+     * Creates the gradebook with the grades tab selected.
+     */
     public TeacherGradebookPage() {
         this(0, null);
     }
 
+    /**
+     * Creates the gradebook with the specified tab selected.
+     *
+     * @param initialTab index of the initially selected tab
+     */
     public TeacherGradebookPage(int initialTab) {
         this(initialTab, null);
     }
 
+    /**
+     * Creates the gradebook with a selected tab and optional preselected course.
+     *
+     * @param initialTab index of the initially selected tab
+     * @param course course name to select initially, or {@code null} for no preselection
+     */
     public TeacherGradebookPage(int initialTab, String course) {
         Main.setCurrentPageSupplier(TeacherGradebookPage::new);
         activeTab = initialTab;

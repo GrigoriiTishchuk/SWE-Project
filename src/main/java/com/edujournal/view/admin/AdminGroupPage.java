@@ -10,9 +10,18 @@ import javafx.scene.layout.VBox;
 
 import com.edujournal.config.LocalizationManager;
 
+/**
+ * Displays the academic-group management screen for administrators.
+ */
 public class AdminGroupPage extends BorderPane {
     private final Role role;
 
+    /**
+     * Creates the academic-group page.
+     *
+     * @param sidebar sidebar displayed beside the page content
+     * @param role role used to configure group management
+     */
     public AdminGroupPage(VBox sidebar, Role role) {
         Main.setCurrentPageSupplier(() -> new AdminGroupPage(AdminSidebar.build("Groups"), Role.ADMINISTRATOR));
         this.role = role;

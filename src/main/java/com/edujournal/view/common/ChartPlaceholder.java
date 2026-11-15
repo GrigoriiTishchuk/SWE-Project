@@ -4,10 +4,20 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
-// common chart placeholder for the dashboard
-
+/**
+ * Builds a simple placeholder card for a chart that is not yet available.
+ */
 public class ChartPlaceholder {
 
+    private ChartPlaceholder() {
+    }
+
+    /**
+     * Creates a card with the supplied chart title.
+     *
+     * @param title title displayed above the placeholder
+     * @return the chart placeholder container
+     */
     public static VBox build(String title) {
         VBox box = new VBox(8);
         box.setPadding(new Insets(16));
