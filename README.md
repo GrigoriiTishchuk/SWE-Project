@@ -354,20 +354,20 @@ Focus: understanding the project and planning the work for upcoming sprints.
 - Prepared a formal Acceptance Test Plan including acceptance criteria and coverage matrix.
 - Updated ER diagrams, UML diagrams, and additional architecture documentation.
 - Verified stability through unit, integration, and end-to-end testing.
-- 
+
 🔗 [Sprint 6 Planning](Documents/Sprint_Reports/Sprint6/sprint_6_planning_report.md)  
 🔗 [Sprint 6 Review](Documents/Sprint_Reports/Sprint6/sprint_6_review_report.md)  
 🔗 [Database Localization Report](Documents/Localization/DatabaseLocalizationReport.md)  
 🔗 [Statistical Code Review Report](Documents/StatisticalСodeReviewReport.md)  
 🔗 [Acceptance Test Plan](Documents/AcceptanceTestPlanning.pdf)
 
-
 ## Documentation
 
 - [Feature Documentation](Documents/Features.md) - full description of implemented features by role
 - [UI Localization](Documents/Localization/UI_Localization.md) - localization framework, supported languages, RTL support, and guide for adding new languages
-- [DB Localization](Documents/Localization/DB_Localization.md) - database localization strategy, encoding, and user locale persistence
-- [DB Localization Implementation](Documents/Localization/DB_Localization_Implementation.md) - technical implementation details with code examples
+- [DB Localization Plan & Implementation Report](Documents/Localization/DatabaseLocalizationReport.md) — Sprint 6 formal deliverable: plan, strategy, and results
+- [DB Localization Strategy](Documents/Localization/DB_Localization.md) — design approach, schema details, and validation
+- [DB Localization Implementation](Documents/Localization/DB_Localization_Implementation.md) — code-level technical details with Java and SQL examples
 
 ---
 
