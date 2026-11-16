@@ -64,6 +64,9 @@ EduJournal stores all data using `utf8mb4` character encoding, supporting any Un
 - [Use Case Diagram](Documents/Diagrams/Use-Case-Diagram-Updated.png)
 - [ER Diagram](Documents/Diagrams/ER-diagram-Updated.png)
 - [Relational Model](Documents/Diagrams/db_relational_model_Updated.png)
+- [Class Diagram](Documents/Diagrams/ClassDiagram_Edujournal.png)
+- [Package Diagram](Documents/Diagrams/PackageDiagram_Edujournal.png)
+- [Sequence Diagram](Documents/Diagrams/SequenceDiagram_Edujournal.png)
 
 ### Definition of Success
 
@@ -338,6 +341,26 @@ Focus: understanding the project and planning the work for upcoming sprints.
 🔗 [UI Localization Documentation](Documents/Localization/UI_Localization.md)
 
 ---
+
+### Sprint 6 - Database Localization, Code Review and Refactoring
+
+- Implemented database-level localization support using translation tables and locale persistence.
+- Added multilingual database content retrieval for supported languages.
+- Verified UTF-8 compatibility and locale-aware data handling across the application.
+- Conducted static code analysis using SonarQube and SonarScanner.
+- Reviewed project metrics including code coverage, complexity, maintainability, and code duplication.
+- Refactored controllers, services, DAO classes, and utility components to improve maintainability.
+- Added JavaDoc documentation and standardized code formatting using Google Java Format.
+- Prepared a formal Acceptance Test Plan including acceptance criteria and coverage matrix.
+- Updated ER diagrams, UML diagrams, and additional architecture documentation.
+- Verified stability through unit, integration, and end-to-end testing.
+- 
+🔗 [Sprint 6 Planning](Documents/Sprint_Reports/Sprint6/sprint_6_planning_report.md)  
+🔗 [Sprint 6 Review](Documents/Sprint_Reports/Sprint6/sprint_6_review_report.md)  
+🔗 [Database Localization Report](Documents/Localization/DatabaseLocalizationReport.md)  
+🔗 [Statistical Code Review Report](Documents/StatisticalСodeReviewReport.md)  
+🔗 [Acceptance Test Plan](Documents/AcceptanceTestPlanning.pdf)
+
 
 ## Documentation
 
