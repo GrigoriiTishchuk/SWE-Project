@@ -214,7 +214,7 @@ Verified that English translations are used when localized values are unavailabl
 
 ### Database Localization Example
 
-![Database Localization Screenshot](screenshots/database-localization.png)
+![Database Localization Screenshot](../screenshots/database-localization.png)
 
 Figure 1. Database localization tables and multilingual content.
 
@@ -222,7 +222,7 @@ Figure 1. Database localization tables and multilingual content.
 
 ### Localized Role Labels
 
-![Localized Roles Screenshot](screenshots/localized-roles.png)
+![Localized Roles Screenshot](../screenshots/localized-roles.png)
 
 Figure 2. Localized role labels retrieved from the database.
 
@@ -230,7 +230,7 @@ Figure 2. Localized role labels retrieved from the database.
 
 ### User Locale Persistence
 
-![Locale Persistence Screenshot](screenshots/user-locale.png)
+![Locale Persistence Screenshot](../screenshots/user-locale.png)
 
 Figure 3. User language preference stored and restored from the database.
 
