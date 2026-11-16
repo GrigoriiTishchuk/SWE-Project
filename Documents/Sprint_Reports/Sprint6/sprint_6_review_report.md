@@ -72,9 +72,14 @@ The goal of Sprint 6 was to extend localization support into the database layer 
 
 ### Architecture Documentation
 
-- Updated ER diagrams to reflect localization-related database structures.
-- Updated UML diagrams to reflect architectural changes introduced during localization and refactoring.
-- Added updated design artefacts to the project documentation directory.
+### Architecture Documentation
+
+- Updated ER diagrams to reflect localization-related database structures and multilingual database support.
+- Updated the relational database model to align with localization requirements and schema changes.
+- Updated UML use case diagrams to reflect completed functionality and user interactions.
+- Added additional UML documentation including a Class Diagram, Package Diagram, and Sequence Diagram.
+- Added supporting database documentation including CRUD operation and database structure diagrams.
+- Committed all design artefacts to the `/docs` directory in the GitHub repository.
 
 ### Project Management and Documentation
 
@@ -93,7 +98,8 @@ During the Sprint 6 Review, the team demonstrated:
 - Successful execution of SonarQube analysis and interpretation of quality metrics.
 - Refactored code structure with improved maintainability and documentation.
 - Successful execution of unit and end-to-end tests after refactoring.
-- Updated ER diagrams and UML documentation.
+- Updated ER diagrams, relational database models, and UML documentation.
+- Additional Class, Package, and Sequence diagrams demonstrating the final system architecture.
 - Acceptance Test Plan prepared for project acceptance activities.
 
 ---
@@ -129,7 +135,8 @@ The team conducted regular stand-up meetings to coordinate database localization
 | **Olena Petrova**<br>*(Scrum Master)* | Sprint coordination, SonarQube analysis, static code review, code clean-up, acceptance test design, UI verification, architecture documentation, sprint reporting, backlog management. | 18 h 15 min | Submitted |
 | **Maria Kuznetsova** | Database localization implementation, static code review, code clean-up, multilingual database testing, ER diagram updates.        | 25 h 30 min | Submitted |
 | **Bayram Erdogan** | Static code review, code clean-up, testing and validation.                                                                                                  | 10 h 30 min | Submitted |
-| **Grigorii Tishchuk** | Static code review, code clean-up, static code review, code clean-up.                                                                                                | 11 h 30 min | Submitted |
+| **Grigorii Tishchuk** | Static code review, code clean-up, static code review, code clean-up.                                                                                                | 20 h 30 min | Submitted |
+
 ## Submission Summary
 
 | Deliverable | Status |

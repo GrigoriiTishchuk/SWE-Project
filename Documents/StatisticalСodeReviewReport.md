@@ -117,6 +117,59 @@ Coverage analysis was performed after executing the complete unit and end-to-end
 
 Figure 2. JaCoCo code coverage statistics.
 
+## Complexity Analysis
+
+SonarQube complexity metrics were reviewed to identify classes and methods that may require refactoring or simplification.
+
+### Complexity Metrics
+
+| Metric | Result |
+|----------|----------|
+| Cyclomatic Complexity | 1,307 |
+| Cognitive Complexity | 841 |
+
+### Analysis
+
+The analysis indicated that most complexity originated from controller classes, user interface workflows, and business logic validation methods.
+
+To reduce complexity and improve maintainability, the team performed several refactoring activities:
+
+- Extracted reusable helper methods.
+- Moved shared functionality into BaseController.
+- Reduced duplicated UI logic.
+- Simplified conditional expressions.
+- Centralized error handling and localization logic.
+
+These improvements reduced code duplication and made complex workflows easier to understand and maintain.
+
+---
+
+## Method Size and Code Structure Review
+
+During the statistical review, source code was inspected for excessively large methods and opportunities for decomposition.
+
+### Findings
+
+Several controller classes contained methods responsible for multiple tasks, including:
+
+- UI rendering
+- Localization handling
+- Error processing
+- Data filtering
+- Event handling
+
+### Improvements
+
+The following actions were performed:
+
+- Extracted createScrollPane() helper methods.
+- Extracted createCardList() rendering methods.
+- Moved common localization logic into reusable methods.
+- Centralized dialog creation and error handling.
+- Reduced repeated filtering and rendering logic.
+
+These changes improved readability, reduced method complexity, and increased maintainability while preserving existing functionality.
+
 ---
 
 # 4. Key Findings
@@ -390,3 +443,17 @@ The statistical code review successfully identified maintainability issues, dupl
 In addition to structural refactoring and defect resolution, the team adopted Google Java Format to enforce a consistent coding style across the project. This improved readability, simplified code reviews, and increased overall maintainability.
 
 The resulting codebase is significantly more maintainable, better documented, more secure, and easier to extend. The improvements completed during Sprint 6 increased overall software quality and prepared the project for acceptance testing and future development.
+
+---
+
+## Recommendations
+
+Based on the results of the statistical code review, the following recommendations were identified for future development:
+
+- Continue increasing automated test coverage for JavaFX view components.
+- Monitor complexity growth in controller classes and extract additional helper methods where appropriate.
+- Continue reducing duplicated UI logic through reusable components.
+- Maintain JavaDoc documentation standards for newly introduced classes and methods.
+- Regularly execute SonarQube analysis to identify maintainability issues early in development.
+
+These recommendations will help preserve the maintainability and quality achieved during Sprint 6.
