@@ -98,10 +98,10 @@ assessment_type_translation
 
 | type_key | lang | name |
 |----------|------|----------|
-| EXAM | en | Exam |
-| EXAM | ru | Экзамен |
-| EXAM | tr | Sınav |
-| EXAM | ar | اختبار |
+| HOMETASK | en_US | Homework |
+| HOMETASK | ru_RU | Домашнее задание |
+| HOMETASK | tr_TR | Ev Ödevi |
+| HOMETASK | ar_SA | واجب منزلي |
 
 ---
 
@@ -125,10 +125,10 @@ role_translation
 
 | role_key | lang | label |
 |----------|------|----------|
-| TEACHER | en | Teacher |
-| TEACHER | ru | Преподаватель |
-| TEACHER | tr | Öğretmen |
-| TEACHER | ar | معلم |
+| TEACHER | en_US | Teacher |
+| TEACHER | ru_RU | Преподаватель |
+| TEACHER | tr_TR | Öğretmen |
+| TEACHER | ar_SA | معلم |
 
 ---
 
@@ -259,3 +259,10 @@ The implemented solution supports future language additions with minimal databas
 Database localization was successfully integrated into the EduJournal system. The selected translation-table approach provides a scalable and maintainable foundation for multilingual content management.
 
 The implementation ensures correct encoding, reliable language persistence, localized database content retrieval, and compatibility with the existing application localization framework. The solution is fully prepared for future expansion and long-term maintenance.
+
+---
+
+## See Also
+
+- [DB Localization Strategy](DB_Localization.md) — design approach, encoding rationale, schema details, and validation data
+- [DB Localization Implementation](DB_Localization_Implementation.md) — full technical details: SQL schemas, Java/JPA code, JDBC configuration, and DAO queries
