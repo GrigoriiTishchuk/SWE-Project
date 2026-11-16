@@ -123,8 +123,8 @@
                             <goal>report</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>public_html</outputDirectory>
                             <formats>
+                                <format>XML</format>
                                 <format>HTML</format>
                             </formats>
                             <excludes>

@@ -1,9 +1,12 @@
 package com.edujournal.e2e;
 
 import com.edujournal.Main;
+import com.edujournal.config.LocalizationManager;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
+
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -11,6 +14,8 @@ public class StudentE2ETest extends ApplicationTest {
 
     @Override
     public void start(Stage stage) {
+        LocalizationManager.setLocale(Locale.US);
+
         new Main().start(stage);
         stage.show();
     }
@@ -30,7 +35,7 @@ public class StudentE2ETest extends ApplicationTest {
 
         sleep(1000);
 
-        clickOn("Own profile");
+        clickOn("Own Profile");
 
         sleep(1000);
 
@@ -40,7 +45,7 @@ public class StudentE2ETest extends ApplicationTest {
         );
 
         assertTrue(
-                lookup("Student Number").tryQuery().isPresent(),
+                lookup("Student Number:").tryQuery().isPresent(),
                 "Student profile should show the student number"
         );
 
@@ -50,7 +55,7 @@ public class StudentE2ETest extends ApplicationTest {
         );
 
         assertTrue(
-                lookup("Group").tryQuery().isPresent(),
+                lookup("Group:").tryQuery().isPresent(),
                 "Student profile should show the academic group"
         );
     }
@@ -70,12 +75,12 @@ public class StudentE2ETest extends ApplicationTest {
 
         sleep(1000);
 
-        clickOn("Student's report");
+        clickOn("Student's Report");
 
         sleep(1000);
 
         assertTrue(
-                lookup("Student's report").tryQuery().isPresent(),
+                lookup("Student's Report").tryQuery().isPresent(),
                 "Student should be able to view their report"
         );
     }

@@ -1,6 +1,7 @@
 package com.edujournal.e2e;
 
 import com.edujournal.Main;
+import com.edujournal.config.LocalizationManager;
 import com.edujournal.entity.Role;
 import com.edujournal.entity.User;
 import com.edujournal.backend.service.AcademicGroupService;
@@ -9,12 +10,14 @@ import com.edujournal.backend.service.StudentService;
 import com.edujournal.backend.service.UserService;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 import javafx.scene.control.DatePicker;
 import java.time.LocalDate;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
@@ -23,6 +26,8 @@ public class AdminE2ETest extends ApplicationTest {
 
     @Override
     public void start(Stage stage) {
+        LocalizationManager.setLocale(Locale.US);
+
         new Main().start(stage);
         stage.show();
     }
@@ -168,7 +173,7 @@ public class AdminE2ETest extends ApplicationTest {
         clickOn("Last Name");
         write("TestUser");
 
-        clickOn("Phone Number");
+        push(KeyCode.TAB);
         write("5551234567");
 
         clickOn("Save");
@@ -202,8 +207,8 @@ public class AdminE2ETest extends ApplicationTest {
         clickOn("Last Name");
         write("TestUser");
 
-        clickOn("Phone Number");
-        write("5559876543");
+        push(KeyCode.TAB);
+        write("5551234567");
 
         clickOn("Save");
         sleep(1200);
@@ -230,11 +235,11 @@ public class AdminE2ETest extends ApplicationTest {
         clickOn("Add group");
         sleep(700);
 
-        clickOn("Academic group name");
+        clickOn("#groupNameField");
         write("E2E Group");
 
         clickOn("Save");
-        sleep(1200);
+        sleep(2000);
 
         assertTrue(
                 lookup("E2E Group").tryQuery().isPresent(),
@@ -258,11 +263,11 @@ public class AdminE2ETest extends ApplicationTest {
         clickOn("Add group");
         sleep(700);
 
-        clickOn("Academic group name");
+        clickOn("#groupNameField");
         write("E2ECourse Group");
 
         clickOn("Save");
-        sleep(1200);
+        sleep(2000);
 
         assertTrue(
                 lookup("E2ECourse Group").tryQuery().isPresent(),
@@ -273,12 +278,12 @@ public class AdminE2ETest extends ApplicationTest {
         sleep(1200);
 
         clickOn("Add course");
-        sleep(700);
+        sleep(1000);
 
-        clickOn("Course name");
+        clickOn("#courseNameField");
         write("E2E Course");
 
-        clickOn("Course code");
+        clickOn("#courseCodeField");
         write("E2E101");
 
         Node teacherComboBox = lookup(".combo-box")
@@ -339,11 +344,18 @@ public class AdminE2ETest extends ApplicationTest {
 
         waitForFxEvents();
 
-        clickOn("Start date");
-        write("09/01/2026");
+        DatePicker startDatePicker =
+                lookup(".date-picker").nth(0)
+                        .queryAs(DatePicker.class);
 
-        clickOn("End date");
-        write("06/30/2027");
+        DatePicker endDatePicker =
+                lookup(".date-picker").nth(1)
+                        .queryAs(DatePicker.class);
+
+        interact(() -> {
+            startDatePicker.setValue(LocalDate.of(2026, 9, 1));
+            endDatePicker.setValue(LocalDate.of(2027, 6, 30));
+        });
 
         clickOn("Save");
         sleep(1200);
@@ -387,8 +399,8 @@ public class AdminE2ETest extends ApplicationTest {
         clickOn("Last Name");
         write(studentLastName);
 
-        clickOn("Phone Number");
-        write("5551112233");
+        push(KeyCode.TAB);
+        write("5551234567");
 
         clickOn("Save");
         sleep(1000);
@@ -410,8 +422,8 @@ public class AdminE2ETest extends ApplicationTest {
         clickOn("Last Name");
         write(teacherLastName);
 
-        clickOn("Phone Number");
-        write("5554445566");
+        push(KeyCode.TAB);
+        write("5551112233");
 
         clickOn("Save");
         sleep(1000);
@@ -427,11 +439,11 @@ public class AdminE2ETest extends ApplicationTest {
         clickOn("Add group");
         sleep(500);
 
-        clickOn("Academic group name");
+        clickOn("#groupNameField");
         write(groupName);
 
         clickOn("Save");
-        sleep(1000);
+        sleep(1200);
 
         assertTrue(
                 lookup(groupName).tryQuery().isPresent(),
@@ -444,10 +456,10 @@ public class AdminE2ETest extends ApplicationTest {
         clickOn("Add course");
         sleep(500);
 
-        clickOn("Course name");
+        clickOn("#courseNameField");
         write(courseName);
 
-        clickOn("Course code");
+        clickOn("#courseCodeField");
         write(courseCode);
 
         selectTeacher(
@@ -456,13 +468,7 @@ public class AdminE2ETest extends ApplicationTest {
         );
 
         selectGroup(groupName);
-/*
-        clickOn("Start date");
-        write("09/01/2026");
 
-        clickOn("End date");
-        write("06/30/2027");
-*/
         DatePicker startDatePicker =
                 lookup(".date-picker").nth(0)
                         .queryAs(DatePicker.class);

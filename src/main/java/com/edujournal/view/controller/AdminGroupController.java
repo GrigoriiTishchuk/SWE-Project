@@ -208,6 +208,7 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
 
         TextField nameField = new TextField();
         nameField.setPromptText(LocalizationManager.get("name"));
+        nameField.setId("groupNameField");
 
         VBox box = new VBox(10, nameField);
         box.setPadding(new Insets(10));
