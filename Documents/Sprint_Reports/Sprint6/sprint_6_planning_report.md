@@ -15,7 +15,7 @@ The primary goal of Sprint 6 is to extend localization support to the database l
 
 ## 2. Sprint Objectives
 
-The main objectives of Sprint 5 are:
+The main objectives of Sprint 6 are:
 
 - Design and implement a localization strategy for multilingual database content.
 - Extend the database structure and data access layer to support localized records.

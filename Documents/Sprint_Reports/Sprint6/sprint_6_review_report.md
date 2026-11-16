@@ -126,8 +126,8 @@ The team conducted regular stand-up meetings to coordinate database localization
 
 | Team Member Name | Assigned Tasks                                                                                                                                                                         | Time Spent (hrs) | In-class tasks |
 | :--- |:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------| :---: | :---: |
-| **Olena Petrova**<br>*(Scrum Master)* | Sprint coordination, SonarQube analysis, static code review, code clean-up, acceptance test design, UI verification, architecture documentation, sprint reporting, backlog management. | 15 h 0 min | Submitted |
-| **Maria Kuznetsova** | Database localization implementation, static code review, code clean-up, multilingual database testing, ER diagram updates.        | 16 h 0 min | Submitted |
+| **Olena Petrova**<br>*(Scrum Master)* | Sprint coordination, SonarQube analysis, static code review, code clean-up, acceptance test design, UI verification, architecture documentation, sprint reporting, backlog management. | 18 h 15 min | Submitted |
+| **Maria Kuznetsova** | Database localization implementation, static code review, code clean-up, multilingual database testing, ER diagram updates.        | 25 h 30 min | Submitted |
 | **Bayram Erdogan** | Static code review, code clean-up, testing and validation.                                                                                                  | 10 h 30 min | Submitted |
 | **Grigorii Tishchuk** | Static code review, code clean-up, static code review, code clean-up.                                                                                                | 11 h 30 min | Submitted |
 ## Submission Summary
