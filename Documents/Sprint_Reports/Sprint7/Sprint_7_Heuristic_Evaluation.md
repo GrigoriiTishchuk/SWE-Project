@@ -68,16 +68,10 @@ and a recommendation.
 
 | ID | Screen | Heuristic | Description | Severity | Recommendation | Status |
 |---|---|:---:|---|:---:|---|---|
-| HE-01 | | | | | | |
-| HE-02 | | | | | | |
-| HE-03 | | | | | | |
-| HE-04 | | | | | | |
-| HE-05 | | | | | | |
-| HE-06 | | | | | | |
-| HE-07 | | | | | | |
-| HE-08 | | | | | | |
-| HE-09 | | | | | | |
-| HE-10 | | | | | | |
+| HE-01 | Login Page | H10 | No app description or context visible — a first-time user has no explanation of what EduJournal is or why they are logging in | 2 | Add a short tagline or subtitle below the app title (e.g. "Teacher's Gradebook and Report Card System") | Open |
+| HE-02 | Login Page | H7 | Pressing Enter on the username field does not move focus to the password field — user must click with the mouse | 2 | Set the username field's action to transfer focus to the password field on Enter | Open |
+| HE-03 | Login Page | H7 | Pressing Enter on the password field does not submit the form — user must click the Sign In button with the mouse | 2 | Bind Enter key on the password field to trigger the login action | Open |
+| HE-04 | Login Page | H5 | Forgot Password allows any user to reset any other user's password without identity verification — no current user credentials or confirmation required | 4 | Require the current user to confirm their identity (e.g. current password or admin approval) before a password change is accepted | Open |
 
 ---
 
