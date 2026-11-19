@@ -375,13 +375,11 @@ Focus: understanding the project and planning the work for upcoming sprints.
 
 - [Feature Documentation](Documents/Features.md) - full description of implemented features by role
 - [UI Localization](Documents/Localization/UI_Localization.md) - localization framework, supported languages, RTL support, and guide for adding new languages
-- [DB Localization](Documents/Localization/DB_Localization.md) - database localization strategy, encoding, and user locale persistence
 - [DB Localization Implementation](Documents/Localization/DB_Localization_Implementation.md) - technical implementation details with code examples
 - [DB Localization Plan & Implementation Report](Documents/Localization/DatabaseLocalizationReport.md) — Sprint 6 formal deliverable: plan, strategy, and results
 - [DB Localization Strategy](Documents/Localization/DB_Localization.md) — design approach, schema details, and validation
 - [DB Localization Implementation](Documents/Localization/DB_Localization_Implementation.md) — code-level technical details with Java and SQL examples
 - [Sprint 7 Test Plan](Documents/Sprint_Reports/Sprint7/Sprint_7_Test_Plan.md) - functional and non-functional testing strategy and execution checklist
-- [Sprint 7 Planning Report](Documents/Sprint_Reports/Sprint7/Sprint_7_Planning_Report.md) - Sprint 7 objectives, backlog, roles, and definition of done
 
 ---
 
