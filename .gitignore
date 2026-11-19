@@ -37,3 +37,5 @@ target/
 cp.txt
 dependency-reduced-pom.xml
 public_html/**
+
+.scannerwork/

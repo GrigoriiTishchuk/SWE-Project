@@ -8,14 +8,40 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 
-// left navigation sidebar for every role's pages.
-
+/**
+ * Builds the navigation sidebar used across
+ * administrator, teacher and student pages.
+ */
 public class Sidebar {
 
+    /**
+     * Marker interface for sidebar items.
+     */
     public sealed interface Item permits NavItem, SectionHeader {}
+
+    /**
+     * Clickable navigation item.
+     *
+     * @param label displayed button text
+     * @param active whether the item represents the current page
+     * @param onClick action executed when the button is clicked
+     */
     public record NavItem(String label, boolean active, Runnable onClick) implements Item {}
+
+    /**
+     * Non-clickable section title used to group
+     * navigation items.
+     *
+     * @param label section title
+     */
     public record SectionHeader(String label) implements Item {}
 
+    /**
+     * Creates a navigation sidebar from the supplied items.
+     *
+     * @param items sidebar items and section headers
+     * @return configured sidebar
+     */
     public static VBox build(Item... items) {
         VBox box = new VBox(4);
         box.setPadding(new Insets(20, 12, 20, 12));
@@ -53,6 +79,12 @@ public class Sidebar {
         return box;
     }
 
+    /**
+     * Returns the CSS style for a navigation button.
+     *
+     * @param active whether the button is currently selected
+     * @return CSS style string
+     */
     private static String navButtonStyle(boolean active) {
         String base = "-fx-alignment: CENTER_LEFT; -fx-padding: 8 12 8 12;";
         return active
