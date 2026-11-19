@@ -361,6 +361,16 @@ Focus: understanding the project and planning the work for upcoming sprints.
 🔗 [Statistical Code Review Report](Documents/StatisticalСodeReviewReport.md)  
 🔗 [Acceptance Test Plan](Documents/AcceptanceTestPlanning.pdf)
 
+---
+
+### Sprint 7 - Functional and Non-functional Testing
+
+- Created a test plan covering functional, localization, usability, performance, security, CI/CD, SonarQube, and Docker validation.
+- Defined test environments, data, entry/exit criteria, defect tracking fields, evidence requirements, and functional test scenarios.
+
+🔗 [Sprint 7 Planning Report](Documents/Sprint_Reports/Sprint7/Sprint_7_Planning_Report.md)
+🔗 [Sprint 7 Test Plan](Documents/Sprint_Reports/Sprint7/Sprint_7_Test_Plan.md)
+
 ## Documentation
 
 - [Feature Documentation](Documents/Features.md) - full description of implemented features by role
