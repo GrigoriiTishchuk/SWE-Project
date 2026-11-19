@@ -339,12 +339,24 @@ Focus: understanding the project and planning the work for upcoming sprints.
 
 ---
 
+### Sprint 7 - Functional and Non-functional Testing
+
+- Created a test plan covering functional, localization, usability, performance, security, CI/CD, SonarQube, and Docker validation.
+- Defined test environments, data, entry/exit criteria, defect tracking fields, evidence requirements, and functional test scenarios.
+
+🔗 [Sprint 7 Planning Report](Documents/Sprint_Reports/Sprint7/Sprint_7_Planning_Report.md)
+🔗 [Sprint 7 Test Plan](Documents/Sprint_Reports/Sprint7/Sprint_7_Test_Plan.md)
+
+---
+
 ## Documentation
 
 - [Feature Documentation](Documents/Features.md) - full description of implemented features by role
 - [UI Localization](Documents/Localization/UI_Localization.md) - localization framework, supported languages, RTL support, and guide for adding new languages
 - [DB Localization](Documents/Localization/DB_Localization.md) - database localization strategy, encoding, and user locale persistence
 - [DB Localization Implementation](Documents/Localization/DB_Localization_Implementation.md) - technical implementation details with code examples
+- [Sprint 7 Test Plan](Documents/Sprint_Reports/Sprint7/Sprint_7_Test_Plan.md) - functional and non-functional testing strategy and execution checklist
+- [Sprint 7 Planning Report](Documents/Sprint_Reports/Sprint7/Sprint_7_Planning_Report.md) - Sprint 7 objectives, backlog, roles, and definition of done
 
 ---
 
