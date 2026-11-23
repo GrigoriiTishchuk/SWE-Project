@@ -8,11 +8,16 @@ import com.edujournal.view.controller.AdminStudentController;
 import com.edujournal.view.controller.AdminTeacherController;
 import com.edujournal.view.controller.CourseController;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import java.util.List;
@@ -30,7 +35,18 @@ public class AdminDashboardPage extends BorderPane {
     public AdminDashboardPage() {
         Main.setCurrentPageSupplier(AdminDashboardPage::new);
         setLeft(AdminSidebar.build("Dashboard"));
-        setCenter(buildContent());
+
+        String adminImg = AdminDashboardPage.class.getResource("/images/admin-background.png").toExternalForm();
+        Region bg = new Region();
+        bg.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        bg.setStyle("-fx-background-image: url('" + adminImg + "'); -fx-background-size: cover; -fx-background-position: center;");
+        GaussianBlur blur = new GaussianBlur(4);
+        blur.setInput(new ColorAdjust(0, 0, 0.3, 0));
+        bg.setEffect(blur);
+
+        StackPane center = new StackPane(bg, buildContent());
+        StackPane.setAlignment(center.getChildren().get(1), Pos.TOP_LEFT);
+        setCenter(center);
     }
     private VBox buildContent() {
         VBox content = new VBox(20);
