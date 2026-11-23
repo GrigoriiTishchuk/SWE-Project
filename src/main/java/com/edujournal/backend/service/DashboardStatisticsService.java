@@ -345,9 +345,10 @@ public final class DashboardStatisticsService {
             final List<Assessments> assessments, final Map<Integer, Grades> gradeMap) {
 
         return !assessments.isEmpty()
-                && !gradeMap.isEmpty()
-                && gradeMap.size() >= assessments.size()
-                && gradeMap.values().stream().noneMatch(grade -> grade.getScore() == null);
+                && assessments.stream().allMatch(a -> {
+                    Grades g = gradeMap.get(a.getId());
+                    return g != null && g.getScore() != null;
+                });
     }
 
     /**

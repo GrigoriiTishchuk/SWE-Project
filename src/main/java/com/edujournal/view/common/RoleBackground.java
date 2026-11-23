@@ -22,8 +22,8 @@ public class RoleBackground {
         Region bg = new Region();
         bg.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         bg.setStyle("-fx-background-image: url('" + img + "'); -fx-background-size: cover; -fx-background-position: center;");
-        GaussianBlur blur = new GaussianBlur(3);
-        blur.setInput(new ColorAdjust(0, 0, 0.3, 0));
+        GaussianBlur blur = new GaussianBlur(2);
+        blur.setInput(new ColorAdjust(0, 0, 0.2, 0));
         bg.setEffect(blur);
 
         StackPane center = new StackPane(bg, content);

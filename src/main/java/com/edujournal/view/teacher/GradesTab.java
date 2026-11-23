@@ -271,9 +271,10 @@ public class GradesTab {
      * @return formatted grade and percentage, or an em dash if a complete grade cannot be calculated
      */
     public static String computeFinalGrade(List<Assessments> assessments, Map<Integer, Grades> studentGrades, int colCount) {
-        if (studentGrades == null || studentGrades.size() < colCount
-                || studentGrades.values().stream().anyMatch(g -> g.getScore() == null)) {
-            return "—";
+        if (studentGrades == null || colCount == 0) return "—";
+        for (Assessments a : assessments) {
+            Grades g = studentGrades.get(a.getId());
+            if (g == null || g.getScore() == null) return "—";
         }
         try {
             double percent = new CourseGradeService().calculateFinalGrade(
