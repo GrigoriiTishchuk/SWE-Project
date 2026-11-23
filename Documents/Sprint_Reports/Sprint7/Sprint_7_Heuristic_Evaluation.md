@@ -68,10 +68,12 @@ and a recommendation.
 
 | ID | Screen | Heuristic | Description | Severity | Recommendation | Status |
 |---|---|:---:|---|:---:|---|---|
-| HE-01 | Login Page | H10 | No app description or context visible — a first-time user has no explanation of what EduJournal is or why they are logging in | 2 | Add a short tagline or subtitle below the app title (e.g. "Teacher's Gradebook and Report Card System") | Open |
-| HE-02 | Login Page | H7 | Pressing Enter on the username field does not move focus to the password field — user must click with the mouse | 2 | Set the username field's action to transfer focus to the password field on Enter | Open |
-| HE-03 | Login Page | H7 | Pressing Enter on the password field does not submit the form — user must click the Sign In button with the mouse | 2 | Bind Enter key on the password field to trigger the login action | Open |
-| HE-04 | Login Page | H5 | Forgot Password allows any user to reset any other user's password without identity verification — no current user credentials or confirmation required | 4 | Require the current user to confirm their identity (e.g. current password or admin approval) before a password change is accepted | Open |
+| HE-01 | Login Page | H10 | No app description or context visible — a first-time user has no explanation of what EduJournal is or why they are logging in | 1 | Add a short tagline or subtitle below the app title (e.g. "Teacher's Gradebook and Report Card System") | Open |
+| HE-02 | Login Page | H7 | Pressing Enter on the username field does not move focus to the password field — user must click with the mouse | 1 | Set the username field's action to transfer focus to the password field on Enter | Open |
+| HE-03 | Login Page | H7 | Pressing Enter on the password field does not submit the form — user must click the Sign In button with the mouse | 1 | Bind Enter key on the password field to trigger the login action | Open |
+| HE-04 | Login Page | H5 | Forgot Password allows any user to reset any other user's password without identity verification — no current user credentials or confirmation required | 3 | Require the current user to confirm their identity (e.g. current password or admin approval) before a password change is accepted | Open |
+| HE-05 | Admin — Student / Teacher / Course / Group Management | H1 | No confirmation message is shown after adding, editing, or deleting a record — the table updates immediately so the change is visible, but there is no explicit success notification | 1 | Optionally add a brief status message (e.g. "Student saved") for extra clarity | Open |
+| HE-06 | Course Report Page | H1 | After exporting a gradebook to PDF or CSV, no confirmation or file path is shown — user does not know if the export succeeded or where the file was saved | 2 | Display a success message with the saved file location after export completes | Open |
 
 ---
 
