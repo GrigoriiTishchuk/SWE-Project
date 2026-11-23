@@ -28,9 +28,6 @@ import javafx.scene.layout.*;
  */
 public class AssessmentsTab {
 
-    private static final String PANEL_STYLE =
-            "-fx-background-color: white; -fx-border-color: #E5E7EB; " +
-                    "-fx-border-radius: 8; -fx-background-radius: 8;";
 
 
     private static final String LIGHT_INPUT =
@@ -210,9 +207,7 @@ public class AssessmentsTab {
                 new Insets(16)
         );
 
-        leftPanel.setStyle(
-                PANEL_STYLE
-        );
+        leftPanel.getStyleClass().add("card");
 
         leftPanel.setPrefWidth(450);
 
@@ -716,9 +711,7 @@ public class AssessmentsTab {
                 new Insets(24)
         );
 
-        rightPanel.setStyle(
-                PANEL_STYLE
-        );
+        rightPanel.getStyleClass().add("card");
 
         rightPanel.setAlignment(
                 Pos.TOP_LEFT

@@ -74,7 +74,7 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
      */
     private VBox buildGroupCard(AcademicGroupDTO group) {
         VBox card = new VBox();
-        card.setStyle("-fx-border-color: #ccc; -fx-padding: 10; -fx-background-color: #f9f9f9;");
+        card.getStyleClass().add("card-group");
         card.setSpacing(8);
         card.setMinHeight(80);
         card.setPrefHeight(80);
@@ -156,12 +156,12 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
             VBox parent = (VBox) card.getParent();
             if (parent != null) {
                 for (Node node : parent.getChildren()) {
-                    node.setStyle(
-                            "-fx-border-color: #ccc; -fx-padding: 10; -fx-background-color: #f9f9f9;");
+                    node.getStyleClass().remove("card-group-selected");
+                    if (!node.getStyleClass().contains("card-group")) node.getStyleClass().add("card-group");
                 }
             }
-            card.setStyle(
-                    "-fx-border-color: #4A90E2; -fx-padding: 10; -fx-background-color: #E8F0FE;");
+            card.getStyleClass().remove("card-group");
+            card.getStyleClass().add("card-group-selected");
         });
 
         card.getChildren().addAll(header, coursesBox);

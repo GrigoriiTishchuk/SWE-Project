@@ -9,6 +9,7 @@ import com.edujournal.entity.AcademicGroup;
 import com.edujournal.entity.Role;
 import com.edujournal.model.CourseDTO;
 import com.edujournal.view.common.TopBar;
+import com.edujournal.view.common.RoleBackground;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -23,7 +24,7 @@ public class TeacherGradebookPage extends BorderPane {
     private static final String ACTIVE_TAB_STYLE =
             "-fx-text-fill: #2563EB; -fx-font-size: 14px; -fx-cursor: hand;";
     private static final String INACTIVE_TAB_STYLE =
-            "-fx-text-fill: #6B7280; -fx-font-size: 14px; -fx-cursor: hand;";
+            "-fx-text-fill: #111827; -fx-font-size: 14px; -fx-cursor: hand;";
     private static final String ACTIVE_UNDERLINE =
             "-fx-background-color: #2563EB; -fx-min-height: 2; -fx-max-height: 2;";
     private static final String INACTIVE_UNDERLINE =
@@ -71,7 +72,7 @@ public class TeacherGradebookPage extends BorderPane {
         activeTab = initialTab;
         preSelectedCourse = course;
         setLeft(TeacherSidebar.build("Gradebook"));
-        setCenter(buildContent());
+        setCenter(RoleBackground.wrap(Role.TEACHER, buildContent()));
     }
 
     private VBox buildContent() {
@@ -172,4 +173,5 @@ public class TeacherGradebookPage extends BorderPane {
         StackPane.setAlignment(tabContent, Pos.TOP_LEFT);
         contentArea.getChildren().add(tabContent);
     }
+
 }

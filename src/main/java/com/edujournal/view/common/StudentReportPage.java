@@ -34,7 +34,7 @@ public class StudentReportPage extends BorderPane {
         if (role == Role.STUDENT) {
             studentId = resolveCurrentStudentId();
         }
-        setCenter(buildContent(studentId));
+        setCenter(RoleBackground.wrap(role, buildContent(studentId)));
     }
 
     private static VBox buildSidebar(Role role) {

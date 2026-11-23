@@ -33,8 +33,6 @@ import java.util.List;
  */
 public class OwnProfilePage extends BorderPane {
 
-    private static final String PANEL =
-            "-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 8; -fx-background-radius: 8;";
     private static final String BLUE_BTN =
             "-fx-background-color: #1a3a6b; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16;";
     private static final String LIGHT_INPUT =
@@ -47,8 +45,9 @@ public class OwnProfilePage extends BorderPane {
         setLeft(sidebar);
         ScrollPane scroll = new ScrollPane(buildContent(role));
         scroll.setFitToWidth(true);
+        scroll.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         scroll.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
-        setCenter(scroll);
+        setCenter(RoleBackground.wrap(role, scroll));
     }
 
     private static VBox buildSidebar(Role role) {
@@ -100,7 +99,7 @@ public class OwnProfilePage extends BorderPane {
         VBox card = new VBox(14, avatar, nameLabel, badge);
         card.setAlignment(Pos.TOP_CENTER);
         card.setPadding(new Insets(28));
-        card.setStyle(PANEL);
+        card.getStyleClass().add("card");
         card.setPrefWidth(200);
         return card;
     }
@@ -216,7 +215,7 @@ public class OwnProfilePage extends BorderPane {
 
         form.getChildren().add(editSaveBtn);
         form.setPadding(new Insets(24));
-        form.setStyle(PANEL);
+        form.getStyleClass().add("card");
         HBox.setHgrow(form, Priority.ALWAYS);
         return form;
     }

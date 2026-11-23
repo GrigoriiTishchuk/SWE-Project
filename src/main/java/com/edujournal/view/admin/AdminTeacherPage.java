@@ -2,7 +2,7 @@ package com.edujournal.view.admin;
 
 import com.edujournal.Main;
 import com.edujournal.entity.Role;
-import com.edujournal.view.common.TopBar;
+import com.edujournal.view.common.*;
 import com.edujournal.view.controller.AdminTeacherController;
 import javafx.geometry.Insets;
 import javafx.scene.layout.BorderPane;
@@ -25,7 +25,7 @@ public class AdminTeacherPage extends BorderPane {
         Main.setCurrentPageSupplier(() -> new AdminTeacherPage(AdminSidebar.build("Teachers"), Role.ADMINISTRATOR));
         this.role = role;
         setLeft(sidebar);
-        setCenter(buildContent());
+        setCenter(RoleBackground.wrap(Role.ADMINISTRATOR, buildContent()));
     }
 
     private VBox buildContent()  {

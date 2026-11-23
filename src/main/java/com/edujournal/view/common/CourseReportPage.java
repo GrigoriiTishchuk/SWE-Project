@@ -49,7 +49,7 @@ public class CourseReportPage extends BorderPane {
         Main.setCurrentPageSupplier(() -> new CourseReportPage(buildSidebar(role), role));
         this.role = role;
         setLeft(sidebar);
-        setCenter(buildContent(role));
+        setCenter(RoleBackground.wrap(role, buildContent(role)));
     }
 
     private static VBox buildSidebar(Role role) {
