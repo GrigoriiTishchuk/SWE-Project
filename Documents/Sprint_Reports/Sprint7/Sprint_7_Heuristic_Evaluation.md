@@ -1,7 +1,7 @@
 # EduJournal — Sprint 7 Heuristic Evaluation
 
 **Project:** EduJournal - Teacher's Gradebook and Report Card System
-**Sprint:** 7 - Functional and Non-functional Testing
+**Sprint:** 7 - Project Testing, Functional and Non-functional Testing
 **Evaluator:** Maria Kuznetsova
 **Date:** 19.11.2026
 **Status:** Complete
