@@ -4,7 +4,7 @@
 **Sprint:** 7 - Functional and Non-functional Testing
 **Evaluator:** Maria Kuznetsova
 **Date:** 19.11.2026
-**Status:** In Progress
+**Status:** Complete
 
 ---
 
@@ -74,8 +74,10 @@ and a recommendation.
 | HE-04 | Login Page | H5 | Forgot Password allows any user to reset any other user's password without identity verification — no current user credentials or confirmation required | 3 | Require the current user to confirm their identity (e.g. current password or admin approval) before a password change is accepted | Open |
 | HE-05 | Admin — Student / Teacher / Course / Group Management | H1 | No confirmation message is shown after adding, editing, or deleting a record — the table updates immediately so the change is visible, but there is no explicit success notification | 1 | Optionally add a brief status message (e.g. "Student saved") for extra clarity | Open |
 | HE-06 | Course Report Page | H1 | After exporting a gradebook to PDF or CSV, no confirmation or file path is shown — user does not know if the export succeeded or where the file was saved | 2 | Display a success message with the saved file location after export completes | Open |
-| HE-07 | Teacher Gradebook — Grades Tab | H1 | Final grade column shows "—" with no explanation when a student is missing one or more assessment grades — user does not know why the grade is absent or what action is required | 2 | Show a tooltip on "—" cells explaining that the final grade appears once all assessment grades are filled in | Fixed |
+| HE-07 | Teacher Gradebook — Grades Tab | H1 | Final grade column shows "—" with no explanation when a student is missing one or more assessment grades — user does not know why the grade is absent or what action is required | 1 | Show a tooltip on "—" cells explaining that the final grade appears once all assessment grades are filled in | Fixed |
 | HE-08 | Teacher Gradebook — Assessments Tab | H3 | Editing an existing assessment does not apply a position change — the position field is shown and pre-filled in the edit form but its value is silently ignored on save | 2 | Read the position field value during update and move the assessment to the selected position in the list | Fixed |
+| HE-09 | Own Profile Page | H3 | No Cancel button is available while editing profile fields — if a user starts editing and wants to discard changes they must manually retype all original values | 1 | Add a Cancel button that restores original field values and exits edit mode without saving | Fixed |
+| HE-10 | Student Report Page | H1 | Final grade column shows "—" with no explanation when assessment grades are incomplete — student does not know what action is required to see the grade | 1 | Show a tooltip on "—" cells explaining that the final grade appears once all assessment grades are filled in | Fixed |
 
 ---
 
@@ -83,9 +85,9 @@ and a recommendation.
 
 | Heuristic | Findings Count | Highest Severity |
 |---|:---:|:---:|
-| H1 — Visibility of system status | 4 | 2 |
+| H1 — Visibility of system status | 5 | 2 |
 | H2 — Match with the real world | 0 | — |
-| H3 — User control and freedom | 1 | 2 |
+| H3 — User control and freedom | 2 | 1 |
 | H4 — Consistency and standards | 0 | — |
 | H5 — Error prevention | 1 | 3 |
 | H6 — Recognition rather than recall | 0 | — |
@@ -98,23 +100,42 @@ and a recommendation.
 
 ## 6. Overall Assessment
 
-> *(To be completed after evaluation)*
-
-**Total findings:** 8
+**Total findings:** 10
 **Critical issues (severity 4):** 0
 **Major issues (severity 3):** 1 (HE-04 — Forgot Password without identity verification)
-**Minor/cosmetic issues (1–2):** 7
+**Minor/cosmetic issues (1–2):** 9
 
-**General conclusion:** The application is functionally stable and covers all core use cases. The majority of usability issues are cosmetic or minor workflow gaps (missing keyboard shortcuts, absent feedback messages). One major security concern was identified around the password reset flow. Two issues found during evaluation (HE-07, HE-08) were fixed immediately during the sprint.
+**General conclusion:** The application is functionally stable and covers all core use cases. The majority of usability issues are cosmetic or minor workflow gaps (missing keyboard shortcuts, absent feedback messages, missing cancel actions). One major security concern was identified around the password reset flow. Four issues found during evaluation (HE-07, HE-08, HE-09, HE-10) were fixed immediately during the sprint.
 
 ---
 
 ## 7. Positive Observations
 
-> *(Record things that work well — areas where the app meets usability expectations)*
+- **Role-based visual identity** — each role (Admin, Teacher, Student) has a distinct background and color scheme, making it immediately clear which role context the user is in.
+- **Consistent sidebar navigation** — all pages share the same sidebar layout per role; users always know where they are and how to navigate.
+- **Multilingual support** — the application supports four languages (English, Russian, Turkish, Arabic) switchable at any time from the top bar without requiring a logout.
+- **Destructive action protection** — deleting an assessment that already has grades triggers a two-step confirmation dialog, preventing accidental data loss.
+- **Searchable quick actions** — the dashboard quick-action panel has a live search filter, allowing fast access to any action without scrolling.
+- **Export to PDF and CSV** — course and student reports can be exported to both formats directly from the report pages, making it easy to share or archive data outside the application.
+- **Automatic final grade calculation** — the system calculates the weighted final grade automatically once all assessment scores are entered, reducing manual work and calculation errors.
+- **All information in one place** — student grades, assessments, group membership, course details, and reports are all accessible within the application without switching between external tools.
+- **Editable user profile** — all users can view and update their personal information (name, email, phone, date of birth for students) directly from the Own Profile page.
+- **Inline grade editing** — the gradebook allows teachers to edit grades in place within the table without navigating to a separate page.
+- **Comprehensive dashboard statistics** — the dashboard provides an at-a-glance overview of key metrics (total students, courses, groups, assessments) alongside a grade distribution chart, giving each role a meaningful summary of their data.
 
 ---
 
 ## 8. Recommendations Summary
 
-> *(Prioritized list of the most important fixes based on severity)*
+Prioritized by severity — open issues only.
+
+| Priority | ID | Severity | Recommendation |
+|:---:|---|:---:|---|
+| 1 | HE-04 | 3 | Add identity verification to the Forgot Password flow — require current credentials or admin approval before accepting a password change |
+| 2 | HE-06 | 2 | Show a success notification with the saved file path after CSV or PDF export completes |
+| 3 | HE-02 | 1 | Move focus to the password field when Enter is pressed in the username field |
+| 4 | HE-03 | 1 | Submit the login form when Enter is pressed in the password field |
+| 5 | HE-05 | 1 | Show a brief success message after adding, editing, or deleting a student, teacher, course, or group |
+| 6 | HE-01 | 1 | Add a short tagline below the app title on the login page to explain what EduJournal is |
+
+> HE-07, HE-08, HE-09, HE-10 were identified and fixed during this sprint.

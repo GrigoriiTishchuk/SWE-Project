@@ -203,6 +203,15 @@ public class StudentReportController {
                 new TableColumn<>(LocalizationManager.get("finalGrade"));
         finalGradeCol.setPrefWidth(120);
         finalGradeCol.setCellValueFactory(data -> new SimpleStringProperty(finalGrade));
+        finalGradeCol.setCellFactory(tc -> new javafx.scene.control.TableCell<>() {
+            @Override protected void updateItem(String s, boolean empty) {
+                super.updateItem(s, empty);
+                setText(empty || s == null ? null : s);
+                setTooltip(!empty && "—".equals(s)
+                        ? new javafx.scene.control.Tooltip(LocalizationManager.get("finalGradeTooltip"))
+                        : null);
+            }
+        });
         table.getColumns().add(finalGradeCol);
 
         table.setItems(FXCollections.observableArrayList(List.of(scoreRow)));

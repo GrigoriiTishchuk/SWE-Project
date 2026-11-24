@@ -154,19 +154,41 @@ public class OwnProfilePage extends BorderPane {
         form.getChildren().add(row(LocalizationManager.get("role"), roleField));
 
         boolean[] editing = {false};
+        java.util.Map<TextField, String> originals = new java.util.HashMap<>();
+
         Button editSaveBtn = new Button(LocalizationManager.get("edit"));
         editSaveBtn.setStyle(BLUE_BTN);
+
+        Button cancelBtn = new Button(LocalizationManager.get("cancel"));
+        cancelBtn.setStyle(BLUE_BTN);
+        cancelBtn.setVisible(false);
+        cancelBtn.setManaged(false);
 
         final Student finalStudent = student;
         final TextField finalDob = dobField;
 
+        cancelBtn.setOnAction(e -> {
+            for (TextField tf : editableFields) {
+                tf.setText(originals.getOrDefault(tf, tf.getText()));
+                tf.setEditable(false);
+                tf.setStyle(READONLY_INPUT);
+            }
+            editSaveBtn.setText(LocalizationManager.get("edit"));
+            cancelBtn.setVisible(false);
+            cancelBtn.setManaged(false);
+            editing[0] = false;
+        });
+
         editSaveBtn.setOnAction(e -> {
             if (!editing[0]) {
                 for (TextField tf : editableFields) {
+                    originals.put(tf, tf.getText());
                     tf.setEditable(true);
                     tf.setStyle(LIGHT_INPUT);
                 }
                 editSaveBtn.setText(LocalizationManager.get("saveChanges"));
+                cancelBtn.setVisible(true);
+                cancelBtn.setManaged(true);
             } else {
                 LocalDate dateOfBirth = null;
                 if (role == Role.STUDENT && finalStudent != null && finalDob != null) {
@@ -209,11 +231,14 @@ public class OwnProfilePage extends BorderPane {
                     tf.setStyle(READONLY_INPUT);
                 }
                 editSaveBtn.setText(LocalizationManager.get("edit"));
+                cancelBtn.setVisible(false);
+                cancelBtn.setManaged(false);
             }
             editing[0] = !editing[0];
         });
 
-        form.getChildren().add(editSaveBtn);
+        HBox btnRow = new HBox(8, editSaveBtn, cancelBtn);
+        form.getChildren().add(btnRow);
         form.setPadding(new Insets(24));
         form.getStyleClass().add("card");
         HBox.setHgrow(form, Priority.ALWAYS);
