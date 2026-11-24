@@ -171,8 +171,28 @@ public class GradesTab {
         for (int i = 0; i < colCount; i++) exportHeaders[2 + i] = assessments.get(i).getTitle();
         exportHeaders[2 + colCount] = "Final Grade";
 
+        String[][] originalTfValues = new String[rowCount][colCount];
+
         Button fixSave = new Button(LocalizationManager.get("edit"));
         fixSave.getStyleClass().add("btn-primary");
+
+        Button cancelBtn = new Button(LocalizationManager.get("cancel"));
+        cancelBtn.getStyleClass().add("btn-primary");
+        cancelBtn.setVisible(false);
+        cancelBtn.setManaged(false);
+
+        cancelBtn.setOnAction(e -> {
+            for (int r = 0; r < rowCount; r++) {
+                for (int c = 0; c < colCount; c++) {
+                    tfs[r][c].setText(originalTfValues[r][c]);
+                }
+            }
+            editing[0] = false;
+            table.refresh();
+            fixSave.setText(LocalizationManager.get("edit"));
+            cancelBtn.setVisible(false);
+            cancelBtn.setManaged(false);
+        });
 
         Button csvBtn = new Button(LocalizationManager.get("exportCSV"));
         csvBtn.getStyleClass().add("btn-primary");
@@ -206,7 +226,18 @@ public class GradesTab {
         });
 
         fixSave.setOnAction(e -> {
-            if (editing[0]) {
+            if (!editing[0]) {
+                for (int r = 0; r < rowCount; r++) {
+                    for (int c = 0; c < colCount; c++) {
+                        originalTfValues[r][c] = tfs[r][c].getText();
+                    }
+                }
+                editing[0] = true;
+                table.refresh();
+                fixSave.setText(LocalizationManager.get("saveChanges"));
+                cancelBtn.setVisible(true);
+                cancelBtn.setManaged(true);
+            } else {
                 for (int r = 0; r < rowCount; r++) {
                     int enrollmentId = rowEnrollmentIds.get(r);
                     Map<Integer, Grades> studentGrades = gradeMap.get(enrollmentId);
@@ -249,13 +280,15 @@ public class GradesTab {
                     }
                     data[r][colCount + 1] = computeFinalGrade(assessments, gradeMap.get(enrollmentId), colCount);
                 }
+                editing[0] = false;
+                table.refresh();
+                fixSave.setText(LocalizationManager.get("edit"));
+                cancelBtn.setVisible(false);
+                cancelBtn.setManaged(false);
             }
-            editing[0] = !editing[0];
-            table.refresh();
-            fixSave.setText(editing[0] ? LocalizationManager.get("saveChanges") : LocalizationManager.get("edit"));
         });
 
-        HBox btnRow = new HBox(8, fixSave, csvBtn, pdfBtn);
+        HBox btnRow = new HBox(8, fixSave, cancelBtn, csvBtn, pdfBtn);
         btnRow.setAlignment(Pos.CENTER_RIGHT);
 
         VBox vbox = new VBox(8, btnRow, table);

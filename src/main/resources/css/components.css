@@ -1,3 +1,8 @@
+/* ── Tooltip — faster show delay ───────────────────────────────────────── */
+.tooltip {
+    -fx-show-delay: 150ms;
+}
+
 /* ── Main card / panel ─────────────────────────────────────────────────── */
 .card {
     -fx-background-color: white;
