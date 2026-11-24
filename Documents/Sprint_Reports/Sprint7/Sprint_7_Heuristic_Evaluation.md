@@ -74,6 +74,8 @@ and a recommendation.
 | HE-04 | Login Page | H5 | Forgot Password allows any user to reset any other user's password without identity verification — no current user credentials or confirmation required | 3 | Require the current user to confirm their identity (e.g. current password or admin approval) before a password change is accepted | Open |
 | HE-05 | Admin — Student / Teacher / Course / Group Management | H1 | No confirmation message is shown after adding, editing, or deleting a record — the table updates immediately so the change is visible, but there is no explicit success notification | 1 | Optionally add a brief status message (e.g. "Student saved") for extra clarity | Open |
 | HE-06 | Course Report Page | H1 | After exporting a gradebook to PDF or CSV, no confirmation or file path is shown — user does not know if the export succeeded or where the file was saved | 2 | Display a success message with the saved file location after export completes | Open |
+| HE-07 | Teacher Gradebook — Grades Tab | H1 | Final grade column shows "—" with no explanation when a student is missing one or more assessment grades — user does not know why the grade is absent or what action is required | 2 | Show a tooltip on "—" cells explaining that the final grade appears once all assessment grades are filled in | Fixed |
+| HE-08 | Teacher Gradebook — Assessments Tab | H3 | Editing an existing assessment does not apply a position change — the position field is shown and pre-filled in the edit form but its value is silently ignored on save | 2 | Read the position field value during update and move the assessment to the selected position in the list | Fixed |
 
 ---
 
@@ -81,16 +83,16 @@ and a recommendation.
 
 | Heuristic | Findings Count | Highest Severity |
 |---|:---:|:---:|
-| H1 — Visibility of system status | | |
-| H2 — Match with the real world | | |
-| H3 — User control and freedom | | |
-| H4 — Consistency and standards | | |
-| H5 — Error prevention | | |
-| H6 — Recognition rather than recall | | |
-| H7 — Flexibility and efficiency | | |
-| H8 — Aesthetic and minimalist design | | |
-| H9 — Error recovery | | |
-| H10 — Help and documentation | | |
+| H1 — Visibility of system status | 4 | 2 |
+| H2 — Match with the real world | 0 | — |
+| H3 — User control and freedom | 1 | 2 |
+| H4 — Consistency and standards | 0 | — |
+| H5 — Error prevention | 1 | 3 |
+| H6 — Recognition rather than recall | 0 | — |
+| H7 — Flexibility and efficiency | 2 | 1 |
+| H8 — Aesthetic and minimalist design | 0 | — |
+| H9 — Error recovery | 0 | — |
+| H10 — Help and documentation | 1 | 1 |
 
 ---
 
@@ -98,12 +100,12 @@ and a recommendation.
 
 > *(To be completed after evaluation)*
 
-**Total findings:** TBD
-**Critical issues (severity 4):** TBD
-**Major issues (severity 3):** TBD
-**Minor/cosmetic issues (1–2):** TBD
+**Total findings:** 8
+**Critical issues (severity 4):** 0
+**Major issues (severity 3):** 1 (HE-04 — Forgot Password without identity verification)
+**Minor/cosmetic issues (1–2):** 7
 
-**General conclusion:**
+**General conclusion:** The application is functionally stable and covers all core use cases. The majority of usability issues are cosmetic or minor workflow gaps (missing keyboard shortcuts, absent feedback messages). One major security concern was identified around the password reset flow. Two issues found during evaluation (HE-07, HE-08) were fixed immediately during the sprint.
 
 ---
 

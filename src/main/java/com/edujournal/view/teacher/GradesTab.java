@@ -151,6 +151,9 @@ public class GradesTab {
                 super.updateItem(s, empty);
                 setText(empty || s == null ? null : s);
                 setStyle(empty ? "" : "-fx-background-color: #DBEAFE; -fx-font-weight: bold; -fx-text-fill: #1a3a6b;");
+                setTooltip(!empty && "—".equals(s)
+                        ? new Tooltip(LocalizationManager.get("finalGradeTooltip"))
+                        : null);
             }
         });
         finalGradeCol.setPrefWidth(110);

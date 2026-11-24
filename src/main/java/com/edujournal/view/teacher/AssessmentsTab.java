@@ -364,6 +364,10 @@ public class AssessmentsTab {
                                     )
                             );
 
+                            posCombo.getItems().clear();
+                            for (int i = 1; i <= data.size(); i++) posCombo.getItems().add(i);
+                            posCombo.setValue(data.indexOf(selected) + 1);
+
                             title.setText(
                                     LocalizationManager.get("edit") + " " + LocalizationManager.get("assessment").toLowerCase()
                             );
@@ -673,15 +677,21 @@ public class AssessmentsTab {
                             assessment.getDueDate()
                     );
 
-            data.set(
-                    index,
-                    updated
-            );
+            Integer newPos = posCombo.getValue();
+            if (newPos != null && newPos != index + 1) {
+                data.remove(index);
+                data.add(Math.min(newPos - 1, data.size()), updated);
+            } else {
+                data.set(index, updated);
+            }
 
             nameField.clear();
             typeCombo.setValue(null);
             weightField.clear();
             maxScoreField.clear();
+            posCombo.getItems().clear();
+            for (int i = 1; i <= data.size() + 1; i++) posCombo.getItems().add(i);
+            posCombo.setValue(null);
 
             selectedAssessment[0] = null;
 
