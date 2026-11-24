@@ -14,9 +14,9 @@ public class RoleBackground {
 
     public static StackPane wrap(Role role, Node content) {
         String img = switch (role) {
-            case ADMINISTRATOR -> RoleBackground.class.getResource("/images/admin-background2.png").toExternalForm();
-            case TEACHER -> RoleBackground.class.getResource("/images/teacher-background2.png").toExternalForm();
-            case STUDENT -> RoleBackground.class.getResource("/images/student-background2.png").toExternalForm();
+            case ADMINISTRATOR -> RoleBackground.class.getResource("/images/admin-background.png").toExternalForm();
+            case TEACHER -> RoleBackground.class.getResource("/images/teacher-background.png").toExternalForm();
+            case STUDENT -> RoleBackground.class.getResource("/images/student-background.png").toExternalForm();
         };
 
         Region bg = new Region();
