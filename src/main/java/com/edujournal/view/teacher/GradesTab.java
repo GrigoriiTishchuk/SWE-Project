@@ -238,6 +238,7 @@ public class GradesTab {
                 cancelBtn.setVisible(true);
                 cancelBtn.setManaged(true);
             } else {
+                boolean hasError = false;
                 for (int r = 0; r < rowCount; r++) {
                     int enrollmentId = rowEnrollmentIds.get(r);
                     Map<Integer, Grades> studentGrades = gradeMap.get(enrollmentId);
@@ -247,12 +248,14 @@ public class GradesTab {
                         if (!text.matches("\\d+(\\.\\d{1,2})?")) {
                             new Alert(Alert.AlertType.WARNING,
                                     "\"" + assessments.get(c).getTitle() + "\": " + LocalizationManager.get("scoreInvalid")).showAndWait();
+                            hasError = true;
                             continue;
                         }
                         double score = Double.parseDouble(text);
                         if (score < 0) {
                             new Alert(Alert.AlertType.WARNING,
                                     "\"" + assessments.get(c).getTitle() + "\": " + LocalizationManager.get("scoreNegative")).showAndWait();
+                            hasError = true;
                             continue;
                         }
                         double maxScore = assessments.get(c).getMaxScore();
@@ -260,6 +263,7 @@ public class GradesTab {
                             new Alert(Alert.AlertType.WARNING,
                                     "\"" + assessments.get(c).getTitle() + "\": " + score +
                                     " " + LocalizationManager.get("scoreExceedsMax") + " " + maxScore + ".").showAndWait();
+                            hasError = true;
                             continue;
                         }
                         Grades grade = studentGrades != null
@@ -280,11 +284,15 @@ public class GradesTab {
                     }
                     data[r][colCount + 1] = computeFinalGrade(assessments, gradeMap.get(enrollmentId), colCount);
                 }
-                editing[0] = false;
-                table.refresh();
-                fixSave.setText(LocalizationManager.get("edit"));
-                cancelBtn.setVisible(false);
-                cancelBtn.setManaged(false);
+                if (!hasError) {
+                    editing[0] = false;
+                    table.refresh();
+                    fixSave.setText(LocalizationManager.get("edit"));
+                    cancelBtn.setVisible(false);
+                    cancelBtn.setManaged(false);
+                } else {
+                    table.refresh();
+                }
             }
         });
 
