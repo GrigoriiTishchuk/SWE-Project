@@ -1,10 +1,7 @@
 # EduJournal - Sprint 7 Heuristic Evaluation
 
 **Project:**: EduJournal - Teacher's Gradebook and Report Card System  
-**Sprint:** 7 - Project Testing, Functional and Non-functional Testing  
-**Evaluator:** Maria Kuznetsova  
-**Date:** 19.11.2026  
-**Status:** Complete
+**Sprint:** 7 - Project Testing, Functional and Non-functional Testing
 
 ---
 
@@ -31,16 +28,16 @@ and a recommendation.
 
 | # | Heuristic |
 |:---:|---|
-| H1 | Visibility of system status |
-| H2 | Match between system and the real world |
-| H3 | User control and freedom |
-| H4 | Consistency and standards |
-| H5 | Error prevention |
-| H6 | Recognition rather than recall |
-| H7 | Flexibility and efficiency of use |
-| H8 | Aesthetic and minimalist design |
-| H9 | Help users recognize, diagnose, and recover from errors |
-| H10 | Help and documentation |
+| H1-1 | Simple & natural dialog |
+| H1-2 | Speak the users' language |
+| H1-3 | Minimize users' memory load |
+| H1-4 | Consistency |
+| H1-5 | Feedback |
+| H1-6 | Clearly marked exits |
+| H1-7 | Shortcuts |
+| H1-8 | Precise & constructive error messages |
+| H1-9 | Prevent errors |
+| H1-10 | Help and documentation |
 
 ---
 
@@ -68,18 +65,18 @@ and a recommendation.
 
 | ID | Screen | Heuristic | Description | Severity | Recommendation | Status |
 |---|---|:---:|---|:---:|---|---|
-| HE-01 | Login Page | H10 | No app description or context visible - a first-time user has no explanation of what EduJournal is or why they are logging in | 1 | Add a short tagline or subtitle below the app title (e.g. "Teacher's Gradebook and Report Card System") | Open |
-| HE-02 | Login Page | H7 | Pressing Enter on the username field does not move focus to the password field - user must click with the mouse | 1 | Set the username field's action to transfer focus to the password field on Enter | Open |
-| HE-03 | Login Page | H7 | Pressing Enter on the password field does not submit the form - user must click the Sign In button with the mouse | 1 | Bind Enter key on the password field to trigger the login action | Open |
-| HE-04 | Login Page | H5 | Forgot Password allows any user to reset any other user's password without identity verification - no current user credentials or confirmation required | 3 | Require the current user to confirm their identity (e.g. current password or admin approval) before a password change is accepted | Open |
-| HE-05 | Admin - Student / Teacher / Course / Group Management | H1 | No confirmation message is shown after adding, editing, or deleting a record - the table updates immediately so the change is visible, but there is no explicit success notification | 1 | Optionally add a brief status message (e.g. "Student saved") for extra clarity | Open |
-| HE-06 | Course Report Page | H1 | After exporting a gradebook to PDF or CSV, no confirmation or file path is shown - user does not know if the export succeeded or where the file was saved | 2 | Display a success message with the saved file location after export completes | Open |
-| HE-07 | Teacher Gradebook - Grades Tab | H1 | Final grade column shows "-" with no explanation when a student is missing one or more assessment grades - user does not know why the grade is absent or what action is required | 1 | Show a tooltip on "-" cells explaining that the final grade appears once all assessment grades are filled in | Fixed |
-| HE-08 | Teacher Gradebook - Assessments Tab | H3 | Editing an existing assessment does not apply a position change - the position field is shown and pre-filled in the edit form but its value is silently ignored on save | 2 | Read the position field value during update and move the assessment to the selected position in the list | Fixed |
-| HE-09 | Own Profile Page | H3 | No Cancel button is available while editing profile fields - if a user starts editing and wants to discard changes they must manually retype all original values | 1 | Add a Cancel button that restores original field values and exits edit mode without saving | Fixed |
-| HE-10 | Student Report Page | H1 | Final grade column shows "-" with no explanation when assessment grades are incomplete - student does not know what action is required to see the grade | 1 | Show a tooltip on "-" cells explaining that the final grade appears once all assessment grades are filled in | Fixed |
-| HE-11 | Teacher Gradebook - Grades Tab | H3 | No Cancel button available while editing grades - if a teacher starts editing and wants to discard changes they must manually retype all original values | 1 | Add a Cancel button that restores original grade values and exits edit mode without saving | Fixed |
-| HE-12 | Teacher Gradebook - Grades Tab | H9 | After entering an invalid grade and dismissing the alert, the form exits edit mode - valid grades entered in the same session are saved but the teacher cannot correct the invalid value without re-entering edit mode | 2 | Keep the form in edit mode when a validation error occurs so the teacher can fix the invalid value and continue | Fixed |
+| HE-01 | Login Page | H1-10 | No app description or context visible - a first-time user has no explanation of what EduJournal is or why they are logging in | 1 | Add a short tagline or subtitle below the app title (e.g. "Teacher's Gradebook and Report Card System") | Open |
+| HE-02 | Login Page | H1-7 | Pressing Enter on the username field does not move focus to the password field - user must click with the mouse | 1 | Set the username field's action to transfer focus to the password field on Enter | Open |
+| HE-03 | Login Page | H1-7 | Pressing Enter on the password field does not submit the form - user must click the Sign In button with the mouse | 1 | Bind Enter key on the password field to trigger the login action | Open |
+| HE-04 | Login Page | H1-9 | Forgot Password allows any user to reset any other user's password without identity verification - no current user credentials or confirmation required | 3 | Require the current user to confirm their identity (e.g. current password or admin approval) before a password change is accepted | Open |
+| HE-05 | Admin - Student / Teacher / Course / Group Management | H1-5 | No confirmation message is shown after adding, editing, or deleting a record - the table updates immediately so the change is visible, but there is no explicit success notification | 1 | Optionally add a brief status message (e.g. "Student saved") for extra clarity | Open |
+| HE-06 | Course Report Page | H1-5 | After exporting a gradebook to PDF or CSV, no confirmation or file path is shown - user does not know if the export succeeded or where the file was saved | 2 | Display a success message with the saved file location after export completes | Open |
+| HE-07 | Teacher Gradebook - Grades Tab | H1-5 | Final grade column shows "-" with no explanation when a student is missing one or more assessment grades - user does not know why the grade is absent or what action is required | 1 | Show a tooltip on "-" cells explaining that the final grade appears once all assessment grades are filled in | Fixed |
+| HE-08 | Teacher Gradebook - Assessments Tab | H1-4 | Editing an existing assessment does not apply a position change - the position field is shown and pre-filled in the edit form but its value is silently ignored on save | 2 | Read the position field value during update and move the assessment to the selected position in the list | Fixed |
+| HE-09 | Own Profile Page | H1-6 | No Cancel button is available while editing profile fields - if a user starts editing and wants to discard changes they must manually retype all original values | 1 | Add a Cancel button that restores original field values and exits edit mode without saving | Fixed |
+| HE-10 | Student Report Page | H1-5 | Final grade column shows "-" with no explanation when assessment grades are incomplete - student does not know what action is required to see the grade | 1 | Show a tooltip on "-" cells explaining that the final grade appears once all assessment grades are filled in | Fixed |
+| HE-11 | Teacher Gradebook - Grades Tab | H1-6 | No Cancel button available while editing grades - if a teacher starts editing and wants to discard changes they must manually retype all original values | 1 | Add a Cancel button that restores original grade values and exits edit mode without saving | Fixed |
+| HE-12 | Teacher Gradebook - Grades Tab | H1-8 | After entering an invalid grade and dismissing the alert, the form exits edit mode - valid grades entered in the same session are saved but the teacher cannot correct the invalid value without re-entering edit mode | 2 | Keep the form in edit mode when a validation error occurs so the teacher can fix the invalid value and continue | Fixed |
 
 ---
 
@@ -87,25 +84,25 @@ and a recommendation.
 
 | Heuristic | Findings Count | Highest Severity |
 |---|:---:|:---:|
-| H1 - Visibility of system status | 5 | 2 |
-| H2 - Match with the real world | 0 | - |
-| H3 - User control and freedom | 3 | 1 |
-| H4 - Consistency and standards | 0 | - |
-| H5 - Error prevention | 1 | 3 |
-| H6 - Recognition rather than recall | 0 | - |
-| H7 - Flexibility and efficiency | 2 | 1 |
-| H8 - Aesthetic and minimalist design | 0 | - |
-| H9 - Error recovery | 1 | 2 |
-| H10 - Help and documentation | 1 | 1 |
+| H1-1 - Simple & natural dialog | 0 | - |
+| H1-2 - Speak the users' language | 0 | - |
+| H1-3 - Minimize users' memory load | 0 | - |
+| H1-4 - Consistency | 1 | 2 |
+| H1-5 - Feedback | 4 | 2 |
+| H1-6 - Clearly marked exits | 2 | 1 |
+| H1-7 - Shortcuts | 2 | 1 |
+| H1-8 - Precise & constructive error messages | 1 | 2 |
+| H1-9 - Prevent errors | 1 | 3 |
+| H1-10 - Help and documentation | 1 | 1 |
 
 ---
 
 ## 6. Overall Assessment
 
-**Total findings:** 12
-**Critical issues (severity 4):** 0
-**Major issues (severity 3):** 1 (HE-04 - Forgot Password without identity verification)
-**Minor/cosmetic issues (1–2):** 9
+**Total findings:** 12  
+**Critical issues (severity 4):** 0  
+**Major issues (severity 3):** 1 (HE-04 - Forgot Password without identity verification)  
+**Minor/cosmetic issues (1–2):** 11
 
 **General conclusion:** The application is functionally stable and covers all core use cases. The majority of usability issues are cosmetic or minor workflow gaps (missing keyboard shortcuts, absent feedback messages, missing cancel actions). One major security concern was identified around the password reset flow. Six issues found during evaluation (HE-07, HE-08, HE-09, HE-10, HE-11, HE-12) were fixed immediately during the sprint.
 
