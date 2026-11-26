@@ -240,8 +240,9 @@ public class AdminTeacherController extends BaseController<UserDTO> {
                 new TextField(teacher.getFirstName() != null ? teacher.getFirstName() : "");
         TextField lastNameField =
                 new TextField(teacher.getLastName() != null ? teacher.getLastName() : "");
+        TextField phoneField = new TextField(teacher.getPhone() != null ? teacher.getPhone() : "");
 
-        VBox box = new VBox(10, firstNameField, lastNameField);
+        VBox box = new VBox(10, firstNameField, lastNameField, phoneField);
         box.setPadding(new Insets(10));
         dialog.getDialogPane().setContent(box);
 
@@ -259,6 +260,7 @@ public class AdminTeacherController extends BaseController<UserDTO> {
 
                 teacher.setFirstName(firstNameField.getText().trim());
                 teacher.setLastName(lastNameField.getText().trim());
+                teacher.setPhone(phoneField.getText().trim());
                 return teacher;
             }
             return null;
