@@ -104,6 +104,23 @@ class CourseMapperTest {
     }
 
     @Test
+    void toDTO_TeacherNotFoundTest() {
+        UserDAO userDAO = mock(UserDAO.class);
+        AcademicGroupDAO groupDAO = mock(AcademicGroupDAO.class);
+
+        when(userDAO.findById(10)).thenReturn(null);
+
+        CourseMapper mapper = new CourseMapper(userDAO, groupDAO);
+
+        Course course = new Course();
+        course.setUserId(10);
+
+        CourseDTO dto = mapper.toDTO(course);
+
+        assertNull(dto.getTeacherName());
+    }
+
+    @Test
     void toEntityTest() {
         CourseMapper mapper = new CourseMapper(null, null);
 
