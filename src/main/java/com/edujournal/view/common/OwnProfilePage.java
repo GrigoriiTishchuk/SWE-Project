@@ -33,8 +33,6 @@ import java.util.List;
  */
 public class OwnProfilePage extends BorderPane {
 
-    private static final String PANEL =
-            "-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 8; -fx-background-radius: 8;";
     private static final String BLUE_BTN =
             "-fx-background-color: #1a3a6b; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16;";
     private static final String LIGHT_INPUT =
@@ -47,8 +45,9 @@ public class OwnProfilePage extends BorderPane {
         setLeft(sidebar);
         ScrollPane scroll = new ScrollPane(buildContent(role));
         scroll.setFitToWidth(true);
+        scroll.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         scroll.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
-        setCenter(scroll);
+        setCenter(RoleBackground.wrap(role, scroll));
     }
 
     private static VBox buildSidebar(Role role) {
@@ -100,7 +99,7 @@ public class OwnProfilePage extends BorderPane {
         VBox card = new VBox(14, avatar, nameLabel, badge);
         card.setAlignment(Pos.TOP_CENTER);
         card.setPadding(new Insets(28));
-        card.setStyle(PANEL);
+        card.getStyleClass().add("card");
         card.setPrefWidth(200);
         return card;
     }
@@ -155,19 +154,41 @@ public class OwnProfilePage extends BorderPane {
         form.getChildren().add(row(LocalizationManager.get("role"), roleField));
 
         boolean[] editing = {false};
+        java.util.Map<TextField, String> originals = new java.util.HashMap<>();
+
         Button editSaveBtn = new Button(LocalizationManager.get("edit"));
         editSaveBtn.setStyle(BLUE_BTN);
+
+        Button cancelBtn = new Button(LocalizationManager.get("cancel"));
+        cancelBtn.setStyle(BLUE_BTN);
+        cancelBtn.setVisible(false);
+        cancelBtn.setManaged(false);
 
         final Student finalStudent = student;
         final TextField finalDob = dobField;
 
+        cancelBtn.setOnAction(e -> {
+            for (TextField tf : editableFields) {
+                tf.setText(originals.getOrDefault(tf, tf.getText()));
+                tf.setEditable(false);
+                tf.setStyle(READONLY_INPUT);
+            }
+            editSaveBtn.setText(LocalizationManager.get("edit"));
+            cancelBtn.setVisible(false);
+            cancelBtn.setManaged(false);
+            editing[0] = false;
+        });
+
         editSaveBtn.setOnAction(e -> {
             if (!editing[0]) {
                 for (TextField tf : editableFields) {
+                    originals.put(tf, tf.getText());
                     tf.setEditable(true);
                     tf.setStyle(LIGHT_INPUT);
                 }
                 editSaveBtn.setText(LocalizationManager.get("saveChanges"));
+                cancelBtn.setVisible(true);
+                cancelBtn.setManaged(true);
             } else {
                 LocalDate dateOfBirth = null;
                 if (role == Role.STUDENT && finalStudent != null && finalDob != null) {
@@ -210,13 +231,16 @@ public class OwnProfilePage extends BorderPane {
                     tf.setStyle(READONLY_INPUT);
                 }
                 editSaveBtn.setText(LocalizationManager.get("edit"));
+                cancelBtn.setVisible(false);
+                cancelBtn.setManaged(false);
             }
             editing[0] = !editing[0];
         });
 
-        form.getChildren().add(editSaveBtn);
+        HBox btnRow = new HBox(8, editSaveBtn, cancelBtn);
+        form.getChildren().add(btnRow);
         form.setPadding(new Insets(24));
-        form.setStyle(PANEL);
+        form.getStyleClass().add("card");
         HBox.setHgrow(form, Priority.ALWAYS);
         return form;
     }

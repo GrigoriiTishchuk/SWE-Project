@@ -28,9 +28,6 @@ import javafx.scene.layout.*;
  */
 public class AssessmentsTab {
 
-    private static final String PANEL_STYLE =
-            "-fx-background-color: white; -fx-border-color: #E5E7EB; " +
-                    "-fx-border-radius: 8; -fx-background-radius: 8;";
 
 
     private static final String LIGHT_INPUT =
@@ -210,9 +207,7 @@ public class AssessmentsTab {
                 new Insets(16)
         );
 
-        leftPanel.setStyle(
-                PANEL_STYLE
-        );
+        leftPanel.getStyleClass().add("card");
 
         leftPanel.setPrefWidth(450);
 
@@ -368,6 +363,10 @@ public class AssessmentsTab {
                                             selected.getMaxScore()
                                     )
                             );
+
+                            posCombo.getItems().clear();
+                            for (int i = 1; i <= data.size(); i++) posCombo.getItems().add(i);
+                            posCombo.setValue(data.indexOf(selected) + 1);
 
                             title.setText(
                                     LocalizationManager.get("edit") + " " + LocalizationManager.get("assessment").toLowerCase()
@@ -678,15 +677,21 @@ public class AssessmentsTab {
                             assessment.getDueDate()
                     );
 
-            data.set(
-                    index,
-                    updated
-            );
+            Integer newPos = posCombo.getValue();
+            if (newPos != null && newPos != index + 1) {
+                data.remove(index);
+                data.add(Math.min(newPos - 1, data.size()), updated);
+            } else {
+                data.set(index, updated);
+            }
 
             nameField.clear();
             typeCombo.setValue(null);
             weightField.clear();
             maxScoreField.clear();
+            posCombo.getItems().clear();
+            for (int i = 1; i <= data.size() + 1; i++) posCombo.getItems().add(i);
+            posCombo.setValue(null);
 
             selectedAssessment[0] = null;
 
@@ -716,9 +721,7 @@ public class AssessmentsTab {
                 new Insets(24)
         );
 
-        rightPanel.setStyle(
-                PANEL_STYLE
-        );
+        rightPanel.getStyleClass().add("card");
 
         rightPanel.setAlignment(
                 Pos.TOP_LEFT

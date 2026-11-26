@@ -26,7 +26,7 @@ public class CoursePage extends BorderPane {
         Main.setCurrentPageSupplier(() -> new CoursePage(buildSidebar(role), role));
         this.role = role;
         setLeft(sidebar);
-        setCenter(buildContent());
+        setCenter(RoleBackground.wrap(role, buildContent()));
     }
 
     private static VBox buildSidebar(Role role) {

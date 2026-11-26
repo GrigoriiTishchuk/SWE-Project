@@ -1,0 +1,42 @@
+/* ── Tooltip — faster show delay ───────────────────────────────────────── */
+.tooltip {
+    -fx-show-delay: 150ms;
+}
+
+/* ── Main card / panel ─────────────────────────────────────────────────── */
+.card {
+    -fx-background-color: white;
+    -fx-border-color: #CBD5E1;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.10), 10, 0, 0, 0);
+}
+
+/* ── Small row item inside a card (e.g. student course list) ───────────── */
+.card-row {
+    -fx-background-color: #F8FAFC;
+    -fx-background-radius: 8;
+    -fx-border-color: #E2E8F0;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+}
+
+/* ── Admin group card (normal / selected) ──────────────────────────────── */
+.card-group {
+    -fx-border-color: #CBD5E1;
+    -fx-border-width: 1.5;
+    -fx-padding: 10;
+    -fx-background-color: #FAFAFA;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+}
+
+.card-group-selected {
+    -fx-border-color: #3B82F6;
+    -fx-border-width: 2;
+    -fx-padding: 10;
+    -fx-background-color: #EFF6FF;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+}

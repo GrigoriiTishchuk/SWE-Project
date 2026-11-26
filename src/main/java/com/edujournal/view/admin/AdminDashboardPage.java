@@ -30,7 +30,7 @@ public class AdminDashboardPage extends BorderPane {
     public AdminDashboardPage() {
         Main.setCurrentPageSupplier(AdminDashboardPage::new);
         setLeft(AdminSidebar.build("Dashboard"));
-        setCenter(buildContent());
+        setCenter(RoleBackground.wrap(Role.ADMINISTRATOR, buildContent()));
     }
     private VBox buildContent() {
         VBox content = new VBox(20);
@@ -52,8 +52,7 @@ public class AdminDashboardPage extends BorderPane {
     private VBox buildQuickActions() {
         VBox box = new VBox(12);
         box.setPadding(new Insets(16));
-        box.setStyle("-fx-background-color: white; -fx-border-color: #E5E7EB; "
-                + "-fx-border-radius: 8; -fx-background-radius: 8;");
+        box.getStyleClass().add("card");
         box.getStylesheets().add(AdminDashboardPage.class.getResource("/css/button.css").toExternalForm());
 
         Label heading = new Label(LocalizationManager.get("quickActions"));

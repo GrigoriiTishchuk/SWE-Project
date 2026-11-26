@@ -47,7 +47,8 @@ public class Main extends Application {
         );
 
         Scene scene = new Scene(page, 1280, 720);
-        scene.getRoot().setStyle("-fx-font-family: 'Consolas'; -fx-font-size: 14px;");
+        scene.getRoot().setStyle("-fx-font-family: 'Consolas'; -fx-font-size: 14px; -fx-text-base-color: #111827;");
+        scene.getStylesheets().add(Main.class.getResource("/css/components.css").toExternalForm());
         stage.setScene(scene);
     }
 

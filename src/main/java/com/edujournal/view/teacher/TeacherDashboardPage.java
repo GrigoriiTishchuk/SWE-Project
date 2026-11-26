@@ -26,7 +26,7 @@ public class TeacherDashboardPage extends BorderPane {
     public TeacherDashboardPage() {
         Main.setCurrentPageSupplier(TeacherDashboardPage::new);
         setLeft(TeacherSidebar.build("Dashboard"));
-        setCenter(buildContent());
+        setCenter(RoleBackground.wrap(Role.TEACHER, buildContent()));
     }
 
     private VBox buildContent() {
@@ -49,8 +49,7 @@ public class TeacherDashboardPage extends BorderPane {
     private VBox buildQuickActions() {
         VBox box = new VBox(12);
         box.setPadding(new Insets(16));
-        box.setStyle("-fx-background-color: white; -fx-border-color: #E5E7EB; "
-                + "-fx-border-radius: 8; -fx-background-radius: 8;");
+        box.getStyleClass().add("card");
         box.getStylesheets().add(TeacherDashboardPage.class.getResource("/css/button.css").toExternalForm());
 
         Label heading = new Label(LocalizationManager.get("quickActions"));

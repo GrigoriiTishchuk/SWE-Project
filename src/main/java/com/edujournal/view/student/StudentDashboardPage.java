@@ -7,9 +7,7 @@ import com.edujournal.backend.utils.UserSession;
 import com.edujournal.entity.Role;
 import com.edujournal.entity.Student;
 import com.edujournal.model.CourseDTO;
-import com.edujournal.view.common.DashboardStatCards;
-import com.edujournal.view.common.GradeDistributionCard;
-import com.edujournal.view.common.TopBar;
+import com.edujournal.view.common.*;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -34,7 +32,7 @@ public class StudentDashboardPage extends BorderPane {
     public StudentDashboardPage() {
         Main.setCurrentPageSupplier(StudentDashboardPage::new);
         setLeft(StudentSidebar.build(LocalizationManager.get("dashboard")));
-        setCenter(buildContent());
+        setCenter(RoleBackground.wrap(Role.STUDENT, buildContent()));
     }
 
     private VBox buildContent() {
@@ -57,8 +55,7 @@ public class StudentDashboardPage extends BorderPane {
     private VBox buildCourseOverview() {
         VBox box = new VBox(12);
         box.setPadding(new Insets(16));
-        box.setStyle("-fx-background-color: white; -fx-border-color: #E5E7EB; "
-                + "-fx-border-radius: 8; -fx-background-radius: 8;");
+        box.getStyleClass().add("card");
 
         Label heading = new Label(LocalizationManager.get("courseOverview"));
         heading.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
@@ -110,7 +107,7 @@ public class StudentDashboardPage extends BorderPane {
 
         HBox row = new HBox(10, icon, text);
         row.setPadding(new Insets(8));
-        row.setStyle("-fx-background-color: #F3F4F6; -fx-background-radius: 6;");
+        row.getStyleClass().add("card-row");
         return row;
     }
 }

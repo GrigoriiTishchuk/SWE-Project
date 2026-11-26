@@ -34,7 +34,7 @@ public class GradeDistributionCard extends VBox {
         setSpacing(10);
         setPadding(new Insets(15));
 
-        setStyle("-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #DDDDDD;");
+        getStyleClass().add("card");
 
         Label title = new Label("");
         if (role == Role.ADMINISTRATOR) {

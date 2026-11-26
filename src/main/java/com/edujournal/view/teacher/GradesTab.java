@@ -151,6 +151,9 @@ public class GradesTab {
                 super.updateItem(s, empty);
                 setText(empty || s == null ? null : s);
                 setStyle(empty ? "" : "-fx-background-color: #DBEAFE; -fx-font-weight: bold; -fx-text-fill: #1a3a6b;");
+                setTooltip(!empty && "—".equals(s)
+                        ? new Tooltip(LocalizationManager.get("finalGradeTooltip"))
+                        : null);
             }
         });
         finalGradeCol.setPrefWidth(110);
@@ -168,8 +171,28 @@ public class GradesTab {
         for (int i = 0; i < colCount; i++) exportHeaders[2 + i] = assessments.get(i).getTitle();
         exportHeaders[2 + colCount] = "Final Grade";
 
+        String[][] originalTfValues = new String[rowCount][colCount];
+
         Button fixSave = new Button(LocalizationManager.get("edit"));
         fixSave.getStyleClass().add("btn-primary");
+
+        Button cancelBtn = new Button(LocalizationManager.get("cancel"));
+        cancelBtn.getStyleClass().add("btn-primary");
+        cancelBtn.setVisible(false);
+        cancelBtn.setManaged(false);
+
+        cancelBtn.setOnAction(e -> {
+            for (int r = 0; r < rowCount; r++) {
+                for (int c = 0; c < colCount; c++) {
+                    tfs[r][c].setText(originalTfValues[r][c]);
+                }
+            }
+            editing[0] = false;
+            table.refresh();
+            fixSave.setText(LocalizationManager.get("edit"));
+            cancelBtn.setVisible(false);
+            cancelBtn.setManaged(false);
+        });
 
         Button csvBtn = new Button(LocalizationManager.get("exportCSV"));
         csvBtn.getStyleClass().add("btn-primary");
@@ -203,7 +226,19 @@ public class GradesTab {
         });
 
         fixSave.setOnAction(e -> {
-            if (editing[0]) {
+            if (!editing[0]) {
+                for (int r = 0; r < rowCount; r++) {
+                    for (int c = 0; c < colCount; c++) {
+                        originalTfValues[r][c] = tfs[r][c].getText();
+                    }
+                }
+                editing[0] = true;
+                table.refresh();
+                fixSave.setText(LocalizationManager.get("saveChanges"));
+                cancelBtn.setVisible(true);
+                cancelBtn.setManaged(true);
+            } else {
+                boolean hasError = false;
                 for (int r = 0; r < rowCount; r++) {
                     int enrollmentId = rowEnrollmentIds.get(r);
                     Map<Integer, Grades> studentGrades = gradeMap.get(enrollmentId);
@@ -213,12 +248,14 @@ public class GradesTab {
                         if (!text.matches("\\d+(\\.\\d{1,2})?")) {
                             new Alert(Alert.AlertType.WARNING,
                                     "\"" + assessments.get(c).getTitle() + "\": " + LocalizationManager.get("scoreInvalid")).showAndWait();
+                            hasError = true;
                             continue;
                         }
                         double score = Double.parseDouble(text);
                         if (score < 0) {
                             new Alert(Alert.AlertType.WARNING,
                                     "\"" + assessments.get(c).getTitle() + "\": " + LocalizationManager.get("scoreNegative")).showAndWait();
+                            hasError = true;
                             continue;
                         }
                         double maxScore = assessments.get(c).getMaxScore();
@@ -226,6 +263,7 @@ public class GradesTab {
                             new Alert(Alert.AlertType.WARNING,
                                     "\"" + assessments.get(c).getTitle() + "\": " + score +
                                     " " + LocalizationManager.get("scoreExceedsMax") + " " + maxScore + ".").showAndWait();
+                            hasError = true;
                             continue;
                         }
                         Grades grade = studentGrades != null
@@ -246,13 +284,19 @@ public class GradesTab {
                     }
                     data[r][colCount + 1] = computeFinalGrade(assessments, gradeMap.get(enrollmentId), colCount);
                 }
+                if (!hasError) {
+                    editing[0] = false;
+                    table.refresh();
+                    fixSave.setText(LocalizationManager.get("edit"));
+                    cancelBtn.setVisible(false);
+                    cancelBtn.setManaged(false);
+                } else {
+                    table.refresh();
+                }
             }
-            editing[0] = !editing[0];
-            table.refresh();
-            fixSave.setText(editing[0] ? LocalizationManager.get("saveChanges") : LocalizationManager.get("edit"));
         });
 
-        HBox btnRow = new HBox(8, fixSave, csvBtn, pdfBtn);
+        HBox btnRow = new HBox(8, fixSave, cancelBtn, csvBtn, pdfBtn);
         btnRow.setAlignment(Pos.CENTER_RIGHT);
 
         VBox vbox = new VBox(8, btnRow, table);
@@ -271,9 +315,10 @@ public class GradesTab {
      * @return formatted grade and percentage, or an em dash if a complete grade cannot be calculated
      */
     public static String computeFinalGrade(List<Assessments> assessments, Map<Integer, Grades> studentGrades, int colCount) {
-        if (studentGrades == null || studentGrades.size() < colCount
-                || studentGrades.values().stream().anyMatch(g -> g.getScore() == null)) {
-            return "—";
+        if (studentGrades == null || colCount == 0) return "—";
+        for (Assessments a : assessments) {
+            Grades g = studentGrades.get(a.getId());
+            if (g == null || g.getScore() == null) return "—";
         }
         try {
             double percent = new CourseGradeService().calculateFinalGrade(
