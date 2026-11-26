@@ -466,6 +466,16 @@ public class CourseController extends BaseController<CourseDTO> {
      * @param course selected course
      */
     private void showCourseInfoDialog(CourseDTO course) {
+        String startDate =
+                course.getStartDate() != null
+                        ? course.getStartDate().toString()
+                        : "-";
+
+        String endDate =
+                course.getEndDate() != null
+                        ? course.getEndDate().toString()
+                        : "-";
+
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(LocalizationManager.get("courseInfo"));
         alert.setHeaderText(course.getName());
@@ -480,7 +490,15 @@ public class CourseController extends BaseController<CourseDTO> {
                         + "\n"
                         + LocalizationManager.get(KEY_ACADEMIC_GROUP)
                         + ": "
-                        + course.getGroupName());
+                        + course.getGroupName()
+                        + "\n"
+                        + LocalizationManager.get("startDate")
+                        + ": "
+                        + startDate
+                        + "\n"
+                        + LocalizationManager.get("endDate")
+                        + ": "
+                        + endDate);
         alert.showAndWait();
     }
 

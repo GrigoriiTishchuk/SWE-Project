@@ -2,9 +2,36 @@ package com.edujournal.backend.utils;
 
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class GradeNormalizerTest {
+    @Test
+    void constructorShouldThrowException() throws Exception {
+        Constructor<GradeNormalizer> constructor =
+                GradeNormalizer.class.getDeclaredConstructor();
+
+        constructor.setAccessible(true);
+
+        InvocationTargetException exception =
+                assertThrows(
+                        InvocationTargetException.class,
+                        constructor::newInstance
+                );
+
+        assertInstanceOf(
+                IllegalStateException.class,
+                exception.getCause()
+        );
+
+        assertEquals(
+                "Utility class cannot be instantiated.",
+                exception.getCause().getMessage()
+        );
+    }
+
     @Test
     void normalizeTest() {
         assertEquals(80.0, GradeNormalizer.normalizer(4, 5), 0.001);

@@ -1,8 +1,36 @@
 package com.edujournal.backend.utils;
 
+import org.junit.jupiter.api.Test;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class InputValidatorTest {
+    @Test
+    void constructorShouldThrowException() throws Exception {
+        Constructor<InputValidator> constructor =
+                InputValidator.class.getDeclaredConstructor();
+
+        constructor.setAccessible(true);
+
+        InvocationTargetException exception =
+                assertThrows(
+                        InvocationTargetException.class,
+                        constructor::newInstance
+                );
+
+        assertInstanceOf(
+                IllegalStateException.class,
+                exception.getCause()
+        );
+
+        assertEquals(
+                "Utility class cannot be instantiated.",
+                exception.getCause().getMessage()
+        );
+    }
 
     @org.junit.jupiter.api.Test
     void isValidName() {
