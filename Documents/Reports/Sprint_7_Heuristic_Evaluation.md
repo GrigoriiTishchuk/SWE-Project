@@ -56,7 +56,7 @@ and a recommendation.
 | Teacher Gradebook - Notes Tab | Teacher |
 | Student Dashboard | Student |
 | Course Report Page | Teacher / Admin |
-| Student Report Page | Teacher / Admin / Student |
+| Student Report Page | Admin / Student |
 | Own Profile Page | All users |
 
 ---

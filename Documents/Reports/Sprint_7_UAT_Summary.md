@@ -35,7 +35,7 @@
 
 ## Results Summary
 
-| Test Case | Maria Kuznetsova | Bayram Erdogan | Olena Petrova | Grigorii Tishchuk |
+| Test Case | Test Engineer 1 | Test Engineer 2 | Test Engineer 3 | Test Engineer 4 |
 |---|:---:|:---:|:---:|:---:|
 | TC1 - FT-10: Weighted Average Calculation | Pass | Pass | Pass | Pass |
 | TC2 - FT-11: Gradebook Report | Pass | Pass | Pass | Pass |
@@ -54,6 +54,6 @@
 
 ## Notes
 
-- TC1: Maria noted that assessment order cannot be changed after creation (fixed as HE-08).
-- TC2: Maria noted no confirmation notification is shown after saving a report (open issue HE-06).
-- TC6: Maria noted a cancel button would improve UX when modifying grades (fixed as HE-11).
+- TC1: Maria and Olena noted that assessment order cannot be changed after creation (fixed as HE-08).
+- TC2: Maria and Olena noted no confirmation notification is shown after saving a report (open issue HE-06).
+- TC6: Maria and Olena noted a cancel button would improve UX when modifying grades (fixed as HE-11).
