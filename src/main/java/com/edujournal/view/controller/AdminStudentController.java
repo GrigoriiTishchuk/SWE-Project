@@ -381,11 +381,11 @@ public class AdminStudentController extends BaseController<StudentDTO> {
                         + "\n"
                         + LocalizationManager.get(KEY_EMAIL)
                         + ": "
-                        + dto.getEmail()
+                        + (dto.getEmail() != null ? dto.getEmail() : "-")
                         + "\n"
                         + LocalizationManager.get(KEY_PHONE)
                         + ": "
-                        + dto.getPhone());
+                        + (dto.getPhone() != null ? dto.getPhone() : "-"));
         alert.showAndWait();
     }
 }
