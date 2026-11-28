@@ -2,6 +2,7 @@ package com.edujournal.view.common;
 
 import com.edujournal.Main;
 import com.edujournal.backend.service.AcademicGroupService;
+import com.edujournal.backend.service.AuthService;
 import com.edujournal.config.LocalizationManager;
 import com.edujournal.backend.service.StudentService;
 import com.edujournal.backend.service.UserService;
@@ -35,6 +36,8 @@ public class OwnProfilePage extends BorderPane {
 
     private static final String BLUE_BTN =
             "-fx-background-color: #1a3a6b; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16;";
+    private static final String RED_BTN =
+            "-fx-background-color: #DC2626; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16;";
     private static final String LIGHT_INPUT =
             "-fx-background-color: #DBEAFE; -fx-background-radius: 6; -fx-border-color: transparent;";
     private static final String READONLY_INPUT =
@@ -79,12 +82,17 @@ public class OwnProfilePage extends BorderPane {
         Label nameLabel = new Label(user.getFirstName() + " " + user.getLastName());
         nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
-        HBox body = new HBox(16, buildAvatarCard(role, nameLabel), buildFormCard(user, student, role, nameLabel));
+        VBox changePasswordCard = buildChangePasswordCard(sessionUser.getUsername());
+        changePasswordCard.setVisible(false);
+        changePasswordCard.setManaged(false);
+
+        HBox body = new HBox(16, buildAvatarCard(role, nameLabel), buildFormCard(user, student, role, nameLabel, changePasswordCard));
         body.setAlignment(Pos.TOP_LEFT);
 
         VBox content = new VBox(20);
         content.setPadding(new Insets(24));
-        content.getChildren().addAll(TopBar.build(LocalizationManager.get("profile"), role, false), body);
+        content.getChildren().addAll(TopBar.build(LocalizationManager.get("profile"), role, false), body,
+                changePasswordCard);
         return content;
     }
 
@@ -104,7 +112,7 @@ public class OwnProfilePage extends BorderPane {
         return card;
     }
 
-    private VBox buildFormCard(User user, Student student, Role role, Label nameLabel) {
+    private VBox buildFormCard(User user, Student student, Role role, Label nameLabel, VBox changePasswordCard) {
         Label title = new Label(LocalizationManager.get("personalInfo"));
         title.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
@@ -237,12 +245,83 @@ public class OwnProfilePage extends BorderPane {
             editing[0] = !editing[0];
         });
 
-        HBox btnRow = new HBox(8, editSaveBtn, cancelBtn);
+        Button changePasswordBtn = new Button(LocalizationManager.get("changePassword"));
+        changePasswordBtn.setStyle(RED_BTN);
+        changePasswordBtn.setOnAction(e -> {
+            boolean showing = changePasswordCard.isVisible();
+            changePasswordCard.setVisible(!showing);
+            changePasswordCard.setManaged(!showing);
+        });
+
+        HBox btnRow = new HBox(8, editSaveBtn, cancelBtn, changePasswordBtn);
         form.getChildren().add(btnRow);
         form.setPadding(new Insets(24));
         form.getStyleClass().add("card");
         HBox.setHgrow(form, Priority.ALWAYS);
         return form;
+    }
+
+    private VBox buildChangePasswordCard(String username) {
+        Label title = new Label(LocalizationManager.get("changePassword"));
+        title.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
+        PasswordField currentPasswordField = new PasswordField();
+        currentPasswordField.setPromptText(LocalizationManager.get("currentPassword"));
+        currentPasswordField.setMaxWidth(Double.MAX_VALUE);
+        currentPasswordField.setStyle(LIGHT_INPUT);
+
+        PasswordField newPasswordField = new PasswordField();
+        newPasswordField.setPromptText(LocalizationManager.get("newPasswordPrompt"));
+        newPasswordField.setMaxWidth(Double.MAX_VALUE);
+        newPasswordField.setStyle(LIGHT_INPUT);
+
+        PasswordField confirmPasswordField = new PasswordField();
+        confirmPasswordField.setPromptText(LocalizationManager.get("confirmPassword"));
+        confirmPasswordField.setMaxWidth(Double.MAX_VALUE);
+        confirmPasswordField.setStyle(LIGHT_INPUT);
+
+        Button saveBtn = new Button(LocalizationManager.get("saveChanges"));
+        saveBtn.setStyle(BLUE_BTN);
+
+        AuthService authService = new AuthService();
+
+        saveBtn.setOnAction(e -> {
+            String current = currentPasswordField.getText();
+            String newPass = newPasswordField.getText();
+            String confirm = confirmPasswordField.getText();
+
+            if (!authService.verifyPassword(username, current)) {
+                new Alert(Alert.AlertType.WARNING, LocalizationManager.get("incorrectPassword")).showAndWait();
+                return;
+            }
+            if (newPass.length() < 9) {
+                new Alert(Alert.AlertType.WARNING, LocalizationManager.get("passwordMinLength")).showAndWait();
+                return;
+            }
+            if (!newPass.equals(confirm)) {
+                new Alert(Alert.AlertType.WARNING, LocalizationManager.get("passwordsDoNotMatch")).showAndWait();
+                return;
+            }
+
+            boolean success = authService.resetPassword(username, newPass);
+            if (success) {
+                new Alert(Alert.AlertType.INFORMATION, LocalizationManager.get("passwordResetSuccess")).showAndWait();
+                currentPasswordField.clear();
+                newPasswordField.clear();
+                confirmPasswordField.clear();
+            } else {
+                new Alert(Alert.AlertType.ERROR, LocalizationManager.get("userNotFound")).showAndWait();
+            }
+        });
+
+        VBox card = new VBox(12, title,
+                row(LocalizationManager.get("currentPassword"), currentPasswordField),
+                row(LocalizationManager.get("newPasswordLabel"), newPasswordField),
+                row(LocalizationManager.get("confirmPassword"), confirmPasswordField),
+                saveBtn);
+        card.setPadding(new Insets(24));
+        card.getStyleClass().add("card");
+        return card;
     }
 
     private TextField createField(String value) {
