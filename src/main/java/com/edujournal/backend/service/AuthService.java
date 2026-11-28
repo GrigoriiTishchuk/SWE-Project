@@ -97,6 +97,18 @@ public final class AuthService {
     }
 
     /**
+     * Verifies that the given raw password matches the stored hash for a user.
+     *
+     * @param username the username to look up
+     * @param rawPassword the password to verify
+     * @return true if the password is correct, false otherwise
+     */
+    public boolean verifyPassword(final String username, final String rawPassword) {
+        User user = userDao.findByUsername(username);
+        return user != null && checkPassword(rawPassword, user.getPasswordHash());
+    }
+
+    /**
      * Resets the password of an existing user. The new password is stored as a BCrypt hash.
      *
      * @param username the username of the account

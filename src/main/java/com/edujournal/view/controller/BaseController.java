@@ -33,6 +33,7 @@ public abstract class BaseController<T> extends BorderPane {
     protected final Button deleteBtn = new Button(LocalizationManager.get("delete"));
     protected final Button viewBtn = new Button(LocalizationManager.get("view"));
     protected final Button reportBtn = new Button(LocalizationManager.get("studentReport"));
+    protected final Button resetPasswordBtn = new Button(LocalizationManager.get("resetPassword"));
 
     protected Function<T, Node> cardBuilder = null;
 
@@ -53,6 +54,7 @@ public abstract class BaseController<T> extends BorderPane {
         deleteBtn.getStyleClass().add(BTN_DELETE);
         viewBtn.getStyleClass().add(BTN_SECONDARY);
         reportBtn.getStyleClass().add(BTN_SECONDARY);
+        resetPasswordBtn.getStyleClass().add(BTN_DELETE);
     }
 
     /** Configures table columns for the entity view. */
@@ -128,11 +130,14 @@ public abstract class BaseController<T> extends BorderPane {
         reportBtn.setDisable(true);
         reportBtn.setVisible(false);
         reportBtn.setManaged(false);
+        resetPasswordBtn.setDisable(true);
+        resetPasswordBtn.setVisible(false);
+        resetPasswordBtn.setManaged(false);
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        HBox bottom = new HBox(10, addBtn, editBtn, deleteBtn, viewBtn, spacer, reportBtn);
+        HBox bottom = new HBox(10, addBtn, editBtn, deleteBtn, viewBtn, spacer, resetPasswordBtn, reportBtn);
         bottom.setPadding(new Insets(10));
 
         setBottom(bottom);

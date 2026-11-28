@@ -1,6 +1,7 @@
 package com.edujournal.view.controller;
 
 import com.edujournal.Main;
+import com.edujournal.backend.service.AuthService;
 import com.edujournal.backend.service.StudentService;
 import com.edujournal.backend.service.UserService;
 import com.edujournal.config.LocalizationManager;
@@ -50,13 +51,18 @@ public class AdminStudentController extends BaseController<StudentDTO> {
         reportBtn.setVisible(true);
         reportBtn.setManaged(true);
         reportBtn.setDisable(true);
+        resetPasswordBtn.setVisible(true);
+        resetPasswordBtn.setManaged(true);
+        resetPasswordBtn.setDisable(true);
 
         table.getSelectionModel()
                 .selectedItemProperty()
                 .addListener((obs, oldStudent, newStudent) -> {
                     reportBtn.setDisable(newStudent == null);
+                    resetPasswordBtn.setDisable(newStudent == null);
                 });
         reportBtn.setOnAction(e -> openStudentReport());
+        resetPasswordBtn.setOnAction(e -> resetStudentPassword());
     }
 
     /**
@@ -199,6 +205,30 @@ public class AdminStudentController extends BaseController<StudentDTO> {
                         KEY_PHONE);
         filterCombo.setCellFactory(list -> createLocalizedCell(filterKeyMap));
         filterCombo.setButtonCell(createLocalizedCell(filterKeyMap));
+    }
+
+    /** Resets the selected student's password to the default. */
+    private void resetStudentPassword() {
+        StudentDTO selected = table.getSelectionModel().getSelectedItem();
+        if (selected == null) return;
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle(LocalizationManager.get("resetPassword"));
+        confirm.setHeaderText(LocalizationManager.get("resetPassword") + ": \"" + selected.getUsername() + "\"");
+        confirm.setContentText(LocalizationManager.get("resetPasswordToDefault"));
+
+        ButtonType yes = new ButtonType(LocalizationManager.get("yes"), ButtonBar.ButtonData.OK_DONE);
+        ButtonType no = new ButtonType(LocalizationManager.get("no"), ButtonBar.ButtonData.CANCEL_CLOSE);
+        confirm.getButtonTypes().setAll(yes, no);
+
+        if (confirm.showAndWait().orElse(no) == yes) {
+            boolean success = new AuthService().resetPassword(selected.getUsername(), "EduJournal1");
+            if (success) {
+                new Alert(Alert.AlertType.INFORMATION, LocalizationManager.get("passwordResetSuccess")).showAndWait();
+            } else {
+                new Alert(Alert.AlertType.ERROR, LocalizationManager.get("userNotFound")).showAndWait();
+            }
+        }
     }
 
     /** Opens the report page for the selected student. */
