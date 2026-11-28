@@ -26,7 +26,9 @@ import java.util.logging.Logger;
  */
 public class GradesTab {
     private static final Logger LOGGER = Logger.getLogger(GradesTab.class.getName());
+    private static final String BTN_PRIMARY = "btn-primary";
 
+    private GradesTab() {}
 
     /**
      * Creates a grade table for the selected course and optional group.
@@ -50,28 +52,11 @@ public class GradesTab {
         }
 
         // studentId -> assessmentId -> Grades entity
-        Map<Integer, Map<Integer, Grades>> gradeMap = new LinkedHashMap<>();
-        for (Assessments a : assessments) {
-            for (Grades g : gradesDAO.findByAssessment(a.getId())) {
-                gradeMap.computeIfAbsent(g.getEnrollmentId(), k -> new LinkedHashMap<>())
-                        .put(g.getAssessmentId(), g);
-            }
-        }
+        Map<Integer, Map<Integer, Grades>> gradeMap =
+                loadGradeMap(assessments, gradesDAO);
 
         // Load enrollments for this course/group
-        List<Enrollment> enrollments;
-        if (group != null && !group.isEmpty()) {
-            AcademicGroup academicGroup = new AcademicGroupService().findByName(group);
-            Course dbCourse = new AssessmentsService().getCourseByName(course);
-            if (academicGroup != null && dbCourse != null) {
-                enrollments = new EnrollmentDAO().findByCourseAndGroup(dbCourse.getId(), academicGroup.getId());
-            } else {
-                enrollments = new ArrayList<>();
-            }
-        } else {
-        Course dbCourse = new AssessmentsService().getCourseByName(course);
-        enrollments = new EnrollmentDAO().findByCourseId(dbCourse.getId());
-        }
+        List<Enrollment> enrollments = loadEnrollments(course,group);
 
         List<Integer> rowEnrollmentIds = new ArrayList<>();
         for (Enrollment e : enrollments) rowEnrollmentIds.add(e.getId());
@@ -81,27 +66,17 @@ public class GradesTab {
 
         // Display data and TextFields side by side
         // data columns: [0]=name, [1..colCount]=scores, [colCount+1]=final grade
-        String[][] data = new String[rowCount][colCount + 2];
-        TextField[][] tfs = new TextField[rowCount][colCount];
+        GradebookData gradebookData =
+                prepareGradebookData(
+                        enrollments,
+                        assessments,
+                        gradeMap,
+                        studentService,
+                        userService
+                );
 
-        for (int r = 0; r < rowCount; r++) {
-            Enrollment enrollment = enrollments.get(r);
-            int enrollmentId = enrollment.getId();
-
-            Student student = studentService.findById(enrollment.getStudentId());
-            User user = userService.findById(student.getUserId());
-
-            data[r][0] = user.getFirstName() + " " + user.getLastName();
-            Map<Integer, Grades> studentGrades = gradeMap.get(enrollmentId);
-
-            for (int c = 0; c < colCount; c++) {
-                Grades g = studentGrades != null ? studentGrades.get(assessments.get(c).getId()) : null;
-                String val = (g != null && g.getScore() != null) ? String.valueOf(g.getScore()) : "—";
-                data[r][c + 1] = val;
-                tfs[r][c] = new TextField(val.equals("—") ? "" : val);
-            }
-            data[r][colCount + 1] = computeFinalGrade(assessments, studentGrades, colCount);
-        }
+        String[][] data = gradebookData.getData();
+        TextField[][] tfs = gradebookData.getTextFields();
 
         TableView<String[]> table = new TableView<>();
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -122,174 +97,92 @@ public class GradesTab {
 
         boolean[] editing = {false};
 
-        for (int i = 0; i < colCount; i++) {
-            final int col = i + 1;
-            final int tfCol = i;
-            TableColumn<String[], String> scoreCol = new TableColumn<>(assessments.get(i).getTitle());
-            scoreCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue()[col]));
-            scoreCol.setCellFactory(tc -> new TableCell<>() {
-                @Override protected void updateItem(String s, boolean empty) {
-                    super.updateItem(s, empty);
-                    int idx = getIndex();
-                    if (empty || idx < 0 || idx >= rowCount) { setText(null); setGraphic(null); return; }
-                    if (editing[0]) {
-                        setGraphic(tfs[idx][tfCol]); setText(null);
-                    } else {
-                        setText(data[idx][col]); setGraphic(null);
-                    }
-                }
-            });
-            scoreCol.setPrefWidth(80);
-            scoreCol.setMinWidth(80);
-            table.getColumns().add(scoreCol);
-        }
-
-        TableColumn<String[], String> finalGradeCol = new TableColumn<>(LocalizationManager.get("finalGrade"));
-        finalGradeCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue()[colCount + 1]));
-        finalGradeCol.setCellFactory(tc -> new TableCell<>() {
-            @Override protected void updateItem(String s, boolean empty) {
-                super.updateItem(s, empty);
-                setText(empty || s == null ? null : s);
-                setStyle(empty ? "" : "-fx-background-color: #DBEAFE; -fx-font-weight: bold; -fx-text-fill: #1a3a6b;");
-                setTooltip(!empty && "—".equals(s)
-                        ? new Tooltip(LocalizationManager.get("finalGradeTooltip"))
-                        : null);
-            }
-        });
-        finalGradeCol.setPrefWidth(110);
-        finalGradeCol.setMinWidth(110);
-        table.getColumns().add(finalGradeCol);
+        createScoreColumns(table, assessments, tfs, data, editing, rowCount);
+        table.getColumns().add(createFinalGradeColumn(colCount));
 
         if (table.getItems().isEmpty()) {
             table.setPlaceholder(new Label(LocalizationManager.get("noGradesRecorded")));
         }
         table.getItems().addAll(List.of(data));
 
-        String[] exportHeaders = new String[3 + colCount];
-        exportHeaders[0] = "#";
-        exportHeaders[1] = "Student";
-        for (int i = 0; i < colCount; i++) exportHeaders[2 + i] = assessments.get(i).getTitle();
-        exportHeaders[2 + colCount] = "Final Grade";
+        String[] exportHeaders = createExportHeaders(assessments);
 
         String[][] originalTfValues = new String[rowCount][colCount];
 
         Button fixSave = new Button(LocalizationManager.get("edit"));
-        fixSave.getStyleClass().add("btn-primary");
+        fixSave.getStyleClass().add(BTN_PRIMARY);
 
         Button cancelBtn = new Button(LocalizationManager.get("cancel"));
-        cancelBtn.getStyleClass().add("btn-primary");
+        cancelBtn.getStyleClass().add(BTN_PRIMARY);
         cancelBtn.setVisible(false);
         cancelBtn.setManaged(false);
 
-        cancelBtn.setOnAction(e -> {
-            for (int r = 0; r < rowCount; r++) {
-                for (int c = 0; c < colCount; c++) {
-                    tfs[r][c].setText(originalTfValues[r][c]);
-                }
-            }
-            editing[0] = false;
-            table.refresh();
-            fixSave.setText(LocalizationManager.get("edit"));
-            cancelBtn.setVisible(false);
-            cancelBtn.setManaged(false);
-        });
+        cancelBtn.setOnAction(e ->
+                cancelEditing(
+                        originalTfValues,
+                        tfs,
+                        editing,
+                        table,
+                        fixSave,
+                        cancelBtn
+                )
+        );
 
         Button csvBtn = new Button(LocalizationManager.get("exportCSV"));
-        csvBtn.getStyleClass().add("btn-primary");
-        csvBtn.setOnAction(e -> {
-            List<String[]> rows = new ArrayList<>();
-            for (int r = 0; r < rowCount; r++) {
-                String[] row = new String[3 + colCount];
-                row[0] = String.valueOf(r + 1);
-                row[1] = data[r][0];
-                for (int c = 0; c < colCount; c++) row[2 + c] = data[r][c + 1];
-                row[2 + colCount] = data[r][colCount + 1];
-                rows.add(row);
-            }
-            ExportUtil.exportCsv(csvBtn.getScene().getWindow(), "gradebook", exportHeaders, rows);
-        });
+        csvBtn.getStyleClass().add(BTN_PRIMARY);
+        configureCsvButton(
+                csvBtn,
+                data,
+                rowCount,
+                colCount,
+                exportHeaders
+        );
 
         Button pdfBtn = new Button(LocalizationManager.get("exportPDF"));
-        pdfBtn.getStyleClass().add("btn-primary");
-        pdfBtn.setOnAction(e -> {
-            List<String[]> rows = new ArrayList<>();
-            for (int r = 0; r < rowCount; r++) {
-                String[] row = new String[3 + colCount];
-                row[0] = String.valueOf(r + 1);
-                row[1] = data[r][0];
-                for (int c = 0; c < colCount; c++) row[2 + c] = data[r][c + 1];
-                row[2 + colCount] = data[r][colCount + 1];
-                rows.add(row);
-            }
-            String subtitle = "Course: " + course + (group != null && !group.isEmpty() ? "   Group: " + group : "");
-            ExportUtil.exportPdf(pdfBtn.getScene().getWindow(), "gradebook", "Gradebook", subtitle, exportHeaders, rows);
-        });
+        pdfBtn.getStyleClass().add(BTN_PRIMARY);
+        configurePdfButton(
+                pdfBtn,
+                data,
+                rowCount,
+                colCount,
+                exportHeaders,
+                course,
+                group
+        );
 
         fixSave.setOnAction(e -> {
+
             if (!editing[0]) {
-                for (int r = 0; r < rowCount; r++) {
-                    for (int c = 0; c < colCount; c++) {
-                        originalTfValues[r][c] = tfs[r][c].getText();
-                    }
-                }
-                editing[0] = true;
-                table.refresh();
-                fixSave.setText(LocalizationManager.get("saveChanges"));
-                cancelBtn.setVisible(true);
-                cancelBtn.setManaged(true);
+
+                startEditing(
+                        originalTfValues,
+                        tfs,
+                        editing,
+                        table,
+                        fixSave,
+                        cancelBtn
+                );
             } else {
-                boolean hasError = false;
-                for (int r = 0; r < rowCount; r++) {
-                    int enrollmentId = rowEnrollmentIds.get(r);
-                    Map<Integer, Grades> studentGrades = gradeMap.get(enrollmentId);
-                    for (int c = 0; c < colCount; c++) {
-                        String text = tfs[r][c].getText().trim();
-                        if (text.isEmpty()) continue;
-                        if (!text.matches("\\d+(\\.\\d{1,2})?")) {
-                            new Alert(Alert.AlertType.WARNING,
-                                    "\"" + assessments.get(c).getTitle() + "\": " + LocalizationManager.get("scoreInvalid")).showAndWait();
-                            hasError = true;
-                            continue;
-                        }
-                        double score = Double.parseDouble(text);
-                        if (score < 0) {
-                            new Alert(Alert.AlertType.WARNING,
-                                    "\"" + assessments.get(c).getTitle() + "\": " + LocalizationManager.get("scoreNegative")).showAndWait();
-                            hasError = true;
-                            continue;
-                        }
-                        double maxScore = assessments.get(c).getMaxScore();
-                        if (score > maxScore) {
-                            new Alert(Alert.AlertType.WARNING,
-                                    "\"" + assessments.get(c).getTitle() + "\": " + score +
-                                    " " + LocalizationManager.get("scoreExceedsMax") + " " + maxScore + ".").showAndWait();
-                            hasError = true;
-                            continue;
-                        }
-                        Grades grade = studentGrades != null
-                                ? studentGrades.get(assessments.get(c).getId()) : null;
-                        if (grade != null) {
-                            grade.setScore(score);
-                            gradesDAO.update(grade);
-                        } else {
-                            Grades newGrade = new Grades();
-                            newGrade.setEnrollmentId(enrollmentId);
-                            newGrade.setAssessmentId(assessments.get(c).getId());
-                            newGrade.setScore(score);
-                            gradesDAO.save(newGrade);
-                            gradeMap.computeIfAbsent(enrollmentId, k -> new LinkedHashMap<>())
-                                    .put(assessments.get(c).getId(), newGrade);
-                        }
-                        data[r][c + 1] = text;
-                    }
-                    data[r][colCount + 1] = computeFinalGrade(assessments, gradeMap.get(enrollmentId), colCount);
-                }
-                if (!hasError) {
+                boolean success =
+                        saveGrades(
+                                tfs,
+                                assessments,
+                                rowEnrollmentIds,
+                                gradeMap,
+                                gradesDAO,
+                                data,
+                                colCount
+                        );
+
+                if (success) {
+
                     editing[0] = false;
                     table.refresh();
                     fixSave.setText(LocalizationManager.get("edit"));
+
                     cancelBtn.setVisible(false);
                     cancelBtn.setManaged(false);
+
                 } else {
                     table.refresh();
                 }
@@ -343,5 +236,565 @@ public class GradesTab {
         if (percent >= 50) return 2;
         if (percent >= 40) return 1;
         return 0;
+    }
+
+    private static Double validateScore(
+            String text,
+            Assessments assessment) {
+
+        if (!text.matches("\\d+(\\.\\d{1,2})?")) {
+
+            new Alert(
+                    Alert.AlertType.WARNING,
+                    "\"" + assessment.getTitle()
+                            + "\": "
+                            + LocalizationManager.get("scoreInvalid")
+            ).showAndWait();
+
+            return null;
+        }
+
+        double score = Double.parseDouble(text);
+        if (score < 0) {
+            new Alert(
+                    Alert.AlertType.WARNING,
+                    "\"" + assessment.getTitle()
+                            + "\": "
+                            + LocalizationManager.get("scoreNegative")
+            ).showAndWait();
+
+            return null;
+        }
+
+        if (score > assessment.getMaxScore()) {
+            new Alert(
+                    Alert.AlertType.WARNING,
+                    "\"" + assessment.getTitle()
+                            + "\": "
+                            + score
+                            + " "
+                            + LocalizationManager.get("scoreExceedsMax")
+                            + " "
+                            + assessment.getMaxScore()
+                            + "."
+            ).showAndWait();
+            return null;
+        }
+
+        return score;
+    }
+
+    /**
+     * Loads all grades for the provided assessments and groups them
+     * by enrollment identifier and assessment identifier.
+     *
+     * @param assessments course assessments
+     * @param gradesDAO grades data access object
+     * @return nested map:
+     *         enrollmentId -> assessmentId -> grade
+     */
+    private static Map<Integer, Map<Integer, Grades>> loadGradeMap(
+            List<Assessments> assessments,
+            GradesDAO gradesDAO) {
+
+        Map<Integer, Map<Integer, Grades>> gradeMap =
+                new LinkedHashMap<>();
+
+        for (Assessments assessment : assessments) {
+
+            for (Grades grade :
+                    gradesDAO.findByAssessment(
+                            assessment.getId())) {
+
+                gradeMap.computeIfAbsent(
+                                grade.getEnrollmentId(),
+                                k -> new LinkedHashMap<>()
+                        )
+                        .put(
+                                grade.getAssessmentId(),
+                                grade
+                        );
+            }
+        }
+
+        return gradeMap;
+    }
+
+    /**
+     * Loads enrollments for the selected course and optional group.
+     *
+     * @param course course name
+     * @param group group name or null
+     * @return matching enrollments
+     */
+    private static List<Enrollment> loadEnrollments(
+            String course,
+            String group) {
+
+        List<Enrollment> enrollments;
+
+        if (group != null && !group.isEmpty()) {
+
+            AcademicGroup academicGroup =
+                    new AcademicGroupService().findByName(group);
+
+            Course dbCourse =
+                    new AssessmentsService().getCourseByName(course);
+
+            if (academicGroup != null && dbCourse != null) {
+                enrollments = new EnrollmentDAO()
+                                .findByCourseAndGroup(
+                                        dbCourse.getId(),
+                                        academicGroup.getId()
+                                );
+            } else {
+                enrollments = new ArrayList<>();
+            }
+
+        } else {
+            Course dbCourse = new AssessmentsService().getCourseByName(course);
+            enrollments = new EnrollmentDAO().findByCourseId(dbCourse.getId());
+        }
+
+        return enrollments;
+    }
+
+    /**
+     * Container for prepared gradebook data and editable text fields.
+     * Used to return multiple values from the gradebook preparation step.
+     */
+    private static class GradebookData {
+
+        private final String[][] data;
+        private final TextField[][] textFields;
+
+        /**
+         * Creates a new gradebook data container.
+         *
+         * @param data table data displayed in the gradebook
+         * @param textFields editable text fields for assessment scores
+         */
+        public GradebookData(
+                String[][] data,
+                TextField[][] textFields) {
+
+            this.data = data;
+            this.textFields = textFields;
+        }
+
+        /**
+         * Returns gradebook table data.
+         *
+         * @return gradebook data matrix
+         */
+        public String[][] getData() {
+            return data;
+        }
+
+        /**
+         * Returns editable text fields associated with the gradebook.
+         *
+         * @return score text fields
+         */
+        public TextField[][] getTextFields() {
+            return textFields;
+        }
+    }
+
+    /**
+     * Prepares gradebook table data and editable text fields.
+     *
+     * @param enrollments course enrollments
+     * @param assessments course assessments
+     * @param gradeMap grades grouped by enrollment and assessment
+     * @param studentService student service
+     * @param userService user service
+     * @return prepared gradebook data
+     */
+    private static GradebookData prepareGradebookData(
+            List<Enrollment> enrollments,
+            List<Assessments> assessments,
+            Map<Integer, Map<Integer, Grades>> gradeMap,
+            StudentService studentService,
+            UserService userService) {
+
+        int rowCount = enrollments.size();
+        int colCount = assessments.size();
+
+        String[][] data = new String[rowCount][colCount + 2];
+        TextField[][] tfs = new TextField[rowCount][colCount];
+
+        for (int r = 0; r < rowCount; r++) {
+            Enrollment enrollment = enrollments.get(r);
+            int enrollmentId = enrollment.getId();
+
+            Student student = studentService.findById(enrollment.getStudentId());
+            User user = userService.findById(student.getUserId());
+
+            data[r][0] = user.getFirstName() + " " + user.getLastName();
+            Map<Integer, Grades> studentGrades = gradeMap.get(enrollmentId);
+
+            for (int c = 0; c < colCount; c++) {
+                Grades g = studentGrades != null ? studentGrades.get(assessments.get(c).getId()) : null;
+                String val = (g != null && g.getScore() != null) ? String.valueOf(g.getScore()) : "—";
+                data[r][c + 1] = val;
+                tfs[r][c] = new TextField(val.equals("—") ? "" : val);
+            }
+            data[r][colCount + 1] = computeFinalGrade(assessments, studentGrades, colCount);
+        }
+        return new GradebookData(data, tfs);
+    }
+
+    private static void createScoreColumns(
+            TableView<String[]> table,
+            List<Assessments> assessments,
+            TextField[][] tfs,
+            String[][] data,
+            boolean[] editing,
+            int rowCount) {
+
+        int colCount = assessments.size();
+
+        for (int i = 0; i < colCount; i++) {
+            final int col = i + 1;
+            final int tfCol = i;
+            TableColumn<String[], String> scoreCol = new TableColumn<>(assessments.get(i).getTitle());
+            scoreCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue()[col]));
+            scoreCol.setCellFactory(tc -> new TableCell<>() {
+                @Override
+                protected void updateItem(String s, boolean empty) {
+                    super.updateItem(s, empty);
+                    if (empty || getIndex() < 0 || getIndex() >= rowCount) {
+                        setText(null);
+                        setGraphic(null);
+                        return;
+                    }
+
+                    if (editing[0]) {
+                        setGraphic(tfs[getIndex()][tfCol]);
+                        setText(null);
+                    } else {
+                        setText(data[getIndex()][col]);
+                        setGraphic(null);
+                    }
+                }
+            });
+            scoreCol.setPrefWidth(80);
+            scoreCol.setMinWidth(80);
+            table.getColumns().add(scoreCol);
+        }
+    }
+
+    private static String[] createExportHeaders(
+            List<Assessments> assessments) {
+
+        int colCount = assessments.size();
+
+        String[] exportHeaders = new String[colCount + 3];
+
+        exportHeaders[0] = "#";
+        exportHeaders[1] = "Student";
+
+        for (int i = 0; i < colCount; i++) {
+
+            exportHeaders[2 + i] = assessments.get(i).getTitle();
+        }
+
+        exportHeaders[colCount + 2] = "Final Grade";
+
+        return exportHeaders;
+    }
+    private static void startEditing(
+            String[][] originalTfValues,
+            TextField[][] tfs,
+            boolean[] editing,
+            TableView<String[]> table,
+            Button fixSave,
+            Button cancelBtn) {
+
+        for (int r = 0; r < originalTfValues.length; r++) {
+
+            for (int c = 0; c < originalTfValues[r].length; c++) {
+
+                originalTfValues[r][c] = tfs[r][c].getText();
+            }
+        }
+
+        editing[0] = true;
+        table.refresh();
+        fixSave.setText(LocalizationManager.get("saveChanges"));
+
+        cancelBtn.setVisible(true);
+        cancelBtn.setManaged(true);
+    }
+
+    /**
+     * Validates and saves edited grades.
+     *
+     * @param tfs editable score fields
+     * @param assessments course assessments
+     * @param rowEnrollmentIds enrollment identifiers corresponding to table rows
+     * @param gradeMap loaded grades
+     * @param gradesDAO grades data access object
+     * @param data displayed gradebook data
+     * @param colCount assessment column count
+     * @return true if all grades were saved successfully;
+     *         false if validation errors occurred
+     */
+    private static boolean saveGrades(
+            TextField[][] tfs,
+            List<Assessments> assessments,
+            List<Integer> rowEnrollmentIds,
+            Map<Integer, Map<Integer, Grades>> gradeMap,
+            GradesDAO gradesDAO,
+            String[][] data,
+            int colCount) {
+
+        boolean hasError = false;
+        int rowCount = rowEnrollmentIds.size();
+
+        for (int r = 0; r < rowCount; r++) {
+            int enrollmentId = rowEnrollmentIds.get(r);
+            Map<Integer, Grades> studentGrades = gradeMap.get(enrollmentId);
+
+            for (int c = 0; c < colCount; c++) {
+                String text = tfs[r][c].getText().trim();
+
+                if (text.isEmpty()) {
+                    continue;
+                }
+
+                Double score = validateScore(text,assessments.get(c));
+
+                if (score == null) {
+                    hasError = true;
+                } else {
+                    Grades grade = studentGrades != null
+                                    ? studentGrades.get(
+                                    assessments.get(c)
+                                            .getId()
+                            )
+                                    : null;
+
+                    saveOrUpdateGrade(
+                            grade,
+                            score,
+                            enrollmentId,
+                            assessments.get(c),
+                            gradesDAO,
+                            gradeMap
+                    );
+                    data[r][c + 1] = text;
+                }
+
+                data[r][colCount + 1] =
+                        computeFinalGrade(
+                                assessments,
+                                gradeMap.get(
+                                        enrollmentId
+                                ),
+                                colCount
+                        );
+            }
+        }
+        return !hasError;
+    }
+
+    private static void cancelEditing(
+            String[][] originalTfValues,
+            TextField[][] tfs,
+            boolean[] editing,
+            TableView<String[]> table,
+            Button fixSave,
+            Button cancelBtn) {
+
+        for (int r = 0; r < originalTfValues.length; r++) {
+
+            for (int c = 0; c < originalTfValues[r].length; c++) {
+
+                tfs[r][c].setText(originalTfValues[r][c]);
+            }
+        }
+
+        editing[0] = false;
+        table.refresh();
+        fixSave.setText(LocalizationManager.get("edit"));
+
+        cancelBtn.setVisible(false);
+        cancelBtn.setManaged(false);
+    }
+
+    private static void configureCsvButton(
+            Button csvBtn,
+            String[][] data,
+            int rowCount,
+            int colCount,
+            String[] exportHeaders) {
+
+        csvBtn.setOnAction(e -> {
+
+            List<String[]> rows = new ArrayList<>();
+
+            for (int r = 0; r < rowCount; r++) {
+
+                String[] row = new String[3 + colCount];
+
+                row[0] = String.valueOf(r + 1);
+                row[1] = data[r][0];
+
+                for (int c = 0; c < colCount; c++) {
+                    row[2 + c] = data[r][c + 1];
+                }
+
+                row[2 + colCount] = data[r][colCount + 1];
+
+                rows.add(row);
+            }
+
+            ExportUtil.exportCsv(
+                    csvBtn.getScene().getWindow(),
+                    "gradebook",
+                    exportHeaders,
+                    rows
+            );
+        });
+    }
+
+    private static void configurePdfButton(
+            Button pdfBtn,
+            String[][] data,
+            int rowCount,
+            int colCount,
+            String[] exportHeaders,
+            String course,
+            String group) {
+
+        pdfBtn.setOnAction(e -> {
+
+            List<String[]> rows = new ArrayList<>();
+
+            for (int r = 0; r < rowCount; r++) {
+
+                String[] row = new String[3 + colCount];
+
+                row[0] = String.valueOf(r + 1);
+                row[1] = data[r][0];
+
+                for (int c = 0; c < colCount; c++) {
+                    row[2 + c] = data[r][c + 1];
+                }
+
+                row[2 + colCount] = data[r][colCount + 1];
+
+                rows.add(row);
+            }
+
+            String subtitle =
+                    "Course: " + course
+                            + (group != null
+                            && !group.isEmpty()
+                            ? "   Group: " + group
+                            : "");
+
+            ExportUtil.exportPdf(
+                    pdfBtn.getScene().getWindow(),
+                    "gradebook",
+                    "Gradebook",
+                    subtitle,
+                    exportHeaders,
+                    rows
+            );
+        });
+    }
+
+    private static TableColumn<String[], String> createFinalGradeColumn(int colCount) {
+
+        TableColumn<String[], String> finalGradeCol =
+                new TableColumn<>(LocalizationManager.get("finalGrade"));
+
+        finalGradeCol.setCellValueFactory(
+                d -> new SimpleStringProperty(
+                        d.getValue()[colCount + 1]
+                )
+        );
+
+        finalGradeCol.setCellFactory(
+                tc -> new TableCell<>() {
+
+                    @Override
+                    protected void updateItem(String s, boolean empty) {
+
+                        super.updateItem(s, empty);
+                        setText(empty || s == null ? null : s);
+
+                        setStyle(
+                                empty
+                                        ? ""
+                                        : "-fx-background-color: #DBEAFE;"
+                                        + "-fx-font-weight: bold;"
+                                        + "-fx-text-fill: #1a3a6b;"
+                        );
+
+                        setTooltip(
+                                !empty && "—".equals(s)
+                                        ? new Tooltip(
+                                        LocalizationManager.get(
+                                                "finalGradeTooltip"
+                                        )
+                                )
+                                        : null
+                        );
+                    }
+                }
+        );
+
+        finalGradeCol.setPrefWidth(110);
+        finalGradeCol.setMinWidth(110);
+
+        return finalGradeCol;
+    }
+
+    /**
+     * Updates an existing grade or creates a new one.
+     *
+     * @param grade existing grade or null
+     * @param score validated score
+     * @param enrollmentId enrollment identifier
+     * @param assessment assessment being graded
+     * @param gradesDAO grades data access object
+     * @param gradeMap cached grades map
+     */
+    private static void saveOrUpdateGrade(
+            Grades grade,
+            Double score,
+            int enrollmentId,
+            Assessments assessment,
+            GradesDAO gradesDAO,
+            Map<Integer, Map<Integer, Grades>> gradeMap) {
+
+        if (grade != null) {
+
+            grade.setScore(score);
+            gradesDAO.update(grade);
+
+        } else {
+
+            Grades newGrade = new Grades();
+
+            newGrade.setEnrollmentId(enrollmentId);
+            newGrade.setAssessmentId(assessment.getId());
+            newGrade.setScore(score);
+
+            gradesDAO.save(newGrade);
+
+            gradeMap.computeIfAbsent(
+                            enrollmentId,
+                            k -> new LinkedHashMap<>()
+                    )
+                    .put(
+                            assessment.getId(),
+                            newGrade
+                    );
+        }
     }
 }

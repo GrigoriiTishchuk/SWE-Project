@@ -12,6 +12,7 @@ import com.edujournal.config.LocalizationManager;
  * Builds the student navigation menu.
  */
 public class StudentSidebar {
+    private StudentSidebar() {}
 
     /**
      * Creates the student sidebar and marks the active destination.

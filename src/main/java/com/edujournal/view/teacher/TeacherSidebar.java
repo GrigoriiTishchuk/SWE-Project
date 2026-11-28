@@ -14,6 +14,7 @@ import javafx.scene.layout.VBox;
  */
 public class TeacherSidebar {
 
+    private TeacherSidebar() {}
     /**
      * Creates the teacher sidebar and marks the active destination.
      *

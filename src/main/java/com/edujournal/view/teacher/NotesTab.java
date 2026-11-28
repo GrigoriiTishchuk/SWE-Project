@@ -21,6 +21,8 @@ import java.text.MessageFormat;
  */
 public class NotesTab {
 
+    private NotesTab() {}
+
     /**
      * Creates the course notes editor, or an explanatory placeholder when the course
      * and group cannot be resolved.

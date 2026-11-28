@@ -26,15 +26,18 @@ import java.util.function.Consumer;
  * Builds the shared page header with year, language, account, and logout controls.
  */
 public class TopBar {
+    private static final String RUSSIAN = "Русский";
+    private static final String TURKISH = "Türkçe";
+    private static final String ARABIC = "العربية";
 
     private TopBar() {
     }
 
     private static String localeToLanguage(Locale locale) {
         return switch (locale.getLanguage()) {
-            case "ru" -> "Русский";
-            case "tr" -> "Türkçe";
-            case "ar" -> "العربية";
+            case "ru" -> RUSSIAN;
+            case "tr" -> TURKISH;
+            case "ar" -> ARABIC;
             default   -> "English";
         };
     }
@@ -80,16 +83,16 @@ public class TopBar {
         }
 
         ComboBox<String> languageSelector = new ComboBox<>();
-        languageSelector.getItems().addAll("English", "Türkçe", "Русский", "العربية");
+        languageSelector.getItems().addAll("English", TURKISH, RUSSIAN, ARABIC);
         languageSelector.setValue(localeToLanguage(LocalizationManager.getCurrentLocale()));
         languageSelector.valueProperty().addListener((obs, old, val) -> {
             if (val == null) {
                 return;
             }
             Locale locale = switch (val) {
-                case "Русский" -> new Locale("ru", "RU");
-                case "Türkçe" -> new Locale("tr", "TR");
-                case "العربية"  -> new Locale("ar", "SA");
+                case RUSSIAN -> new Locale("ru", "RU");
+                case TURKISH -> new Locale("tr", "TR");
+                case ARABIC  -> new Locale("ar", "SA");
                 default        -> new Locale("en", "US");
             };
             LocalizationManager.setLocale(locale);
