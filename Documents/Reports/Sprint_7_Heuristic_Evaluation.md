@@ -79,7 +79,7 @@ and a recommendation.
 | HE-12 | Login Page | H1-7: Shortcuts | Pressing Enter on the username field does not move focus to the password field - user must click with the mouse                                                                                                                                                | ![](../screenshots/login.png) | 1 | Set the username field's action to transfer focus to the password field on Enter | Open |
 | HE-13 | Login Page | H1-7: Shortcuts | Pressing Enter on the password field does not submit the form - user must click the Sign In button with the mouse                                                                                                                                              | ![](../screenshots/login_password.png) | 1 | Bind Enter key on the password field to trigger the login action | Open |
 | HE-14 | Teacher Gradebook - Grades Tab | H1-8: Precise & constructive error messages | After entering an invalid grade and dismissing the alert, the form exits edit mode - valid grades entered in the same session are saved but the teacher cannot correct the invalid value without re-entering edit mode                                         | ![](../screenshots/teacher_grade_alert.png) | 2 | Keep the form in edit mode when a validation error occurs so the teacher can fix the invalid value and continue | Fixed |
-| HE-15 | Login Page | H1-9: Prevent errors | Forgot Password allows any user to reset any other user's password without identity verification - no current user credentials or confirmation required                                                                                                        | ![](../screenshots/reset_password.png) | 3 | Require the current user to confirm their identity (e.g. current password or admin approval) before a password change is accepted | Open |
+| HE-15 | Login Page | H1-9: Prevent errors | Forgot Password allows any user to reset any other user's password without identity verification - no current user credentials or confirmation required                                                                                                        | ![](../screenshots/reset_password.png) | 3 | Require the current user to confirm their identity (e.g. current password or admin approval) before a password change is accepted | Fixed |
 | HE-16 | Admin - Student / Teacher / Course / Group Management | H1-9: Prevent errors | Users can submit creation forms with missing required fields - validation is only triggered after clicking Save, rather than preventing the error beforehand                                                                                                   | ![](../screenshots/preventing_error.png) | 2 | Clearly mark required fields and validate input before form submission, or disable the Save button until all required fields are filled | Open |
 | HE-17 | Login Page | H1-10: Help and documentation | No app description or context visible - a first-time user has no explanation of what EduJournal is or why they are logging in | ![](../screenshots/login.png) | 1 | Add a short tagline or subtitle below the app title | Open |
 | HE-18 | All screens | H1-10: Help and documentation | The application does not provide built-in help or user documentation - new users have no guide explaining system features or how to perform common tasks                                                                                                       | ![](../screenshots/help.png) | 2 | Add a Help section or user guide with basic instructions and an overview of system features | Open |
@@ -107,10 +107,10 @@ and a recommendation.
 
 **Total findings:** 18  
 **Critical issues (severity 4):** 0  
-**Major issues (severity 3):** 1 (HE-15 - Forgot Password without identity verification)  
+**Major issues (severity 3):** 1 (HE-15 - Forgot Password without identity verification, fixed)  
 **Minor/cosmetic issues (1–2):** 17
 
-**General conclusion:** The application is functionally stable and covers all core use cases. The majority of usability issues are minor workflow gaps (missing feedback messages, inconsistent form behavior, missing cancel actions, absent keyboard shortcuts). One major security concern was identified around the password reset flow. Six issues found during evaluation (HE-03, HE-07, HE-08, HE-09, HE-10, HE-14) were fixed immediately during the sprint.
+**General conclusion:** The application is functionally stable and covers all core use cases. The majority of usability issues are minor workflow gaps (missing feedback messages, inconsistent form behavior, missing cancel actions, absent keyboard shortcuts). One major security concern was identified around the password reset flow and addressed during the sprint. Seven issues found during evaluation (HE-03, HE-07, HE-08, HE-09, HE-10, HE-14, HE-15) were fixed immediately during the sprint.
 
 ---
 
@@ -136,17 +136,16 @@ Prioritized by severity - open issues only.
 
 | Priority | ID | Severity | Recommendation |
 |:---:|---|:---:|---|
-| 1 | HE-15 | 3 | Add identity verification to the Forgot Password flow - require current credentials or admin approval before accepting a password change |
-| 2 | HE-06 | 2 | Show a success notification with the saved file path after CSV or PDF export completes |
-| 3 | HE-05 | 2 | Add a brief status message after each create, edit, or delete action |
-| 4 | HE-01 | 2 | Clearly mark required fields in course and group creation forms |
-| 5 | HE-02 | 2 | Preserve entered data when a validation error occurs in course or group creation forms |
-| 6 | HE-04 | 2 | Make all creation forms stay open consistently when a validation error occurs |
-| 7 | HE-16 | 2 | Validate required fields before form submission or disable Save until all required fields are filled |
-| 8 | HE-18 | 2 | Add a Help section or user guide with basic instructions and an overview of system features |
-| 9 | HE-11 | 2 | Cancel button should return the user to the page from which they started the operation |
-| 10 | HE-12 | 1 | Move focus to the password field when Enter is pressed in the username field |
-| 11 | HE-13 | 1 | Submit the login form when Enter is pressed in the password field |
-| 12 | HE-17 | 1 | Add a short tagline or subtitle below the app title on the login page to explain what EduJournal is |
+| 1 | HE-06 | 2 | Show a success notification with the saved file path after CSV or PDF export completes |
+| 2 | HE-05 | 2 | Add a brief status message after each create, edit, or delete action |
+| 3 | HE-01 | 2 | Clearly mark required fields in course and group creation forms |
+| 4 | HE-02 | 2 | Preserve entered data when a validation error occurs in course or group creation forms |
+| 5 | HE-04 | 2 | Make all creation forms stay open consistently when a validation error occurs |
+| 6 | HE-16 | 2 | Validate required fields before form submission or disable Save until all required fields are filled |
+| 7 | HE-18 | 2 | Add a Help section or user guide with basic instructions and an overview of system features |
+| 8 | HE-11 | 2 | Cancel button should return the user to the page from which they started the operation |
+| 9 | HE-12 | 1 | Move focus to the password field when Enter is pressed in the username field |
+| 10 | HE-13 | 1 | Submit the login form when Enter is pressed in the password field |
+| 11 | HE-17 | 1 | Add a short tagline or subtitle below the app title on the login page to explain what EduJournal is |
 
-> HE-03, HE-07, HE-08, HE-09, HE-10, HE-14 were identified and fixed during this sprint.
+> HE-03, HE-07, HE-08, HE-09, HE-10, HE-14, HE-15 were identified and fixed during this sprint.
