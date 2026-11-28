@@ -26,7 +26,9 @@ import java.util.logging.Logger;
  */
 public class GradesTab {
     private static final Logger LOGGER = Logger.getLogger(GradesTab.class.getName());
+    private static final String BTN_PRIMARY = "btn-primary";
 
+    private GradesTab() {}
 
     /**
      * Creates a grade table for the selected course and optional group.
@@ -174,10 +176,10 @@ public class GradesTab {
         String[][] originalTfValues = new String[rowCount][colCount];
 
         Button fixSave = new Button(LocalizationManager.get("edit"));
-        fixSave.getStyleClass().add("btn-primary");
+        fixSave.getStyleClass().add(BTN_PRIMARY);
 
         Button cancelBtn = new Button(LocalizationManager.get("cancel"));
-        cancelBtn.getStyleClass().add("btn-primary");
+        cancelBtn.getStyleClass().add(BTN_PRIMARY);
         cancelBtn.setVisible(false);
         cancelBtn.setManaged(false);
 
@@ -195,7 +197,7 @@ public class GradesTab {
         });
 
         Button csvBtn = new Button(LocalizationManager.get("exportCSV"));
-        csvBtn.getStyleClass().add("btn-primary");
+        csvBtn.getStyleClass().add(BTN_PRIMARY);
         csvBtn.setOnAction(e -> {
             List<String[]> rows = new ArrayList<>();
             for (int r = 0; r < rowCount; r++) {
@@ -210,7 +212,7 @@ public class GradesTab {
         });
 
         Button pdfBtn = new Button(LocalizationManager.get("exportPDF"));
-        pdfBtn.getStyleClass().add("btn-primary");
+        pdfBtn.getStyleClass().add(BTN_PRIMARY);
         pdfBtn.setOnAction(e -> {
             List<String[]> rows = new ArrayList<>();
             for (int r = 0; r < rowCount; r++) {
@@ -245,45 +247,36 @@ public class GradesTab {
                     for (int c = 0; c < colCount; c++) {
                         String text = tfs[r][c].getText().trim();
                         if (text.isEmpty()) continue;
-                        if (!text.matches("\\d+(\\.\\d{1,2})?")) {
-                            new Alert(Alert.AlertType.WARNING,
-                                    "\"" + assessments.get(c).getTitle() + "\": " + LocalizationManager.get("scoreInvalid")).showAndWait();
+                        Double score = validateScore(
+                                text,
+                                assessments.get(c)
+                        );
+
+                        if (score == null) {
                             hasError = true;
-                            continue;
-                        }
-                        double score = Double.parseDouble(text);
-                        if (score < 0) {
-                            new Alert(Alert.AlertType.WARNING,
-                                    "\"" + assessments.get(c).getTitle() + "\": " + LocalizationManager.get("scoreNegative")).showAndWait();
-                            hasError = true;
-                            continue;
-                        }
-                        double maxScore = assessments.get(c).getMaxScore();
-                        if (score > maxScore) {
-                            new Alert(Alert.AlertType.WARNING,
-                                    "\"" + assessments.get(c).getTitle() + "\": " + score +
-                                    " " + LocalizationManager.get("scoreExceedsMax") + " " + maxScore + ".").showAndWait();
-                            hasError = true;
-                            continue;
-                        }
-                        Grades grade = studentGrades != null
-                                ? studentGrades.get(assessments.get(c).getId()) : null;
-                        if (grade != null) {
-                            grade.setScore(score);
-                            gradesDAO.update(grade);
+
                         } else {
-                            Grades newGrade = new Grades();
-                            newGrade.setEnrollmentId(enrollmentId);
-                            newGrade.setAssessmentId(assessments.get(c).getId());
-                            newGrade.setScore(score);
-                            gradesDAO.save(newGrade);
-                            gradeMap.computeIfAbsent(enrollmentId, k -> new LinkedHashMap<>())
-                                    .put(assessments.get(c).getId(), newGrade);
+
+                            Grades grade = studentGrades != null
+                                    ? studentGrades.get(assessments.get(c).getId()) : null;
+                            if (grade != null) {
+                                grade.setScore(score);
+                                gradesDAO.update(grade);
+                            } else {
+                                Grades newGrade = new Grades();
+                                newGrade.setEnrollmentId(enrollmentId);
+                                newGrade.setAssessmentId(assessments.get(c).getId());
+                                newGrade.setScore(score);
+                                gradesDAO.save(newGrade);
+                                gradeMap.computeIfAbsent(enrollmentId, k -> new LinkedHashMap<>())
+                                        .put(assessments.get(c).getId(), newGrade);
+                            }
+                            data[r][c + 1] = text;
                         }
-                        data[r][c + 1] = text;
+                        data[r][colCount + 1] = computeFinalGrade(assessments, gradeMap.get(enrollmentId), colCount);
                     }
-                    data[r][colCount + 1] = computeFinalGrade(assessments, gradeMap.get(enrollmentId), colCount);
                 }
+
                 if (!hasError) {
                     editing[0] = false;
                     table.refresh();
@@ -343,5 +336,55 @@ public class GradesTab {
         if (percent >= 50) return 2;
         if (percent >= 40) return 1;
         return 0;
+    }
+
+    private static Double validateScore(
+            String text,
+            Assessments assessment) {
+
+        if (!text.matches("\\d+(\\.\\d{1,2})?")) {
+
+            new Alert(
+                    Alert.AlertType.WARNING,
+                    "\"" + assessment.getTitle()
+                            + "\": "
+                            + LocalizationManager.get("scoreInvalid")
+            ).showAndWait();
+
+            return null;
+        }
+
+        double score = Double.parseDouble(text);
+
+        if (score < 0) {
+
+            new Alert(
+                    Alert.AlertType.WARNING,
+                    "\"" + assessment.getTitle()
+                            + "\": "
+                            + LocalizationManager.get("scoreNegative")
+            ).showAndWait();
+
+            return null;
+        }
+
+        if (score > assessment.getMaxScore()) {
+
+            new Alert(
+                    Alert.AlertType.WARNING,
+                    "\"" + assessment.getTitle()
+                            + "\": "
+                            + score
+                            + " "
+                            + LocalizationManager.get("scoreExceedsMax")
+                            + " "
+                            + assessment.getMaxScore()
+                            + "."
+            ).showAndWait();
+
+            return null;
+        }
+
+        return score;
     }
 }

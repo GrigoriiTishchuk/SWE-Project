@@ -34,6 +34,9 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
     private final AcademicGroupMapper groupMapper = new AcademicGroupMapper();
     private final CourseService courseService = new CourseService();
 
+    private static final String CARD_GROUP = "card-group";
+    private static final String CARD_GROUP_SELECTED = "card-group-selected";
+
     private AcademicGroupDTO selectedGroup;
 
     /**
@@ -74,7 +77,7 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
      */
     private VBox buildGroupCard(AcademicGroupDTO group) {
         VBox card = new VBox();
-        card.getStyleClass().add("card-group");
+        card.getStyleClass().add(CARD_GROUP);
         card.setSpacing(8);
         card.setMinHeight(80);
         card.setPrefHeight(80);
@@ -150,23 +153,34 @@ public class AdminGroupController extends BaseController<AcademicGroupDTO> {
             }
         });
 
-        card.setOnMouseClicked(e -> {
-            selectedGroup = group;
-
-            VBox parent = (VBox) card.getParent();
-            if (parent != null) {
-                for (Node node : parent.getChildren()) {
-                    node.getStyleClass().remove("card-group-selected");
-                    if (!node.getStyleClass().contains("card-group")) node.getStyleClass().add("card-group");
-                }
-            }
-            card.getStyleClass().remove("card-group");
-            card.getStyleClass().add("card-group-selected");
-        });
+        card.setOnMouseClicked(e ->
+                selectGroupCard(card, group));
 
         card.getChildren().addAll(header, coursesBox);
 
         return card;
+    }
+
+    private void selectGroupCard(
+            VBox card,
+            AcademicGroupDTO group) {
+
+        selectedGroup = group;
+
+        VBox parent = (VBox) card.getParent();
+
+        if (parent != null) {
+            for (Node node : parent.getChildren()) {
+                node.getStyleClass().remove(CARD_GROUP_SELECTED);
+
+                if (!node.getStyleClass().contains(CARD_GROUP)) {
+                    node.getStyleClass().add(CARD_GROUP);
+                }
+            }
+        }
+
+        card.getStyleClass().remove(CARD_GROUP);
+        card.getStyleClass().add(CARD_GROUP_SELECTED);
     }
 
     /**

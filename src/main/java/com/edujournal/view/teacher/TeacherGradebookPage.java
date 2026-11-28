@@ -30,13 +30,13 @@ public class TeacherGradebookPage extends BorderPane {
     private static final String INACTIVE_UNDERLINE =
             "-fx-background-color: transparent; -fx-min-height: 2; -fx-max-height: 2;";
 
-    private final String[] TAB_NAMES = {
+    private final String[] tabNames = {
         LocalizationManager.get("grades"),
         LocalizationManager.get("assessments"),
         LocalizationManager.get("notes")
     };
-    private final Label[] tabLabels = new Label[TAB_NAMES.length];
-    private final Region[] tabUnderlines = new Region[TAB_NAMES.length];
+    private final Label[] tabLabels = new Label[tabNames.length];
+    private final Region[] tabUnderlines = new Region[tabNames.length];
     private final StackPane contentArea = new StackPane();
     private final CourseService courseService = new CourseService();
     private int activeTab;
@@ -116,10 +116,10 @@ public class TeacherGradebookPage extends BorderPane {
         HBox tabRow = new HBox(0);
         tabRow.setAlignment(Pos.CENTER_LEFT);
 
-        for (int i = 0; i < TAB_NAMES.length; i++) {
+        for (int i = 0; i < tabNames.length; i++) {
             final int idx = i;
 
-            Label label = new Label(TAB_NAMES[i]);
+            Label label = new Label(tabNames[i]);
             label.setStyle(i == activeTab ? ACTIVE_TAB_STYLE : INACTIVE_TAB_STYLE);
             label.setPadding(new Insets(0, 0, 8, 0));
             label.setOnMouseClicked(e -> selectTab(idx));
@@ -144,7 +144,7 @@ public class TeacherGradebookPage extends BorderPane {
 
     private void selectTab(int idx) {
         activeTab = idx;
-        for (int i = 0; i < TAB_NAMES.length; i++) {
+        for (int i = 0; i < tabNames.length; i++) {
             tabLabels[i].setStyle(i == idx ? ACTIVE_TAB_STYLE : INACTIVE_TAB_STYLE);
             tabUnderlines[i].setStyle(i == idx ? ACTIVE_UNDERLINE : INACTIVE_UNDERLINE);
         }

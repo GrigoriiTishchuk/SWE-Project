@@ -27,6 +27,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Displays and edits the current user's profile details.
@@ -131,23 +132,12 @@ public class OwnProfilePage extends BorderPane {
         );
 
         TextField dobField = null;
+
         if (role == Role.STUDENT && student != null) {
-            TextField studentNumber = createField(student.getStudentNumber());
-
-            dobField = createField(student.getDateOfBirth() != null ? student.getDateOfBirth().toString() : "");
-            editableFields.add(dobField);
-
-            String groupName = "-";
-            if (student.getAcademicGroupId() != null) {
-                AcademicGroup group = new AcademicGroupService().findById(student.getAcademicGroupId());
-                if (group != null) groupName = group.getName();
-            }
-            TextField groupField = createField(groupName);
-
-            form.getChildren().addAll(
-                    row(LocalizationManager.get("studentNumber"), studentNumber),
-                    row(LocalizationManager.get("dateOfBirth"),   dobField),
-                    row(LocalizationManager.get("group"),         groupField)
+            dobField = addStudentFields(
+                    form,
+                    student,
+                    editableFields
             );
         }
 
@@ -167,56 +157,29 @@ public class OwnProfilePage extends BorderPane {
         final Student finalStudent = student;
         final TextField finalDob = dobField;
 
-        cancelBtn.setOnAction(e -> {
-            for (TextField tf : editableFields) {
-                tf.setText(originals.getOrDefault(tf, tf.getText()));
-                tf.setEditable(false);
-                tf.setStyle(READONLY_INPUT);
-            }
-            editSaveBtn.setText(LocalizationManager.get("edit"));
-            cancelBtn.setVisible(false);
-            cancelBtn.setManaged(false);
-            editing[0] = false;
-        });
+        cancelEditing(
+                editableFields,
+                originals,
+                editSaveBtn,
+                cancelBtn
+        );
+        editing[0] = false;
 
         editSaveBtn.setOnAction(e -> {
             if (!editing[0]) {
-                for (TextField tf : editableFields) {
-                    originals.put(tf, tf.getText());
-                    tf.setEditable(true);
-                    tf.setStyle(LIGHT_INPUT);
-                }
-                editSaveBtn.setText(LocalizationManager.get("saveChanges"));
-                cancelBtn.setVisible(true);
-                cancelBtn.setManaged(true);
+
+                enableEditing(
+                        editableFields,
+                        originals,
+                        editSaveBtn,
+                        cancelBtn
+                );
             } else {
-                LocalDate dateOfBirth = null;
-                if (role == Role.STUDENT && finalStudent != null && finalDob != null) {
-                    String dob = finalDob.getText().trim();
-                    if (!dob.isEmpty()) {
-                        try {
-                            dateOfBirth = LocalDate.parse(dob);
-                        } catch (DateTimeParseException ex) {
-                            new Alert(Alert.AlertType.WARNING,
-                                    "Invalid date of birth. Use yyyy-MM-dd.").showAndWait();
-                            return;
-                        }
-                    }
-                }
+                LocalDate dateOfBirth =
+                        parseDateOfBirth(role, finalStudent, finalDob);
 
-                user.setFirstName(firstName.getText().trim());
-                user.setLastName(lastName.getText().trim());
-                user.setUsername(username.getText().trim());
-                user.setEmail(email.getText().trim());
-                user.setPhone(phone.getText().trim());
-                new UserService().update(user);
+                updateUser(user, firstName, lastName, username, email, phone);
 
-                UserDTO session = UserSession.getInstance().getCurrentUser();
-                session.setFirstName(user.getFirstName());
-                session.setLastName(user.getLastName());
-                session.setUsername(user.getUsername());
-                session.setEmail(user.getEmail());
-                session.setPhone(user.getPhone());
                 if (role == Role.STUDENT && finalStudent != null && finalDob != null) {
                     if (dateOfBirth != null) {
                         finalStudent.setDateOfBirth(dateOfBirth);
@@ -226,13 +189,11 @@ public class OwnProfilePage extends BorderPane {
 
                 nameLabel.setText(user.getFirstName() + " " + user.getLastName());
 
-                for (TextField tf : editableFields) {
-                    tf.setEditable(false);
-                    tf.setStyle(READONLY_INPUT);
-                }
-                editSaveBtn.setText(LocalizationManager.get("edit"));
-                cancelBtn.setVisible(false);
-                cancelBtn.setManaged(false);
+                disableEditing(
+                        editableFields,
+                        editSaveBtn,
+                        cancelBtn
+                );
             }
             editing[0] = !editing[0];
         });
@@ -243,6 +204,146 @@ public class OwnProfilePage extends BorderPane {
         form.getStyleClass().add("card");
         HBox.setHgrow(form, Priority.ALWAYS);
         return form;
+    }
+
+    private LocalDate parseDateOfBirth(
+            Role role,
+            Student student,
+            TextField dobField) {
+
+        if (role != Role.STUDENT || student == null || dobField == null) {
+            return null;
+        }
+
+        String dob = dobField.getText().trim();
+
+        if (dob.isEmpty()) {
+            return null;
+        }
+
+        try {
+            return LocalDate.parse(dob);
+        } catch (DateTimeParseException ex) {
+            new Alert(
+                    Alert.AlertType.WARNING,
+                    "Invalid date of birth. Use yyyy-MM-dd."
+            ).showAndWait();
+
+            return null;
+        }
+    }
+
+    private void updateUser(
+            User user,
+            TextField firstName,
+            TextField lastName,
+            TextField username,
+            TextField email,
+            TextField phone) {
+
+        user.setFirstName(firstName.getText().trim());
+        user.setLastName(lastName.getText().trim());
+        user.setUsername(username.getText().trim());
+        user.setEmail(email.getText().trim());
+        user.setPhone(phone.getText().trim());
+
+        new UserService().update(user);
+
+        UserDTO session =
+                UserSession.getInstance().getCurrentUser();
+
+        session.setFirstName(user.getFirstName());
+        session.setLastName(user.getLastName());
+        session.setUsername(user.getUsername());
+        session.setEmail(user.getEmail());
+        session.setPhone(user.getPhone());
+    }
+
+    private TextField addStudentFields(
+            VBox form,
+            Student student,
+            List<TextField> editableFields) {
+
+        TextField studentNumber =
+                createField(student.getStudentNumber());
+
+        TextField dobField =
+                createField(student.getDateOfBirth() != null
+                        ? student.getDateOfBirth().toString()
+                        : "");
+
+        editableFields.add(dobField);
+
+        String groupName = "-";
+
+        if (student.getAcademicGroupId() != null) {
+            AcademicGroup group =
+                    new AcademicGroupService()
+                            .findById(student.getAcademicGroupId());
+
+            if (group != null) {
+                groupName = group.getName();
+            }
+        }
+
+        TextField groupField = createField(groupName);
+
+        form.getChildren().addAll(
+                row(LocalizationManager.get("studentNumber"), studentNumber),
+                row(LocalizationManager.get("dateOfBirth"), dobField),
+                row(LocalizationManager.get("group"), groupField)
+        );
+
+        return dobField;
+    }
+
+    private void enableEditing(
+            List<TextField> editableFields,
+            Map<TextField, String> originals,
+            Button editSaveBtn,
+            Button cancelBtn) {
+
+        for (TextField tf : editableFields) {
+            originals.put(tf, tf.getText());
+            tf.setEditable(true);
+            tf.setStyle(LIGHT_INPUT);
+        }
+
+        editSaveBtn.setText(LocalizationManager.get("saveChanges"));
+        cancelBtn.setVisible(true);
+        cancelBtn.setManaged(true);
+    }
+
+    private void disableEditing(
+            List<TextField> editableFields,
+            Button editSaveBtn,
+            Button cancelBtn) {
+
+        for (TextField tf : editableFields) {
+            tf.setEditable(false);
+            tf.setStyle(READONLY_INPUT);
+        }
+
+        editSaveBtn.setText(LocalizationManager.get("edit"));
+        cancelBtn.setVisible(false);
+        cancelBtn.setManaged(false);
+    }
+
+    private void cancelEditing(
+            List<TextField> editableFields,
+            Map<TextField, String> originals,
+            Button editSaveBtn,
+            Button cancelBtn) {
+
+        for (TextField tf : editableFields) {
+            tf.setText(originals.getOrDefault(tf, tf.getText()));
+            tf.setEditable(false);
+            tf.setStyle(READONLY_INPUT);
+        }
+
+        editSaveBtn.setText(LocalizationManager.get("edit"));
+        cancelBtn.setVisible(false);
+        cancelBtn.setManaged(false);
     }
 
     private TextField createField(String value) {
