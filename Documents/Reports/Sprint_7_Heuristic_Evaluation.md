@@ -63,20 +63,26 @@ and a recommendation.
 
 ## 4. Findings
 
-| ID | Screen | Heuristic | Description | Screenshot | Severity | Recommendation | Status |
-|---|---|:---:|---|:---:|:---:|---|---|
-| HE-01 | Login Page | H1-10 | No app description or context visible - a first-time user has no explanation of what EduJournal is or why they are logging in | ![](../screenshots/login.png) | 1 | Add a short tagline or subtitle below the app title (e.g. "Teacher's Gradebook and Report Card System") | Open |
-| HE-02 | Login Page | H1-7 | Pressing Enter on the username field does not move focus to the password field - user must click with the mouse | ![](../screenshots/login.png) | 1 | Set the username field's action to transfer focus to the password field on Enter | Open |
-| HE-03 | Login Page | H1-7 | Pressing Enter on the password field does not submit the form - user must click the Sign In button with the mouse | ![](../screenshots/login_password.png) | 1 | Bind Enter key on the password field to trigger the login action | Open |
-| HE-04 | Login Page | H1-9 | Forgot Password allows any user to reset any other user's password without identity verification - no current user credentials or confirmation required | ![](../screenshots/reset_password.png) | 3 | Require the current user to confirm their identity (e.g. current password or admin approval) before a password change is accepted | Open |
-| HE-05 | Admin - Student / Teacher / Course / Group Management | H1-5 | No confirmation message is shown after adding, editing, or deleting a record - the table updates immediately so the change is visible, but there is no explicit success notification | ![](../screenshots/add_student.png) | 1 | Optionally add a brief status message (e.g. "Student saved") for extra clarity | Open |
-| HE-06 | Course Report Page | H1-5 | After exporting a gradebook to PDF or CSV, no confirmation or file path is shown - user does not know if the export succeeded or where the file was saved | ![](../screenshots/course_report.png) | 2 | Display a success message with the saved file location after export completes | Open |
-| HE-07 | Teacher Gradebook - Grades Tab | H1-5 | Final grade column shows "-" with no explanation when a student is missing one or more assessment grades - user does not know why the grade is absent or what action is required | ![](../screenshots/teacher.png) | 1 | Show a tooltip on "-" cells explaining that the final grade appears once all assessment grades are filled in | Fixed |
-| HE-08 | Teacher Gradebook - Assessments Tab | H1-4 | Editing an existing assessment does not apply a position change - the position field is shown and pre-filled in the edit form but its value is silently ignored on save | ![](../screenshots/teacher_assessment.png) | 2 | Read the position field value during update and move the assessment to the selected position in the list | Fixed |
-| HE-09 | Own Profile Page | H1-6 | No Cancel button is available while editing profile fields - if a user starts editing and wants to discard changes they must manually retype all original values | ![](../screenshots/student_profile.png) | 1 | Add a Cancel button that restores original field values and exits edit mode without saving | Fixed |
-| HE-10 | Student Report Page | H1-5 | Final grade column shows "-" with no explanation when assessment grades are incomplete - student does not know what action is required to see the grade | ![](../screenshots/teacher.png) | 1 | Show a tooltip on "-" cells explaining that the final grade appears once all assessment grades are filled in | Fixed |
-| HE-11 | Teacher Gradebook - Grades Tab | H1-6 | No Cancel button available while editing grades - if a teacher starts editing and wants to discard changes they must manually retype all original values | ![](../screenshots/teacher_no_cancel.png) | 1 | Add a Cancel button that restores original grade values and exits edit mode without saving | Fixed |
-| HE-12 | Teacher Gradebook - Grades Tab | H1-8 | After entering an invalid grade and dismissing the alert, the form exits edit mode - valid grades entered in the same session are saved but the teacher cannot correct the invalid value without re-entering edit mode | ![](../screenshots/teacher_grade_alert.png) | 2 | Keep the form in edit mode when a validation error occurs so the teacher can fix the invalid value and continue | Fixed |
+| ID | Screen | Heuristic | Description                                                                                                                                                                                                                                                    | Screenshot | Severity | Recommendation | Status |
+|---|---|:---:|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:---:|:---:|---|---|
+| HE-01 | Admin - Course / Group Management | H1-1: Simple & natural dialog | Required fields are not clearly marked in the course and group creation forms - users may only discover missing information after submitting the form                                                                                                          | ![](../screenshots/required_fields.png) | 2 | Clearly mark required fields with a visual indicator so users know what is mandatory before submitting | Open |
+| HE-02 | Admin - Course / Group Management | H1-3: Minimize users' memory load | Entered data is not preserved after a validation error during course or group creation - the form closes and users must reopen it and re-enter all information                                                                                                 | ![](../screenshots/course_error.png) | 2 | Keep the form open and preserve entered data when a validation error occurs | Open |
+| HE-03 | Teacher Gradebook - Assessments Tab | H1-4: Consistency | Editing an existing assessment does not apply a position change - the position field is shown and pre-filled in the edit form but its value is silently ignored on save                                                                                        | ![](../screenshots/teacher_assessment.png) | 2 | Read the position field value during update and move the assessment to the selected position in the list | Fixed |
+| HE-04 | Admin - Student / Teacher / Course / Group Management | H1-4: Consistency | Creation forms behave inconsistently after validation errors - student and teacher forms remain open allowing the user to correct input, while group and course forms close and require the user to reopen them                                                | ![](../screenshots/group_course_forms_not_open.png) | 2 | Make all creation forms behave consistently by keeping them open when a validation error occurs | Open |
+| HE-05 | Admin - Student / Teacher / Course / Group Management | H1-5: Feedback | No confirmation message is shown after adding, editing, or deleting a record - the table updates immediately so the change is visible, but there is no clear success notification. Users can only verify that an action succeeded by checking the updated list | ![](../screenshots/add_student.png) | 2 | Add a brief status message (e.g. "Student saved") after each create, edit, or delete action | Open |
+| HE-06 | Course Report Page | H1-5: Feedback | After exporting a gradebook to PDF or CSV, no confirmation or file path is shown - user does not know if the export succeeded or where the file was saved                                                                                                      | ![](../screenshots/course_report.png) | 2 | Display a success message with the saved file location after export completes | Open |
+| HE-07 | Teacher Gradebook - Grades Tab | H1-5: Feedback | Final grade column shows "-" with no explanation when a student is missing one or more assessment grades - user does not know why the grade is absent or what action is required                                                                               | ![](../screenshots/teacher.png) | 1 | Show a tooltip on "-" cells explaining that the final grade appears once all assessment grades are filled in | Fixed |
+| HE-08 | Student Report Page | H1-5: Feedback | Final grade column shows "-" with no explanation when assessment grades are incomplete - student does not know what action is required to see the grade                                                                                                        | ![](../screenshots/teacher.png) | 1 | Show a tooltip on "-" cells explaining that the final grade appears once all assessment grades are filled in | Fixed |
+| HE-09 | Own Profile Page | H1-6: Clearly marked exits | No Cancel button is available while editing profile fields - it is not clear to the user that navigating away will discard unsaved changes, with no clear way to cancel                                                                                        | ![](../screenshots/student_profile.png) | 1 | Add a Cancel button that restores original field values and exits edit mode without saving | Fixed |
+| HE-10 | Teacher Gradebook - Grades Tab | H1-6: Clearly marked exits | No Cancel button available while editing grades - it is not clear to the teacher that navigating away will discard unsaved changes, with no clear way to cancel                                                                                                | ![](../screenshots/teacher_no_cancel.png) | 1 | Add a Cancel button that restores original grade values and exits edit mode without saving | Fixed |
+| HE-11 | Admin - Dashboard / All Management screens | H1-6: Clearly marked exits | Cancel button does not return the user to the page where they started the operation - clicking Cancel from an add form opened via the Dashboard redirects to a different page instead of back to the Dashboard | ![](../screenshots/admin.png) | 2 | Cancel button should return the user to the page from which they started the operation | Open |
+| HE-12 | Login Page | H1-7: Shortcuts | Pressing Enter on the username field does not move focus to the password field - user must click with the mouse                                                                                                                                                | ![](../screenshots/login.png) | 1 | Set the username field's action to transfer focus to the password field on Enter | Open |
+| HE-13 | Login Page | H1-7: Shortcuts | Pressing Enter on the password field does not submit the form - user must click the Sign In button with the mouse                                                                                                                                              | ![](../screenshots/login_password.png) | 1 | Bind Enter key on the password field to trigger the login action | Open |
+| HE-14 | Teacher Gradebook - Grades Tab | H1-8: Precise & constructive error messages | After entering an invalid grade and dismissing the alert, the form exits edit mode - valid grades entered in the same session are saved but the teacher cannot correct the invalid value without re-entering edit mode                                         | ![](../screenshots/teacher_grade_alert.png) | 2 | Keep the form in edit mode when a validation error occurs so the teacher can fix the invalid value and continue | Fixed |
+| HE-15 | Login Page | H1-9: Prevent errors | Forgot Password allows any user to reset any other user's password without identity verification - no current user credentials or confirmation required                                                                                                        | ![](../screenshots/reset_password.png) | 3 | Require the current user to confirm their identity (e.g. current password or admin approval) before a password change is accepted | Open |
+| HE-16 | Admin - Student / Teacher / Course / Group Management | H1-9: Prevent errors | Users can submit creation forms with missing required fields - validation is only triggered after clicking Save, rather than preventing the error beforehand                                                                                                   | ![](../screenshots/preventing_error.png) | 2 | Clearly mark required fields and validate input before form submission, or disable the Save button until all required fields are filled | Open |
+| HE-17 | Login Page | H1-10: Help and documentation | No app description or context visible - a first-time user has no explanation of what EduJournal is or why they are logging in | ![](../screenshots/login.png) | 1 | Add a short tagline or subtitle below the app title | Open |
+| HE-18 | All screens | H1-10: Help and documentation | The application does not provide built-in help or user documentation - new users have no guide explaining system features or how to perform common tasks                                                                                                       | ![](../screenshots/help.png) | 2 | Add a Help section or user guide with basic instructions and an overview of system features | Open |
 
 ---
 
@@ -84,27 +90,27 @@ and a recommendation.
 
 | Heuristic | Findings Count | Highest Severity |
 |---|:---:|:---:|
-| H1-1 - Simple & natural dialog | 0 | - |
+| H1-1 - Simple & natural dialog | 1 | 2 |
 | H1-2 - Speak the users' language | 0 | - |
-| H1-3 - Minimize users' memory load | 0 | - |
-| H1-4 - Consistency | 1 | 2 |
+| H1-3 - Minimize users' memory load | 1 | 2 |
+| H1-4 - Consistency | 2 | 2 |
 | H1-5 - Feedback | 4 | 2 |
-| H1-6 - Clearly marked exits | 2 | 1 |
+| H1-6 - Clearly marked exits | 3 | 2 |
 | H1-7 - Shortcuts | 2 | 1 |
 | H1-8 - Precise & constructive error messages | 1 | 2 |
-| H1-9 - Prevent errors | 1 | 3 |
-| H1-10 - Help and documentation | 1 | 1 |
+| H1-9 - Prevent errors | 2 | 3 |
+| H1-10 - Help and documentation | 2 | 2 |
 
 ---
 
 ## 6. Overall Assessment
 
-**Total findings:** 12  
+**Total findings:** 18  
 **Critical issues (severity 4):** 0  
-**Major issues (severity 3):** 1 (HE-04 - Forgot Password without identity verification)  
-**Minor/cosmetic issues (1–2):** 11
+**Major issues (severity 3):** 1 (HE-15 - Forgot Password without identity verification)  
+**Minor/cosmetic issues (1–2):** 17
 
-**General conclusion:** The application is functionally stable and covers all core use cases. The majority of usability issues are cosmetic or minor workflow gaps (missing keyboard shortcuts, absent feedback messages, missing cancel actions). One major security concern was identified around the password reset flow. Six issues found during evaluation (HE-07, HE-08, HE-09, HE-10, HE-11, HE-12) were fixed immediately during the sprint.
+**General conclusion:** The application is functionally stable and covers all core use cases. The majority of usability issues are minor workflow gaps (missing feedback messages, inconsistent form behavior, missing cancel actions, absent keyboard shortcuts). One major security concern was identified around the password reset flow. Six issues found during evaluation (HE-03, HE-07, HE-08, HE-09, HE-10, HE-14) were fixed immediately during the sprint.
 
 ---
 
@@ -130,11 +136,17 @@ Prioritized by severity - open issues only.
 
 | Priority | ID | Severity | Recommendation |
 |:---:|---|:---:|---|
-| 1 | HE-04 | 3 | Add identity verification to the Forgot Password flow - require current credentials or admin approval before accepting a password change |
+| 1 | HE-15 | 3 | Add identity verification to the Forgot Password flow - require current credentials or admin approval before accepting a password change |
 | 2 | HE-06 | 2 | Show a success notification with the saved file path after CSV or PDF export completes |
-| 3 | HE-02 | 1 | Move focus to the password field when Enter is pressed in the username field |
-| 4 | HE-03 | 1 | Submit the login form when Enter is pressed in the password field |
-| 5 | HE-05 | 1 | Show a brief success message after adding, editing, or deleting a student, teacher, course, or group |
-| 6 | HE-01 | 1 | Add a short tagline below the app title on the login page to explain what EduJournal is |
+| 3 | HE-05 | 2 | Add a brief status message after each create, edit, or delete action |
+| 4 | HE-01 | 2 | Clearly mark required fields in course and group creation forms |
+| 5 | HE-02 | 2 | Preserve entered data when a validation error occurs in course or group creation forms |
+| 6 | HE-04 | 2 | Make all creation forms stay open consistently when a validation error occurs |
+| 7 | HE-16 | 2 | Validate required fields before form submission or disable Save until all required fields are filled |
+| 8 | HE-18 | 2 | Add a Help section or user guide with basic instructions and an overview of system features |
+| 9 | HE-11 | 2 | Cancel button should return the user to the page from which they started the operation |
+| 10 | HE-12 | 1 | Move focus to the password field when Enter is pressed in the username field |
+| 11 | HE-13 | 1 | Submit the login form when Enter is pressed in the password field |
+| 12 | HE-17 | 1 | Add a short tagline or subtitle below the app title on the login page to explain what EduJournal is |
 
-> HE-07, HE-08, HE-09, HE-10, HE-11, HE-12 were identified and fixed during this sprint.
+> HE-03, HE-07, HE-08, HE-09, HE-10, HE-14 were identified and fixed during this sprint.
