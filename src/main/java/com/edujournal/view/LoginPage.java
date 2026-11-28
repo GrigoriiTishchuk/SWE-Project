@@ -3,7 +3,6 @@ package com.edujournal.view;
 import com.edujournal.Main;
 import com.edujournal.backend.service.AuthService;
 import com.edujournal.backend.utils.UserSession;
-import com.edujournal.backend.utils.InputValidator;
 import com.edujournal.config.LocalizationManager;
 import com.edujournal.entity.Role;
 import com.edujournal.view.admin.AdminDashboardPage;
@@ -21,14 +20,12 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
 
 /**
  * Login page that handles:
  * <ul>
  *     <li>User authentication</li>
  *     <li>Language selection</li>
- *     <li>Password reset</li>
  *     <li>Navigation to role-specific dashboards</li>
  * </ul>
  */
@@ -125,7 +122,13 @@ public class LoginPage extends StackPane {
         errorLabel.setStyle("-fx-text-fill: #d9534f; -fx-font-size: 13px;");
 
         Hyperlink forgotPassword = new Hyperlink(LocalizationManager.get("forgotPassword"));
-        forgotPassword.setOnAction(e -> onForgotPassword());
+        forgotPassword.setOnAction(e -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle(LocalizationManager.get("forgotPassword"));
+            alert.setHeaderText(null);
+            alert.setContentText(LocalizationManager.get("forgotPasswordContact"));
+            alert.showAndWait();
+        });
 
         Button signIn = new Button(LocalizationManager.get("signIn"));
         signIn.setMaxWidth(Double.MAX_VALUE);
@@ -207,76 +210,4 @@ public class LoginPage extends StackPane {
         }
     }
 
-    /**
-     * Opens the password reset dialog and
-     * processes the entered credentials.
-     */
-    private void onForgotPassword() {
-        Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setTitle(LocalizationManager.get("resetPassword"));
-        dialog.setHeaderText(LocalizationManager.get("resetPasswordHeader"));
-
-        ButtonType resetButtonType = new ButtonType(LocalizationManager.get("resetPassword"), ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(resetButtonType, ButtonType.CANCEL);
-
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 20, 10, 10));
-
-        TextField usernameInput = new TextField();
-        usernameInput.setPromptText(LocalizationManager.get(KEY_USERNAME));
-
-        PasswordField newPasswordInput = new PasswordField();
-        newPasswordInput.setPromptText(LocalizationManager.get("newPasswordPrompt"));
-
-        grid.add(new Label(LocalizationManager.get(KEY_USERNAME) + ":"), 0, 0);
-        grid.add(usernameInput, 1, 0);
-        grid.add(new Label(LocalizationManager.get("newPasswordLabel")), 0, 1);
-        grid.add(newPasswordInput, 1, 1);
-
-        dialog.getDialogPane().setContent(grid);
-
-        dialog.showAndWait().ifPresent(buttonType -> {
-            if (buttonType == resetButtonType) {
-                String username = usernameInput.getText();
-                String newPassword = newPasswordInput.getText();
-
-                if (!InputValidator.isValidName(username)) {
-                    showResultAlert(false, LocalizationManager.get("usernameEmpty"));
-                    return;
-                }
-
-                if (!InputValidator.isValidPassword(newPassword)) {
-                    showResultAlert(false, LocalizationManager.get("passwordMinLength"));
-                    return;
-                }
-
-                boolean success = authService.resetPassword(username, newPassword);
-                String messageKey = success
-                        ? "passwordResetSuccess"
-                        : "userNotFound";
-
-                showResultAlert(
-                        success,
-                        LocalizationManager.get(messageKey)
-                );
-            }
-        });
-    }
-
-    /**
-     * Displays the result of a password
-     * reset operation.
-     *
-     * @param isSuccess true if operation succeeded
-     * @param message result message to display
-     */
-    private void showResultAlert(boolean isSuccess, String message) {
-        Alert alert = new Alert(isSuccess ? Alert.AlertType.INFORMATION : Alert.AlertType.ERROR);
-        alert.setTitle(LocalizationManager.get("passwordResetResult"));
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
 }

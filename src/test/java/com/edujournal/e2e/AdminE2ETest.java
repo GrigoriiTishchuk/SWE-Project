@@ -19,8 +19,12 @@ import javafx.scene.control.DatePicker;
 import java.time.LocalDate;
 import java.util.Locale;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
+
+import javafx.scene.control.TextField;
+import javafx.scene.control.PasswordField;
 
 public class AdminE2ETest extends ApplicationTest {
 
@@ -155,11 +159,13 @@ public class AdminE2ETest extends ApplicationTest {
     void adminCanCreateStudent() {
         sleep(1200);
 
-        clickOn(".text-field");
-        write("admin");
+        TextField username = lookup(".text-field").queryAs(TextField.class);
+        PasswordField password = lookup(".password-field").queryAs(PasswordField.class);
 
-        clickOn(".password-field");
-        write("demo_password");
+        interact(() -> {
+            username.setText("admin");
+            password.setText("demo_password");
+        });
 
         clickOn("Sign in");
         sleep(1200);
@@ -487,6 +493,60 @@ public class AdminE2ETest extends ApplicationTest {
         assertTrue(
                 lookup(courseName).tryQuery().isPresent(),
                 "Created course should appear in the course list"
+        );
+    }
+
+    @Test
+    void adminCanChangeLanguage() {
+        sleep(1200);
+
+        TextField username = lookup(".text-field").queryAs(TextField.class);
+        PasswordField password = lookup(".password-field").queryAs(PasswordField.class);
+
+        interact(() -> {
+            username.setText("admin");
+            password.setText("demo_password");
+        });
+
+        clickOn("Sign in");
+        sleep(1200);
+
+        ComboBox<String> languageSelector = lookup(".combo-box")
+                .queryAll()
+                .stream()
+                .map(node -> (ComboBox<String>) node)
+                .filter(combo -> combo.getItems().contains("Türkçe"))
+                .findFirst()
+                .orElseThrow(() -> new AssertionError("Language selector not found"));
+
+        interact(() -> languageSelector.setValue("Türkçe"));
+        waitForFxEvents();
+        sleep(1000);
+
+        ComboBox<String> updatedSelector = lookup(".combo-box")
+                .queryAll()
+                .stream()
+                .map(node -> (ComboBox<String>) node)
+                .filter(combo -> combo.getItems().contains("Türkçe"))
+                .findFirst()
+                .orElseThrow(() -> new AssertionError("Language selector not found after reload"));
+
+        assertEquals("Türkçe", updatedSelector.getValue());
+
+        interact(() -> updatedSelector.setValue("English"));
+        waitForFxEvents();
+        sleep(1000);
+
+        assertEquals(
+                "English",
+                lookup(".combo-box")
+                        .queryAll()
+                        .stream()
+                        .map(node -> (ComboBox<String>) node)
+                        .filter(combo -> combo.getItems().contains("Türkçe"))
+                        .findFirst()
+                        .orElseThrow()
+                        .getValue()
         );
     }
 
