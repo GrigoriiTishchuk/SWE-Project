@@ -40,10 +40,9 @@ public class AssessmentsTab {
      * Creates the assessment list and controls for a selected course and optional group.
      *
      * @param course selected course name
-     * @param group selected group name, or {@code null} or blank when no group is selected
      * @return assessment management view
      */
-    public static Node build(String course, String group) {
+    public static Node build(String course) {
 
 
         AssessmentsService assessmentsService =
@@ -116,14 +115,11 @@ public class AssessmentsTab {
         );
 
         table.setPrefHeight(320);
-
         table.getStylesheets().add(AssessmentsTab.class.getResource("/css/table.css").toExternalForm());
-
         table.setPlaceholder(createPlaceholder());
 
         // --- Total row ---
         HBox totalRow = new HBox();
-
         totalRow.setPadding(
                 new Insets(6, 8, 6, 8)
         );
@@ -146,13 +142,9 @@ public class AssessmentsTab {
                 (ListChangeListener<AssessmentsDTO>) c ->
                         updateTotalWeight(data, totalType)
         );
-        Region totalSpacer =
-                new Region();
+        Region totalSpacer = new Region();
 
-        HBox.setHgrow(
-                totalSpacer,
-                Priority.ALWAYS
-        );
+        HBox.setHgrow(totalSpacer, Priority.ALWAYS);
 
         totalRow.getChildren().addAll(
                 totalName,
@@ -160,19 +152,9 @@ public class AssessmentsTab {
                 totalType
         );
 
-        VBox leftPanel =
-                new VBox(
-                        12,
-                        table,
-                        totalRow
-                );
-
-        leftPanel.setPadding(
-                new Insets(16)
-        );
-
+        VBox leftPanel = new VBox(12, table, totalRow);
+        leftPanel.setPadding(new Insets(16));
         leftPanel.getStyleClass().add("card");
-
         leftPanel.setPrefWidth(450);
 
         // --- Form ---
@@ -183,8 +165,7 @@ public class AssessmentsTab {
                 "-fx-font-size: 16px; -fx-font-weight: bold;"
         );
 
-        TextField nameField =
-                new TextField();
+        TextField nameField = new TextField();
 
         nameField.setPromptText(
                 LocalizationManager.get("typeName")
@@ -195,13 +176,9 @@ public class AssessmentsTab {
                 Double.MAX_VALUE
         );
 
-        ComboBox<AssessmentType> typeCombo =
-                new ComboBox<>();
+        ComboBox<AssessmentType> typeCombo = new ComboBox<>();
 
-        typeCombo.getItems().addAll(
-                AssessmentType.values()
-        );
-
+        typeCombo.getItems().addAll(AssessmentType.values());
         typeCombo.setPromptText(LocalizationManager.get("chooseType"));
         typeCombo.setCellFactory(lv -> new javafx.scene.control.ListCell<>() {
             @Override protected void updateItem(AssessmentType item, boolean empty) {
@@ -216,21 +193,14 @@ public class AssessmentsTab {
             }
         });
 
-        typeCombo.setMaxWidth(
-                Double.MAX_VALUE
-        );
-
+        typeCombo.setMaxWidth(Double.MAX_VALUE);
         typeCombo.setStyle(LIGHT_INPUT);
 
-        TextField weightField =
-                new TextField();
+        TextField weightField = new TextField();
 
         weightField.setPromptText(LocalizationManager.get("weight"));
-
         weightField.setStyle(LIGHT_INPUT);
-        weightField.setMaxWidth(
-                Double.MAX_VALUE
-        );
+        weightField.setMaxWidth(Double.MAX_VALUE);
 
         typeCombo.setOnAction(e -> {
             AssessmentType sel = typeCombo.getValue();
@@ -245,8 +215,7 @@ public class AssessmentsTab {
         maxScoreField.setStyle(LIGHT_INPUT);
         maxScoreField.setMaxWidth(Double.MAX_VALUE);
 
-        ComboBox<Integer> posCombo =
-                new ComboBox<>();
+        ComboBox<Integer> posCombo = new ComboBox<>();
 
         for (int i = 1; i <= data.size() + 1; i++) {
             posCombo.getItems().add(i);
@@ -256,40 +225,28 @@ public class AssessmentsTab {
                 LocalizationManager.get("choosePosition")
         );
 
-        posCombo.setMaxWidth(
-                Double.MAX_VALUE
-        );
-
+        posCombo.setMaxWidth(Double.MAX_VALUE);
         posCombo.setStyle(LIGHT_INPUT);
 
         Button saveBtn =
                 new Button(LocalizationManager.get("save"));
 
-        saveBtn.setMaxWidth(
-                Double.MAX_VALUE
-        );
-
+        saveBtn.setMaxWidth(Double.MAX_VALUE);
         saveBtn.getStyleClass().add("btn-primary");
 
         Button updateBtn =
                 new Button(LocalizationManager.get("update"));
 
-        updateBtn.setMaxWidth(
-                Double.MAX_VALUE
-        );
-
+        updateBtn.setMaxWidth(Double.MAX_VALUE);
         updateBtn.getStyleClass().add("btn-primary");
-
         updateBtn.setVisible(false);
 
         final AssessmentsDTO[] selectedAssessment =
                 new AssessmentsDTO[1];
 
         // --- Actions column ---
-        table.getColumns().add(
-                createActionColumn(
-                        data,
-                        assessmentsService,
+        AssessmentForm form =
+                new AssessmentForm(
                         nameField,
                         typeCombo,
                         weightField,
@@ -299,6 +256,13 @@ public class AssessmentsTab {
                         saveBtn,
                         updateBtn,
                         selectedAssessment
+                );
+
+        table.getColumns().add(
+                createActionColumn(
+                        data,
+                        assessmentsService,
+                        form
                 )
         );
 
@@ -308,11 +272,7 @@ public class AssessmentsTab {
                 assessmentsService,
                 course,
                 data,
-                nameField,
-                typeCombo,
-                weightField,
-                maxScoreField,
-                posCombo
+                form
         );
 
         // --- Update ---
@@ -320,14 +280,7 @@ public class AssessmentsTab {
                 updateBtn,
                 assessmentsService,
                 data,
-                selectedAssessment,
-                nameField,
-                typeCombo,
-                weightField,
-                maxScoreField,
-                posCombo,
-                title,
-                saveBtn
+                form
         );
 
         VBox rightPanel =
@@ -343,21 +296,11 @@ public class AssessmentsTab {
                         updateBtn
                 );
 
-        rightPanel.setPadding(
-                new Insets(24)
-        );
-
+        rightPanel.setPadding(new Insets(24));
         rightPanel.getStyleClass().add("card");
+        rightPanel.setAlignment(Pos.TOP_LEFT);
 
-        rightPanel.setAlignment(
-                Pos.TOP_LEFT
-        );
-
-        HBox.setHgrow(
-                rightPanel,
-                Priority.ALWAYS
-        );
-
+        HBox.setHgrow(rightPanel, Priority.ALWAYS);
         HBox layout =
                 new HBox(
                         16,
@@ -370,6 +313,14 @@ public class AssessmentsTab {
         return layout;
     }
 
+    /**
+     * Loads all assessments for the specified course and converts them
+     * to table data transfer objects.
+     *
+     * @param course course name
+     * @param assessmentsService assessments service
+     * @return observable list of assessments
+     */
     private static ObservableList<AssessmentsDTO> loadAssessments(
             String course,
             AssessmentsService assessmentsService) {
@@ -398,6 +349,13 @@ public class AssessmentsTab {
         return data;
     }
 
+    /**
+     * Calculates the total weight of unique assessment types and updates
+     * the summary label.
+     *
+     * @param data assessment table data
+     * @param totalType label displaying the total weight
+     */
     private static void updateTotalWeight(
             ObservableList<AssessmentsDTO> data,
             Label totalType) {
@@ -419,12 +377,14 @@ public class AssessmentsTab {
         );
     }
 
+    /**
+     * Creates a placeholder displayed when no assessments are available.
+     *
+     * @return placeholder label
+     */
     private static Label createPlaceholder() {
 
-        Label placeholder =
-                new Label(
-                        LocalizationManager.get("noContent")
-                );
+        Label placeholder = new Label(LocalizationManager.get("noContent"));
 
         placeholder.setWrapText(true);
         placeholder.setMaxWidth(348);
@@ -434,21 +394,27 @@ public class AssessmentsTab {
         return placeholder;
     }
 
+    /**
+     * Validates that the total weight of assessment categories
+     * does not exceed the allowed limit.
+     *
+     * @param data existing assessments
+     * @param type assessment type being processed
+     * @param weight proposed weight
+     * @return true if the weight is valid; false otherwise
+     */
     private static boolean validateTotalWeight(
             ObservableList<AssessmentsDTO> data,
             AssessmentType type,
             double weight) {
 
-        Set<AssessmentType> seenTypes =
-                new HashSet<>();
+        Set<AssessmentType> seenTypes = new HashSet<>();
 
         double currentTotal = 0;
 
         for (AssessmentsDTO dto : data) {
 
-            if (dto.getType() != type
-                    && seenTypes.add(dto.getType())) {
-
+            if (dto.getType() != type && seenTypes.add(dto.getType())) {
                 currentTotal += dto.getWeight();
             }
         }
@@ -462,19 +428,20 @@ public class AssessmentsTab {
                             + currentTotal
                             + "."
             ).showAndWait();
-
             return false;
         }
-
         return true;
     }
 
-    private static Double parseMaxScore(
-            TextField maxScoreField) {
+    /**
+     * Parses and validates the maximum score value entered by the user.
+     *
+     * @param maxScoreField maximum score input field
+     * @return parsed maximum score or null if validation fails
+     */
+    private static Double parseMaxScore(TextField maxScoreField) {
 
-        String maxScoreText =
-                maxScoreField.getText().trim();
-
+        String maxScoreText = maxScoreField.getText().trim();
         if (maxScoreText.isEmpty()) {
 
             new Alert(
@@ -487,11 +454,9 @@ public class AssessmentsTab {
 
         try {
 
-            double maxScore =
-                    Double.parseDouble(maxScoreText);
+            double maxScore = Double.parseDouble(maxScoreText);
 
             if (maxScore <= 0) {
-
                 new Alert(
                         Alert.AlertType.WARNING,
                         LocalizationManager.get("maxPointsPositive")
@@ -499,32 +464,105 @@ public class AssessmentsTab {
 
                 return null;
             }
-
             return maxScore;
 
         } catch (NumberFormatException ex) {
-
             new Alert(
                     Alert.AlertType.WARNING,
                     LocalizationManager.get("maxPointsInvalid")
             ).showAndWait();
-
             return null;
         }
     }
 
+    /**
+     * Encapsulates controls and state used by the assessment form.
+     * This object is used to reduce parameter passing between helper methods.
+     */
+    @SuppressWarnings("java:S107")
+    private static class AssessmentForm {
+        TextField nameField;
+        ComboBox<AssessmentType> typeCombo;
+        TextField weightField;
+        TextField maxScoreField;
+        ComboBox<Integer> posCombo;
+        Label title;
+        Button saveBtn;
+        Button updateBtn;
+        AssessmentsDTO[] selectedAssessment;
+
+        public AssessmentForm(
+                TextField nameField,
+                ComboBox<AssessmentType> typeCombo,
+                TextField weightField,
+                TextField maxScoreField,
+                ComboBox<Integer> posCombo,
+                Label title,
+                Button saveBtn,
+                Button updateBtn,
+                AssessmentsDTO[] selectedAssessment) {
+
+            this.nameField = nameField;
+            this.typeCombo = typeCombo;
+            this.weightField = weightField;
+            this.maxScoreField = maxScoreField;
+            this.posCombo = posCombo;
+            this.title = title;
+            this.saveBtn = saveBtn;
+            this.updateBtn = updateBtn;
+            this.selectedAssessment = selectedAssessment;
+        }
+
+        public TextField getNameField() {
+            return nameField;
+        }
+
+        public ComboBox<AssessmentType> getTypeCombo() {
+            return typeCombo;
+        }
+
+        public TextField getWeightField() {
+            return weightField;
+        }
+
+        public TextField getMaxScoreField() {
+            return maxScoreField;
+        }
+
+        public ComboBox<Integer> getPosCombo() {
+            return posCombo;
+        }
+
+        public Label getTitle() {
+            return title;
+        }
+
+        public Button getSaveBtn() {
+            return saveBtn;
+        }
+
+        public Button getUpdateBtn() {
+            return updateBtn;
+        }
+
+        public AssessmentsDTO[] getSelectedAssessment() {
+            return selectedAssessment;
+        }
+    }
+
+    /**
+     * Creates the action column containing edit and delete buttons.
+     *
+     * @param data assessment table data
+     * @param assessmentsService assessments service
+     * @param form assessment form controls and state
+     * @return configured action column
+     */
+    @SuppressWarnings("java:S1171")
     private static TableColumn<AssessmentsDTO, Void> createActionColumn(
             ObservableList<AssessmentsDTO> data,
             AssessmentsService assessmentsService,
-            TextField nameField,
-            ComboBox<AssessmentType> typeCombo,
-            TextField weightField,
-            TextField maxScoreField,
-            ComboBox<Integer> posCombo,
-            Label title,
-            Button saveBtn,
-            Button updateBtn,
-            AssessmentsDTO[] selectedAssessment) {
+            AssessmentForm form) {
 
         TableColumn<AssessmentsDTO, Void> actionCol =
                 new TableColumn<>(
@@ -543,59 +581,26 @@ public class AssessmentsTab {
                             new Button("🗑");
 
                     {
-                        deleteBtn.setStyle("-fx-background-color: #DC2626; -fx-text-fill: white; -fx-background-radius: 6;");
-                        editBtn.setOnAction(e ->
-                                handleEditAssessment(
-                                        getTableView()
-                                                .getItems()
-                                                .get(getIndex()),
-                                        data,
-                                        nameField,
-                                        typeCombo,
-                                        weightField,
-                                        maxScoreField,
-                                        posCombo,
-                                        title,
-                                        saveBtn,
-                                        updateBtn,
-                                        selectedAssessment
-                                )
-                        );
-
-                        deleteBtn.setOnAction(e ->
-                                handleDeleteAssessment(
-                                        getTableView()
-                                                .getItems()
-                                                .get(getIndex()),
-                                        assessmentsService,
-                                        data
-                                )
+                        configureActionButtons(
+                                editBtn,
+                                deleteBtn,
+                                this,
+                                data,
+                                assessmentsService,
+                                form
                         );
                     }
 
                     @Override
-                    protected void updateItem(
-                            Void item,
-                            boolean empty) {
+                    protected void updateItem(Void item, boolean empty) {
 
-                        super.updateItem(
-                                item,
-                                empty
-                        );
+                        super.updateItem(item, empty);
 
                         if (empty) {
                             setGraphic(null);
                         } else {
-
-                            HBox buttons = new HBox(
-                                    5,
-                                    editBtn,
-                                    deleteBtn
-                            );
-
-                            setGraphic(buttons);
+                            setGraphic(new HBox(5, editBtn, deleteBtn));
                         }
-
                     }
                 }
         );
@@ -603,33 +608,32 @@ public class AssessmentsTab {
         return actionCol;
     }
 
+    /**
+     * Configures the save button used to create new assessments.
+     *
+     * @param saveBtn save button
+     * @param assessmentsService assessments service
+     * @param course selected course name
+     * @param data assessment table data
+     * @param form assessment form controls and state
+     */
     private static void configureSaveButton(
             Button saveBtn,
             AssessmentsService assessmentsService,
             String course,
             ObservableList<AssessmentsDTO> data,
-            TextField nameField,
-            ComboBox<AssessmentType> typeCombo,
-            TextField weightField,
-            TextField maxScoreField,
-            ComboBox<Integer> posCombo) {
+            AssessmentForm form) {
 
         saveBtn.setOnAction(e -> {
 
-            String name =
-                    nameField.getText().trim();
-
-            AssessmentType type =
-                    typeCombo.getValue();
-
-            Integer pos =
-                    posCombo.getValue();
+            String name = form.getNameField().getText().trim();
+            AssessmentType type = form.getTypeCombo().getValue();
+            Integer pos = form.getPosCombo().getValue();
 
             double weight;
-
             try {
                 weight = Double.parseDouble(
-                        weightField
+                        form.getWeightField()
                                 .getText()
                                 .trim()
                 );
@@ -637,11 +641,7 @@ public class AssessmentsTab {
                 weight = 1.0;
             }
 
-            if (!validateSaveInput(
-                    name,
-                    type,
-                    pos
-            )) {
+            if (!validateSaveInput(name, type, pos)) {
                 return;
             }
 
@@ -650,38 +650,35 @@ public class AssessmentsTab {
             }
 
             Assessments assessment = new Assessments();
-
             Course courseEntity = assessmentsService.getCourseByName(course);
 
             if (courseEntity == null) {
-                new Alert(Alert.AlertType.ERROR, LocalizationManager.get("courseNotFound")).showAndWait();
+
+                new Alert(
+                        Alert.AlertType.ERROR,
+                        LocalizationManager.get(
+                                "courseNotFound"
+                        )
+                ).showAndWait();
+
                 return;
             }
 
-            assessment.setCourseId(
-                    courseEntity.getId()
-            );
-
+            assessment.setCourseId(courseEntity.getId());
             assessment.setTitle(name);
-
             assessment.setType(type);
 
-            Double maxScore = parseMaxScore(maxScoreField);
+            Double maxScore = parseMaxScore(form.getMaxScoreField());
 
             if (maxScore == null) {
                 return;
             }
+
             assessment.setMaxScore(maxScore);
-
             assessment.setWeight(weight);
+            assessment.setDueDate(null);
 
-            assessment.setDueDate(
-                    null
-            );
-
-            assessmentsService.save(
-                    assessment
-            );
+            assessmentsService.save(assessment);
 
             data.add(
                     pos - 1,
@@ -696,53 +693,43 @@ public class AssessmentsTab {
                     )
             );
 
-            nameField.clear();
-            typeCombo.setValue(null);
-            weightField.clear();
-            maxScoreField.clear();
-            posCombo.setValue(null);
-
-            posCombo.getItems().clear();
-
-            for (int i = 1;
-                 i <= data.size() + 1;
-                 i++) {
-
-                posCombo.getItems().add(i);
-            }
+            resetForm(
+                    data,
+                    form.getNameField(),
+                    form.getTypeCombo(),
+                    form.getWeightField(),
+                    form.getMaxScoreField(),
+                    form.getPosCombo()
+            );
         });
     }
 
+    /**
+     * Configures the update button used to edit existing assessments.
+     *
+     * @param updateBtn update button
+     * @param assessmentsService assessments service
+     * @param data assessment table data
+     * @param form assessment form controls and state
+     */
     private static void configureUpdateButton(
             Button updateBtn,
             AssessmentsService assessmentsService,
             ObservableList<AssessmentsDTO> data,
-            AssessmentsDTO[] selectedAssessment,
-            TextField nameField,
-            ComboBox<AssessmentType> typeCombo,
-            TextField weightField,
-            TextField maxScoreField,
-            ComboBox<Integer> posCombo,
-            Label title,
-            Button saveBtn) {
+            AssessmentForm form) {
 
         updateBtn.setOnAction(e -> {
 
-            AssessmentsDTO selected =
-                    selectedAssessment[0];
+            AssessmentsDTO selected = form.getSelectedAssessment()[0];
 
             if (selected == null) {
                 return;
             }
 
-            String name =
-                    nameField.getText().trim();
+            String name = form.getNameField().getText().trim();
+            AssessmentType type = form.getTypeCombo().getValue();
 
-            AssessmentType type =
-                    typeCombo.getValue();
-
-            double weight =
-                    parseWeight(weightField);
+            double weight = parseWeight(form.getWeightField());
 
             if (name.isEmpty()
                     || type == null) {
@@ -758,7 +745,7 @@ public class AssessmentsTab {
                 return;
             }
 
-            Double maxScore = parseMaxScore(maxScoreField);
+            Double maxScore = parseMaxScore(form.getMaxScoreField());
 
             if (maxScore == null) {
                 return;
@@ -778,41 +765,58 @@ public class AssessmentsTab {
                 return;
             }
 
-            int index =
-                    data.indexOf(selected);
+            int index = data.indexOf(selected);
+            AssessmentsDTO updated = toDTO(assessment);
+            Integer newPos = form.getPosCombo().getValue();
 
-            AssessmentsDTO updated =
-                    toDTO(assessment);
-
-            Integer newPos = posCombo.getValue();
             if (newPos != null && newPos != index + 1) {
                 data.remove(index);
-                data.add(Math.min(newPos - 1, data.size()), updated);
+                data.add(
+                        Math.min(
+                                newPos - 1,
+                                data.size()
+                        ),
+                        updated
+                );
+
             } else {
-                data.set(index, updated);
+                data.set(
+                        index,
+                        updated
+                );
             }
 
             resetForm(
                     data,
-                    nameField,
-                    typeCombo,
-                    weightField,
-                    maxScoreField,
-                    posCombo
+                    form.getNameField(),
+                    form.getTypeCombo(),
+                    form.getWeightField(),
+                    form.getMaxScoreField(),
+                    form.getPosCombo()
             );
 
-            selectedAssessment[0] = null;
+            form.getSelectedAssessment()[0] = null;
 
-            title.setText(
-                    LocalizationManager.get("addAssessment")
+            form.getTitle().setText(
+                    LocalizationManager.get(
+                            "addAssessment"
+                    )
             );
 
             updateBtn.setVisible(false);
-            saveBtn.setVisible(true);
-
+            form.getSaveBtn().setVisible(true);
         });
     }
 
+    /**
+     * Validates the total weight when an assessment is updated.
+     *
+     * @param data assessment table data
+     * @param selected assessment being edited
+     * @param type updated assessment type
+     * @param weight updated weight
+     * @return true if the updated weight is valid; false otherwise
+     */
     private static boolean validateUpdatedWeight(
             ObservableList<AssessmentsDTO> data,
             AssessmentsDTO selected,
@@ -830,15 +834,12 @@ public class AssessmentsTab {
                 continue;
             }
 
-            if (dto.getType() != type
-                    && seenTypes.add(dto.getType())) {
-
+            if (dto.getType() != type && seenTypes.add(dto.getType())) {
                 currentTotal += dto.getWeight();
             }
         }
 
         if (currentTotal + weight > 1.0) {
-
             new Alert(
                     Alert.AlertType.WARNING,
                     LocalizationManager.get("weightExceedsLimit")
@@ -853,6 +854,12 @@ public class AssessmentsTab {
         return true;
     }
 
+    /**
+     * Converts a persistence entity to a data transfer object.
+     *
+     * @param assessment assessment entity
+     * @return assessment DTO
+     */
     private static AssessmentsDTO toDTO(
             Assessments assessment) {
 
@@ -867,6 +874,16 @@ public class AssessmentsTab {
         );
     }
 
+    /**
+     * Clears the assessment form and restores available positions.
+     *
+     * @param data assessment table data
+     * @param nameField assessment name field
+     * @param typeCombo assessment type selector
+     * @param weightField weight field
+     * @param maxScoreField maximum score field
+     * @param posCombo position selector
+     */
     private static void resetForm(
             ObservableList<AssessmentsDTO> data,
             TextField nameField,
@@ -889,6 +906,17 @@ public class AssessmentsTab {
         posCombo.setValue(null);
     }
 
+    /**
+     * Updates an existing assessment and persists the changes.
+     *
+     * @param assessmentsService assessments service
+     * @param selected selected assessment DTO
+     * @param name updated title
+     * @param type updated assessment type
+     * @param weight updated weight
+     * @param maxScore updated maximum score
+     * @return updated assessment entity or null if not found
+     */
     private static Assessments updateAssessment(
             AssessmentsService assessmentsService,
             AssessmentsDTO selected,
@@ -918,6 +946,12 @@ public class AssessmentsTab {
         return assessment;
     }
 
+    /**
+     * Parses the assessment weight entered by the user.
+     *
+     * @param weightField weight input field
+     * @return parsed weight or 1.0 if parsing fails
+     */
     private static double parseWeight(
             TextField weightField) {
 
@@ -930,6 +964,14 @@ public class AssessmentsTab {
         }
     }
 
+    /**
+     * Validates required input fields before creating a new assessment.
+     *
+     * @param name assessment title
+     * @param type assessment type
+     * @param pos selected position
+     * @return true if all required values are provided
+     */
     private static boolean validateSaveInput(
             String name,
             AssessmentType type,
@@ -968,46 +1010,35 @@ public class AssessmentsTab {
         return true;
     }
 
+    /**
+     * Loads assessment data into the form for editing.
+     *
+     * @param selected selected assessment
+     * @param data assessment table data
+     * @param form assessment form controls and state
+     */
     private static void handleEditAssessment(
             AssessmentsDTO selected,
             ObservableList<AssessmentsDTO> data,
-            TextField nameField,
-            ComboBox<AssessmentType> typeCombo,
-            TextField weightField,
-            TextField maxScoreField,
-            ComboBox<Integer> posCombo,
-            Label title,
-            Button saveBtn,
-            Button updateBtn,
-            AssessmentsDTO[] selectedAssessment) {
+            AssessmentForm form) {
 
-        selectedAssessment[0] = selected;
+        form.getSelectedAssessment()[0] = selected;
 
-        nameField.setText(selected.getTitle());
-
-        typeCombo.setValue(selected.getType());
-
-        weightField.setText(
-                String.valueOf(selected.getWeight())
-        );
-
-        maxScoreField.setText(
-                String.valueOf(
-                        selected.getMaxScore()
-                )
-        );
-
-        posCombo.getItems().clear();
+        form.getNameField().setText(selected.getTitle());
+        form.getTypeCombo().setValue(selected.getType());
+        form.getWeightField().setText(String.valueOf(selected.getWeight()));
+        form.getMaxScoreField().setText(String.valueOf(selected.getMaxScore()));
+        form.getPosCombo().getItems().clear();
 
         for (int i = 1; i <= data.size(); i++) {
-            posCombo.getItems().add(i);
+            form.getPosCombo()
+                    .getItems()
+                    .add(i);
         }
 
-        posCombo.setValue(
-                data.indexOf(selected) + 1
-        );
+        form.getPosCombo().setValue(data.indexOf(selected) + 1);
 
-        title.setText(
+        form.getTitle().setText(
                 LocalizationManager.get("edit")
                         + " "
                         + LocalizationManager
@@ -1015,38 +1046,33 @@ public class AssessmentsTab {
                         .toLowerCase()
         );
 
-        saveBtn.setVisible(false);
-        updateBtn.setVisible(true);
+        form.getSaveBtn().setVisible(false);
+        form.getUpdateBtn().setVisible(true);
     }
 
+    /**
+     * Deletes an assessment and optionally removes related grades.
+     *
+     * @param selected selected assessment
+     * @param assessmentsService assessments service
+     * @param data assessment table data
+     */
     private static void handleDeleteAssessment(
             AssessmentsDTO selected,
             AssessmentsService assessmentsService,
             ObservableList<AssessmentsDTO> data) {
 
-        Alert confirm =
-                new Alert(
-                        Alert.AlertType.CONFIRMATION
-                );
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
 
-        confirm.setTitle(
-                LocalizationManager.get(
-                        "deleteAssessmentTitle"
-                )
-        );
+        confirm.setTitle(LocalizationManager.get(
+                        "deleteAssessmentTitle"));
 
-        confirm.setHeaderText(
-                LocalizationManager.get(
-                        "deleteAssessmentQuestion"
-                )
-        );
+        confirm.setHeaderText(LocalizationManager.get(
+                        "deleteAssessmentQuestion"));
 
-        confirm.setContentText(
-                selected.getTitle()
-        );
+        confirm.setContentText(selected.getTitle());
 
-        Optional<ButtonType> result =
-                confirm.showAndWait();
+        Optional<ButtonType> result = confirm.showAndWait();
 
         if (result.isEmpty()
                 || result.get() != ButtonType.OK) {
@@ -1062,14 +1088,9 @@ public class AssessmentsTab {
             return;
         }
 
-        if (assessmentsService.hasGrades(
-                selected.getId()
-        )) {
+        if (assessmentsService.hasGrades(selected.getId())) {
 
-            Alert warning =
-                    new Alert(
-                            Alert.AlertType.CONFIRMATION
-                    );
+            Alert warning = new Alert(Alert.AlertType.CONFIRMATION);
 
             warning.setTitle(
                     LocalizationManager.get(
@@ -1131,5 +1152,40 @@ public class AssessmentsTab {
         );
 
         data.remove(selected);
+    }
+
+    private static void configureActionButtons(
+            Button editBtn,
+            Button deleteBtn,
+            TableCell<AssessmentsDTO, Void> cell,
+            ObservableList<AssessmentsDTO> data,
+            AssessmentsService assessmentsService,
+            AssessmentForm form) {
+
+        deleteBtn.setStyle(
+                "-fx-background-color: #DC2626; "
+                        + "-fx-text-fill: white; "
+                        + "-fx-background-radius: 6;"
+        );
+
+        editBtn.setOnAction(e ->
+                handleEditAssessment(
+                        cell.getTableView()
+                                .getItems()
+                                .get(cell.getIndex()),
+                        data,
+                        form
+                )
+        );
+
+        deleteBtn.setOnAction(e ->
+                handleDeleteAssessment(
+                        cell.getTableView()
+                                .getItems()
+                                .get(cell.getIndex()),
+                        assessmentsService,
+                        data
+                )
+        );
     }
 }

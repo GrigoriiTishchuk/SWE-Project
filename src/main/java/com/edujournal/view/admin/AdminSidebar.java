@@ -15,6 +15,8 @@ import com.edujournal.config.LocalizationManager;
  */
 public class AdminSidebar {
 
+    private AdminSidebar() {}
+
     /**
      * Creates the administrator sidebar and marks the active destination.
      *

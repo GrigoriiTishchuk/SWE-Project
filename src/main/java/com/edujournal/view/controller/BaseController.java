@@ -318,6 +318,7 @@ public abstract class BaseController<T> extends BorderPane {
      * @param keyMap mapping between display values and localization keys
      * @return localized list cell
      */
+    @SuppressWarnings("java:S1854")
     protected ListCell<String> createLocalizedCell(Map<String, String> keyMap) {
         return new ListCell<>() {
             @Override

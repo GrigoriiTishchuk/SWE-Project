@@ -38,7 +38,7 @@ public final class DatabaseInitializer {
      * and populates the database with initial data when it has not
      * been seeded before.
      */
-    @SuppressWarnings("java:S2077") // database name cannot be parameterized in JDBC
+    @SuppressWarnings({"java:S2077", "java:S112"}) // database name cannot be parameterized in JDBC
     public static void initialize() {
 
         String databaseName = EnvConfig.get("DB_NAME");

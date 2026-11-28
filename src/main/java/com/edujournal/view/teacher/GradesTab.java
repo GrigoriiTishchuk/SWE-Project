@@ -461,14 +461,21 @@ public class GradesTab {
             TableColumn<String[], String> scoreCol = new TableColumn<>(assessments.get(i).getTitle());
             scoreCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue()[col]));
             scoreCol.setCellFactory(tc -> new TableCell<>() {
-                @Override protected void updateItem(String s, boolean empty) {
+                @Override
+                protected void updateItem(String s, boolean empty) {
                     super.updateItem(s, empty);
-                    int idx = getIndex();
-                    if (empty || idx < 0 || idx >= rowCount) { setText(null); setGraphic(null); return; }
+                    if (empty || getIndex() < 0 || getIndex() >= rowCount) {
+                        setText(null);
+                        setGraphic(null);
+                        return;
+                    }
+
                     if (editing[0]) {
-                        setGraphic(tfs[idx][tfCol]); setText(null);
+                        setGraphic(tfs[getIndex()][tfCol]);
+                        setText(null);
                     } else {
-                        setText(data[idx][col]); setGraphic(null);
+                        setText(data[getIndex()][col]);
+                        setGraphic(null);
                     }
                 }
             });

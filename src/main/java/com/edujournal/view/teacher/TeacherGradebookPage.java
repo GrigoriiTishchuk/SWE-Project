@@ -167,7 +167,7 @@ public class TeacherGradebookPage extends BorderPane {
 
         Node tabContent = switch (activeTab) {
             case 0  -> GradesTab.build(course, group);
-            case 1  -> AssessmentsTab.build(course, group);
+            case 1  -> AssessmentsTab.build(course);
             default -> NotesTab.build(course, group);
         };
         StackPane.setAlignment(tabContent, Pos.TOP_LEFT);
